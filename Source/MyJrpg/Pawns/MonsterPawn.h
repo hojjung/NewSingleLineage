@@ -1,0 +1,77 @@
+// All right Reserve 2021 HereticByte
+
+#pragma once
+
+#include "CoreMinimal.h"
+#include "CombatUnitPawn.h"
+#include "Components/MyFlockSteering.h"
+#include "Logics/BulletPool.h"
+#include "MonsterPawn.generated.h"
+
+/**
+ * 
+ */
+UCLASS()
+class MYJRPG_API AMonsterPawn : public ACombatUnitPawn
+{
+	GENERATED_BODY()
+	
+public:
+	AMonsterPawn(const FObjectInitializer& obj);
+
+protected:
+	UPROPERTY(VisibleAnywhere,BlueprintReadWrite)
+	UWidgetPawnInfoComp* m_PawnInfo;
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+	UAudioComponent* m_SoundComp;
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+	UParticleSystemComponent* m_HitParticle;
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+	UWidgetSpeechBubbleComp* m_SpeechBubbleComp;
+	UPROPERTY()
+	float m_fMinReviveTimer;
+	UPROPERTY()
+	float m_fMaxReviveTimer;
+	UPROPERTY()
+	float m_fMaxHp;
+	UPROPERTY()
+	float m_fExp;
+	UPROPERTY()
+	float m_fGold;
+	UPROPERTY()
+	FVector m_SpawnPoint;
+	UPROPERTY()
+	FRotator m_SpawnRot;
+
+protected:
+	void PlayHitFlash();
+	
+	void PlayHittenSound();
+
+	void PlayHittenEffect();
+
+	void Revive();
+
+	void OnReviveAnimEnd();
+
+public:
+	void Speech(FText text);
+
+	void Speech(FString text);
+	
+	virtual void SetEntity(const FNpcUnitEntityRow& unitEntityRow) override;
+
+	virtual void Dead() override;
+	
+	virtual bool TakeDmg(float amount, ACombatUnitPawn* attacker) override;
+
+	void SetReviveTime(float min,float max);
+
+	virtual void OnNotifyTrigger(const FName& name) override;
+
+	float GetRewardExp() const;
+
+	float GetRewardGold() const;
+};
+
+
