@@ -8,6 +8,7 @@
 #include "Hud/WidgetLevelUp.h"
 #include "Menu/CharacterInfoHUD/AlertInfoWindow.h"
 #include "Menu/Dialogue/WidgetLogWindow.h"
+#include "Menu/Enchant/WidgetEnchantBase.h"
 #include "Menu/Quest/WidgetQuestAcceptPanel.h"
 #include "Menu/Quest/WidgetQuestPanel.h"
 #include "Menu/StackSelector/WidgetStackCalculator.h"
@@ -103,6 +104,9 @@ protected:
 	UWidgetGameOver* m_WindowGameOver;
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (BindWidget))
 	UWidgetQuestHUD* m_QuestHUD;
+	//
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (BindWidget))
+	UWidgetEnchantBase* m_Enchant;
 	
 protected:
 	void HideHUD();
@@ -148,6 +152,8 @@ public:
 	void StartDialogue(FName str);
 	
 	void TryAcceptQuest(FName qId);
+
+	void OpenEnchant();
 	
 public:
 	void ShowSkillFail(const FString& string);

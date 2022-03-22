@@ -118,7 +118,8 @@ enum class EPanelType
 	StorageDeposit,
 	StorageWithdraw,
 	ShopBuy,
-	ShopSell
+	ShopSell,
+	Enchant
 };
 
 class DeleterNot

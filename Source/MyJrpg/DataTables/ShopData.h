@@ -34,7 +34,7 @@ public:
 public:
 	TSoftObjectPtr<UTexture2D> GetItemIcon() const
 	{
-		if(m_ItemDataRowHandle.IsNull())
+		if(m_ItemDataRowHandle.IsNull() || m_ItemDataRowHandle.RowName.IsNone())
 		{
 			return nullptr;
 		}
@@ -44,7 +44,7 @@ public:
 	
 	int GetCost() const
 	{
-		if(m_ItemDataRowHandle.IsNull())
+		if(m_ItemDataRowHandle.IsNull() || m_ItemDataRowHandle.RowName.IsNone())
 		{
     		return -1;
     	}

@@ -47,6 +47,8 @@ void UWidgetCanvasWorld::NativeOnInitialized()
 
 	m_QuestAcceptPanel->SetVisibility(ESlateVisibility::Collapsed);
 
+	m_Enchant->SetVisibility(ESlateVisibility::Collapsed);
+
 	//Bind Event
 	m_BtnMenu->OnClicked.AddDynamic(this,&UWidgetCanvasWorld::ToggleMenu);
 
@@ -197,6 +199,11 @@ void UWidgetCanvasWorld::StartDialogue(FName str)
 void UWidgetCanvasWorld::TryAcceptQuest(FName qId)
 {
 	m_QuestAcceptPanel->SetQuestAccept(qId);
+}
+
+void UWidgetCanvasWorld::OpenEnchant()
+{
+	m_Enchant->Open();
 }
 
 void UWidgetCanvasWorld::ShowSkillFail(const FString& string)

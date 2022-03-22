@@ -35,6 +35,7 @@ void UMyGameInstance::Init()
 	m_SkillManager = NewObject<USkillManager>(this);
 	m_Inven = NewObject<UInventory>(this);
 	m_PotionManager = NewObject<UPotionManager>(this);
+	m_EnchantManager = NewObject<UEnchantManager>(this);
 	
 	m_BadwordTable =NewObject<UBadwordTable>(this);
 	m_ChatManager = NewObject<UChatManager>(this);

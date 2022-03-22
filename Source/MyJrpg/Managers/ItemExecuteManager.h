@@ -40,5 +40,5 @@ public:
 //
 	void EquipUnequipItem(const FItemSpec& itemSpec);
 
-	void ExecuteItem(FName itemKey);
+	void ExecuteItem(FItemSpec& itemSpec);
 };

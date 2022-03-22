@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "CraftManager.h"
 #include "CurrencyManager.h"
+#include "EnchantManager.h"
 #include "ItemExecuteManager.h"
 #include "LevelMoveManager.h"
 #include "ParticleEffectManager.h"
@@ -71,6 +72,8 @@ public:
 	UPlSkillAuto* m_SkillAuto;
 	UPROPERTY()
 	UPotionManager* m_PotionManager;
+	UPROPERTY()
+	UEnchantManager* m_EnchantManager;
 	
 protected:
 	virtual void BeginDestroy() override;

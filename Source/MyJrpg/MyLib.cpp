@@ -157,9 +157,9 @@ EItemType UMyLib::GetItemType(const FItemDataRow& DataRow)
 		return EItemType::Equip;
 	}
 
-	if (DataRow.m_ClassExeItem==nullptr)
+	if (DataRow.m_ClassExeItem!=nullptr)
 	{
-		return EItemType::None;
+		return EItemType::Consume;
 	}
 
 	return EItemType::None;

@@ -87,6 +87,6 @@ public:
 
 	bool CheckHasItem(FName key, int count=1);
 
-	const FItemSpec& GetItem(int index) const;
+	FItemSpec& GetItem(int index);
 };
 

@@ -42,13 +42,15 @@ FText UWidgetItemElement::GetFocusText()
 	switch (m_PanelType)
 	{
 	case EPanelType::StorageDeposit:
-		return NSLOCTEXT("UWidgetItemElement","FocusDeposit","Deposit?");
+		return NSLOCTEXT("UWidgetItemElement","FocusDeposit","넣기?");
 	case EPanelType::StorageWithdraw:
-		return NSLOCTEXT("UWidgetItemElement","FocusWithdraw","Withdraw?");
+		return NSLOCTEXT("UWidgetItemElement","FocusWithdraw","꺼내기?");
 	case EPanelType::ShopBuy:
-		return NSLOCTEXT("UWidgetItemElement","FocusBuy","Buy?");
+		return NSLOCTEXT("UWidgetItemElement","FocusBuy","사기?");
 	case EPanelType::ShopSell:
-		return NSLOCTEXT("UWidgetItemElement","FocusSell","Sell?");
+		return NSLOCTEXT("UWidgetItemElement","FocusSell","팔기?");
+	case EPanelType::Enchant:
+		return NSLOCTEXT("UWidgetItemElement","Enchant","선택?");
 	}
 
 	EItemType Type = UMyLib::GetItemType(ItemData);
@@ -57,16 +59,16 @@ FText UWidgetItemElement::GetFocusText()
 	{
 		if(UMyLib::GetEquip()->IsItemEquipped(ItemSpec))
 		{
-			return NSLOCTEXT("UWidgetItemElement","FocusUnequip","UnEquip?");
+			return NSLOCTEXT("UWidgetItemElement","FocusUnequip","해제?");
 		}
 		else
 		{
-			return NSLOCTEXT("UWidgetItemElement","FocusEquip","Equip?");
+			return NSLOCTEXT("UWidgetItemElement","FocusEquip","장착?");
 		}
 	}
 	else if(Type == EItemType::Consume)
 	{
-		return NSLOCTEXT("UWidgetItemElement","FocusUse","Use?");	
+		return NSLOCTEXT("UWidgetItemElement","FocusUse","사용?");	
 	}
 
 	return FText();
@@ -176,7 +178,7 @@ int UWidgetItemElement::GetMaxAmount()
 
 void UWidgetItemElement::UseItem()
 {
-	const FItemSpec& ItemSpec = m_Inven->GetItem(m_nIndex);
+	FItemSpec& ItemSpec = m_Inven->GetItem(m_nIndex);
 
 	EItemType ItemType = UMyLib::GetItemType(ItemSpec.m_ItemID);
 
@@ -194,7 +196,15 @@ void UWidgetItemElement::UseItem()
 		return;
 	case EPanelType::ShopSell:
 		SellItem();
-		return;
+	case EPanelType::Enchant:
+		if (IsEquipItem)
+		{
+			if (UMyGameInstance::Get->m_EnchantManager->IsAbleTarget(ItemSpec))
+			{
+				UMyGameInstance::Get->m_EnchantManager->SetTargetEquip(ItemSpec);
+			}
+			return;
+		}
 	}
 	
 	if(IsEquipItem)
@@ -204,7 +214,7 @@ void UWidgetItemElement::UseItem()
 		return;
 	}
 	
-	UMyGameInstance::Get->m_ItemExeManager->ExecuteItem(ItemSpec.m_ItemID);
+	UMyGameInstance::Get->m_ItemExeManager->ExecuteItem(ItemSpec);
 }
 
 void UWidgetItemElement::SetIndex(int index)

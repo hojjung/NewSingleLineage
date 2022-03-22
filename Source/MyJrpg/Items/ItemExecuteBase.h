@@ -11,20 +11,10 @@ struct FItemSpec;
 /**
  * 
  */
-UCLASS()
+UCLASS(Abstract)
 class MYJRPG_API UItemExecuteBase : public UObject
 {
 	GENERATED_BODY()
 public:
-	virtual void Use() const {};
-
-	FString GetDescStr()
-	{
-		return  TEXT("Test");
-	}
-
-	FString GetEffectStr()
-	{
-		return  TEXT("Test");
-	}
+	virtual void Use(FItemSpec& item) const {};
 };

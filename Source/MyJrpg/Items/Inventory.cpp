@@ -310,7 +310,7 @@ bool UInventory::CheckHasItem(FName key, int count)
 	return GetItemAmount(key) >= count;
 }
 
-const FItemSpec& UInventory::GetItem(int index) const
+FItemSpec& UInventory::GetItem(int index)
 {
 	return m_AryItems[index];
 }

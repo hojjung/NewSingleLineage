@@ -6,7 +6,9 @@
 #include "Blueprint/UserWidget.h"
 #include "Components/Button.h"
 #include "Components/TextBlock.h"
+#include "MyJrpg/DataTables/ItemData.h"
 #include "MyJrpg/Widgets/World/CommonElements/WidgetBaseElement.h"
+#include "MyJrpg/Widgets/World/Menu/Inventory/WidgetInventory.h"
 #include "WidgetEnchantBase.generated.h"
 
 /**
@@ -21,7 +23,7 @@ protected:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (BindWidget))
 	UWidgetBaseElement* m_TargetItem;
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (BindWidget))
-	UWidgetBaseElement* m_UseEnchant;
+	UWidgetBaseElement* m_TargetMaterial;
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (BindWidget))
 	UButton* m_BtnClose;
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (BindWidget))
@@ -48,14 +50,23 @@ protected:
 	UTextBlock* m_TextSubBefore;
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (BindWidget))
 	UTextBlock* m_TextSubAfter;
-
-	
-	
-	
-	
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (BindWidget))
+	UWidgetInventory* m_Inven; 
 	
 protected:
 	virtual void NativeOnInitialized() override;
+
+	void Update();
+	
+public:
+	void Open();
+	
+	void SetEnchantEquipTarget(FItemSpec& target);
+
+	void SetEnchantEquipMaterial(FItemSpec& mat);
+
+	UFUNCTION()
+	void OnClose();
 };
 
 

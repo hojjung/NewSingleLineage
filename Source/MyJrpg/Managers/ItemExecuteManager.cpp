@@ -60,16 +60,16 @@ void UItemExecuteManager::EquipUnequipItem(const FItemSpec& itemSpec)
 	}
 }
 
-void UItemExecuteManager::ExecuteItem(FName itemKey)//애초에 이건 장비템에 대해 전혀 신경안썼음,퀵슬롯에 장비템이 존재하는 건?
+void UItemExecuteManager::ExecuteItem(FItemSpec& itemSpec)//애초에 이건 장비템에 대해 전혀 신경안썼음,퀵슬롯에 장비템이 존재하는 건?
 {
-	m_MapItems[itemKey]->Use();
+	m_MapItems[itemSpec.m_ItemID]->Use(itemSpec);
 
 	if(m_OnItemUse.IsBound())
 	{
-		FText ItemName = UMyLib::GetItemData(itemKey).m_TextShowingName;
+		FText ItemName = UMyLib::GetItemData(itemSpec.m_ItemID).m_TextShowingName;
 		
 		m_OnItemUse.Broadcast(ItemName);
 	}
 	
-	UMyLib::GetPlayerInven()->RemoveItem(itemKey);
+	//UMyLib::GetPlayerInven()->RemoveItem(itemSpec.m_ItemID);
 }
