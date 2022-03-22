@@ -83,8 +83,10 @@ void UWidgetQuestHUDChild::UpdateQuestElement()
 
 	FString QuestName = FString::Printf(TEXT("[%s] %s"),m_bIsMain ? TEXT("메인") : TEXT("서브"),*QuestSpec.m_QuestData->m_QuestName.ToString());
 
+	FString QuestDesc = FString::Printf(TEXT("%s %s"), *QuestSpec.m_QuestData->m_QuestDesc.ToString(), *m_Quest->GetProgressText().ToString());
+
 	m_TextQuestName->SetText(FText::FromString(QuestName));
 
-	m_TextQuestDesc->SetText(m_Quest->GetProgressText());
+	m_TextQuestDesc->SetText(FText::FromString(QuestDesc));
 }
 

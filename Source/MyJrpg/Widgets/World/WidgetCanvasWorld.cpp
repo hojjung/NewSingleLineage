@@ -68,14 +68,6 @@ void UWidgetCanvasWorld::NativeOnInitialized()
 
 	m_BtnCraft->IsFocusable = false;
 
-	m_BtnStorage->OnClicked.AddDynamic(this,&UWidgetCanvasWorld::OpenStorage);
-
-	m_BtnStorage->IsFocusable = false;
-
-	m_BtnZone->OnClicked.AddDynamic(this,&UWidgetCanvasWorld::OpenZone);
-
-	m_BtnZone->IsFocusable = false;
-
 	m_QuickBar->SetInvenSkill(m_EquipInvenPanel->GetInvenPanel(),m_SkillPanel);
 
 	m_BtnQuest->OnClicked.AddDynamic(this,&UWidgetCanvasWorld::OpenQuest);

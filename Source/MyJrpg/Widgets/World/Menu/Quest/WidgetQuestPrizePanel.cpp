@@ -23,7 +23,7 @@ void UWidgetQuestPrizePanel::UpdatePrizeElement(const FQuestDataRow& questData)
 
 		m_AryQuestEles.Add(QuestEle);
 
-		m_ScrollRewards->AddChild(QuestEle);
+		m_WrapRewards->AddChild(QuestEle);
 
 		QuestEle->SetPrize(QuestLogic);
 	}
@@ -33,5 +33,5 @@ void UWidgetQuestPrizePanel::Clear()
 {
 	m_AryQuestEles.Reset();
 
-	m_ScrollRewards->ClearChildren();
+	m_WrapRewards->ClearChildren();
 }

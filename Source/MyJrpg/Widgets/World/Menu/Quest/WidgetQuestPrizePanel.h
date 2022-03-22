@@ -6,6 +6,7 @@
 #include "WidgetQuestPrizeElement.h"
 #include "Blueprint/UserWidget.h"
 #include "Components/ScrollBox.h"
+#include "Components/WrapBox.h"
 #include "WidgetQuestPrizePanel.generated.h"
 
 /**
@@ -18,7 +19,7 @@ class MYJRPG_API UWidgetQuestPrizePanel : public UUserWidget
 
 protected:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (BindWidget))
-	UScrollBox* m_ScrollRewards;
+	UWrapBox* m_WrapRewards;
 	UPROPERTY(EditDefaultsOnly)
 	TSubclassOf<UWidgetQuestPrizeElement> m_ClassQuestPrize;
 	UPROPERTY()

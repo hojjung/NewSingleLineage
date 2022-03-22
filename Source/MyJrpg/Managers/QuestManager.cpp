@@ -213,15 +213,7 @@ UQuestLogicBase* UQuestManager::GetCurrentMainQuest()
 	return QuestLogic;
 }
 
-const TArray<UQuestLogicBase*>& UQuestManager::GetMainQuests() const
-{
-	return m_AryMainQuestLogic;
-}
 
-const TArray<UQuestLogicBase*>& UQuestManager::GetSubQuests() const
-{
-	return m_ArySubQuestLogic;
-}
 
 //누구든 던전에서 변신 조각을 얻을수 있다
 //현질하면 던전 입장횟수가 증가 더 빨리 얻어짐

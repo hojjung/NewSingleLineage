@@ -37,6 +37,7 @@ void SImageText::Construct(const FArguments& InArgs)
 			  .VAlign(VAlign_Center)
 			  .HAlign(HAlign_Right)
 			  .AutoWidth()
+			  .Padding(0,3,0,0)
 			[
 				SAssignNew(m_TextSlate, STextBlock)
 			]

@@ -1,5 +1,4 @@
 #include "WidgetQuestPanel.h"
-
 #include "MyJrpg/Managers/MyGameInstance.h"
 
 void UWidgetQuestPanel::NativeOnInitialized()
@@ -45,7 +44,7 @@ void UWidgetQuestPanel::AddQuest(UQuestLogicBase* q, bool isMain)
 		m_ScrollSubQuest->AddChild(QuestChild);
 	}
 	
-	QuestChild->SetQuest(q,isMain);
+	QuestChild->Init(q,isMain);
 }
 
 void UWidgetQuestPanel::EraseQuest(UQuestLogicBase* q, bool isMain)

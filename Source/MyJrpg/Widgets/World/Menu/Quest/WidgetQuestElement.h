@@ -35,12 +35,10 @@ protected:
 	UWidgetQuestPrizePanel* m_PrizePanel;
 	//보상,완성버튼
 
-protected:
-	virtual void Init(UQuestLogicBase* quest, bool isMain) override;
-
 	virtual void OnClick() override;
 	
 public:
+	virtual void Init(UQuestLogicBase* quest, bool isMain) override;
 	UFUNCTION()
 	void OnCompleteQuest();
 

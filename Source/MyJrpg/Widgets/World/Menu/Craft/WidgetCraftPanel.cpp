@@ -7,7 +7,7 @@
 
 UWidgetCraftPanel::UWidgetCraftPanel(const FObjectInitializer& ObjectInitializer) :Super(ObjectInitializer)
 {
-	static ConstructorHelpers::FObjectFinder<UTexture2D> FoundT (TEXT("Texture2D'/Game/Sprites/UI/coin_icon.coin_icon'"));
+	static ConstructorHelpers::FObjectFinder<UTexture2D> FoundT (TEXT("Texture2D'/Game/Sprites/UI/HarmoBox/coin_01.coin_01'"));
 
 	m_CoinIcon = FoundT.Object;
 }

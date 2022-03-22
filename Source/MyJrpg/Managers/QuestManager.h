@@ -69,7 +69,13 @@ public:
 
 	UQuestLogicBase* GetCurrentMainQuest();
 
-	FORCEINLINE const TArray<UQuestLogicBase*>& GetMainQuests() const;
+	FORCEINLINE const TArray<UQuestLogicBase*>& GetMainQuests() const
+	{
+		return m_AryMainQuestLogic;
+	}
 
-	FORCEINLINE const TArray<UQuestLogicBase*>& GetSubQuests() const;
+	FORCEINLINE const TArray<UQuestLogicBase*>& GetSubQuests() const
+	{
+		return m_ArySubQuestLogic;
+	}
 };

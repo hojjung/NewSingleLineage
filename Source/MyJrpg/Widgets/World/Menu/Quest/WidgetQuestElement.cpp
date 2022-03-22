@@ -32,6 +32,8 @@ void UWidgetQuestElement::UpdateQuestElement()
 	m_TextProgress->SetText(m_Quest->GetProgressText());
 	
 	m_BarProgress->SetPercent(m_Quest->GetProgress());
+	//
+	m_BtnComplete->SetIsEnabled(m_Quest->CanCompleteQuest());
 }
 
 void UWidgetQuestElement::OnCompleteQuest()

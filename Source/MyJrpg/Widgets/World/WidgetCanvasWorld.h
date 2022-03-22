@@ -53,17 +53,18 @@ protected:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (BindWidget))
 	UButton* m_BtnMenu;
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (BindWidget))
-	UButton* m_BtnEquipInven;
+	UButton* m_BtnCashShop;
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (BindWidget))
-	UButton* m_BtnSkill;
+	UButton* m_BtnEquipInven;
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (BindWidget))
 	UButton* m_BtnCraft;
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (BindWidget))
-	UButton* m_BtnStorage;
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (BindWidget))
-	UButton* m_BtnZone;
+	UButton* m_BtnSkill;
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (BindWidget))
 	UButton* m_BtnQuest;
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (BindWidget))
+	UButton* m_BtnOption;
+	//
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (BindWidget))
 	UTextBlock* m_TextZoneName;
 	//
