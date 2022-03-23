@@ -31,11 +31,11 @@ void UWidgetItemInfo::NativeOnInitialized()
 	m_BtnCalculator->IsFocusable = false;
 }
 
-void UWidgetItemInfo::SetItemInfo(const FItemSpec& itemSpecInfo)
+void UWidgetItemInfo::SetItemInfo(const FName& itemSpecInfo)
 {
 	SetVisibility(ESlateVisibility::SelfHitTestInvisible);
 	
-	m_EquipItem = &itemSpecInfo;
+	m_EquipItem = itemSpecInfo;
 
 	const FItemDataRow& ItemData = UMyLib::GetItemData(itemSpecInfo);
 
@@ -47,7 +47,7 @@ void UWidgetItemInfo::SetItemInfo(const FItemSpec& itemSpecInfo)
 		m_TextItemEffect->SetText(FText());
 		break;
 	case EItemType::Equip:
-		m_BtnEraseItem->SetIsEnabled(!UMyLib::GetEquip()->IsItemEquipped(*m_EquipItem));
+		m_BtnEraseItem->SetIsEnabled(!UMyLib::GetEquip()->IsItemEquipped(m_EquipItem));
 		m_TextItemEffect->SetText(FText());
 		break;
 	case EItemType::Consume:
@@ -67,11 +67,11 @@ void UWidgetItemInfo::SetItemInfo(const FItemSpec& itemSpecInfo)
 void UWidgetItemInfo::OnErase()
 {
 	//패널에서 버릴 숫자를 정할수 있어야한다.
-	if(m_EquipItem)
+	//if(m_EquipItem)
 	{
-		UMyLib::GetPlayerInven()->RemoveItem(*m_EquipItem);
+	//	UMyLib::GetPlayerInven()->RemoveItem(*m_EquipItem);
 	}
-	else if(m_ItemKey!=NAME_None)
+	//else if(m_ItemKey!=NAME_None)
 	{
 		UMyLib::GetPlayerInven()->RemoveItem(m_ItemKey,m_nEraseAmount);
 	}

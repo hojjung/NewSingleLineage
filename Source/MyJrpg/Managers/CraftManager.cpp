@@ -101,9 +101,9 @@ int UCraftManager::GetCraftAvailableCountWithMaterial()
 	
 	for(const FCraftItemCost& Cost : GetCrntItemRow().m_AryCostItem)
 	{
-		int InvenAmount = UMyLib::GetPlayerInven()->GetItemAmount(Cost.m_ItemDataRowHandle.RowName);
+		int InvenAmount = UMyLib::GetPlayerInven()->GetItemStack(Cost.m_ItemDataRowHandle.RowName);
 
-		int StorageAmount = UMyLib::GetPlayerStorage()->GetItemAmount(Cost.m_ItemDataRowHandle.RowName);
+		int StorageAmount = UMyLib::GetPlayerStorage()->GetItemStack(Cost.m_ItemDataRowHandle.RowName);
 
 		int HasAmount = InvenAmount + StorageAmount; 
 		
@@ -126,7 +126,7 @@ int UCraftManager::GetCraftAvailableCountWithStackSize()
 	
 	if(UMyLib::GetItemType(GetCrntItemKey()) != EItemType::Equip)
 	{
-		int CurrentAmount = UMyLib::GetPlayerInven()->GetItemAmount(GetCrntItemKey());
+		int CurrentAmount = UMyLib::GetPlayerInven()->GetItemStack(GetCrntItemKey());
 
 		InvenStackAvailable = FGlobalVariable::INVEN_MAXSTACK - CurrentAmount;
 	}//스택 아이템의 경우 더 스택할수 있는지?
@@ -158,10 +158,10 @@ bool UCraftManager::IsInvenHasSpace()
 	
 	if(UMyLib::GetItemType(GetCrntItemKey()) == EItemType::Equip)
 	{
-		return UMyLib::GetPlayerInven()->IsInvenHasSpace(GetCrntItemRow(),Amount);//소모품개수는,제작 개수를 결정할때 클램핑해주자.이함수는 제작후 남은 공간에 원하는 아이템을 넣을수 있는가
+		return UMyLib::GetPlayerInven()->IsCountAvailable();//소모품개수는,제작 개수를 결정할때 클램핑해주자.이함수는 제작후 남은 공간에 원하는 아이템을 넣을수 있는가
 	}
 	
-	return  Amount <= UMyGameInstance::Get->m_Inven->GetStackableCount(GetCrntItemKey());	
+	return  Amount <= UMyGameInstance::Get->m_Inven->GetAvailalbeStackCount(GetCrntItemKey());	
 }
 
 bool UCraftManager::IsGoldEnough()
@@ -175,7 +175,7 @@ bool UCraftManager::IsMaterialEnough()
 	{
 		int Count = Cost.m_nStackCount * GetAmount();
 		
-		if(!UMyLib::GetPlayerInven()->CheckHasItem(Cost.m_ItemDataRowHandle.RowName,Count))
+		if(!UMyLib::GetPlayerInven()->HasItem(Cost.m_ItemDataRowHandle.RowName,Count))
 		{
 			return false;
 		}
@@ -192,7 +192,7 @@ void UCraftManager::PurchaseItemForCraft()
 	{
 		int Count = Cost.m_nStackCount * GetAmount();
 		
-		int OverAmount = UMyLib::GetPlayerInven()->RemoveItem(Cost.m_ItemDataRowHandle.RowName,Count);
+		int OverAmount =0;// = UMyLib::GetPlayerInven()->RemoveItem(Cost.m_ItemDataRowHandle.RowName,Count);
 
 		if(OverAmount<0)//NeedMore
 		{

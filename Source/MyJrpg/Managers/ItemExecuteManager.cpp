@@ -12,28 +12,28 @@ void UItemExecuteManager::Init()
 	UMyLib::GetPlayerInven()->m_OnNewItemRemoved.AddUObject(this,&UItemExecuteManager::RemoveItem);
 }
 
-void UItemExecuteManager::AddUseItem(FName itemKey)
+void UItemExecuteManager::AddUseItem(const FName& itemKey)
 {
 	if(m_MapItems.Contains(itemKey))
 	{
 		return;
 	}
 	
-	const FItemDataRow* ItemData = UItemData::GetItemTable->FindRow<FItemDataRow>(itemKey,"");
+	const FItemDataRow& ItemData = UMyLib::GetItemData(itemKey);
 
-	if(!ItemData->m_ClassExeItem)
+	if(!ItemData.m_ClassExeItem->IsValidLowLevel())
 	{
 		return;//장비끼우기도 결국 따로 만들어줘야함
 	}
 
-	UItemExecuteBase* ConsumeItem = NewObject<UItemExecuteBase>(this,ItemData->m_ClassExeItem);
+	UItemExecuteBase* ConsumeItem = NewObject<UItemExecuteBase>(this,ItemData.m_ClassExeItem);
 
 	m_MapItems.Add(itemKey,ConsumeItem);
 
 	m_AryItems.Add(ConsumeItem);
 }
 
-void UItemExecuteManager::RemoveItem(FName itemKey)
+void UItemExecuteManager::RemoveItem(const FName& itemKey)
 {
 	if(!m_MapItems.Contains(itemKey))
 	{
@@ -46,7 +46,7 @@ void UItemExecuteManager::RemoveItem(FName itemKey)
 	m_AryItems.Remove(ItemWantErase);
 }
 
-void UItemExecuteManager::EquipUnequipItem(const FItemSpec& itemSpec)
+void UItemExecuteManager::EquipUnequipItem(const FName& itemSpec)
 {
 	if(UMyGameInstance::Get->m_EquipManager->IsItemEquipped(itemSpec))
 	{
@@ -60,16 +60,14 @@ void UItemExecuteManager::EquipUnequipItem(const FItemSpec& itemSpec)
 	}
 }
 
-void UItemExecuteManager::ExecuteItem(FItemSpec& itemSpec)//애초에 이건 장비템에 대해 전혀 신경안썼음,퀵슬롯에 장비템이 존재하는 건?
+void UItemExecuteManager::ExecuteItem(const FName& itemID)//애초에 이건 장비템에 대해 전혀 신경안썼음,퀵슬롯에 장비템이 존재하는 건?
 {
-	m_MapItems[itemSpec.m_ItemID]->Use(itemSpec);
+	m_MapItems[itemID]->Use(itemID);
 
 	if(m_OnItemUse.IsBound())
 	{
-		FText ItemName = UMyLib::GetItemData(itemSpec.m_ItemID).m_TextShowingName;
+		FText ItemName = UMyLib::GetItemData(itemID).m_TextShowingName;
 		
 		m_OnItemUse.Broadcast(ItemName);
 	}
-	
-	//UMyLib::GetPlayerInven()->RemoveItem(itemSpec.m_ItemID);
 }

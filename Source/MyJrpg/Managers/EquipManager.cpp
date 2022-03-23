@@ -9,7 +9,7 @@ void UEquipManager::Init()
 	m_AryEqupSlots.Init(nullptr,(int)EEquipSlotType::Length-1);
 }
 
-bool UEquipManager::Equip(EEquipSlotType slotWant,const FItemSpec& itemWant)
+bool UEquipManager::Equip(EEquipSlotType slotWant,const FName& itemWant)
 {
 	PRINTF("Equip01");
 	int Index = (int)slotWant - 1;
@@ -23,12 +23,12 @@ bool UEquipManager::Equip(EEquipSlotType slotWant,const FItemSpec& itemWant)
 	return true;
 }
 
-void UEquipManager::EquipOption(const FItemSpec& itemWant)
+void UEquipManager::EquipOption(const FName& itemWant)
 {
 	UMyGameInstance::Get->m_PlayerStatManager->EquipItem(itemWant);
 }
 
-void UEquipManager::UnequipOption(const FItemSpec& itemWant)
+void UEquipManager::UnequipOption(const FName& itemWant)
 {
 	UMyGameInstance::Get->m_PlayerStatManager->UnequipItem(itemWant);
 }
@@ -38,7 +38,7 @@ void UEquipManager::Unequip(EEquipSlotType slotWant)
 	PRINTF("Unequip01");
 	int Index = (int)slotWant - 1;
 	
-	const FItemSpec* Temp = m_AryEqupSlots[Index];
+	const FName* Temp = m_AryEqupSlots[Index];
 
 	UnequipOption(*Temp);
 
@@ -48,19 +48,19 @@ void UEquipManager::Unequip(EEquipSlotType slotWant)
 	m_OnEquipChanged.Broadcast();
 }
 
-void UEquipManager::Unequip(const FItemSpec& itemWant)
+void UEquipManager::Unequip(const FName& itemWant)
 {
 	int Index = m_AryEqupSlots.Find(&itemWant) + 1;
 	EEquipSlotType SlotT = (EEquipSlotType)Index;
 	Unequip(SlotT);
 }
 
-const TArray<const FItemSpec*>& UEquipManager::GetEquipAry() const
+const TArray<const FName*>& UEquipManager::GetEquipAry() const
 {
 	return m_AryEqupSlots;
 }
 
-bool UEquipManager::IsItemEquipped(const FItemSpec& itemWant)
+bool UEquipManager::IsItemEquipped(const FName& itemWant)
 {
 	EEquipSlotType SlotT = UMyLib::GetEquipItemSlot(itemWant);
 	
@@ -74,7 +74,7 @@ bool UEquipManager::IsItemEquipped(EEquipSlotType wantSlot)
 	return GetEquipItem(wantSlot)  != nullptr;
 }
 
-const FItemSpec* UEquipManager::GetEquipItem(EEquipSlotType wantSlot)
+const FName* UEquipManager::GetEquipItem(EEquipSlotType wantSlot)
 {
 	return m_AryEqupSlots[(int)wantSlot-1];
 }

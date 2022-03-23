@@ -2,315 +2,160 @@
 #include "MyJrpg/MyLib.h"
 #include "MyJrpg/Managers/MyGameInstance.h"
 
-
-UInventory::UInventory()
-{
-
-}
-
 void UInventory::Init(int size)
 {
 	m_nInvenMaxSize = size;
 	
-	m_AryItems.Reserve(m_nInvenMaxSize);
-
-	m_AryItems.Init(FItemSpec(), m_nInvenMaxSize);	
+	m_AryTotalItems.Reserve(m_nInvenMaxSize);
 }
 
-int UInventory::GetTotalItemCount()
+bool UInventory::IsCountAvailable()
 {
-	return m_AryItems.Num();
+	return m_AryTotalItems.Num() < m_nInvenMaxSize;
 }
 
-bool UInventory::CheckEmptySlot(int needCount)
+int UInventory::GetInvenSize()
 {
-	int RemainSlotCount = m_nInvenMaxSize - (GetEmptyIndex());
-	
-	return RemainSlotCount >= needCount; //엠티 인덱스가 전체 사이즈 -1 이라면 더이상 칸이 없는거임
+	return m_nInvenMaxSize;
 }
 
-bool UInventory::CheckEmptyStack(FName id, int needCount)
+int UInventory::GetAvailalbeStackCount(FName id)
 {
-	FItemSpec* ItemSpec = GetItem(id);
+	bool HasItem = m_MapMiscItems.Contains(id);
 
-	if(!ItemSpec)
-	{
-		return false;
-	}
-
-	if(ItemSpec->m_nStack + needCount > FGlobalVariable::INVEN_MAXSTACK)
-	{
-		return false;
-	}
-
-	return true;
-}
-
-int UInventory::GetStackableCount(FName id)
-{
-	FItemSpec* ItemSpec = GetItem(id);
-
-	if(!ItemSpec)
+	if (!HasItem)
 	{
 		return FGlobalVariable::INVEN_MAXSTACK;
 	}
 
-	return FGlobalVariable::INVEN_MAXSTACK - ItemSpec->m_nStack; 
+	return FGlobalVariable::INVEN_MAXSTACK - m_MapMiscItems[id];
 }
 
-bool UInventory::IsItemWillBeZeroOnErase(FName id, int amount)
+bool UInventory::AddItem(FName id, int amount)
 {
-	int CurrentAmount = GetItemAmount(id);
+	bool HasItem = m_MapMiscItems.Contains(id);
 
-	int Remain = CurrentAmount - amount; 
-
-	return Remain <= 0;
-}
-
-FItemSpec* UInventory::GetItem(FName id)
-{
-	int Index = GetItemIndex(id);
-
-	if(Index<=INDEX_NONE)
+	if (!HasItem)
 	{
-		return nullptr;
-	}
-
-	return &m_AryItems[Index]; 
-}
-
-int UInventory::GetItemIndex(FName id)
-{
-	int Index = 0;
-
-	for (const FItemSpec& Item : m_AryItems)
-	{
-		if (Item.m_ItemID == id)
+		if(!IsCountAvailable())
 		{
-			return Index;
+			return false;	
 		}
-
-		Index++;
-	}
-
-	return INDEX_NONE;
-}
-
-
-
-int UInventory::GetEmptyIndex()
-{
-	int Index = 0;
-
-	for (const FItemSpec& Item : m_AryItems)
-	{
-		if (Item.IsEmpty())
-		{
-			break;
-		}
-
-		Index++;
-	}
-
-	return Index;
-}
-
-UInventory::EResult UInventory::AddItem(FName id, int& amount, int level)
-{
-	const FItemDataRow* FoundItemRow = &UMyLib::GetItemData(id);
-
-	check(FoundItemRow);
-
-	EItemType ItemType = UMyLib::GetItemType(id);
-
-	if (ItemType == EItemType::Equip)
-	{
-		if (!CheckEmptySlot(amount)) //템꽉참
-		{
-			return EResult::FailMaxCount;
-		}
-
-		FItemSpec NewItem(id, 1, level);
-
-		int Iter = 0;
-
-		while (Iter < amount)
-		{
-			AddItemInst(NewItem);
-
-			Iter++;
-		}
-
-		m_OnItemObtain.Broadcast(*FoundItemRow,Iter);
+		amount = FMath::Min(amount,FGlobalVariable::INVEN_MAXSTACK);
 		
-		return EResult::Success;
+		m_AryTotalItems.Add(id);
+		
+		m_MapMiscItems.Add(id,amount);
 	}
 	else
 	{
-		FItemSpec* ItemFound = GetItem(id);
+		int& CrntAmount = m_MapMiscItems[id];
 		
-		if (ItemFound) //이미 가진거면
-		{
-			if(ItemFound->m_nStack + amount > FGlobalVariable::INVEN_MAXSTACK)
-			{
-				return EResult::FailStackCount;//일단 더해주고 남는건 남겨야한다.
-			}
-
-			ItemFound->m_nStack += amount;
-		}
-		else
-		{
-			if (!CheckEmptySlot(1))
-			{
-				return EResult::FailMaxCount;
-			}
-			//인덱스 한개씩 빗나가서 이상한게 등록되고있다.
-			FItemSpec NewItem(id, amount, level);
-
-			int Index = GetEmptyIndex();
-
-			m_AryItems[Index] = NewItem;
-
-			m_OnNewItemAdded.Broadcast(id);
-		}
+		CrntAmount += amount;
+		
+		CrntAmount = FMath::Min(CrntAmount,FGlobalVariable::INVEN_MAXSTACK);
 	}
+	
+	m_OnInvenChanged.Broadcast();
+
+	m_OnNewItemAdded.Broadcast(id);
+
+	m_OnItemObtain.Broadcast(UMyLib::GetItemData(id), amount);
+
+	return true;
+}
+
+bool UInventory::AddEquipItem(FName gid, int lv)
+{
+	if(!IsCountAvailable())
+	{
+		return false;
+	}
+
+	m_AryTotalItems.Add(gid);
+		
+	m_MapEquipItems.Add(gid,lv);
 
 	m_OnInvenChanged.Broadcast();
 
-	m_OnItemObtain.Broadcast(*FoundItemRow,amount);
-
-	return EResult::Success;
+	return true;
 }
 
-UInventory::EResult UInventory::AddItemInst(const FItemSpec& itemOld) //복사해서씀
+void UInventory::RemoveItem(FName id, int amount)
 {
-	if (!CheckEmptySlot(1)) //템꽉참
+	int& Amount = m_MapMiscItems[id];
+
+	if (amount == -1 || Amount <= amount)
 	{
-		return EResult::FailMaxCount;
-	}
-
-	int Index = GetEmptyIndex();
-
-	m_AryItems[Index] = itemOld; //일단 넣어주고
-
-	m_OnNewItemAdded.Broadcast(itemOld.m_ItemID); //배열 자체를 새로만들어서 맵에 등록
+		m_MapMiscItems.Remove(id);
 		
+		m_AryTotalItems.Remove(id);
+		
+	}
+	else
+	{
+		Amount -= amount;
+	}
+	m_OnNewItemAdded.Broadcast(id);
 	m_OnInvenChanged.Broadcast();
-	//
-	
-	return EResult::Success;
 }
 
-int UInventory::RemoveItem(FName id, int amount)
+void UInventory::RemoveEquipItem(FName gid)
 {
-	UInventory::EResult Result = EResult::Success;
-
-	EItemType ItemType = UMyLib::GetItemType(id);
-
-	int IndexFound = GetItemIndex(id);
-
-	if(IndexFound==INDEX_NONE)
-	{
-		return -amount;
-	}
-
-	FItemSpec* FoundItem = &m_AryItems[IndexFound];
-
-	FoundItem->m_nStack -= amount;
-
-	int OverAmount = 0;
-		
-	if (FoundItem->m_nStack <= 0)
-	{
-		OverAmount = FoundItem->m_nStack;
-		
-		m_AryItems.RemoveAt(IndexFound); //배열에서 먼저지워주기
-		
-		m_AryItems.Add(FItemSpec()); //지웠으니까 슈링크 되고 새로운 빈아이템 추가
-
-		m_OnNewItemRemoved.Broadcast(id);
-	}
+	m_MapEquipItems.Remove(gid);
+	
+	m_AryTotalItems.Remove(gid);
 
 	m_OnInvenChanged.Broadcast();
-
-	return OverAmount;
 }
 
-void UInventory::RemoveItem(const FItemSpec& itemOld)
+bool UInventory::IsEquipItem(FName hasID)
 {
-	bool Found = false;
-
-	int Index = 0;
-
-	for (; Index < m_AryItems.Num(); Index++)
-	{
-		const FItemSpec& Item = m_AryItems[Index];
-
-		if (Item == itemOld)
-		{
-			Found = true;
-
-			break;
-		}
-	}
-
-	if (Found)
-	{
-		m_AryItems.RemoveAt(Index);
-
-		m_AryItems.Add(FItemSpec());
-
-		m_OnInvenChanged.Broadcast();
-	}
+	return !m_MapMiscItems.Contains(hasID);
 }
 
-void UInventory::LevelUpEquipItem(const FItemSpec& itemOld)
+int UInventory::GetItemStack(FName ID)
 {
-	int32 Index = m_AryItems.Find(itemOld);
-
-	m_AryItems[Index].m_nLevel++;
+	return m_MapMiscItems[ID];
 }
 
-int UInventory::GetItemAmount(FName id)
+int UInventory::GetItemLevel(FName gID)
 {
-	FItemSpec* FoundItemSpec = GetItem(id);
-	
-	return  FoundItemSpec ? FoundItemSpec->m_nStack : 0;
+	return m_MapEquipItems[gID];
 }
 
-bool UInventory::IsInvenHasSpace(const FItemDataRow& crafting_data,int amount)
+void UInventory::AddItemLevel(FName gID, int addlv)
 {
-	int  EraseCount=0;
-	
-	for (const FCraftItemCost& Cost : crafting_data.m_AryCostItem)
-	{
-		if (IsItemWillBeZeroOnErase(Cost.m_ItemDataRowHandle.RowName, Cost.m_nStackCount*amount))
-		{
-			++EraseCount;
-		}
-	}
+	m_MapEquipItems[gID]+=addlv;	
+}
 
-	int LackCount = amount - EraseCount;//추가 필요칸 4개, 지워질칸 3개,1개 더 비워야함//추가 필요칸 2개,지워질칸 10개
+void UInventory::SubItemLevel(FName gID, int sublv)
+{
+	m_MapEquipItems[gID]-=sublv;
+}
 
-	if(LackCount<=0)
+const TArray<FName>& UInventory::GetAryTotalItemIDs() const
+{
+	return m_AryTotalItems;
+}
+
+FName UInventory::GetItemID(int index)
+{
+	if (index < 0 || m_AryTotalItems.Num() <= index)
 	{
-		return true;
+		return NAME_None;
 	}
 	
-	if (CheckEmptySlot(LackCount))
+	return m_AryTotalItems[index];
+}
+
+bool UInventory::HasItem(const FName& name, int amount)
+{
+	if(!m_MapMiscItems.Contains(name))
 	{
-		return true; 
+		return false;
 	}
 
-	return false;
+	return m_MapMiscItems[name] >= amount;
 }
 
-bool UInventory::CheckHasItem(FName key, int count)
-{
-	return GetItemAmount(key) >= count;
-}
-
-FItemSpec& UInventory::GetItem(int index)
-{
-	return m_AryItems[index];
-}

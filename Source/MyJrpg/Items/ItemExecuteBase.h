@@ -7,7 +7,6 @@
 #include "UObject/NoExportTypes.h"
 #include "ItemExecuteBase.generated.h"
 
-struct FItemSpec;
 /**
  * 
  */
@@ -16,5 +15,5 @@ class MYJRPG_API UItemExecuteBase : public UObject
 {
 	GENERATED_BODY()
 public:
-	virtual void Use(FItemSpec& item) const {};
+	virtual void Use(const FName& item) const {};
 };

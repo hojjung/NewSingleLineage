@@ -28,11 +28,20 @@ void URewardManager::ReceiveQuestReward(const FQuestReward& qReward)
 		LL->ExecuteRewardReceive(qReward.m_nAmount);
 		
 	}
-	else if(qReward.m_Item.RowName != NAME_None)
+	else if(!qReward.m_Item.RowName.IsNone())
 	{
-		int Amount  = qReward.m_nAmount;
+		EItemType type = UMyLib::GetItemType(qReward.m_Item.RowName);
+
+		if (type == EItemType::Equip)
+		{
+			FName HashID = UMyLib::GenerateEquipItemHashKey(qReward.m_Item.RowName,this);
+			
+			UMyGameInstance::Get->m_Inven->AddEquipItem(HashID);
+
+			return;
+		}
 		
-		UInventory::EResult Res = UMyGameInstance::Get->m_Inven->AddItem(qReward.m_Item.RowName,Amount);
+		UMyGameInstance::Get->m_Inven->AddItem(qReward.m_Item.RowName,qReward.m_nAmount);
 	}
 }
 
@@ -69,29 +78,29 @@ bool URewardManager::RequestQuestReward(const TArray<FQuestReward>& aryQuest)
 		{
 			int Amount  = QQ.m_nAmount;
 			
-			if(EItemType::Equip == UMyLib::GetItemType(QQ.m_Item.RowName))
-			{
-				Result = UMyGameInstance::Get->m_Inven->CheckEmptySlot(Amount);
-
-				if(!Result)
-				{
-					return false;
-				}
-			}
-			else
-			{
-				Result = UMyGameInstance::Get->m_Inven->CheckEmptyStack(QQ.m_Item.RowName,Amount);
-
-				if(!Result)
-				{
-					Result = UMyGameInstance::Get->m_Inven->CheckEmptySlot(Amount);
-
-					if(!Result)
-					{
-						return false;
-					}
-				}
-			}
+			// if(EItemType::Equip == UMyLib::GetItemType(QQ.m_Item.RowName))
+			// {
+			// 	Result = UMyGameInstance::Get->m_Inven->CheckEmptySlot(Amount);
+			//
+			// 	if(!Result)
+			// 	{
+			// 		return false;
+			// 	}
+			// }
+			// else
+			// {
+			// 	Result = UMyGameInstance::Get->m_Inven->CheckEmptyStack(QQ.m_Item.RowName,Amount);
+			//
+			// 	if(!Result)
+			// 	{
+			// 		Result = UMyGameInstance::Get->m_Inven->CheckEmptySlot(Amount);
+			//
+			// 		if(!Result)
+			// 		{
+			// 			return false;
+			// 		}
+			// 	}
+			// }
 		}
 	}
 

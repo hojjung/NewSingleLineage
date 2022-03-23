@@ -135,9 +135,9 @@ public:
 	
 	void SetBaseStat(const FStatGroup& stat_group);
 	
-	void EquipItem(const FItemSpec& item_spec);
+	void EquipItem(const FName& item_spec);
 	
-	void UnequipItem(const FItemSpec& item_spec);
+	void UnequipItem(const FName& item_spec);
 
 public:
 	void OnPlayerDead(const ACombatUnitPawn* killer);

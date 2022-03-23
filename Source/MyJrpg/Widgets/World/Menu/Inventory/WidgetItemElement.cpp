@@ -7,19 +7,27 @@
 #include "MyJrpg/Managers/EquipManager.h"
 #include "MyJrpg/Managers/MyGameInstance.h"
 
-void UWidgetItemElement::NativeOnInitialized()
+void UWidgetItemElement::Init(EPanelType panel, UInventory* inven)
 {
-	Super::NativeOnInitialized();
-
-	m_nIndex = INDEX_NONE;
-
 	m_ElementBase->m_OnHold.AddUObject(this,&UWidgetItemElement::OnHoldingComplete);
 
 	m_ElementBase->m_OnClick.AddUObject(this,&UWidgetItemElement::OnClicked);
 
 	m_TextFocus->SetVisibility(ESlateVisibility::Collapsed);
+	
+	m_PanelType = panel;
 
-	m_PanelType = EPanelType::Inven;
+	if (m_PanelType == EPanelType::None)
+	{
+		m_ElementBase->SetHoldable(false);
+		m_ElementBase->SetFocusable(false);
+	}
+
+	m_Inven = inven;
+
+	m_nIndex = INDEX_NONE;
+
+	Clear();
 }
 
 void UWidgetItemElement::Clear()
@@ -35,9 +43,9 @@ void UWidgetItemElement::Clear()
 
 FText UWidgetItemElement::GetFocusText()
 {
-	const FItemSpec& ItemSpec = *GetItemSpec();
+	FName ItemID = GetItemID();
 	
-	const FItemDataRow& ItemData = UMyLib::GetItemData(ItemSpec);
+	const FItemDataRow& ItemData = UMyLib::GetItemData(ItemID);
 
 	switch (m_PanelType)
 	{
@@ -57,7 +65,7 @@ FText UWidgetItemElement::GetFocusText()
 
 	if(Type == EItemType::Equip)
 	{
-		if(UMyLib::GetEquip()->IsItemEquipped(ItemSpec))
+		if(UMyLib::GetEquip()->IsItemEquipped(ItemID))
 		{
 			return NSLOCTEXT("UWidgetItemElement","FocusUnequip","해제?");
 		}
@@ -76,49 +84,46 @@ FText UWidgetItemElement::GetFocusText()
 
 void UWidgetItemElement::OnHoldingComplete()
 {
-	UMyLib::GetCanvas()->OpenItemInfo(*GetItemSpec());
+	UMyLib::GetCanvas()->OpenItemInfo(GetItemID());
 
 	SetMyUnFocus();
 }
 
-const FItemSpec* UWidgetItemElement::GetItemSpec() const
+void UWidgetItemElement::SetIndex(int index)
 {
-	return &m_Inven->GetItem(m_nIndex);
+	m_nIndex = index;
+	UpdateElement();
 }
 
-void UWidgetItemElement::MoveItem(UInventory* addHere,UInventory* removeHere,const FItemSpec& ItemSpec, bool IsEquipItem)
+FName UWidgetItemElement::GetItemID() const
 {
-	int Amount = ItemSpec.m_nStack;
-	
-	UInventory::EResult Result;
-	
+	return m_Inven->GetItemID(m_nIndex);
+}
+
+void UWidgetItemElement::MoveItem(UInventory* addHere,UInventory* removeHere,const FName& ItemSpec, bool IsEquipItem)
+{
 	if(IsEquipItem)
 	{
-		Result = addHere->AddItemInst(ItemSpec);
-
+		int Level = m_Inven->GetItemLevel(ItemSpec);
+		
 		if(UMyLib::GetEquip()->IsItemEquipped(ItemSpec))
 		{
 			UMyGameInstance::Get->m_EquipManager->Unequip(UMyLib::GetItemData(ItemSpec).m_ItemType);
 		}
-	}
-	else
-	{
-		Result = addHere->AddItem(ItemSpec.m_ItemID,Amount,ItemSpec.m_nLevel);
-	}
 		
-	if(Result == UInventory::EResult::Success)
-	{
-		removeHere->RemoveItem(ItemSpec);
-	}
-	else if(Result == UInventory::EResult::FailStackCount)
-	{
-		int Diff = ItemSpec.m_nStack - Amount;
-
-		removeHere->RemoveItem(ItemSpec.m_ItemID,Diff);
+		if(addHere->AddEquipItem(ItemSpec, Level))
+		{
+			removeHere->RemoveEquipItem(ItemSpec);
+		}
 	}
 	else
 	{
-		//칸수 부족 그냥 무시
+		int Amount = removeHere->GetItemStack(ItemSpec);
+		
+		if(addHere->AddItem(ItemSpec,Amount))
+		{
+			removeHere->RemoveItem(ItemSpec,Amount);
+		}
 	}
 }
 
@@ -127,9 +132,9 @@ void UWidgetItemElement::SellItem()
 {
 	PRINTF("UUWidgetShopItemElement::TryBuyItem");
 
-	const FItemSpec& ItemSpec = m_Inven->GetItem(m_nIndex);
+	const FName ID = m_Inven->GetItemID(m_nIndex);
 
-	bool IsEquip =  UMyLib::GetItemType(ItemSpec.m_ItemID) == EItemType::Equip;
+	bool IsEquip =  UMyLib::GetItemType(ID) == EItemType::Equip;
 
 	if(IsEquip)
 	{
@@ -137,7 +142,7 @@ void UWidgetItemElement::SellItem()
 		
 		m_nMaxAmount = 1;
 		
-		UMyGameInstance::Get->m_ShopManager->SellItem(ItemSpec,m_nAmount);
+		UMyGameInstance::Get->m_ShopManager->SellItem(ID,m_nAmount);
 
 		return;
 	}
@@ -146,7 +151,7 @@ void UWidgetItemElement::SellItem()
 
 	int Gold = UMyGameInstance::Get->m_CurrencyManager->GetGold();
 
-	m_nMaxAmount = ItemSpec.m_nStack;
+	m_nMaxAmount = m_Inven->GetItemStack(ID);
 
 	UWidgetStackCalculator* Calculator = UMyLib::GetCanvas()->OpenCalculator(0);
 
@@ -164,9 +169,7 @@ void UWidgetItemElement::OnSellConfirm(int amount)
 		return;
 	}
 	
-	const FItemSpec& ItemSpec = m_Inven->GetItem(m_nIndex);
-
-	UMyGameInstance::Get->m_ShopManager->SellItem(ItemSpec,m_nAmount);
+	UMyGameInstance::Get->m_ShopManager->SellItem(m_Inven->GetItemID(m_nIndex),m_nAmount);
 	
 	m_nAmount=0;	
 }
@@ -178,13 +181,11 @@ int UWidgetItemElement::GetMaxAmount()
 
 void UWidgetItemElement::UseItem()
 {
-	FItemSpec& ItemSpec = m_Inven->GetItem(m_nIndex);
+	FName ItemSpec = m_Inven->GetItemID(m_nIndex);
 
-	EItemType ItemType = UMyLib::GetItemType(ItemSpec.m_ItemID);
+	EItemType ItemType = UMyLib::GetItemType(ItemSpec);
 
 	bool IsEquipItem = ItemType == EItemType::Equip;
-
-	UInventory::EResult Result = UInventory::EResult::Success;
 
 	switch (m_PanelType)
 	{
@@ -217,11 +218,6 @@ void UWidgetItemElement::UseItem()
 	UMyGameInstance::Get->m_ItemExeManager->ExecuteItem(ItemSpec);
 }
 
-void UWidgetItemElement::SetIndex(int index)
-{
-	m_nIndex = index;
-}
-
 void UWidgetItemElement::UpdateElement()
 {
 	Clear();
@@ -231,20 +227,18 @@ void UWidgetItemElement::UpdateElement()
 		return;
 	}
 
-	const FItemSpec& ItemSpec = *GetItemSpec();;
-	
-	UpdateElement(ItemSpec);
+	UpdateElement(GetItemID());
 }
 
-void UWidgetItemElement::UpdateElement(const FItemSpec& spec)
+void UWidgetItemElement::UpdateElement(const FName& id)
 {
 	m_TextStackAmount->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
 	
-	const FItemDataRow& ItemData = UMyLib::GetItemData(spec);
+	const FItemDataRow& ItemData = UMyLib::GetItemData(id);
 
 	if(UMyLib::GetItemType(ItemData) == EItemType::Equip)
 	{
-		int Level = spec.m_nLevel;
+		int Level = m_Inven->GetItemLevel(id);
 
 		if(Level>0)
 		{
@@ -257,7 +251,7 @@ void UWidgetItemElement::UpdateElement(const FItemSpec& spec)
 			m_TextStackAmount->SetVisibility(ESlateVisibility::Collapsed);
 		}
 
-		if(UMyLib::GetEquip()->IsItemEquipped(spec))
+		if(UMyLib::GetEquip()->IsItemEquipped(id))
 		{
 			m_OverlayEquip->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
 		}
@@ -268,7 +262,7 @@ void UWidgetItemElement::UpdateElement(const FItemSpec& spec)
 	}
 	else
 	{
-		int StackCount = spec.m_nStack;
+		int StackCount =m_Inven->GetItemStack(id);
 
 		m_TextStackAmount->SetText(FText::AsNumber(StackCount));	
 	}
@@ -312,7 +306,7 @@ void UWidgetItemElement::SetMyUnFocus()
 
 bool UWidgetItemElement::IsSlotEmpty()
 {
-	return GetItemSpec()->IsEmpty();
+	return  GetIndex() == INDEX_NONE|| GetItemID().IsNone();
 }
 
 int UWidgetItemElement::GetIndex()
@@ -325,7 +319,4 @@ void UWidgetItemElement::SetMyInteractable(bool isInteractAble)
 	m_ElementBase->SetHoldable(isInteractAble);
 }
 
-void UWidgetItemElement::SetPanelType(EPanelType panel)
-{
-	m_PanelType = panel;
-}
+

@@ -1,43 +1,187 @@
 #include "EnchantManager.h"
 
+#include "EquipManager.h"
+#include "MyGameInstance.h"
 #include "MyJrpg/MyLib.h"
 #include "MyJrpg/Items/Exe_EnchantArmor.h"
 #include "MyJrpg/Items/Exe_EnchantTrinket.h"
 #include "MyJrpg/Items/Exe_EnchantWeapon.h"
+#include "MyJrpg/Pawns/MyPlayerPawn.h"
 
 UEnchantManager::UEnchantManager()
 {
+	m_AryWeaponPer[0] = 1.f;
+	m_AryWeaponPer[1] = 1.f;
+	m_AryWeaponPer[2] = 1.f;
+	m_AryWeaponPer[3] = 1.f;
+	m_AryWeaponPer[4] = 1.f;
+	m_AryWeaponPer[5] = 1.f;
+	m_AryWeaponPer[6] = 0.5f;
+	m_AryWeaponPer[7] = 0.5f;
+	m_AryWeaponPer[8] = 0.4f;
+	m_AryWeaponPer[9] = 0.4f;
+	m_AryWeaponPer[10] = 0.3f;
+	m_AryWeaponPer[11] = 0.3f;
+	m_AryWeaponPer[12] = 0.2f;
+	m_AryWeaponPer[13] = 0.2f;
+	m_AryWeaponPer[14] = 0.15f;
+	m_AryWeaponPer[15] = 0.15f;
+	m_AryWeaponPer[16] = 0.1f;
+	m_AryWeaponPer[17] = 0.1f;
+	m_AryWeaponPer[18] = 0.1f;
+	m_AryWeaponPer[19] = 0.1f;
+
+	m_AryArmorPer[0] = 1.f;
+	m_AryArmorPer[1] = 1.f;
+	m_AryArmorPer[2] = 1.f;
+	m_AryArmorPer[3] = 1.f;
+	m_AryArmorPer[4] = 1.f;
+	m_AryArmorPer[5] = 0.6f;
+	m_AryArmorPer[6] = 0.6f;
+	m_AryArmorPer[7] = 0.5f;
+	m_AryArmorPer[8] = 0.5f;
+	m_AryArmorPer[9] = 0.4f;
+	m_AryArmorPer[10] = 0.4f;
+	m_AryArmorPer[11] = 0.3f;
+	m_AryArmorPer[12] = 0.3f;
+	m_AryArmorPer[13] = 0.2f;
+	m_AryArmorPer[14] = 0.2f;
+	m_AryArmorPer[15] = 0.15f;
+	m_AryArmorPer[16] = 0.15f;
+	m_AryArmorPer[17] = 0.1f;
+	m_AryArmorPer[18] = 0.1f;
+	m_AryArmorPer[19] = 0.1f;
+	
+	m_AryTrinketPer[0] = 1.f;
+	m_AryTrinketPer[1] = 0.6f;
+	m_AryTrinketPer[2] = 0.6f;
+	m_AryTrinketPer[3] = 0.5f;
+	m_AryTrinketPer[4] = 0.5f;
+	m_AryTrinketPer[5] = 0.4f;
+	m_AryTrinketPer[6] = 0.4f;
+	m_AryTrinketPer[7] = 0.3f;
+	m_AryTrinketPer[8] = 0.3f;
+	m_AryTrinketPer[9] = 0.2f;
+	m_AryTrinketPer[10] = 0.2f;
+	m_AryTrinketPer[11] = 0.15f;
+	m_AryTrinketPer[12] = 0.15f;
+	m_AryTrinketPer[13] = 0.15f;
+	m_AryTrinketPer[14] = 0.15f;
+	m_AryTrinketPer[15] = 0.1f;
+	m_AryTrinketPer[16] = 0.1f;
+	m_AryTrinketPer[17] = 0.1f;
+	m_AryTrinketPer[18] = 0.1f;
+	m_AryTrinketPer[19] = 0.1f;
+	
 	Clear();
 }
 
-void UEnchantManager::SetTargetEquip(FItemSpec& target)
+void UEnchantManager::EnchantSuccess(bool isSpecial)
 {
-	m_CrntTarget = &target;
+	UMyLib::GetPlayerInven()->AddItemLevel(m_CrntTarget,1);
+
+	UMyGameInstance::Get->m_CurrencyManager->SubGold(GetEnchantCost());
+}
+
+void UEnchantManager::EnchantFail()
+{
+	if(UMyGameInstance::Get->m_EquipManager->IsItemEquipped(m_CrntTarget))
+	{
+		UMyGameInstance::Get->m_EquipManager->Unequip(m_CrntTarget);
+	}
+	
+	UMyLib::GetPlayerInven()->RemoveEquipItem(m_CrntTarget);
+
+	m_CrntTarget = NAME_None;
+}
+
+bool UEnchantManager::TryEnchant()
+{
+	float Percent = GetEnchantPercent();
+
+	float Rand = FMath::RandRange(0.f,1.f);
+
+	return Rand <= Percent;
+}
+
+int UEnchantManager::GetEnchantCost() const
+{
+	int Level = 1;
+	
+	if(!m_CrntTarget.IsNone())
+	{
+		Level = m_nCrntLevel + 1;
+	}
+	return Level * 0;
+}
+
+float UEnchantManager::GetEnchantPercent() const
+{
+	int Lv = m_nCrntLevel;
+	
+	if (Lv >= FGlobalVariable::ENCHANT_MAX)
+	{
+		return 0;
+	}
+	
+	TSubclassOf<UItemExecuteBase> ClassExe = UMyLib::GetItemData(m_CrntMat).m_ClassExeItem;
+
+	if (ClassExe == UExe_EnchantWeapon::StaticClass())
+	{
+		return m_AryWeaponPer[Lv];
+	}
+	else if (ClassExe == UExe_EnchantArmor::StaticClass())
+	{
+		return m_AryArmorPer[Lv];
+	}
+	else if (ClassExe == UExe_EnchantTrinket::StaticClass())
+	{
+		return m_AryTrinketPer[Lv];
+	}
+	return 0;
+}
+
+void UEnchantManager::SetTargetEquip(const FName& target)
+{
+	m_CrntTarget = target;
+
+	m_nCrntLevel = UMyLib::GetPlayerInven()->GetItemLevel(m_CrntTarget);
 
 	m_OnEnchantChanged.Broadcast();
 }
 
-void UEnchantManager::SetMaterialEquip(FItemSpec& mat)
+void UEnchantManager::SetMaterialEquip(const FName& mat)
 {
-	m_CrntMat = &mat;
+	m_CrntMat = mat;
 
-	if (m_CrntTarget && !IsAbleTarget(*m_CrntTarget))
+	if (!m_CrntTarget.IsNone() && !IsAbleTarget(m_CrntTarget))
 	{
-		m_CrntTarget = nullptr;
+		m_CrntTarget = NAME_None;
+		m_nCrntLevel = 0;
 	}
 
 	m_OnEnchantChanged.Broadcast();
 }
 
-bool UEnchantManager::IsAbleTarget(const FItemSpec& target)
+FName UEnchantManager::GetCrntTarget() const
 {
-	if (!m_CrntMat)
+	return m_CrntTarget;
+}
+
+FName UEnchantManager::GetCrntMat() const
+{
+	return m_CrntMat;
+}
+
+bool UEnchantManager::IsAbleTarget(const FName& target)
+{
+	if (m_CrntMat.IsNone())
 	{
-		return nullptr;
+		return false;
 	}
 	const FItemDataRow& FoundTarget = UMyLib::GetItemData(target);
 	
-	const FItemDataRow& FoundMat = UMyLib::GetItemData(*m_CrntMat);
+	const FItemDataRow& FoundMat = UMyLib::GetItemData(m_CrntMat);
 	
 	if (FoundTarget.m_ItemType == EEquipSlotType::Weapon)
 	{
@@ -55,14 +199,14 @@ bool UEnchantManager::IsAbleTarget(const FItemSpec& target)
 	return false;
 }
 
-bool UEnchantManager::IsAbleMaterial(const FItemSpec& material)
+bool UEnchantManager::IsAbleMaterial(const FName& material)
 {
-	if (!m_CrntTarget)
+	if (m_CrntTarget.IsNone())
 	{
-		return nullptr;
+		return false;
 	}
 
-	const FItemDataRow& FoundTarget = UMyLib::GetItemData(*m_CrntTarget);
+	const FItemDataRow& FoundTarget = UMyLib::GetItemData(m_CrntTarget);
 
 	const FItemDataRow& FoundMat = UMyLib::GetItemData(material);
 	
@@ -84,7 +228,50 @@ bool UEnchantManager::IsAbleMaterial(const FItemSpec& material)
 
 void UEnchantManager::Clear()
 {
-	m_CrntMat = nullptr;
+	m_nCrntLevel = 0;
+	
+	m_CrntMat = NAME_None;
 
-	m_CrntTarget = nullptr;
+	m_CrntTarget = NAME_None;
+}
+
+void UEnchantManager::DoEnchant()
+{
+	if (TryEnchant())
+	{
+		EnchantSuccess(false);
+	}
+	else
+	{
+		EnchantFail();
+	}
+	
+	UMyLib::GetPlayerInven()->RemoveItem(m_CrntMat, 1);
+
+	if(!UMyLib::GetPlayerInven()->HasItem(m_CrntMat))
+	{
+		m_CrntMat = NAME_None;
+	}
+	
+	m_OnEnchantChanged.Broadcast();
+}
+
+bool UEnchantManager::IsEnchantAvailable()
+{
+	if (m_CrntMat.IsNone() || m_CrntTarget.IsNone())
+	{
+		return false;
+	}
+
+	if (!UMyGameInstance::Get->m_CurrencyManager->CheckGoldEnough(GetEnchantCost()))
+	{
+		return false;
+	}
+
+	if (m_nCrntLevel >= FGlobalVariable::ENCHANT_MAX)
+	{
+		return false;
+	}
+	
+	return true;
 }

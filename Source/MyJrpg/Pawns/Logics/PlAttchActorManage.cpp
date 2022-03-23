@@ -23,7 +23,7 @@ void UPlAttchActorManage::Init(AMyPlayerPawn* my_player_pawn)
 
 void UPlAttchActorManage::UpdateEquipActor()
 {
-	const TArray<const FItemSpec*>& AryEquips = UMyGameInstance::Get->m_EquipManager->GetEquipAry();
+	const TArray<const FName*>& AryEquips = UMyGameInstance::Get->m_EquipManager->GetEquipAry();
 
 	int i=0;
 
@@ -31,7 +31,7 @@ void UPlAttchActorManage::UpdateEquipActor()
 	{
 		AAttachEquipmentBase* CurrentEquip = m_AryEqupActors[i];
 
-		const FItemSpec* const* NewEquip = &AryEquips[i];
+		const FName* const* NewEquip = &AryEquips[i];
 		
 		if(*NewEquip)
 		{

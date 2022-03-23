@@ -236,13 +236,13 @@ void UPlayerStatusManager::SetBaseStat(const FStatGroup& stat_group)
 	m_BaseStatGroup = stat_group;
 }
 
-void UPlayerStatusManager::EquipItem(const FItemSpec& item_spec)
+void UPlayerStatusManager::EquipItem(const FName& item_spec)
 {
 	m_AddStatGroup += UMyLib::GetItemData(item_spec).m_EquipStats;
 	UpdateStat();
 }
 
-void UPlayerStatusManager::UnequipItem(const FItemSpec& item_spec)
+void UPlayerStatusManager::UnequipItem(const FName& item_spec)
 {
 	m_AddStatGroup -= UMyLib::GetItemData(item_spec).m_EquipStats;
 	UpdateStat();

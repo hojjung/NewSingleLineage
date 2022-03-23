@@ -21,5 +21,5 @@ public:
 public:
 	void BuyItem(const FItemTradingData& item_trading_data, int amount);
 	
-	void SellItem(const FItemSpec& ability_spec, int amount);
+	void SellItem(const FName& id, int amount);
 };

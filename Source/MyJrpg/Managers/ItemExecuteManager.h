@@ -34,11 +34,11 @@ protected:
 public:
 	void Init();
 	
-	void AddUseItem(FName itemKey);
+	void AddUseItem(const FName& itemKey);
 
-	void RemoveItem(FName itemKey);
+	void RemoveItem(const FName& itemKey);
 //
-	void EquipUnequipItem(const FItemSpec& itemSpec);
+	void EquipUnequipItem(const FName& itemSpec);
 
-	void ExecuteItem(FItemSpec& itemSpec);
+	void ExecuteItem(const FName& itemID);
 };

@@ -110,18 +110,6 @@ int UMyLib::GetRectVertIndexPer(const FSlateRect& rect, int maxDivide, const FVe
 	//divide vertical only
 	// Point.X >= Left && Point.X <= Right && Point.Y >= Top && Point.Y <= Bottom;
 	//fail contains = return -1?
-
-	
-}
-
-const FItemDataRow& UMyLib::GetItemData(const FItemSpec& spec)
-{
-	return GetItemData(spec.m_ItemID);
-}
-
-const FSkillDataRow& UMyLib::GetSkillData(const FItemSpec& spec)
-{
-	return GetSkillData(spec.m_ItemID);
 }
 
 const FItemDataRow& UMyLib::GetItemData(const FName& specID)
@@ -170,23 +158,11 @@ UEquipManager* UMyLib::GetEquip()
 	return UMyGameInstance::Get->m_EquipManager;
 }
 
-EEquipSlotType UMyLib::GetEquipItemSlot(const FItemSpec& spec)
+EEquipSlotType UMyLib::GetEquipItemSlot(const FName& id)
 {
-	return GetItemData(spec).m_ItemType;
-}
+	FName ID = UMyLib::GetEquipIDFromHashID(id);
 
-//레벨 또한 명중률
-//71+22 = 93
-//90명중일때 확률 70%
-//74명중일때 확률 50%
-
-bool UMyLib::CanHit(int atkLv,const FStatGroup& attacker,const FStatGroup& defender)
-{
-	int HitRate = FMath::RandRange(1,atkLv + attacker.m_nAccu);
-	
-	int BlockRate = FMath::RandRange(0,defender.m_nAvoid + 20);
-
-	return BlockRate < HitRate;
+	return UMyLib::GetItemData(ID).m_ItemType;
 }
 
 UParticleEffectManager* UMyLib::GetEffectM()
@@ -324,4 +300,40 @@ void UMyLib::SetBtnTint(UButton* btn, FLinearColor colrWant)
 	btn->WidgetStyle.Normal.TintColor = colrWant;
 	btn->WidgetStyle.Pressed.TintColor = colrWant;
 	btn->WidgetStyle.Hovered.TintColor = colrWant;
+}
+
+FName UMyLib::GenerateEquipItemHashKey(const FName& id, const void *ptr)
+{
+	FString Result;
+
+	Result.Append(id.ToString());
+
+	Result.Append(TEXT(":"));
+	
+	uint32 PtrD = PointerHash(ptr);
+	
+	uint32 Rand = FMath::RandRange(0,99999);
+	
+	PtrD = (PtrD / Rand) + Rand;
+	
+	PtrD %= 100000;
+	
+	FString NewHash = FString::Printf(TEXT("%u"),PtrD);
+
+	Result.Append(NewHash);
+
+	return FName(Result);
+}
+
+FName UMyLib::GetEquipIDFromHashID(const FName& hash_id)
+{
+	FString TempStr = hash_id.ToString();
+	
+	FString L;
+	
+	FString R;
+	
+	TempStr.Split(TEXT(":"),&L,&R);
+	
+	return FName(L);
 }

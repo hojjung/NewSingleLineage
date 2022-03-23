@@ -67,6 +67,8 @@ namespace FGlobalVariable
 	static const int STORAGE_SIZE = 24;
 
 	static const int QUICKSLOT_MAX = 5;
+
+	static const int ENCHANT_MAX = 20;
 };
 
 #define PRINTFSCREEN(Format, ...) if (GEngine) GEngine->AddOnScreenDebugMessage(-1, 3.5, FColor::Green, *FString::Printf(TEXT(Format), ##__VA_ARGS__),true)
@@ -114,6 +116,7 @@ enum class EItemType
 
 enum class EPanelType
 {
+	None,
 	Inven,
 	StorageDeposit,
 	StorageWithdraw,

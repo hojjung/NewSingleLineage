@@ -3,10 +3,12 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "ImageText.h"
 #include "Blueprint/UserWidget.h"
 #include "Components/Button.h"
 #include "Components/TextBlock.h"
 #include "MyJrpg/DataTables/ItemData.h"
+#include "MyJrpg/Managers/EnchantManager.h"
 #include "MyJrpg/Widgets/World/CommonElements/WidgetBaseElement.h"
 #include "MyJrpg/Widgets/World/Menu/Inventory/WidgetInventory.h"
 #include "WidgetEnchantBase.generated.h"
@@ -21,9 +23,9 @@ class MYJRPG_API UWidgetEnchantBase : public UUserWidget
 
 protected:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (BindWidget))
-	UWidgetBaseElement* m_TargetItem;
+	UWidgetItemElement* m_TargetItem;
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (BindWidget))
-	UWidgetBaseElement* m_TargetMaterial;
+	UWidgetItemElement* m_TargetMaterial;
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (BindWidget))
 	UButton* m_BtnClose;
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (BindWidget))
@@ -52,21 +54,33 @@ protected:
 	UTextBlock* m_TextSubAfter;
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (BindWidget))
 	UWidgetInventory* m_Inven; 
-	
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (BindWidget))
+	UWidgetImageText* m_TextEnchantCost;
 protected:
 	virtual void NativeOnInitialized() override;
 
 	void Update();
 	
+	void UpdateIcons(const UEnchantManager* Enchant);
+	
+	void UpdateInfoTexts(UEnchantManager* Enchant);
+	
+	void UpdateBeforeAfter(const UEnchantManager* Enchant);
+	
+	void UpdateEnchantBtn(UEnchantManager* Enchant);
+	
 public:
 	void Open();
 	
-	void SetEnchantEquipTarget(FItemSpec& target);
+	void SetEnchantEquipTarget(FName& target);
 
-	void SetEnchantEquipMaterial(FItemSpec& mat);
+	void SetEnchantEquipMaterial(FName& mat);
 
 	UFUNCTION()
 	void OnClose();
+
+	UFUNCTION()
+	void DoEnchant();
 };
 
 

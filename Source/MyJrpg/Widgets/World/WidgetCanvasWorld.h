@@ -21,7 +21,6 @@ class UWidgetStackCalculator;
 class UWidgetShopPanel;
 class UWidgetZoneSelectPanel;
 class UWidgetStorage;
-struct FItemSpec;
 class UInventory;
 class UWidgetCraftPanel;
 class UWidgetSkillPanel;
@@ -124,7 +123,7 @@ protected:
 public:
 	UWidgetEquipInvenPanel* GetEquipInvenMenu();
 
-	void OpenItemInfo(const FItemSpec& itemSpec);
+	void OpenItemInfo(const FName& itemSpec);
 
 	UFUNCTION()
 	void ToggleMenu();

@@ -8,6 +8,7 @@
 #include "Blueprint/UserWidget.h"
 #include "Components/ScrollBox.h"
 #include "Components/WrapBox.h"
+#include "MyJrpg/Widgets/World/CommonElements/WidgetFilterBtns.h"
 
 #include "WidgetInventory.generated.h"
 
@@ -26,7 +27,6 @@ protected:
 	TSubclassOf<UWidgetItemElement> m_ClassWidgetItemEle;
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (BindWidget))
 	UWrapBox* m_InvenBox;
-
 	UPROPERTY()
 	TArray<UWidgetItemElement*> m_AryItemEles;
 
@@ -36,7 +36,9 @@ protected:
 
 	EItemType m_FilterCategoryItem;
 
-	bool m_bNoFilter;
+	FDelegateHandle m_InvenDele;
+
+	FDelegateHandle m_EquipDele;
 
 protected:
 	virtual FReply NativeOnTouchStarted(const FGeometry& InGeometry, const FPointerEvent& InGestureEvent) override;
@@ -47,20 +49,19 @@ protected:
 
 	void UpdateInventory();
 
-	bool IsSameType(const FItemSpec& item);
+	bool IsSameType(const FName& item);
 	
 	void OnFocused(UWidgetItemElement* ele);
-	
-	void SetInventory(UInventory* inven,EPanelType panelType);
 	
 public:
 	void Init(UInventory* inven,EPanelType panelType = EPanelType::Inven);
 
+	void OpenPanel();
+	
+	void ClosePanel();
+
 	UInventory* GetInven() const;
 
-	const FItemSpec* GetFocusedItem() const;
-
-	void ClosePanel();
 
 	void UnFocusCurrent();
 

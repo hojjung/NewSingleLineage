@@ -10,6 +10,11 @@
 #include "WidgetItemInfo.generated.h"
 
 /**
+ * Open Mode 여러개
+ * 장비 아이템
+ * 일반 아이템
+ * 몬스터
+ * 스킬북
  * 
  */
 UCLASS()
@@ -40,7 +45,7 @@ protected:
 	FName m_ItemKey;
 	UPROPERTY()
 	int m_nEraseAmount;
-	const FItemSpec* m_EquipItem;
+	FName m_EquipItem;
 
 protected:
 	virtual void NativeOnInitialized() override;;
@@ -53,8 +58,7 @@ public:
 	UFUNCTION()
 	void OnOpenCalculator();
 	
-
-	void SetItemInfo(const FItemSpec& itemSpecInfo);
+	void SetItemInfo(const FName& itemSpecInfo);
 };
 
 

@@ -47,7 +47,7 @@ public:
 
 	void UpdateElement();
 
-	void UpdateElement(const FItemSpec& spec);
+	void UpdateElement(const FName& spec);
 	
 	void Clear();
 
@@ -59,5 +59,5 @@ public:
 
 	bool IsSlotEmpty() const;
 
-	const FItemSpec* GetEquippedItem() const;
+	const FName* GetEquippedItem() const;
 };

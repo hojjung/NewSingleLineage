@@ -23,33 +23,33 @@ public:
 	FOnEquipChanged m_OnEquipChanged;
 	
 protected:
-	TArray<const FItemSpec*> m_AryEqupSlots;
+	TArray<const FName*> m_AryEqupSlots;
 
 	bool m_bIsRange;
 	
 protected:
-	void EquipOption(const FItemSpec& itemWant);
+	void EquipOption(const FName& itemWant);
 
-	void UnequipOption(const FItemSpec& itemWant);
+	void UnequipOption(const FName& itemWant);
 
 	void SetIsRangeStance();
 
 public:
 	void Init();
 
-	bool Equip(EEquipSlotType slotWant,const FItemSpec& itemWant);
+	bool Equip(EEquipSlotType slotWant,const FName& itemWant);
 
 	void Unequip(EEquipSlotType slotWant);
 
-	void Unequip(const FItemSpec& itemWant);
+	void Unequip(const FName& itemWant);
 
-	const TArray<const FItemSpec*>& GetEquipAry() const;
+ 	const TArray<const FName*>& GetEquipAry() const;
 
-	bool IsItemEquipped(const FItemSpec& itemWant);
+	bool IsItemEquipped(const FName& itemWant);
 
 	bool IsItemEquipped(EEquipSlotType wantSlot);
 
-	const FItemSpec* GetEquipItem(EEquipSlotType wantSlot);
+	const FName* GetEquipItem(EEquipSlotType wantSlot);
 
 	bool IsRangeStance();
 

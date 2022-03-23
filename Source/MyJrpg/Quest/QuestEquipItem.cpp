@@ -23,9 +23,9 @@ void UQuestEquipItem::CompleteQuest()
 
 void UQuestEquipItem::OnEquipItemChanged()
 {
-	for(const FItemSpec* AbSpec : UMyGameInstance::Get->m_EquipManager->GetEquipAry())
+	for(const FName* AbSpec : UMyGameInstance::Get->m_EquipManager->GetEquipAry())
 	{
-		FText ItemName = UMyLib::GetItemData(AbSpec->m_ItemID).m_TextShowingName;
+		FText ItemName = UMyLib::GetItemData(*AbSpec).m_TextShowingName;
 		
 		if(m_Spec->m_QuestData->m_TargetName.EqualTo(ItemName))
 		{

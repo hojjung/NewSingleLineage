@@ -3,7 +3,7 @@
 #include "MyJrpg/MyLib.h"
 #include "MyJrpg/Managers/MyGameInstance.h"
 
-void UExe_EnchantWeapon::Use(FItemSpec& item) const
+void UExe_EnchantWeapon::Use(const FName& item) const
 {
 	UMyGameInstance::Get->m_EnchantManager->SetMaterialEquip(item);
 	UMyLib::GetCanvas()->OpenEnchant();

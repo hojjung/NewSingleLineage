@@ -53,7 +53,7 @@ void UUWidgetShopItemElement::OpenStackCalculator()
 	{
 		int AbleToBuy = Gold / Cost;
 
-		int AbleToDeposit = UMyGameInstance::Get->m_Inven->GetStackableCount(m_TradeData->m_ItemDataRowHandle.RowName); 
+		int AbleToDeposit = UMyGameInstance::Get->m_Inven->GetItemStack(m_TradeData->m_ItemDataRowHandle.RowName); 
 
 		m_nMaxAmount = FMath::Min(AbleToBuy,AbleToDeposit);
 	}

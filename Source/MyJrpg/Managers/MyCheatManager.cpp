@@ -9,7 +9,6 @@
 #include "MyJrpg/MyLib.h"
 #include "MyJrpg/Items/Inventory.h"
 #include "MyJrpg/Pawns/MyPlayerPawn.h"
-#include "MyJrpg/Save/MySaveGame.h"
 
 void UMyCheatManager::AddItemToPlayer(FName id, int amount)
 {

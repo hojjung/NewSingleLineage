@@ -18,28 +18,46 @@ public:
 	FOnEnchantChangd m_OnEnchantChanged;
 
 protected:
-	FItemSpec* m_CrntTarget;
+	float m_AryWeaponPer[20];
 
-	FItemSpec* m_CrntMat;
+	float m_AryArmorPer[20];
+
+	float m_AryTrinketPer[20];
+
+protected:
+	int m_nCrntLevel;
 	
+	FName m_CrntTarget;
+
+	FName m_CrntMat;
+
+protected:
+	void EnchantSuccess(bool isSpecial);
+
+	void EnchantFail();
+
+	bool TryEnchant();
+
 public:
-	void SetTargetEquip(FItemSpec& target);
+	int GetEnchantCost() const;
 
-	void SetMaterialEquip(FItemSpec& mat);
+	float GetEnchantPercent() const;
+	
+	void SetTargetEquip(const FName& target);
 
-	FORCEINLINE FItemSpec*  GetCrntTarget() const
-	{
-		return m_CrntTarget;
-	}
+	void SetMaterialEquip(const FName& mat);
 
-	FORCEINLINE FItemSpec* GetCrntMat() const
-	{
-		return m_CrntMat;
-	}
+	FName  GetCrntTarget() const;
 
-	bool IsAbleTarget(const FItemSpec& target);
+	FName GetCrntMat() const;
 
-	bool IsAbleMaterial(const FItemSpec& material);
+	bool IsAbleTarget(const FName& target);
+
+	bool IsAbleMaterial(const FName& material);
 
 	void Clear();
+	
+	void DoEnchant();
+
+	bool IsEnchantAvailable();
 };

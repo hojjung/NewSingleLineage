@@ -22,9 +22,9 @@ void UWidgetEquipInvenPanel::NativeOnInitialized()
 
 void UWidgetEquipInvenPanel::UpdateText()
 {
-	int CurrentCount = UMyLib::GetPlayerInven()->GetEmptyIndex();
+	int CurrentCount = 0;//UMyLib::GetPlayerInven()->GetEmptyIndex();
 
-	int MaxCount = UMyLib::GetPlayerInven()->m_nInvenMaxSize;
+	int MaxCount = UMyLib::GetPlayerInven()->GetInvenSize();
 
 	FString StrP = FString::Printf(TEXT("%d/%d"),CurrentCount,MaxCount);
 

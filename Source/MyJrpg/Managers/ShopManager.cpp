@@ -1,4 +1,4 @@
-// All right Reserve 2021 HereticByte
+ // All right Reserve 2021 HereticByte
 
 
 #include "ShopManager.h"
@@ -9,37 +9,28 @@
 
 void UShopManager::BuyItem(const FItemTradingData& item_trading_data, int amount)
 {
-	if(!UMyLib::GetPlayerInven()->CheckEmptySlot(1))
-	{
-		return;
-	}
-
 	int TotalCost = item_trading_data.GetCost()*amount;
 	
-	if(!UMyGameInstance::Get->m_CurrencyManager->SubGold(TotalCost))
+	if(!UMyGameInstance::Get->m_CurrencyManager->CheckGoldEnough(TotalCost))
 	{
 		return;
 	}
-
-	int Amount = amount;
-
-	UMyLib::GetPlayerInven()->AddItem(item_trading_data.m_ItemDataRowHandle.RowName,Amount);
+	
+	if (!UMyLib::GetPlayerInven()->AddItem(item_trading_data.m_ItemDataRowHandle.RowName,amount))
+	{
+		return;
+	}
+	
+	UMyGameInstance::Get->m_CurrencyManager->SubGold(TotalCost);
 	
 	m_OnItemBought.Broadcast(item_trading_data.m_ItemDataRowHandle.GetRow<FItemDataRow>("")->m_TextShowingName);
 }
 
-void UShopManager::SellItem(const FItemSpec& ability_spec, int amount)
+void UShopManager::SellItem(const FName& ability_spec, int amount)
 {
 	int SellGold = amount * UMyLib::GetItemData(ability_spec).m_nSellValue;
 		
-	if(ability_spec.m_nStack == amount)
-	{
-		UMyLib::GetPlayerInven()->RemoveItem(ability_spec);
-	}
-	else
-	{
-		UMyLib::GetPlayerInven()->RemoveItem(ability_spec.m_ItemID,amount);
-	}
+	UMyLib::GetPlayerInven()->RemoveItem(ability_spec,amount);
 
 	UMyGameInstance::Get->m_CurrencyManager->AddGold(SellGold);
 }

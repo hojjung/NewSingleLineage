@@ -243,7 +243,7 @@ UWidgetEquipInvenPanel* UWidgetCanvasWorld::GetEquipInvenMenu()
 	return m_EquipInvenPanel;
 }
 
-void UWidgetCanvasWorld::OpenItemInfo(const FItemSpec& itemSpec)
+void UWidgetCanvasWorld::OpenItemInfo(const FName& itemSpec)
 {
 	//m_MenuBar->Get
 	m_ItemInfo->SetItemInfo(itemSpec);

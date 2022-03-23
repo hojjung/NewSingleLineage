@@ -25,42 +25,45 @@ void UWidgetInventory::Init(UInventory* inven,EPanelType panelType)
 {
 	check(m_ClassWidgetItemEle);
 
-	m_bNoFilter = true;
-
 	m_AryItemEles.Reset();
 
-	SetInventory(inven,panelType);
-}
-
-void UWidgetInventory::SetInventory(UInventory* inven,EPanelType panelType)
-{
 	m_InvenBox->ClearChildren();
 	
 	m_CurrentInven = inven;
 
-	m_CurrentInven->m_OnInvenChanged.AddUObject(this, &UWidgetInventory::UpdateInventory);
-
-	UMyGameInstance::Get->m_EquipManager->m_OnEquipChanged.AddUObject(this, &UWidgetInventory::UpdateInventory);
-
 	CreateGridElements(panelType);
+}
+
+void UWidgetInventory::OpenPanel()
+{
+	m_InvenDele = m_CurrentInven->m_OnInvenChanged.AddUObject(this, &UWidgetInventory::UpdateInventory);
+
+	m_EquipDele = UMyGameInstance::Get->m_EquipManager->m_OnEquipChanged.AddUObject(this, &UWidgetInventory::UpdateInventory);
 
 	UpdateInventory();
 }
 
+void UWidgetInventory::ClosePanel()
+{
+	m_CurrentInven->m_OnInvenChanged.Remove(m_InvenDele);
+
+	UMyGameInstance::Get->m_EquipManager->m_OnEquipChanged.Remove(m_EquipDele);
+	
+	UnFocusCurrent();
+}
+
 void UWidgetInventory::CreateGridElements(EPanelType panelType)
 {
-	for (int i = 0; i < m_CurrentInven->m_nInvenMaxSize; i++)
+	m_AryItemEles.Reset();
+	
+	for (int i = 0; i < m_CurrentInven->GetInvenSize(); i++)
 	{
 		UWidgetItemElement* ItemEle = CreateWidget<UWidgetItemElement>(this, m_ClassWidgetItemEle);
 
-		ItemEle->SetPanelType(panelType);
-
-		ItemEle->m_Inven = GetInven();
+		ItemEle->Init(panelType, GetInven());
 
 		m_AryItemEles.Add(ItemEle);
 		
-		m_AryItemEles[i]->Clear();
-
 		m_InvenBox->AddChildToWrapBox(m_AryItemEles[i])->SetPadding(FMargin(2));
 
 		m_AryItemEles[i]->m_OnFocus.AddUObject(this,&UWidgetInventory::OnFocused);
@@ -72,7 +75,7 @@ void UWidgetInventory::UpdateInventory()
 	int ItemIndex = 0;
 	int Index = 0;
 	
-	for (const FItemSpec& Item : m_CurrentInven->GetAllItems())
+	for (const FName& Item : m_CurrentInven->GetAryTotalItemIDs())
 	{
 		if(!IsSameType(Item))
 		{
@@ -80,8 +83,6 @@ void UWidgetInventory::UpdateInventory()
 			continue;
 		}
 		m_AryItemEles[Index]->SetIndex(ItemIndex);
-		m_AryItemEles[Index]->UpdateElement();
-
 		Index++;
 		ItemIndex++;
 	}
@@ -90,17 +91,16 @@ void UWidgetInventory::UpdateInventory()
 	{
 		m_AryItemEles[Index]->Clear();
 	}
-	//남은 인벤들도 깨끗하게 해줘야한다
 }
 
-bool UWidgetInventory::IsSameType(const FItemSpec& item)
+bool UWidgetInventory::IsSameType(const FName& item)
 {
-	if(m_bNoFilter)
+	if(m_FilterCategoryItem == EItemType::None)
 	{
 		return true;
 	}
 	
-	EItemType Type = UMyLib::GetItemType(item.m_ItemID);
+	EItemType Type = UMyLib::GetItemType(item);
 	
 	return Type == m_FilterCategoryItem;
 }
@@ -127,22 +127,10 @@ UInventory* UWidgetInventory::GetInven() const
 	return m_CurrentInven.Get();
 }
 
-const FItemSpec* UWidgetInventory::GetFocusedItem() const
-{
-	return m_CurrentFocused.Get() ? m_CurrentFocused->GetItemSpec() : nullptr;
-}
-
-void UWidgetInventory::ClosePanel()
-{
-	UnFocusCurrent();
-}
-
 void UWidgetInventory::SetItemFilter(EItemType typeWant)
 {
 	UnFocusCurrent();
 	
-	m_bNoFilter = false;
-
 	m_FilterCategoryItem = typeWant;
 
 	UpdateInventory();
@@ -152,8 +140,6 @@ void UWidgetInventory::ClearFilter()
 {
 	UnFocusCurrent();
 	
-	m_bNoFilter = true;
-
 	m_FilterCategoryItem = EItemType::None;
 
 	UpdateInventory();

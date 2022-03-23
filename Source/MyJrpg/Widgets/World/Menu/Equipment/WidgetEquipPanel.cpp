@@ -50,7 +50,7 @@ FReply UWidgetEquipPanel::NativeOnTouchStarted(const FGeometry& InGeometry, cons
 
 void UWidgetEquipPanel::UpdateSlots()
 {
-	const TArray<const FItemSpec*>& EquippedItems = UMyGameInstance::Get->m_EquipManager->GetEquipAry();
+	const TArray<const FName*>& EquippedItems = UMyGameInstance::Get->m_EquipManager->GetEquipAry();
 
 	for (int i = 0; i < m_AryEquips.Num(); i++)
 	{

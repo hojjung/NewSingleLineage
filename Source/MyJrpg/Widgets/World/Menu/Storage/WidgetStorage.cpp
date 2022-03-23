@@ -28,27 +28,27 @@ void UWidgetStorage::NativeOnInitialized()
 
 void UWidgetStorage::UpdateText()
 {
-	UInventory* CrntStorage = UMyLib::GetPlayerStorage();
-	
-	int CurrentCount = CrntStorage->GetEmptyIndex();
-
-	int MaxCount = CrntStorage->m_nInvenMaxSize;
-
-	FText StorageText = NSLOCTEXT("UWidgetStorage","StorageText","Storage");
-
-	FString StorageStr = FString::Printf(TEXT("%s %d/%d"),*StorageText.ToString(),CurrentCount,MaxCount);
+	// UInventory* CrntStorage = UMyLib::GetPlayerStorage();
 	//
-	CurrentCount = UMyLib::GetPlayerInven()->GetEmptyIndex();
-
-	MaxCount = UMyLib::GetPlayerInven()->m_nInvenMaxSize;
-
-	FText InvenText = NSLOCTEXT("UWidgetStorage","InvenText","Inventory");
-
-	FString InvenStr = FString::Printf(TEXT("%s %d/%d"),*InvenText.ToString(),CurrentCount,MaxCount);
+	// int CurrentCount = CrntStorage->GetEmptyIndex();
 	//
-	FString TotalStr = FString::Printf(TEXT("%s %s"),*StorageStr,*InvenStr);
-
-	m_TxtStorageInvenCount->SetText(FText::FromString(TotalStr));
+	// int MaxCount = CrntStorage->m_nInvenMaxSize;
+	//
+	// FText StorageText = NSLOCTEXT("UWidgetStorage","StorageText","Storage");
+	//
+	// FString StorageStr = FString::Printf(TEXT("%s %d/%d"),*StorageText.ToString(),CurrentCount,MaxCount);
+	// //
+	// CurrentCount = UMyLib::GetPlayerInven()->GetEmptyIndex();
+	//
+	// MaxCount = UMyLib::GetPlayerInven()->m_nInvenMaxSize;
+	//
+	// FText InvenText = NSLOCTEXT("UWidgetStorage","InvenText","Inventory");
+	//
+	// FString InvenStr = FString::Printf(TEXT("%s %d/%d"),*InvenText.ToString(),CurrentCount,MaxCount);
+	// //
+	// FString TotalStr = FString::Printf(TEXT("%s %s"),*StorageStr,*InvenStr);
+	//
+	// m_TxtStorageInvenCount->SetText(FText::FromString(TotalStr));
 }
 
 void UWidgetStorage::AddInvenDelegate()

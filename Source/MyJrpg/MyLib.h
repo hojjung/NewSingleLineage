@@ -44,10 +44,6 @@ public:
 
 	static int GetRectVertIndexPer(const FSlateRect& rect,int maxDivide/*if 0,1,2 than 3*/,const FVector2D& mousePos);
 
-	static const FItemDataRow& GetItemData(const FItemSpec& spec);
-
-	static const FSkillDataRow& GetSkillData(const FItemSpec& spec);
-
 	static const FItemDataRow& GetItemData(const FName& specID);
 
 	static const FSkillDataRow& GetSkillData(const FName& specID);
@@ -67,9 +63,7 @@ public:
 
 	static UEquipManager* GetEquip();
 
-	static EEquipSlotType GetEquipItemSlot(const FItemSpec& spec);
-
-	static bool CanHit(int atkLv,const FStatGroup& attacker,const FStatGroup& defender);
+	static EEquipSlotType GetEquipItemSlot(const FName& id);
 
 	static UParticleEffectManager* GetEffectM();
 
@@ -86,4 +80,8 @@ public:
 	static bool SphereOverlapComponents(UObject* WorldContextObject,FRotator Rot , const FVector SpherePos, float SphereRadius, const TArray<TEnumAsByte<EObjectTypeQuery> > & ObjectTypes, UClass* ComponentClassFilter, const TArray<AActor*>& ActorsToIgnore, TArray<UPrimitiveComponent*>& OutComponents);
 
 	static void SetBtnTint(UButton* btn, FLinearColor colrWant);
+
+	static FName GenerateEquipItemHashKey(const FName& id, const void *ptr);
+
+	static FName GetEquipIDFromHashID(const FName& hash_id);
 };

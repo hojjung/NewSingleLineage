@@ -62,13 +62,13 @@ void UWidgetEquipElement::UpdateElement()
 	}
 }
 
-void UWidgetEquipElement::UpdateElement(const FItemSpec& spec)
+void UWidgetEquipElement::UpdateElement(const FName& spec)
 {
 	const FItemDataRow& ItemData = UMyLib::GetItemData(spec);
 
 	m_OverlayEquip->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
 
-	int Level = spec.m_nLevel;
+	int Level = UMyLib::GetPlayerInven()->GetItemLevel(spec);;
 
 	if(Level>0)
 	{
@@ -141,7 +141,7 @@ bool UWidgetEquipElement::IsSlotEmpty() const
 	return !UMyLib::GetEquip()->IsItemEquipped(m_Slot);
 }
 
-const FItemSpec* UWidgetEquipElement::GetEquippedItem() const
+const FName* UWidgetEquipElement::GetEquippedItem() const
 {
 	return UMyLib::GetEquip()->GetEquipItem(m_Slot);
 }

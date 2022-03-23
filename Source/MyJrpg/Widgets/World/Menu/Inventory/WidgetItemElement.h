@@ -31,7 +31,6 @@ public:
 
 	FOnClicked m_OnFocus;
 
-	TWeakObjectPtr<UInventory> m_Inven;
 	
 protected:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (BindWidget))
@@ -45,6 +44,8 @@ protected:
 	UPROPERTY()
 	int m_nIndex;
 	
+	TWeakObjectPtr<UInventory> m_Inven;
+	
 	EPanelType m_PanelType;
 
 	int m_nAmount;
@@ -52,13 +53,11 @@ protected:
 	int m_nMaxAmount;
 
 protected:
-	virtual void NativeOnInitialized() override;
-
 	FText GetFocusText();
 
 	void OnHoldingComplete();
 
-	void MoveItem(UInventory* addHere,UInventory* removeHere,const FItemSpec& ItemSpec, bool IsEquipItem);
+	void MoveItem(UInventory* addHere,UInventory* removeHere,const FName& ItemSpec, bool IsEquipItem);
 
 	void SellItem();
 
@@ -66,14 +65,16 @@ protected:
 
 	int GetMaxAmount();
 	
+	void UpdateElement();
 public:
-	const FItemSpec* GetItemSpec() const;
+	void Init(EPanelType panel,UInventory* inven);
 
 	void SetIndex(int index);
 	
-	void UpdateElement();
+	FName GetItemID() const;
 
-	void UpdateElement(const FItemSpec& spec);
+
+	void UpdateElement(const FName& id);
 	
 	void Clear();
 
@@ -89,5 +90,4 @@ public:
 
 	void SetMyInteractable(bool isInteractAble);
 
-	void SetPanelType(EPanelType panel);
 };
