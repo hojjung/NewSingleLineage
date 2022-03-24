@@ -15,6 +15,11 @@ void UInGameTextWidget::NativeOnInitialized()
 	m_AryDmgTxtFuncs[static_cast<int>(ETextType::Immune)] = &UInGameTextWidget::PlayImmune;
 }
 
+void UInGameTextWidget::SetParentComponent(USceneComponent* parent)
+{
+	m_Parent = parent;
+}
+
 void UInGameTextWidget::PlayNormalDmg()
 {
 	PlayAnimation(Dmg);
@@ -44,6 +49,8 @@ void UInGameTextWidget::PlayMiss()
 
 void UInGameTextWidget::SetTextWant(const FText& textWant, ETextType dmg)
 {
+	m_Parent->SetHiddenInGame(false);
+	
 	m_TextName->SetText(textWant);
 	
 	(this->*m_AryDmgTxtFuncs[static_cast<int>(dmg)])();
@@ -53,5 +60,7 @@ void UInGameTextWidget::OnAnimationFinishedPlaying(UUMGSequencePlayer& Player)
 {
 	Super::OnAnimationFinishedPlaying(Player);
 
-	m_OnAnimEnd.ExecuteIfBound();
+	m_Parent->SetHiddenInGame(true);
+	
+	m_Parent->SetRelativeLocation(FVector(0,0,0));
 }

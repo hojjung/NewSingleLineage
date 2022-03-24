@@ -24,7 +24,5 @@ public:
 	
 	void SetTextWant(const FText& textWant,ETextType dmg);
 	
-	void EndAnimation();
-
 	virtual void BeginPlay() override;
 };

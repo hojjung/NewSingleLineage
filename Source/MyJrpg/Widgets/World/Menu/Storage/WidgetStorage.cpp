@@ -18,33 +18,46 @@ void UWidgetStorage::NativeOnInitialized()
 	m_BtnLeft->OnClicked.AddDynamic(this, &UWidgetStorage::OnClickLeft);
 	
 	m_BtnRight->OnClicked.AddDynamic(this, &UWidgetStorage::OnClickRight);
+}
 
-	UpdateText();
+void UWidgetStorage::OpenPanel()
+{
+	SetVisibility(ESlateVisibility::SelfHitTestInvisible);
+	AddInvenDelegate();
+	m_InvenPanel->OpenPanel();
+}
+
+void UWidgetStorage::ClosePanel()
+{
+	Super::ClosePanel();
+
+	RemoveInvenDelegate();
+	m_InvenPanel->ClosePanel();
 }
 
 void UWidgetStorage::UpdateText()
 {
-	// UInventory* CrntStorage = UMyLib::GetPlayerStorage();
+	UInventory* CrntStorage = UMyLib::GetPlayerStorage();
+	
+	int CurrentCount = CrntStorage->GetUsingSlotCount();
+	
+	int MaxCount = CrntStorage->GetInvenSize();
+	
+	FText StorageText = NSLOCTEXT("UWidgetStorage","StorageText","Storage");
+	
+	FString StorageStr = FString::Printf(TEXT("%s %d/%d"),*StorageText.ToString(),CurrentCount,MaxCount);
 	//
-	// int CurrentCount = CrntStorage->GetEmptyIndex();
+	CurrentCount = UMyLib::GetPlayerInven()->GetUsingSlotCount();
+	
+	MaxCount = UMyLib::GetPlayerInven()->GetInvenSize();
+	
+	FText InvenText = NSLOCTEXT("UWidgetStorage","InvenText","Inventory");
+	
+	FString InvenStr = FString::Printf(TEXT("%s %d/%d"),*InvenText.ToString(),CurrentCount,MaxCount);
 	//
-	// int MaxCount = CrntStorage->m_nInvenMaxSize;
-	//
-	// FText StorageText = NSLOCTEXT("UWidgetStorage","StorageText","Storage");
-	//
-	// FString StorageStr = FString::Printf(TEXT("%s %d/%d"),*StorageText.ToString(),CurrentCount,MaxCount);
-	// //
-	// CurrentCount = UMyLib::GetPlayerInven()->GetEmptyIndex();
-	//
-	// MaxCount = UMyLib::GetPlayerInven()->m_nInvenMaxSize;
-	//
-	// FText InvenText = NSLOCTEXT("UWidgetStorage","InvenText","Inventory");
-	//
-	// FString InvenStr = FString::Printf(TEXT("%s %d/%d"),*InvenText.ToString(),CurrentCount,MaxCount);
-	// //
-	// FString TotalStr = FString::Printf(TEXT("%s %s"),*StorageStr,*InvenStr);
-	//
-	// m_TxtStorageInvenCount->SetText(FText::FromString(TotalStr));
+	FString TotalStr = FString::Printf(TEXT("%s %s"),*StorageStr,*InvenStr);
+	
+	m_TxtStorageInvenCount->SetText(FText::FromString(TotalStr));
 }
 
 void UWidgetStorage::AddInvenDelegate()
@@ -54,24 +67,18 @@ void UWidgetStorage::AddInvenDelegate()
 	m_EachInvenHandle = UMyLib::GetPlayerStorage()->m_OnInvenChanged.AddUObject(this,&UWidgetStorage::UpdateText);
 
 	m_StoragePanel->Init(UMyLib::GetPlayerStorage(),EPanelType::StorageWithdraw);
+	m_StoragePanel->OpenPanel();
+	
+	UpdateText();
 }
 
 void UWidgetStorage::RemoveInvenDelegate()
 {
+	m_StoragePanel->ClosePanel();
 	UMyLib::GetPlayerStorage()->m_OnInvenChanged.Remove(m_EachInvenHandle);
 }
 
-void UWidgetStorage::OpenPanel()
-{
-	AddInvenDelegate();
-}
 
-void UWidgetStorage::ClosePanel()
-{
-	Super::ClosePanel();
-
-	RemoveInvenDelegate();
-}
 
 void UWidgetStorage::OnClickLeft()
 {

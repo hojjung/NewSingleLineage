@@ -27,9 +27,8 @@ public:
 	UWidgetAnimation* Miss;
 	UPROPERTY(Transient,BlueprintReadWrite,meta = (BindWidgetAnim,AllowPrivateAccess = "true"))
 	UWidgetAnimation* Immune;
-	
-	FOnAnimEnd m_OnAnimEnd;
 
+	TWeakObjectPtr<USceneComponent> m_Parent;
 protected:
 	typedef void (UInGameTextWidget::*FDmgTxtPtr)(void);
 
@@ -38,6 +37,8 @@ protected:
 	virtual void NativeOnInitialized() override;
 
 public:
+	void SetParentComponent(USceneComponent* parent);
+	
 	void PlayNormalDmg();
 
 	void PlayCriticalDmg();

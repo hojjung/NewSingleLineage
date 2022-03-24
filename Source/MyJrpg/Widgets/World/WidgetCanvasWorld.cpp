@@ -159,7 +159,8 @@ void UWidgetCanvasWorld::OpenShop(const UDataTable* dT)
 
 void UWidgetCanvasWorld::OpenStorage()
 {
-	m_StoragePanel->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
+	m_StoragePanel->OpenPanel();
+	
 }
 
 void UWidgetCanvasWorld::OpenZone()

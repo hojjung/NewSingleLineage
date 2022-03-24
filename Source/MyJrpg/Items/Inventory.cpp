@@ -78,6 +78,8 @@ bool UInventory::AddEquipItem(FName gid, int lv)
 
 	m_OnInvenChanged.Broadcast();
 
+	m_OnItemObtain.Broadcast(UMyLib::GetItemData(gid), 1);
+
 	return true;
 }
 
@@ -146,7 +148,7 @@ FName UInventory::GetItemID(int index)
 		return NAME_None;
 	}
 	
-	return m_AryTotalItems[index];
+	return  m_AryTotalItems[index];
 }
 
 bool UInventory::HasItem(const FName& name, int amount)
@@ -157,5 +159,10 @@ bool UInventory::HasItem(const FName& name, int amount)
 	}
 
 	return m_MapMiscItems[name] >= amount;
+}
+
+int UInventory::GetUsingSlotCount()
+{
+	return m_AryTotalItems.Num();
 }
 

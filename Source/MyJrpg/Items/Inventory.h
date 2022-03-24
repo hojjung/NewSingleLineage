@@ -73,5 +73,7 @@ public:
 	FName GetItemID(int index);
 	
 	bool HasItem(const FName& name, int amount =1);
+	
+	int GetUsingSlotCount();
 };
 

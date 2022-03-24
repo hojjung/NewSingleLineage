@@ -58,13 +58,24 @@ void URewardManager::RequestMonsterReward()
 	
 	for(auto& DropItem : AryDropDatas)
 	{
-		int RandIndex = FMath::RandRange(0,DropItem.m_nExpectDropCount);
+		int RandIndex = FMath::RandRange(0,DropItem.m_nExpectDropCount - 1);
 
 		if(RandIndex == 0)
 		{
 			int Amount = 1;
 			
-			UMyLib::GetPlayerInven()->AddItem(DropItem.m_Item.RowName,Amount);
+			EItemType type = UMyLib::GetItemType(DropItem.m_Item.RowName);
+
+			if (type == EItemType::Equip)
+			{
+				FName HashID = UMyLib::GenerateEquipItemHashKey(DropItem.m_Item.RowName,this);
+			
+				UMyGameInstance::Get->m_Inven->AddEquipItem(HashID);
+
+				continue;;
+			}
+		
+			UMyGameInstance::Get->m_Inven->AddItem(DropItem.m_Item.RowName,Amount);
 		}
 	}
 }

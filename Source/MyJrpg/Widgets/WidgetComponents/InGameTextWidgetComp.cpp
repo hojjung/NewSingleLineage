@@ -20,24 +20,15 @@ void UInGameTextWidgetComp::BeginPlay()
 {
 	Super::BeginPlay();
 	SetWidgetClass(m_ClassTextWidget);
+	Cast<UInGameTextWidget>(GetUserWidgetObject())->SetParentComponent(this);
 	SetHiddenInGame(true);
 }
 
 void UInGameTextWidgetComp::SetTextWant(const FText& textWant, ETextType dmg)
 {
-	SetHiddenInGame(false);
-	
 	UInGameTextWidget* InGameWidget =  Cast<UInGameTextWidget>( GetUserWidgetObject());
-	
+
 	InGameWidget->SetTextWant(textWant,dmg);
 	
-	InGameWidget->m_OnAnimEnd.BindUObject(this,&UInGameTextWidgetComp::EndAnimation);
-	
 	RequestRedraw();
-}
-
-void UInGameTextWidgetComp::EndAnimation()
-{
-	SetHiddenInGame(true);
-	SetRelativeLocation(FVector(0,0,0));
 }

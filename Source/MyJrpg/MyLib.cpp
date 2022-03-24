@@ -114,7 +114,9 @@ int UMyLib::GetRectVertIndexPer(const FSlateRect& rect, int maxDivide, const FVe
 
 const FItemDataRow& UMyLib::GetItemData(const FName& specID)
 {
-	const FItemDataRow* FoundItemRow = UItemData::GetItemTable->FindRow<FItemDataRow>(specID,"");
+	FName ID = UMyLib::GetEquipIDFromHashID(specID);
+	
+	const FItemDataRow* FoundItemRow = UItemData::GetItemTable->FindRow<FItemDataRow>(ID,"");
 
 	return *FoundItemRow;
 }
