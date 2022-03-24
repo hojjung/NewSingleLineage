@@ -9,12 +9,8 @@ void UWidgetStorage::NativeOnInitialized()
 
 	m_nCrntIndex = 0;
 
-	UMyLib::GetPlayerInven()->m_OnInvenChanged.AddUObject(this,&UWidgetStorage::UpdateText);
-	
 	m_InvenPanel->Init(UMyLib::GetPlayerInven(),EPanelType::StorageDeposit);
 	
-	AddInvenDelegate();
-
 	m_FilterBtns->RegisterFilter(m_StoragePanel);
 	
 	m_FilterBtns->RegisterFilter(m_InvenPanel);
@@ -55,14 +51,26 @@ void UWidgetStorage::AddInvenDelegate()
 {
 	UMyGameInstance::Get->SelectStorage(m_nCrntIndex);
 
-	m_DeleHandle = UMyLib::GetPlayerStorage()->m_OnInvenChanged.AddUObject(this,&UWidgetStorage::UpdateText);
+	m_EachInvenHandle = UMyLib::GetPlayerStorage()->m_OnInvenChanged.AddUObject(this,&UWidgetStorage::UpdateText);
 
 	m_StoragePanel->Init(UMyLib::GetPlayerStorage(),EPanelType::StorageWithdraw);
 }
 
 void UWidgetStorage::RemoveInvenDelegate()
 {
-	UMyLib::GetPlayerStorage()->m_OnInvenChanged.Remove(m_DeleHandle);
+	UMyLib::GetPlayerStorage()->m_OnInvenChanged.Remove(m_EachInvenHandle);
+}
+
+void UWidgetStorage::OpenPanel()
+{
+	AddInvenDelegate();
+}
+
+void UWidgetStorage::ClosePanel()
+{
+	Super::ClosePanel();
+
+	RemoveInvenDelegate();
 }
 
 void UWidgetStorage::OnClickLeft()

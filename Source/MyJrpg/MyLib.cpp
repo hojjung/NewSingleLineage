@@ -333,7 +333,10 @@ FName UMyLib::GetEquipIDFromHashID(const FName& hash_id)
 	
 	FString R;
 	
-	TempStr.Split(TEXT(":"),&L,&R);
+	if(TempStr.Split(TEXT(":"),&L,&R))
+	{
+		return FName(L);	
+	}
 	
-	return FName(L);
+	return hash_id;
 }

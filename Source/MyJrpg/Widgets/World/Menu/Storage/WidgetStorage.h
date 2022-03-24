@@ -38,7 +38,7 @@ protected:
 	UPROPERTY()
 	int m_nCrntIndex;
 
-	FDelegateHandle m_DeleHandle;
+	FDelegateHandle m_EachInvenHandle;
 protected:
 	virtual void NativeOnInitialized() override;
 
@@ -48,6 +48,9 @@ protected:
 	
 	void RemoveInvenDelegate();
 public:
+	void OpenPanel();
+
+	virtual void ClosePanel() override;
 	UFUNCTION()
 	void OnClickLeft();
 	UFUNCTION()

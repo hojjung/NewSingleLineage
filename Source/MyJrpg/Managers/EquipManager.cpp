@@ -6,18 +6,19 @@
 
 void UEquipManager::Init()
 {
-	m_AryEqupSlots.Init(nullptr,(int)EEquipSlotType::Length-1);
+	m_AryEqupSlots.Init(NAME_None,(int)EEquipSlotType::Length-1);
 }
 
 bool UEquipManager::Equip(EEquipSlotType slotWant,const FName& itemWant)
 {
-	PRINTF("Equip01");
 	int Index = (int)slotWant - 1;
 	
-	m_AryEqupSlots[Index] = &itemWant;
+	m_AryEqupSlots[Index] = itemWant;
 	
-	EquipOption(*m_AryEqupSlots[Index]);
+	EquipOption(m_AryEqupSlots[Index]);
+	
 	SetIsRangeStance();
+	
 	m_OnEquipChanged.Broadcast();
 
 	return true;
@@ -38,11 +39,11 @@ void UEquipManager::Unequip(EEquipSlotType slotWant)
 	PRINTF("Unequip01");
 	int Index = (int)slotWant - 1;
 	
-	const FName* Temp = m_AryEqupSlots[Index];
+	const FName& Temp = m_AryEqupSlots[Index];
 
-	UnequipOption(*Temp);
+	UnequipOption(Temp);
 
-	m_AryEqupSlots[Index] = nullptr;
+	m_AryEqupSlots[Index] = NAME_None;
 
 	SetIsRangeStance();
 	m_OnEquipChanged.Broadcast();
@@ -50,12 +51,12 @@ void UEquipManager::Unequip(EEquipSlotType slotWant)
 
 void UEquipManager::Unequip(const FName& itemWant)
 {
-	int Index = m_AryEqupSlots.Find(&itemWant) + 1;
+	int Index = m_AryEqupSlots.Find(itemWant) + 1;
 	EEquipSlotType SlotT = (EEquipSlotType)Index;
 	Unequip(SlotT);
 }
 
-const TArray<const FName*>& UEquipManager::GetEquipAry() const
+const TArray<FName>& UEquipManager::GetEquipAry() const
 {
 	return m_AryEqupSlots;
 }
@@ -66,15 +67,15 @@ bool UEquipManager::IsItemEquipped(const FName& itemWant)
 	
 	int Index = (int) SlotT - 1;
 
-	return m_AryEqupSlots[Index] == &itemWant;
+	return m_AryEqupSlots[Index] == itemWant;
 }
 
 bool UEquipManager::IsItemEquipped(EEquipSlotType wantSlot)
 {
-	return GetEquipItem(wantSlot)  != nullptr;
+	return !GetEquipItem(wantSlot).IsNone();
 }
 
-const FName* UEquipManager::GetEquipItem(EEquipSlotType wantSlot)
+const FName& UEquipManager::GetEquipItem(EEquipSlotType wantSlot)
 {
 	return m_AryEqupSlots[(int)wantSlot-1];
 }
@@ -86,22 +87,22 @@ bool UEquipManager::IsRangeStance()
 
 void UEquipManager::SetIsRangeStance()
 {
-	auto* FoundItem = GetEquipItem(EEquipSlotType::Weapon);
+	const FName& FoundItem = GetEquipItem(EEquipSlotType::Weapon);
 
-	if(!FoundItem)
+	if(FoundItem.IsNone())
 	{
 		m_bIsRange = false;
 		return ;
 	}
 	
-	m_bIsRange = UMyLib::GetItemData(*FoundItem).m_EffectRange.Get()->IsValidLowLevel();
+	m_bIsRange = UMyLib::GetItemData(FoundItem).m_EffectRange.Get()->IsValidLowLevel();
 }
 
 UParticleSystem* UEquipManager::GetBulletEffect()
 {
-	auto* FoundItem = GetEquipItem(EEquipSlotType::Weapon);
+	const FName& FoundItem = GetEquipItem(EEquipSlotType::Weapon);
 
-	return UMyAssetManager::Get()->LoadParticleEffect(UMyLib::GetItemData(*FoundItem).m_EffectRange);
+	return UMyAssetManager::Get()->LoadParticleEffect(UMyLib::GetItemData(FoundItem).m_EffectRange);
 }
 
 void UEquipManager::UpdateEquip()

@@ -33,9 +33,16 @@ void UWidgetEquipInvenPanel::UpdateText()
 
 void UWidgetEquipInvenPanel::ClosePanel()
 {
-	SetVisibility(ESlateVisibility::Collapsed);
+	Super::ClosePanel();
 	
 	m_InvenPanel->ClosePanel();
+}
+
+void UWidgetEquipInvenPanel::OpenInventory()
+{
+	SetVisibility(ESlateVisibility::SelfHitTestInvisible);
+
+	m_InvenPanel->OpenPanel();
 }
 
 UWidgetInventory* UWidgetEquipInvenPanel::GetInvenPanel()

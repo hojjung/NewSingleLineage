@@ -24,6 +24,8 @@ void UWidgetEnchantBase::Open()
 {
 	SetVisibility(ESlateVisibility::SelfHitTestInvisible);
 
+	m_Inven->OpenPanel();
+
 	Update();
 }
 
@@ -40,6 +42,8 @@ void UWidgetEnchantBase::SetEnchantEquipMaterial(FName& mat)
 void UWidgetEnchantBase::OnClose()
 {
 	SetVisibility(ESlateVisibility::Collapsed);
+
+	m_Inven->ClosePanel();
 
 	UMyGameInstance::Get->m_EnchantManager->Clear();
 }

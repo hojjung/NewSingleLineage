@@ -23,7 +23,7 @@ void UPlAttchActorManage::Init(AMyPlayerPawn* my_player_pawn)
 
 void UPlAttchActorManage::UpdateEquipActor()
 {
-	const TArray<const FName*>& AryEquips = UMyGameInstance::Get->m_EquipManager->GetEquipAry();
+	const TArray<FName>& AryEquips = UMyGameInstance::Get->m_EquipManager->GetEquipAry();
 
 	int i=0;
 
@@ -31,15 +31,15 @@ void UPlAttchActorManage::UpdateEquipActor()
 	{
 		AAttachEquipmentBase* CurrentEquip = m_AryEqupActors[i];
 
-		const FName* const* NewEquip = &AryEquips[i];
+		const FName& NewEquip = AryEquips[i];
 		
-		if(*NewEquip)
+		if(!NewEquip.IsNone())
 		{
 			if(CurrentEquip)
 			{
 				(CurrentEquip)->Destroy();
 			}
-			TSubclassOf<AAttachEquipmentBase> EquipClass = UMyLib::GetItemData(**NewEquip).m_ClassEquip;
+			TSubclassOf<AAttachEquipmentBase> EquipClass = UMyLib::GetItemData(NewEquip).m_ClassEquip;
 
 			if(!EquipClass->IsValidLowLevel())
 			{

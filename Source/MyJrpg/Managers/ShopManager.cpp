@@ -15,10 +15,20 @@ void UShopManager::BuyItem(const FItemTradingData& item_trading_data, int amount
 	{
 		return;
 	}
-	
-	if (!UMyLib::GetPlayerInven()->AddItem(item_trading_data.m_ItemDataRowHandle.RowName,amount))
+
+	const FName& ItemID = item_trading_data.m_ItemDataRowHandle.RowName;
+
+	EItemType ItemType = UMyLib::GetItemType(ItemID);
+
+	if (ItemType == EItemType::Equip)
 	{
-		return;
+		if(!UMyLib::GetPlayerInven()->AddEquipItem(item_trading_data.m_ItemDataRowHandle.RowName))
+			return;
+	}
+	else
+	{
+		if(!UMyLib::GetPlayerInven()->AddItem(item_trading_data.m_ItemDataRowHandle.RowName,amount))
+			return;
 	}
 	
 	UMyGameInstance::Get->m_CurrencyManager->SubGold(TotalCost);
@@ -29,8 +39,14 @@ void UShopManager::BuyItem(const FItemTradingData& item_trading_data, int amount
 void UShopManager::SellItem(const FName& ability_spec, int amount)
 {
 	int SellGold = amount * UMyLib::GetItemData(ability_spec).m_nSellValue;
-		
-	UMyLib::GetPlayerInven()->RemoveItem(ability_spec,amount);
 
+	if (UMyLib::GetItemType(ability_spec) == EItemType::Equip)
+	{
+		UMyLib::GetPlayerInven()->RemoveEquipItem(ability_spec);
+	}
+	else
+	{
+		UMyLib::GetPlayerInven()->RemoveItem(ability_spec,amount);
+	}
 	UMyGameInstance::Get->m_CurrencyManager->AddGold(SellGold);
 }

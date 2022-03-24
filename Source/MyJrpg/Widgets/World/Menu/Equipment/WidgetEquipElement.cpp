@@ -38,7 +38,7 @@ FText UWidgetEquipElement::GetFocusText()
 
 void UWidgetEquipElement::OnHoldingComplete()
 {
-	UMyLib::GetCanvas()->OpenItemInfo(*GetEquippedItem());
+	UMyLib::GetCanvas()->OpenItemInfo(GetEquippedItem());
 }
 
 void UWidgetEquipElement::SetSlot(EEquipSlotType slot)
@@ -48,13 +48,13 @@ void UWidgetEquipElement::SetSlot(EEquipSlotType slot)
 
 void UWidgetEquipElement::UpdateElement()
 {
-	auto Equipped = GetEquippedItem();
+	const FName& Equipped = GetEquippedItem();
 	
-	if(Equipped) 
+	if(!Equipped.IsNone()) 
 	{
 		m_ImgEquipIcon->SetVisibility(ESlateVisibility::Collapsed);
 		
-		UpdateElement(*Equipped);//Update As Equipped
+		UpdateElement(Equipped);//Update As Equipped
 	}
 	else//Update As UnEquipped
 	{
@@ -105,7 +105,7 @@ void UWidgetEquipElement::Clear()
 
 void UWidgetEquipElement::UnEquipItem()
 {
-	UMyGameInstance::Get->m_ItemExeManager->EquipUnequipItem(*GetEquippedItem());
+	UMyGameInstance::Get->m_ItemExeManager->EquipUnequipItem(GetEquippedItem());
 }
 
 void UWidgetEquipElement::SetMyFocus()
@@ -141,7 +141,7 @@ bool UWidgetEquipElement::IsSlotEmpty() const
 	return !UMyLib::GetEquip()->IsItemEquipped(m_Slot);
 }
 
-const FName* UWidgetEquipElement::GetEquippedItem() const
+const FName& UWidgetEquipElement::GetEquippedItem() const
 {
 	return UMyLib::GetEquip()->GetEquipItem(m_Slot);
 }

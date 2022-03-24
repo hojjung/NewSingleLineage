@@ -48,4 +48,6 @@ public:
 	UWidgetStatPanel* GetStatPanel();
 
 	virtual void ClosePanel() override;
+	
+	void OpenInventory();
 };

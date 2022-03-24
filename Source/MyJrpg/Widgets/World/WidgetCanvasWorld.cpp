@@ -138,7 +138,8 @@ void UWidgetCanvasWorld::OpenQuest()
 
 void UWidgetCanvasWorld::OpenInventory()
 {
-	m_EquipInvenPanel->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
+	m_EquipInvenPanel->OpenInventory();
+	
 }
 
 void UWidgetCanvasWorld::OpenSkill()

@@ -112,6 +112,8 @@ void UWidgetShopPanel::SetShopPanel(const UDataTable* shopTable)
 	ClearFilter();
 
 	UpdateShopPanel();
+
+	m_InvenPanel->OpenPanel();
 }
 
 void UWidgetShopPanel::UpdateShopPanel()
@@ -161,4 +163,6 @@ void UWidgetShopPanel::ClosePanel()
 	m_AryShopData.Reset();
 	
 	m_InvenBox->ClearChildren();
+	
+	m_InvenPanel->ClosePanel();
 }

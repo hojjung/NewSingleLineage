@@ -197,6 +197,7 @@ void UWidgetItemElement::UseItem()
 		return;
 	case EPanelType::ShopSell:
 		SellItem();
+		return;
 	case EPanelType::Enchant:
 		if (IsEquipItem)
 		{
