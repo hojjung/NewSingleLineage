@@ -7,6 +7,7 @@
 #include "MyJrpg/MyJrpg.h"
 #include "InGameTextWidget.generated.h"
 
+class UInGameTextWidgetComp;
 UCLASS()
 class MYJRPG_API UInGameTextWidget : public UUserWidget
 {
@@ -27,8 +28,9 @@ public:
 	UWidgetAnimation* Miss;
 	UPROPERTY(Transient,BlueprintReadWrite,meta = (BindWidgetAnim,AllowPrivateAccess = "true"))
 	UWidgetAnimation* Immune;
-
-	TWeakObjectPtr<USceneComponent> m_Parent;
+	UPROPERTY()
+	UInGameTextWidgetComp* m_Parent;
+	
 protected:
 	typedef void (UInGameTextWidget::*FDmgTxtPtr)(void);
 
@@ -37,7 +39,7 @@ protected:
 	virtual void NativeOnInitialized() override;
 
 public:
-	void SetParentComponent(USceneComponent* parent);
+	void SetParentComponent(UInGameTextWidgetComp* parent);
 	
 	void PlayNormalDmg();
 

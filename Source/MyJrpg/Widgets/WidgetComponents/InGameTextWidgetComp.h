@@ -8,6 +8,7 @@
 
 #include "InGameTextWidgetComp.generated.h"
 
+class UInGameTextWidget;
 /**
  * 
  */
@@ -18,11 +19,12 @@ class MYJRPG_API UInGameTextWidgetComp : public UWidgetComponent
 protected:
 	UPROPERTY()
 	TSubclassOf<UUserWidget> m_ClassTextWidget;
-	
+	UPROPERTY()
+	UInGameTextWidget* m_TextWidget;
 public:
 	UInGameTextWidgetComp();
 	
-	void SetTextWant(const FText& textWant,ETextType dmg);
+	void SetTextWant(FVector loc,const FText& textWant,ETextType dmg);
 	
 	virtual void BeginPlay() override;
 };

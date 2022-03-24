@@ -30,7 +30,7 @@ void AMyPlayerController::BeginPlay()
 
 void AMyPlayerController::InitWidget()
 {
-	CreateIGWC(25);
+	CreateIGWC(10);
 }
 
 void AMyPlayerController::CreateIGWC(int count)
@@ -63,9 +63,7 @@ void AMyPlayerController::ShowInGameWorldText(const FString& stringWant, const A
 {
 	UInGameTextWidgetComp* TextCompWant = GetIGWC();
 
-	TextCompWant->SetWorldLocation(interactActor->GetActorLocation());
-
-	TextCompWant->SetTextWant(FText::FromString(stringWant), dmgPopup);
+	TextCompWant->SetTextWant(interactActor->GetActorLocation(), FText::FromString(stringWant), dmgPopup);
 }
 
 void AMyPlayerController::SetupInputComponent()

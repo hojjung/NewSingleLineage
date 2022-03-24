@@ -14,21 +14,21 @@ UInGameTextWidgetComp::UInGameTextWidgetComp()
 	SetPivot(FVector2D (0.5f, 0.5f));
 	SetWidgetSpace(EWidgetSpace::Screen);
 	SetCanEverAffectNavigation(false);
+	SetManuallyRedraw(true);
 }
 
 void UInGameTextWidgetComp::BeginPlay()
 {
 	Super::BeginPlay();
 	SetWidgetClass(m_ClassTextWidget);
-	Cast<UInGameTextWidget>(GetUserWidgetObject())->SetParentComponent(this);
-	SetHiddenInGame(true);
+	m_TextWidget = Cast<UInGameTextWidget>(GetUserWidgetObject()); 
+	m_TextWidget->SetParentComponent(this);
+	
 }
 
-void UInGameTextWidgetComp::SetTextWant(const FText& textWant, ETextType dmg)
+void UInGameTextWidgetComp::SetTextWant(FVector loc,const FText& textWant, ETextType dmg)
 {
-	UInGameTextWidget* InGameWidget =  Cast<UInGameTextWidget>( GetUserWidgetObject());
+	SetWorldLocation(loc);
 
-	InGameWidget->SetTextWant(textWant,dmg);
-	
-	RequestRedraw();
+	m_TextWidget->SetTextWant(textWant,dmg);
 }
