@@ -121,16 +121,55 @@ void UWidgetEnchantBase::UpdateBeforeAfter(const UEnchantManager* Enchant)
 	{
 		return;
 	}
+	
+	for(UWidgetEnchantOption* Op : m_AryOptions)
+	{
+		Op->RemoveFromParent();
+	}
+	m_AryOptions.Reset();
+	
 	int Level = UMyLib::GetPlayerInven()->GetItemLevel(TargetEquip);
-	//주스텟 보조스텟 업그레이드, 룸티스 장신구처럼 많은건 어떻게 해야할까?
-	
-	FString AfterLevelStr  = FString::Printf(TEXT("+%d"),Level + 1);
-	
-	FString BeforeLevelStr  = FString::Printf(TEXT("+%d"),Level);
-	
-	m_TextLevelBefore->SetText(FText::FromString(BeforeLevelStr));
 
-	m_TextLevelAfter->SetText(FText::FromString(AfterLevelStr));
+	m_StatLevel->SetBeforeAfter(TEXT("강화레벨"),TEXT("{0}"),Level, Level + 1);
+
+	const FItemDataRow& ItemData = UMyLib::GetItemData(TargetEquip);
+	
+	const auto& AryStats = ItemData.m_AryEnchantStats;
+
+	FStatGroup PreStat = Level == 0 ? FStatGroup(0) : AryStats[Level - 1];
+
+	if(AryStats[Level].m_Dmg > 0)
+	{
+		CreateOption(TEXT("데미지"), TEXT("+{0}"), PreStat.m_Dmg ,AryStats[Level].m_Dmg);
+	}
+	if(AryStats[Level].m_nAccu > 0)
+	{
+		CreateOption(TEXT("명중"), TEXT("+{0}"), PreStat.m_nAccu ,AryStats[Level].m_nAccu);
+	}
+	if(AryStats[Level].m_AtkSpeed > 0)
+	{
+		CreateOption(TEXT("공격속도"), TEXT("{0}%"), PreStat.m_AtkSpeed ,AryStats[Level].m_AtkSpeed);
+	}
+	if(AryStats[Level].m_MaxHp > 0)
+	{
+		CreateOption(TEXT("체력"), TEXT("+{0}"), PreStat.m_MaxHp ,AryStats[Level].m_MaxHp);
+	}
+	if(AryStats[Level].m_nAvoid > 0)
+	{
+		CreateOption(TEXT("회피"), TEXT("+{0}"), PreStat.m_nAvoid ,AryStats[Level].m_nAvoid);
+	}
+	if(AryStats[Level].m_DmgReduce > 0)
+	{
+		CreateOption(TEXT("데미지 리덕션"), TEXT("+{0}"), PreStat.m_DmgReduce ,AryStats[Level].m_DmgReduce);
+	}
+	if(AryStats[Level].m_CriPer > 0)
+	{
+		CreateOption(TEXT("치명 확률"), TEXT("{0}%"), PreStat.m_CriPer ,AryStats[Level].m_CriPer);
+	}
+	if(AryStats[Level].m_CriDmg > 0)
+	{
+		CreateOption(TEXT("치명 데미지"), TEXT("{0}%"), PreStat.m_CriDmg ,AryStats[Level].m_CriDmg);
+	}
 }
 
 void UWidgetEnchantBase::UpdateEnchantBtn(UEnchantManager* Enchant)
@@ -140,6 +179,17 @@ void UWidgetEnchantBase::UpdateEnchantBtn(UEnchantManager* Enchant)
 	int Cost = Enchant->GetEnchantCost();
 
 	m_TextEnchantCost->SetText(FText::AsNumber(Cost));
+}
+
+void UWidgetEnchantBase::CreateOption(const FString&& infoText, const FString&& formatText, int beforeValue, int afterValue)
+{
+	UWidgetEnchantOption* WidgetOp =  CreateWidget<UWidgetEnchantOption>(this, m_ClassOption);
+
+	m_ScrollInfo->AddChild(WidgetOp);
+
+	m_AryOptions.Add(WidgetOp);
+
+	WidgetOp->SetBeforeAfter(*infoText,*formatText,beforeValue,afterValue);
 }
 
 void UWidgetEnchantBase::Update()

@@ -3,6 +3,7 @@
 #include "MyJrpg/MyJrpg.h"
 #include "MyJrpg/Actors/Equipments/AttachEquipmentBase.h"
 #include "MyJrpg/Items/ItemExecuteBase.h"
+#include "MyJrpg/Items/Options/OptionBase.h"
 #include "UObject/NoExportTypes.h"
 #include "ItemData.generated.h"
 
@@ -72,6 +73,7 @@ public:
 
 	FStatGroup& operator-=(const FStatGroup& stat_group);
 	
+	FStatGroup operator+(const FStatGroup& element) const;
 };
 UCLASS()
 class MYJRPG_API UItemData : public UObject
@@ -142,6 +144,13 @@ struct FItemDataRow : public FTableRowBase
 	GENERATED_USTRUCT_BODY()
 
 public:
+	FItemDataRow()
+	{
+		m_EquipStats = FStatGroup(0);
+		m_EnchantStats = FStatGroup(0);
+	}
+
+public:
 	UPROPERTY(EditDefaultsOnly)
 	FText m_TextShowingName;
 	UPROPERTY(EditDefaultsOnly,meta = (MultiLine="true"))
@@ -158,6 +167,10 @@ public:
 	FColorDataHandle m_ColorHandle;
 	UPROPERTY(EditAnywhere, meta=(EditCondition = "m_ItemType != EEquipSlotType::None", EditConditionHides))
 	FStatGroup m_EquipStats;
+	UPROPERTY(EditAnywhere, meta=(EditCondition = "m_ItemType != EEquipSlotType::None", EditConditionHides))
+	FStatGroup m_EnchantStats;//this * level = enchant
+	UPROPERTY(EditAnywhere, meta=(EditCondition = "m_ItemType != EEquipSlotType::None", EditConditionHides))
+	TArray<TSubclassOf<UOptionBase>> m_Options;
 	UPROPERTY(EditAnywhere, meta=(EditCondition = "m_ItemType != EEquipSlotType::None", EditConditionHides))
 	TSubclassOf<AAttachEquipmentBase> m_ClassEquip;
 	UPROPERTY(EditAnywhere, meta=(EditCondition = "m_ItemType != EEquipSlotType::None", EditConditionHides))

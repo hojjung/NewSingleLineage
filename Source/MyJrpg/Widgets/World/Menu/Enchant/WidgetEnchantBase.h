@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "ImageText.h"
+#include "WidgetEnchantOption.h"
 #include "Blueprint/UserWidget.h"
 #include "Components/Button.h"
 #include "Components/TextBlock.h"
@@ -37,25 +38,18 @@ protected:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (BindWidget))
 	UTextBlock* m_TextInfo;
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (BindWidget))
-	UTextBlock* m_TextLevelBefore;
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (BindWidget))
-	UTextBlock* m_TextLevelAfter;
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (BindWidget))
-	UTextBlock* m_TextMainStat;
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (BindWidget))
-	UTextBlock* m_TextMainBefore;
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (BindWidget))
-	UTextBlock* m_TextMainAfter;
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (BindWidget))
-	UTextBlock* m_TextSubStat;
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (BindWidget))
-	UTextBlock* m_TextSubBefore;
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (BindWidget))
-	UTextBlock* m_TextSubAfter;
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (BindWidget))
 	UWidgetInventory* m_Inven; 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (BindWidget))
 	UWidgetImageText* m_TextEnchantCost;
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (BindWidget))
+	UScrollBox* m_ScrollInfo;
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (BindWidget))
+	UWidgetEnchantOption* m_StatLevel;
+	UPROPERTY(EditDefaultsOnly)
+	TSubclassOf<UWidgetEnchantOption> m_ClassOption;
+	UPROPERTY(EditDefaultsOnly)
+	TArray<UWidgetEnchantOption*> m_AryOptions;
+	
 protected:
 	virtual void NativeOnInitialized() override;
 
@@ -68,6 +62,8 @@ protected:
 	void UpdateBeforeAfter(const UEnchantManager* Enchant);
 	
 	void UpdateEnchantBtn(UEnchantManager* Enchant);
+
+	void CreateOption(const FString&& infoText, const FString&& formatText, int beforeValue, int afterValue);
 	
 public:
 	void Open();

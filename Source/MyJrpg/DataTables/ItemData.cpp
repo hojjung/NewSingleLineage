@@ -76,6 +76,15 @@ FStatGroup& FStatGroup::operator-=(const FStatGroup& stat_group)
 	return *this;
 }
 
+FStatGroup FStatGroup::operator+(const FStatGroup& element) const
+{
+	FStatGroup Stat = *this;
+
+	Stat+=element;
+
+	return Stat;
+}
+
 UItemData::UItemData()
 {
 	static ConstructorHelpers::FObjectFinder<UDataTable> Found(TEXT("DataTable'/Game/00_DataTables/Item/ItemTable.ItemTable'"));

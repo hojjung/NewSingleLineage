@@ -121,6 +121,20 @@ const FItemDataRow& UMyLib::GetItemData(const FName& specID)
 	return *FoundItemRow;
 }
 
+FStatGroup UMyLib::GetItemStatData(const FName& specID)
+{
+	int Level = UMyLib::GetPlayerInven()->GetItemLevel(specID);
+
+	const FItemDataRow& ItemData = GetItemData(specID);
+
+	if(Level == 0)
+	{
+		return ItemData.m_EquipStats;
+	}
+
+	return ItemData.m_EquipStats + ItemData.m_AryEnchantStats[Level - 1];
+}
+
 const FSkillDataRow& UMyLib::GetSkillData(const FName& specID)
 {
 	const FSkillDataRow* FoundItemRow = USkillData::GetSkillTable->FindRow<FSkillDataRow>(specID,"");

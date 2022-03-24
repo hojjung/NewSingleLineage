@@ -34,8 +34,6 @@ void UWidgetItemElement::Clear()
 {
 	m_ElementBase->Clear();
 
-	m_ElementBase->SetHoldable(false);
-
 	m_TextStackAmount->SetVisibility(ESlateVisibility::Collapsed);
 
 	m_OverlayEquip->SetVisibility(ESlateVisibility::Collapsed);

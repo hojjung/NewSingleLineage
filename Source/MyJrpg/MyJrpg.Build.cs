@@ -7,6 +7,9 @@ public class MyJrpg : ModuleRules
 	public MyJrpg(ReadOnlyTargetRules Target) : base(Target)
 	{
 		PCHUsage = PCHUsageMode.UseExplicitOrSharedPCHs;
+		
+		MinFilesUsingPrecompiledHeaderOverride = 1;
+		bUseUnity = true;
 	
 		PublicDependencyModuleNames.AddRange(new string[]
 		{
