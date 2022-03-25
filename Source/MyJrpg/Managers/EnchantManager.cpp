@@ -115,6 +115,11 @@ int UEnchantManager::GetEnchantCost() const
 	return Level * 0;
 }
 
+int UEnchantManager::GetCrntLevel() const
+{
+	return m_nCrntLevel;
+}
+
 float UEnchantManager::GetEnchantPercent() const
 {
 	int Lv = m_nCrntLevel;
@@ -145,7 +150,7 @@ void UEnchantManager::SetTargetEquip(const FName& target)
 {
 	m_CrntTarget = target;
 
-	m_nCrntLevel = UMyLib::GetPlayerInven()->GetItemLevel(m_CrntTarget);
+	m_nCrntLevel = m_CrntTarget.IsNone() ? 0 : UMyLib::GetPlayerInven()->GetItemLevel(m_CrntTarget);
 
 	m_OnEnchantChanged.Broadcast();
 }
@@ -163,12 +168,12 @@ void UEnchantManager::SetMaterialEquip(const FName& mat)
 	m_OnEnchantChanged.Broadcast();
 }
 
-FName UEnchantManager::GetCrntTarget() const
+const FName& UEnchantManager::GetCrntTarget() const
 {
 	return m_CrntTarget;
 }
 
-FName UEnchantManager::GetCrntMat() const
+const FName& UEnchantManager::GetCrntMat() const
 {
 	return m_CrntMat;
 }
@@ -240,6 +245,7 @@ void UEnchantManager::DoEnchant()
 	if (TryEnchant())
 	{
 		EnchantSuccess(false);
+		
 	}
 	else
 	{
@@ -252,11 +258,13 @@ void UEnchantManager::DoEnchant()
 	{
 		m_CrntMat = NAME_None;
 	}
-	
+
+	m_nCrntLevel = m_CrntTarget.IsNone() ? 0 : UMyLib::GetPlayerInven()->GetItemLevel(m_CrntTarget);
+
 	m_OnEnchantChanged.Broadcast();
 }
 
-bool UEnchantManager::IsEnchantAvailable()
+bool UEnchantManager::IsEnchantAvailable() const
 {
 	if (m_CrntMat.IsNone() || m_CrntTarget.IsNone())
 	{

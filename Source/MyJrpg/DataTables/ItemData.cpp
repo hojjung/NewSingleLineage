@@ -10,7 +10,7 @@ UDataTable* UItemData::GetItemTable = nullptr;
 
 UDataTable* UItemData::GetColorTable = nullptr;
 
-FStatGroup FStatGroup::operator+(const FStatGroup& stat_group)
+FStatGroup FStatGroup::operator+(const FStatGroup& stat_group) const
 {
 	FStatGroup StatNew = *this;
 	StatNew.m_nAvoid	+= stat_group.m_nAvoid;
@@ -27,7 +27,7 @@ FStatGroup FStatGroup::operator+(const FStatGroup& stat_group)
 	return StatNew;
 }
 
-FStatGroup FStatGroup::operator*(const FStatGroup& stat_group)
+FStatGroup FStatGroup::operator*(const FStatGroup& stat_group) const
 {
 	FStatGroup StatNew = *this;
 	StatNew.m_nAvoid	*= stat_group.m_nAvoid;
@@ -42,6 +42,40 @@ FStatGroup FStatGroup::operator*(const FStatGroup& stat_group)
 	StatNew.m_DmgReduce *= stat_group.m_DmgReduce;
 	
 	return StatNew;
+}
+
+FStatGroup FStatGroup::operator*(float m) const
+{
+	FStatGroup StatNew = *this;
+	StatNew.m_nAvoid	*= m;
+	StatNew.m_nAccu		*= m;
+	StatNew.m_MaxHp		*= m;
+	StatNew.m_Hp		*= m;
+	StatNew.m_Dmg		*= m;
+	StatNew.m_AtkSpeed	*= m;
+	StatNew.m_MoveSpeed	*= m;
+	StatNew.m_CriPer	*= m;
+	StatNew.m_CriDmg	*= m;
+	StatNew.m_DmgReduce *= m;
+	
+	return StatNew;
+}
+
+FStatGroup FStatGroup::operator*(int m) const
+{
+	FStatGroup StatNew = *this;
+	StatNew.m_nAvoid	*= m;
+	StatNew.m_nAccu		*= m;
+	StatNew.m_MaxHp		*= m;
+	StatNew.m_Hp		*= m;
+	StatNew.m_Dmg		*= m;
+	StatNew.m_AtkSpeed	*= m;
+	StatNew.m_MoveSpeed	*= m;
+	StatNew.m_CriPer	*= m;
+	StatNew.m_CriDmg	*= m;
+	StatNew.m_DmgReduce *= m;
+	
+	return StatNew; 
 }
 
 FStatGroup& FStatGroup::operator+=(const FStatGroup& stat_group)
@@ -74,15 +108,6 @@ FStatGroup& FStatGroup::operator-=(const FStatGroup& stat_group)
 	m_DmgReduce -= stat_group.m_DmgReduce;
 	
 	return *this;
-}
-
-FStatGroup FStatGroup::operator+(const FStatGroup& element) const
-{
-	FStatGroup Stat = *this;
-
-	Stat+=element;
-
-	return Stat;
 }
 
 UItemData::UItemData()

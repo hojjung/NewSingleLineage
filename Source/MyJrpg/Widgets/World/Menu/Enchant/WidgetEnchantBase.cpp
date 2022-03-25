@@ -26,15 +26,15 @@ void UWidgetEnchantBase::Open()
 
 	m_Inven->OpenPanel();
 
-	Update();
+	//Update();
 }
 
-void UWidgetEnchantBase::SetEnchantEquipTarget(FName& target)
+void UWidgetEnchantBase::SetEnchantEquipTarget(const FName& target)
 {
 	UMyGameInstance::Get->m_EnchantManager->SetTargetEquip(target);
 }
 
-void UWidgetEnchantBase::SetEnchantEquipMaterial(FName& mat)
+void UWidgetEnchantBase::SetEnchantEquipMaterial(const FName& mat)
 {
 	UMyGameInstance::Get->m_EnchantManager->SetMaterialEquip(mat);
 }
@@ -53,24 +53,20 @@ void UWidgetEnchantBase::DoEnchant()
 	UMyGameInstance::Get->m_EnchantManager->DoEnchant();
 }
 
-void UWidgetEnchantBase::UpdateIcons(const UEnchantManager* Enchant)
+void UWidgetEnchantBase::UpdateIcons(const FName& target, const FName& mat, int level)
 {
-	FName TargetEquip = Enchant->GetCrntTarget();
-	
-	if (!TargetEquip.IsNone())
+	if (!target.IsNone())
 	{
-		m_TargetItem->UpdateElement(TargetEquip);
+		m_TargetItem->UpdateElement(target);
 	}
 	else
 	{
 		m_TargetItem->Clear();
 	}
 
-	FName EnchantMat = Enchant->GetCrntMat();
-
-	if (!EnchantMat.IsNone())
+	if (!mat.IsNone())
 	{
-		m_TargetMaterial->UpdateElement(EnchantMat);
+		m_TargetMaterial->UpdateElement(mat);
 	}
 	else
 	{
@@ -78,23 +74,24 @@ void UWidgetEnchantBase::UpdateIcons(const UEnchantManager* Enchant)
 	}
 }
 
-void UWidgetEnchantBase::UpdateInfoTexts(UEnchantManager* Enchant)
+void UWidgetEnchantBase::UpdateInfoTexts(const UEnchantManager* Enchant, const FName& target, const FName& mat, int level)
 {
-	FName TargetEquip = Enchant->GetCrntTarget();
-
-	FName TargetMat = Enchant->GetCrntMat();
-	
-	if (TargetEquip.IsNone() || TargetMat.IsNone())
+	if (target.IsNone() || mat.IsNone())
 	{
+		m_BarEnchantLevel->SetPercent(0);
+		
+		m_TextInfo->SetVisibility(ESlateVisibility::Collapsed);
+		
 		return;
 	}
-	int Level = UMyLib::GetPlayerInven()->GetItemLevel(TargetEquip);
 	
-	FString AfterLevelStr  = FString::Printf(TEXT("+%d"),Level + 1);
+	m_TextInfo->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
+	
+	FString AfterLevelStr  = FString::Printf(TEXT("+%d"),level + 1);
 	
 	m_TextLevel->SetText(FText::FromString(AfterLevelStr));
 	//
-	float Percent = Level / FGlobalVariable::ENCHANT_MAX;
+	float Percent = (float)level / (float)FGlobalVariable::ENCHANT_MAX;
 
 	m_BarEnchantLevel->SetPercent(Percent);
 	//
@@ -113,66 +110,69 @@ void UWidgetEnchantBase::UpdateInfoTexts(UEnchantManager* Enchant)
 	m_TextInfo->SetText(FText::FromString(InfoStr));
 }
 
-void UWidgetEnchantBase::UpdateBeforeAfter(const UEnchantManager* Enchant)
+void UWidgetEnchantBase::UpdateBeforeAfter(const FName& target, int level)
 {
-	FName TargetEquip = Enchant->GetCrntTarget();
-	
-	if(TargetEquip.IsNone())
-	{
-		return;
-	}
-	
 	for(UWidgetEnchantOption* Op : m_AryOptions)
 	{
 		Op->RemoveFromParent();
 	}
+	
 	m_AryOptions.Reset();
 	
-	int Level = UMyLib::GetPlayerInven()->GetItemLevel(TargetEquip);
+	if(target.IsNone())
+	{
+		m_StatLevel->SetVisibility(ESlateVisibility::Collapsed);
+		
+		return;
+	}
 
-	m_StatLevel->SetBeforeAfter(TEXT("강화레벨"),TEXT("{0}"),Level, Level + 1);
-
-	const FItemDataRow& ItemData = UMyLib::GetItemData(TargetEquip);
+	m_StatLevel->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
 	
-	const auto& AryStats = ItemData.m_AryEnchantStats;
+	m_StatLevel->SetBeforeAfter(TEXT("강화레벨"),TEXT("{0}"),level, level + 1);
 
-	FStatGroup PreStat = Level == 0 ? FStatGroup(0) : AryStats[Level - 1];
+	const FItemDataRow& ItemData = UMyLib::GetItemData(target);
+	
+	const auto& EnchantStat = ItemData.m_EnchantStats;
 
-	if(AryStats[Level].m_Dmg > 0)
+	FStatGroup BeforeStat = EnchantStat * level;
+
+	FStatGroup AfterStat = EnchantStat * (level + 1);
+
+	if(AfterStat.m_Dmg > 0)
 	{
-		CreateOption(TEXT("데미지"), TEXT("+{0}"), PreStat.m_Dmg ,AryStats[Level].m_Dmg);
+		CreateOption(TEXT("데미지"), TEXT("+{0}"), BeforeStat.m_Dmg ,AfterStat.m_Dmg);
 	}
-	if(AryStats[Level].m_nAccu > 0)
+	if(AfterStat.m_nAccu > 0)
 	{
-		CreateOption(TEXT("명중"), TEXT("+{0}"), PreStat.m_nAccu ,AryStats[Level].m_nAccu);
+		CreateOption(TEXT("명중"), TEXT("+{0}"), BeforeStat.m_nAccu ,AfterStat.m_nAccu);
 	}
-	if(AryStats[Level].m_AtkSpeed > 0)
+	if(AfterStat.m_AtkSpeed > 0)
 	{
-		CreateOption(TEXT("공격속도"), TEXT("{0}%"), PreStat.m_AtkSpeed ,AryStats[Level].m_AtkSpeed);
+		CreateOption(TEXT("공격속도"), TEXT("{0}%"), BeforeStat.m_AtkSpeed ,AfterStat.m_AtkSpeed);
 	}
-	if(AryStats[Level].m_MaxHp > 0)
+	if(AfterStat.m_MaxHp > 0)
 	{
-		CreateOption(TEXT("체력"), TEXT("+{0}"), PreStat.m_MaxHp ,AryStats[Level].m_MaxHp);
+		CreateOption(TEXT("체력"), TEXT("+{0}"), BeforeStat.m_MaxHp ,AfterStat.m_MaxHp);
 	}
-	if(AryStats[Level].m_nAvoid > 0)
+	if(AfterStat.m_nAvoid > 0)
 	{
-		CreateOption(TEXT("회피"), TEXT("+{0}"), PreStat.m_nAvoid ,AryStats[Level].m_nAvoid);
+		CreateOption(TEXT("회피"), TEXT("+{0}"), BeforeStat.m_nAvoid ,AfterStat.m_nAvoid);
 	}
-	if(AryStats[Level].m_DmgReduce > 0)
+	if(AfterStat.m_DmgReduce > 0)
 	{
-		CreateOption(TEXT("데미지 리덕션"), TEXT("+{0}"), PreStat.m_DmgReduce ,AryStats[Level].m_DmgReduce);
+		CreateOption(TEXT("데미지 리덕션"), TEXT("+{0}"), BeforeStat.m_DmgReduce ,AfterStat.m_DmgReduce);
 	}
-	if(AryStats[Level].m_CriPer > 0)
+	if(AfterStat.m_CriPer > 0)
 	{
-		CreateOption(TEXT("치명 확률"), TEXT("{0}%"), PreStat.m_CriPer ,AryStats[Level].m_CriPer);
+		CreateOption(TEXT("치명 확률"), TEXT("{0}%"), BeforeStat.m_CriPer ,AfterStat.m_CriPer);
 	}
-	if(AryStats[Level].m_CriDmg > 0)
+	if(AfterStat.m_CriDmg > 0)
 	{
-		CreateOption(TEXT("치명 데미지"), TEXT("{0}%"), PreStat.m_CriDmg ,AryStats[Level].m_CriDmg);
+		CreateOption(TEXT("치명 데미지"), TEXT("{0}%"), BeforeStat.m_CriDmg ,AfterStat.m_CriDmg);
 	}
 }
 
-void UWidgetEnchantBase::UpdateEnchantBtn(UEnchantManager* Enchant)
+void UWidgetEnchantBase::UpdateEnchantBtn(const UEnchantManager* Enchant)
 {
 	m_BtnEnchant->SetIsEnabled(Enchant->IsEnchantAvailable());
 
@@ -195,12 +195,19 @@ void UWidgetEnchantBase::CreateOption(const FString&& infoText, const FString&& 
 void UWidgetEnchantBase::Update()
 {
 	UEnchantManager* Enchant = UMyGameInstance::Get->m_EnchantManager;
+
+	const FName& Target = Enchant->GetCrntTarget();
+
+	const FName& Mat = Enchant->GetCrntMat();
+
+	int Level = Enchant->GetCrntLevel();
 	
-	UpdateIcons(Enchant);
+	UpdateIcons(Target,Mat,Level);
 	//
-	UpdateInfoTexts(Enchant);
+	UpdateInfoTexts(Enchant,Target,Mat,Level);
 	//
-	UpdateBeforeAfter(Enchant);
+	UpdateBeforeAfter(Target,Level);
 	//
 	UpdateEnchantBtn(Enchant);
 }
+

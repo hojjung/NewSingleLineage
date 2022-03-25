@@ -41,15 +41,17 @@ protected:
 public:
 	int GetEnchantCost() const;
 
+	int GetCrntLevel() const;
+
 	float GetEnchantPercent() const;
 	
 	void SetTargetEquip(const FName& target);
 
 	void SetMaterialEquip(const FName& mat);
 
-	FName  GetCrntTarget() const;
+	const FName& GetCrntTarget() const;
 
-	FName GetCrntMat() const;
+	const FName& GetCrntMat() const;
 
 	bool IsAbleTarget(const FName& target);
 
@@ -59,5 +61,5 @@ public:
 	
 	void DoEnchant();
 
-	bool IsEnchantAvailable();
+	bool IsEnchantAvailable() const;
 };

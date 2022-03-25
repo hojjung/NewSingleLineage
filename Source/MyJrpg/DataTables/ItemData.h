@@ -65,15 +65,17 @@ public:
 	UPROPERTY(EditDefaultsOnly)
 	float m_MoveSpeed;
 	
-	FStatGroup operator+(const FStatGroup& stat_group);
+	FStatGroup operator+(const FStatGroup& stat_group) const;
 	
-	FStatGroup operator*(const FStatGroup& stat_group);
+	FStatGroup operator * (const FStatGroup& stat_group) const;
+
+	FStatGroup operator * (float m) const;
+
+	FStatGroup operator * (int m) const;
 
 	FStatGroup& operator+=(const FStatGroup& stat_group);
 
 	FStatGroup& operator-=(const FStatGroup& stat_group);
-	
-	FStatGroup operator+(const FStatGroup& element) const;
 };
 UCLASS()
 class MYJRPG_API UItemData : public UObject

@@ -7,6 +7,6 @@
 
 void UExe_EnchantArmor::Use(const FName& item) const
 {
-	UMyGameInstance::Get->m_EnchantManager->SetMaterialEquip(item);
 	UMyLib::GetCanvas()->OpenEnchant();
+	UMyGameInstance::Get->m_EnchantManager->SetMaterialEquip(item);
 }

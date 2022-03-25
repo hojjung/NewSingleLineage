@@ -55,22 +55,22 @@ protected:
 
 	void Update();
 	
-	void UpdateIcons(const UEnchantManager* Enchant);
+	void UpdateIcons(const FName& target, const FName& mat, int level);
 	
-	void UpdateInfoTexts(UEnchantManager* Enchant);
+	void UpdateInfoTexts(const UEnchantManager* Enchant, const FName& target, const FName& mat, int level);
 	
-	void UpdateBeforeAfter(const UEnchantManager* Enchant);
+	void UpdateBeforeAfter(const FName& target, int level);
 	
-	void UpdateEnchantBtn(UEnchantManager* Enchant);
+	void UpdateEnchantBtn(const UEnchantManager* Enchant);
 
 	void CreateOption(const FString&& infoText, const FString&& formatText, int beforeValue, int afterValue);
 	
 public:
 	void Open();
 	
-	void SetEnchantEquipTarget(FName& target);
+	void SetEnchantEquipTarget(const FName& target);
 
-	void SetEnchantEquipMaterial(FName& mat);
+	void SetEnchantEquipMaterial(const FName& mat);
 
 	UFUNCTION()
 	void OnClose();

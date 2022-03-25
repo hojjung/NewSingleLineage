@@ -132,7 +132,7 @@ FStatGroup UMyLib::GetItemStatData(const FName& specID)
 		return ItemData.m_EquipStats;
 	}
 
-	return ItemData.m_EquipStats + ItemData.m_AryEnchantStats[Level - 1];
+	return ItemData.m_EquipStats + (ItemData.m_EnchantStats * Level);
 }
 
 const FSkillDataRow& UMyLib::GetSkillData(const FName& specID)
