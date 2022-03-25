@@ -80,10 +80,17 @@ void UWidgetEnchantBase::UpdateInfoTexts(const UEnchantManager* Enchant, const F
 	{
 		m_BarEnchantLevel->SetPercent(0);
 		
-		m_TextInfo->SetVisibility(ESlateVisibility::Collapsed);
+		m_TextInfo->SetVisibility(ESlateVisibility::Hidden);
+
+		if (target.IsNone())
+			m_TextLevel->SetVisibility(ESlateVisibility::Hidden);
+		else
+			m_TextLevel->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
 		
 		return;
 	}
+
+	m_TextLevel->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
 	
 	m_TextInfo->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
 	
@@ -121,7 +128,7 @@ void UWidgetEnchantBase::UpdateBeforeAfter(const FName& target, int level)
 	
 	if(target.IsNone())
 	{
-		m_StatLevel->SetVisibility(ESlateVisibility::Collapsed);
+		m_StatLevel->SetVisibility(ESlateVisibility::Hidden);
 		
 		return;
 	}
@@ -170,6 +177,10 @@ void UWidgetEnchantBase::UpdateBeforeAfter(const FName& target, int level)
 	{
 		CreateOption(TEXT("치명 데미지"), TEXT("{0}%"), BeforeStat.m_CriDmg ,AfterStat.m_CriDmg);
 	}
+	for(const auto& ClassOp: ItemData.m_Options)
+	{
+		CreateOption(ClassOp, level);
+	}
 }
 
 void UWidgetEnchantBase::UpdateEnchantBtn(const UEnchantManager* Enchant)
@@ -190,6 +201,13 @@ void UWidgetEnchantBase::CreateOption(const FString&& infoText, const FString&& 
 	m_AryOptions.Add(WidgetOp);
 
 	WidgetOp->SetBeforeAfter(*infoText,*formatText,beforeValue,afterValue);
+}
+
+void UWidgetEnchantBase::CreateOption(TSubclassOf<UOptionBase> op, int lv)
+{
+	UOptionBase* OpClass = op->GetDefaultObject<UOptionBase>();
+	
+	CreateOption(OpClass->GetOptionName(), OpClass->GetOptionFormat(), OpClass->GetEnchantValue(lv), OpClass->GetEnchantValue(lv + 1));
 }
 
 void UWidgetEnchantBase::Update()

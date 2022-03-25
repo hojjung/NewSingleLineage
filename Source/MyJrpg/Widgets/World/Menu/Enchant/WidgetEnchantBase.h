@@ -64,6 +64,8 @@ protected:
 	void UpdateEnchantBtn(const UEnchantManager* Enchant);
 
 	void CreateOption(const FString&& infoText, const FString&& formatText, int beforeValue, int afterValue);
+
+	void CreateOption(TSubclassOf<UOptionBase> op, int lv);
 	
 public:
 	void Open();
@@ -78,5 +80,4 @@ public:
 	UFUNCTION()
 	void DoEnchant();
 };
-
 
