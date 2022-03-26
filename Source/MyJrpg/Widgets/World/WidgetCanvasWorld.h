@@ -15,6 +15,7 @@
 #include "MyJrpg/Pawns/CombatUnitPawn.h"
 #include "WidgetCanvasWorld.generated.h"
 
+class UWidgetSkinPanel;
 struct FZoneDataRow;
 struct FZone;
 class UWidgetStackCalculator;
@@ -64,6 +65,8 @@ protected:
 	UButton* m_BtnQuest;
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (BindWidget))
 	UButton* m_BtnOption;
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (BindWidget))
+	UButton* m_BtnSkin;
 	//
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (BindWidget))
 	UTextBlock* m_TextZoneName;
@@ -106,7 +109,9 @@ protected:
 	//
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (BindWidget))
 	UWidgetEnchantBase* m_Enchant;
-	
+	//
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (BindWidget))
+	UWidgetSkinPanel* m_SkinPanel;
 protected:
 	void HideHUD();
 
@@ -129,6 +134,8 @@ public:
 	void ToggleMenu();
 	UFUNCTION()
 	void AutoToggle();
+	UFUNCTION()
+	void OpenSkin();
 	UFUNCTION()
 	void OpenQuest();
 	UFUNCTION()

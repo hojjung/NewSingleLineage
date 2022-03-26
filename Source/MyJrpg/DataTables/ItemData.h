@@ -100,6 +100,8 @@ public:
 	FSlateColor m_Color;
 	UPROPERTY(EditDefaultsOnly)
 	UTexture2D* m_GlowTexture;
+	UPROPERTY(EditAnywhere)
+	TSubclassOf<AAttachEquipmentBase> m_ClassEquip;//오오라,트레일,총알
 };
 
 USTRUCT(BlueprintType)
@@ -173,8 +175,6 @@ public:
 	FStatGroup m_EnchantStats;//this * level = enchant
 	UPROPERTY(EditAnywhere, meta=(EditCondition = "m_ItemType != EEquipSlotType::None", EditConditionHides))
 	TArray<TSubclassOf<UOptionBase>> m_Options;
-	UPROPERTY(EditAnywhere, meta=(EditCondition = "m_ItemType != EEquipSlotType::None", EditConditionHides))
-	TSubclassOf<AAttachEquipmentBase> m_ClassEquip;
 	UPROPERTY(EditAnywhere, meta=(EditCondition = "m_ItemType != EEquipSlotType::None", EditConditionHides))
 	TSoftObjectPtr<UParticleSystem> m_EffectRange;
 	UPROPERTY(EditAnywhere, meta=(EditCondition = "m_ItemType != EEquipSlotType::Weapon", EditConditionHides))

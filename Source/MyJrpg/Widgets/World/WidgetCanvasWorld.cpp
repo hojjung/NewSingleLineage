@@ -8,6 +8,7 @@
 #include "Menu/QuickSlotsPanel/WidgetQuickslotBar.h"
 #include "Menu/Shop/WidgetShopPanel.h"
 #include "Menu/Skill/WidgetSkillPanel.h"
+#include "Menu/Skin/WidgetSkinPanel.h"
 #include "Menu/Storage/WidgetStorage.h"
 #include "Menu/ZoneMove/WidgetZoneSelectPanel.h"
 #include "MyJrpg/MyLib.h"
@@ -18,6 +19,8 @@
 void UWidgetCanvasWorld::NativeOnInitialized()
 {
 	Super::NativeOnInitialized();
+
+	m_SkinPanel->SetVisibility(ESlateVisibility::Collapsed);
 
 	m_WindowGameOver->SetVisibility(ESlateVisibility::Collapsed);
 
@@ -83,6 +86,8 @@ void UWidgetCanvasWorld::NativeOnInitialized()
 	UMyGameInstance::Get->m_PlayerStatManager->m_OnLevelChanged.AddUObject(this, & UWidgetCanvasWorld::ShowLevelUpWindow);
 
 	UMyGameInstance::Get->m_PlayerStatManager->m_OnPlayerKilled.AddUObject(this, & UWidgetCanvasWorld::ShowGameOverWindow);
+
+	m_BtnSkin->OnClicked.AddDynamic(this,&UWidgetCanvasWorld::OpenSkin);
 }
 
 void UWidgetCanvasWorld::ToggleMenu()
@@ -123,12 +128,17 @@ void UWidgetCanvasWorld::ToggleMenu()
 
 void UWidgetCanvasWorld::AutoToggle()
 {
-	static bool AutoToggle=true;
+	static bool AutoToggle=false;
 
 	UMyLib::GetPlayer()->SetAutoCombat(true);
 	UMyGameInstance::Get->m_SkillAuto->SetUseAuto(AutoToggle);
 
 	AutoToggle=!AutoToggle;
+}
+
+void UWidgetCanvasWorld::OpenSkin()
+{
+	m_SkinPanel->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
 }
 
 void UWidgetCanvasWorld::OpenQuest()

@@ -19,3 +19,9 @@ void AWorldGameMode::Tick(float DeltaSeconds)
 
 	UMyGameInstance::Get->Tick(DeltaSeconds);
 }
+
+void AWorldGameMode::StartPlay()
+{
+	UMyGameInstance::Get->m_AvatarManager->CreatePreviewActor();	
+	Super::StartPlay();
+}

@@ -61,9 +61,7 @@ void AMyPlayerPawn::BeginPlay()
 
 	m_DissolveCam->SetActive(true);
 
-	const FPlayerUnitEntityRow* UnitRow = UUnitEntityData::GetPlayerUnitTable->FindRow<FPlayerUnitEntityRow>(TEXT("Player01"), "");
-
-	SetPlayerEntity(*UnitRow);
+	UMyGameInstance::Get->m_AvatarManager->EquipSkin(TEXT("Player01"));
 }
 
 void AMyPlayerPawn::SetPlayerEntity(const FPlayerUnitEntityRow& unitEntityRow)

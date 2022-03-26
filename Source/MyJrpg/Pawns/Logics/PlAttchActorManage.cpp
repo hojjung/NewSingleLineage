@@ -39,7 +39,7 @@ void UPlAttchActorManage::UpdateEquipActor()
 			{
 				(CurrentEquip)->Destroy();
 			}
-			TSubclassOf<AAttachEquipmentBase> EquipClass = UMyLib::GetItemData(NewEquip).m_ClassEquip;
+			TSubclassOf<AAttachEquipmentBase> EquipClass = UMyLib::GetAttachItemClass(NewEquip);
 
 			if(!EquipClass->IsValidLowLevel())
 			{

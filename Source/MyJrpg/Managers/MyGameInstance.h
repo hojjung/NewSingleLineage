@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "AvatarManager.h"
 #include "CraftManager.h"
 #include "CurrencyManager.h"
 #include "EnchantManager.h"
@@ -74,6 +75,8 @@ public:
 	UPotionManager* m_PotionManager;
 	UPROPERTY()
 	UEnchantManager* m_EnchantManager;
+	UPROPERTY()
+	UAvatarManager* m_AvatarManager;
 	
 protected:
 	virtual void BeginDestroy() override;

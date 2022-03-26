@@ -40,6 +40,8 @@ void UMyGameInstance::Init()
 	m_BadwordTable =NewObject<UBadwordTable>(this);
 	m_ChatManager = NewObject<UChatManager>(this);
 
+	m_AvatarManager = NewObject<UAvatarManager>(this);
+
 	m_AryStorage.Reset();
 	m_AryStorage.Add(NewObject<UInventory>(this));
 	m_AryStorage.Add(NewObject<UInventory>(this));
