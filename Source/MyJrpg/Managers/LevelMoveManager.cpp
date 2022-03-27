@@ -2,6 +2,7 @@
 
 #include "BUITween.h"
 #include "EquipManager.h"
+#include "MyAssetManager.h"
 #include "MyGameInstance.h"
 #include "Engine/LevelStreaming.h"
 #include "Kismet/GameplayStatics.h"

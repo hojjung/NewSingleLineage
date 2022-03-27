@@ -22,6 +22,11 @@ void UWidgetItemElement::Init(EPanelType panel, UInventory* inven)
 		m_ElementBase->SetHoldable(false);
 		m_ElementBase->SetFocusable(false);
 	}
+	else
+	{
+		m_ElementBase->SetHoldable(true);
+		m_ElementBase->SetFocusable(true);
+	}
 
 	m_Inven = inven;
 

@@ -22,31 +22,18 @@ public:
 	static UMyAssetManager* Get();
 	
 protected:
-	TMap<FSoftObjectPath,TSharedPtr<FStreamableHandle>> m_UnitMap;
-
-	TMap<FSoftObjectPath,TSharedPtr<FStreamableHandle>> m_ItemMap;
+	UPROPERTY()
+	TArray<UUnitEntityAsset*> m_AryUnits;
+	
+	TMap<UUnitEntityAsset *,int> m_MapUnits;
 
 	TMap<FSoftObjectPath,TSharedPtr<FStreamableHandle>> m_ParticleEffectMap;
 
 public:
-	virtual void StartInitialLoading() override;
-
-public:
-	UTexture2D* LoadIconAsset(TSoftObjectPtr<UTexture2D> assetSoftPath);
-
 	UUnitEntityAsset* LoadUnitAsset(TSoftObjectPtr<UUnitEntityAsset> assetSoftPath);
 
-	UUnitEntityAsset* LoadUnitAssetWithID(FName unitID);
+	void UnloadUnit(UUnitEntityAsset* asset);
 
-	TSharedPtr<FStreamableHandle> LoadAnimMontage(TSoftObjectPtr<UAnimMontage> assetSoftPath);
-
-	UParticleSystem* LoadParticleEffect(TSoftObjectPtr<UParticleSystem> assetSoftPath);
-	
-public:
-	void ClearUnitAsset();
-
-	void ClearItemAsset();
-
-	void ClearEffectAsset();
+	void ClearUnits();
 };
 

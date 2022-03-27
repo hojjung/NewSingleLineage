@@ -29,11 +29,15 @@ protected:
 	TSubclassOf<UWidgetSkinElement> m_ClassElement;
 	UPROPERTY()
 	TArray<UWidgetSkinElement*> m_AryEles;
+	UPROPERTY()
+	UWidgetSkinElement* m_CurrentFocused;
 	
 protected:
 	virtual void NativeOnInitialized() override;
 
 	void UpdateElements();
+
+	void OnSelected(UWidgetSkinElement* ele);
 
 public:
 	void Open();

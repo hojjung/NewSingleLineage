@@ -17,6 +17,8 @@ void UWidgetSkinPanel::NativeOnInitialized()
 
 		Ele->Init(*PlSkin);
 
+		Ele->m_OnFocus.AddUObject(this, &UWidgetSkinPanel::OnSelected);
+
 		m_Wrap->AddChild(Ele);
 
 		m_AryEles.Add(Ele);
@@ -33,6 +35,24 @@ void UWidgetSkinPanel::UpdateElements()
 	{
 		Ele->UpdateEle();
 	}
+}
+
+void UWidgetSkinPanel::OnSelected(UWidgetSkinElement* ele)
+{
+	if (m_CurrentFocused == ele)
+	{
+		return;
+	}
+	if (m_CurrentFocused)
+		m_CurrentFocused->SetMyUnfocus();
+	
+	m_CurrentFocused = ele;
+
+	m_CurrentFocused->SetMyFocus();
+	
+	m_CurrentFocused->UpdateEle();
+
+	UMyGameInstance::Get->m_AvatarManager->ShowPreviewSkin(m_CurrentFocused->GetCrntSkin());
 }
 
 void UWidgetSkinPanel::Open()

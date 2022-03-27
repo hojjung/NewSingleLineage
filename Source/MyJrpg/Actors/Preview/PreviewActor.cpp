@@ -6,6 +6,8 @@
 #include "Components/SceneCaptureComponent2D.h"
 #include "MyJrpg/MyJrpg.h"
 #include "MyJrpg/MyLib.h"
+#include "MyJrpg/Managers/MyAssetManager.h"
+#include "MyJrpg/Managers/MyGameInstance.h"
 
 
 APreviewActor::APreviewActor()
@@ -69,14 +71,19 @@ void APreviewActor::BeginPlay()
 
 	m_InitVisualRot = m_MeshBody->GetComponentRotation();
 
-	//HideMeshWithTick();
+	HideMeshWithTick();
 }
 
 void APreviewActor::OnMeshVisualChanged(const FPlayerUnitEntityRow& charData)
 {
-	m_MeshBody->SetSkeletalMesh(charData.m_UnitDataAsset->m_BodyMesh);
+	if(m_Asset.Get())
+	{
+		UMyAssetManager::Get()->UnloadUnit(m_Asset.Get());
+	}
+	m_Asset = UMyAssetManager::Get()->LoadUnitAsset(charData.m_UnitDataAsset);
+	m_MeshBody->SetSkeletalMesh(m_Asset->m_BodyMesh);
 	m_MeshBody->SetAnimationMode(EAnimationMode::AnimationBlueprint);
-	m_MeshBody->SetAnimClass(charData.m_UnitDataAsset->m_AnimBP);
+	m_MeshBody->SetAnimClass(m_Asset->m_AnimBP);
 }
 
 void APreviewActor::ShowMeshWithTick()

@@ -1,4 +1,6 @@
 #include "MyAssetManager.h"
+
+#include "MyGameInstance.h"
 #include "Engine/Engine.h"
 #include "MyJrpg/MyJrpg.h"
 #include "MyJrpg/DataTables/PortraitData.h"
@@ -18,121 +20,54 @@ UMyAssetManager* UMyAssetManager::Get()
 	}
 }
 
-void UMyAssetManager::StartInitialLoading()
-{
-	Super::StartInitialLoading();
-	m_UnitMap.Reset();
-	m_ItemMap.Reset();
-}
-
-UTexture2D* UMyAssetManager::LoadIconAsset(TSoftObjectPtr<UTexture2D> assetSoftPath)
-{
-	FSoftObjectPath SoftPath = assetSoftPath.ToSoftObjectPath();
-
-	TSharedPtr<FStreamableHandle> Handle;
-		
-	return GetStreamableManager().LoadSynchronous<UTexture2D>(assetSoftPath.ToSoftObjectPath(),true,&Handle);
-}
-
 UUnitEntityAsset* UMyAssetManager::LoadUnitAsset(TSoftObjectPtr<UUnitEntityAsset> assetSoftPath)
 {
-	FSoftObjectPath SoftPath = assetSoftPath.ToSoftObjectPath();
-
-	UUnitEntityAsset* EntityAssetWantUse = nullptr;
+	if(m_MapUnits.Contains(assetSoftPath.Get()))
+	{
+		m_MapUnits[assetSoftPath.Get()]++;
+		return assetSoftPath.Get();
+	}
+	LoadPrimaryAsset(assetSoftPath.Get()->GetPrimaryAssetId());
 	
-	if(m_UnitMap.Find(SoftPath))
-	{
-		EntityAssetWantUse = Cast<UUnitEntityAsset>( m_UnitMap[SoftPath].Get()->GetLoadedAsset());
-	}
-	else
-	{
-		TSharedPtr<FStreamableHandle> Handle;
-		
-		EntityAssetWantUse = GetStreamableManager().LoadSynchronous<UUnitEntityAsset>(assetSoftPath.ToSoftObjectPath(),true,&Handle);
-		
-		m_UnitMap.Add(SoftPath,Handle);
-	}
-
-	return EntityAssetWantUse;
+	m_MapUnits.Add(assetSoftPath.Get(),1);
+	
+	m_AryUnits.Add(assetSoftPath.Get());
+	
+	return assetSoftPath.Get();
 }//
-
-UUnitEntityAsset* UMyAssetManager::LoadUnitAssetWithID(FName unitID)
+void UMyAssetManager::UnloadUnit(UUnitEntityAsset* asset)
 {
-	FUnitEntityRow* FoundRow = nullptr;
-
-	FoundRow = UUnitEntityData::GetNpcUnitTable->FindRow<FNpcUnitEntityRow>(unitID, "");
-	
-	if(!FoundRow)
+	if(!m_MapUnits.Contains(asset))
 	{
-		return nullptr;
+		return;
 	}
 	
-	return LoadUnitAsset(FoundRow->m_UnitDataAsset);
-}
-
-TSharedPtr<FStreamableHandle> UMyAssetManager::LoadAnimMontage(TSoftObjectPtr<UAnimMontage> assetSoftPath)
-{
-	TSharedPtr<FStreamableHandle> Handle;
-		
-	GetStreamableManager().LoadSynchronous<UAnimMontage>(assetSoftPath.ToSoftObjectPath(),true,&Handle);
-
-	return Handle;
-}
-
-UParticleSystem* UMyAssetManager::LoadParticleEffect(TSoftObjectPtr<UParticleSystem> assetSoftPath)
-{
-	FSoftObjectPath SoftPath = assetSoftPath.ToSoftObjectPath();
-
-	UParticleSystem* EntityAssetWantUse = nullptr;
+	int& Count = m_MapUnits[asset];
 	
-	if(m_ParticleEffectMap.Find(SoftPath))
+	Count--;
+	
+	if (Count <= 0)
 	{
-		EntityAssetWantUse = Cast<UParticleSystem>( m_ParticleEffectMap[SoftPath].Get()->GetLoadedAsset());
-	}
-	else
-	{
-		TSharedPtr<FStreamableHandle> Handle;
+		m_MapUnits.Remove(asset);
 		
-		EntityAssetWantUse = GetStreamableManager().LoadSynchronous<UParticleSystem>(assetSoftPath.ToSoftObjectPath(),true,&Handle);
-		
-		m_ParticleEffectMap.Add(SoftPath,Handle);
+		m_AryUnits.Remove(asset);
 	}
-
-	return EntityAssetWantUse;
+	
+	UKismetSystemLibrary::UnloadPrimaryAsset(asset->GetPrimaryAssetId());
+	
+	UKismetSystemLibrary::CollectGarbage();
 }
 
-void UMyAssetManager::ClearUnitAsset()
+void UMyAssetManager::ClearUnits()
 {
-	for(auto& Iter : m_UnitMap)
+	for(UUnitEntityAsset* Unit : m_AryUnits)
 	{
-		Iter.Value.Get()->ReleaseHandle();
+		UKismetSystemLibrary::UnloadPrimaryAsset(Unit->GetPrimaryAssetId());
 	}
+	
+	m_AryUnits.Reset();
 
-	m_UnitMap.Reset();
+	m_MapUnits.Reset();
 
-	CollectGarbage(EObjectFlags::RF_Public);
-}
-
-void UMyAssetManager::ClearItemAsset()
-{
-	for(auto& Iter : m_ItemMap)
-	{
-		Iter.Value.Get()->ReleaseHandle();
-	}
-
-	m_ItemMap.Reset();
-
-	CollectGarbage(EObjectFlags::RF_Public);
-}
-
-void UMyAssetManager::ClearEffectAsset()
-{
-	for(auto& Iter : m_ParticleEffectMap)
-	{
-		Iter.Value.Get()->ReleaseHandle();
-	}
-
-	m_ParticleEffectMap.Reset();
-
-	CollectGarbage(EObjectFlags::RF_Public);
+	UKismetSystemLibrary::CollectGarbage();
 }

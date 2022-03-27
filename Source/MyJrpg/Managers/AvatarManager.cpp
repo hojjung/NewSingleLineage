@@ -1,8 +1,4 @@
-// Fill out your copyright notice in the Description page of Project Settings.
-
-
 #include "AvatarManager.h"
-
 #include "MyJrpg/MyLib.h"
 #include "MyJrpg/Actors/Preview/PreviewActor.h"
 #include "MyJrpg/Pawns/MyPlayerPawn.h"
@@ -25,20 +21,30 @@ void UAvatarManager::CreatePreviewActor()
 
 	Param.bNoFail = true;
 	
-	m_PreviewActor = GetWorld()->SpawnActor<APreviewActor>(APreviewActor::StaticClass(),FVector(9999,9999,9999),FRotator(0,0,0),Param);
+	m_PreviewActor = GetWorld()->SpawnActor<APreviewActor>(APreviewActor::StaticClass(),FVector(9999,9999,9999),FRotator(0),Param);
 }
 
 void UAvatarManager::EquipSkin(const FName& id)
 {
 	m_CrntSkin = UUnitEntityData::GetPlayerUnitTable->FindRow<FPlayerUnitEntityRow>(id, "");
 	
+	EquipSkin(*m_CrntSkin);
+}
+
+void UAvatarManager::EquipSkin(const FPlayerUnitEntityRow& selected)
+{
+	m_CrntSkin = &selected;
+
 	UMyLib::GetPlayer()->SetPlayerEntity(*m_CrntSkin);
-
-	m_PreviewActor->OnMeshVisualChanged(*m_CrntSkin);
-
-	UMyLib::GetPlayerCon()->ClientForceGarbageCollection();
+	
+	ShowPreviewSkin(*m_CrntSkin);
 
 	m_OnSkinChanged.Broadcast();
+}
+
+void UAvatarManager::ShowPreviewSkin(const FPlayerUnitEntityRow& selected)
+{
+	m_PreviewActor->OnMeshVisualChanged(selected);
 }
 
 void UAvatarManager::SetIsTouched(bool b)

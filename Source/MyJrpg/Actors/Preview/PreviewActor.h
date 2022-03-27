@@ -38,6 +38,8 @@ protected:
 	bool m_bTouched;
 
 	FRotator m_InitVisualRot;
+
+	TWeakObjectPtr<UUnitEntityAsset> m_Asset; 
 	
 protected:
 	virtual void BeginPlay() override;

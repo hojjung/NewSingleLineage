@@ -30,12 +30,12 @@ void UMyAnimInstance::NativeInitializeAnimation()
 
 void UMyAnimInstance::UpdateMoveFlag()
 {
-#if WITH_EDITOR
+//#if WITH_EDITOR
 	if(!m_Owner)
 	{
 		return;
 	}
-#endif
+//#endif
 	m_bIsMoving=m_Owner->IsMoving();
 	m_bIsRange=m_Owner->IsRange();
 	//UninitializeAnimation();

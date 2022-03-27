@@ -37,6 +37,10 @@ public:
 	void CreatePreviewActor();
 
 	void EquipSkin(const FName& id);
+
+	void EquipSkin(const FPlayerUnitEntityRow& selected);
+	
+	void ShowPreviewSkin(const FPlayerUnitEntityRow& selected);
 	
 	void SetIsTouched(bool b);
 	

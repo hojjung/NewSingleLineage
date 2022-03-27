@@ -16,6 +16,10 @@ UCLASS()
 class MYJRPG_API UWidgetSkinElement : public UUserWidget
 {
 	GENERATED_BODY()
+public:
+	DECLARE_MULTICAST_DELEGATE_OneParam(FOnClicked, UWidgetSkinElement*);
+
+	FOnClicked m_OnFocus;
 
 protected:
 	TWeakObjectPtr<UAvatarManager> m_AvatarManager;
@@ -24,12 +28,26 @@ protected:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (BindWidget))
 	UWidgetBaseElement* m_Ele;
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (BindWidget))
-	USizeBox* m_Selected;
+	USizeBox* m_FocusParent;
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (BindWidget))
+	UTextBlock* m_TextFocus;
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (BindWidget))
 	UImage* m_ImgWeapon;
-	
+
+	 
 public:
 	void Init(const FPlayerUnitEntityRow& pl);
 	
 	void UpdateEle();
+	
+	void SetMyUnfocus();
+	
+	void SetMyFocus();
+	
+	void SetConfirm();
+
+	const FPlayerUnitEntityRow& GetCrntSkin();
+
+protected:
+	void OnClicked();
 };

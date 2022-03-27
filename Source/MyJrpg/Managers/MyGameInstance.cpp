@@ -1,5 +1,6 @@
 #include "MyGameInstance.h"
 #include "EquipManager.h"
+#include "MyAssetManager.h"
 #include "RewardManager.h"
 #include "GameFramework/GameUserSettings.h"
 #include "MyJrpg/MyLib.h"
@@ -75,6 +76,7 @@ void UMyGameInstance::LoadComplete(const float LoadTime, const FString& MapName)
 		{
 			m_SkillAuto->Init();
 			m_LevelMoveManager->OnOpenWorldLevelComplete();
+
 		}
 	}
 }

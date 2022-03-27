@@ -95,14 +95,16 @@ void UEquipManager::SetIsRangeStance()
 		return ;
 	}
 	
-	m_bIsRange = UMyLib::GetItemData(FoundItem).m_EffectRange.Get()->IsValidLowLevel();
+	m_bIsRange = UMyLib::GetItemData(FoundItem).m_bIsRange;
 }
 
 UParticleSystem* UEquipManager::GetBulletEffect()
 {
 	const FName& FoundItem = GetEquipItem(EEquipSlotType::Weapon);
 
-	return UMyAssetManager::Get()->LoadParticleEffect(UMyLib::GetItemData(FoundItem).m_EffectRange);
+	const FColorDataRow* ColorData = UMyLib::GetItemData(FoundItem).m_ColorHandle.GetRow<FColorDataRow>("");
+
+	return ColorData->m_EffectRange;
 }
 
 void UEquipManager::UpdateEquip()
