@@ -27,11 +27,16 @@ protected:
 	UWrapBox* m_Wrap;
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
 	TSubclassOf<UWidgetSkinElement> m_ClassElement;
+	UPROPERTY()
+	TArray<UWidgetSkinElement*> m_AryEles;
 	
 protected:
 	virtual void NativeOnInitialized() override;
 
+	void UpdateElements();
+
 public:
+	void Open();
 	UFUNCTION()
 	void OnClose();
 	

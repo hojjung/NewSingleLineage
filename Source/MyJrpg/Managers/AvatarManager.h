@@ -17,12 +17,23 @@ class MYJRPG_API UAvatarManager : public UObject
 	GENERATED_BODY()
 
 public:
-	DECLARE_MULTICAST_DELEGATE_OneParam(FOnSkinChanged, const FPlayerUnitEntityRow&);
+	DECLARE_MULTICAST_DELEGATE(FOnSkinChanged);
 
 	FOnSkinChanged m_OnSkinChanged;
+	
+protected:
 	UPROPERTY()
 	APreviewActor* m_PreviewActor;
+
+	TArray<FPlayerUnitEntityRow*> m_ArySkins;
+
+	const FPlayerUnitEntityRow* m_CrntSkin;
+	
 public:
+	void Init();
+
+	const TArray<FPlayerUnitEntityRow*>& GetAllSkins() const;
+	
 	void CreatePreviewActor();
 
 	void EquipSkin(const FName& id);
@@ -30,4 +41,10 @@ public:
 	void SetIsTouched(bool b);
 	
 	void RotatePawn(float delta_x);
+
+	void ShowPawn();
+
+	void HidePawn();
+
+	const FPlayerUnitEntityRow* GetCrntSkin() const;
 };

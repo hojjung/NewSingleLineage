@@ -116,6 +116,8 @@ public:
 	TSoftObjectPtr<UAnimMontage> m_StanceMage;
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
 	TArray<FPlayerSkillAnim> m_ArySkillAnims;
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
+	FColorDataHandle m_Color;
 };
 //
 USTRUCT(BlueprintType)

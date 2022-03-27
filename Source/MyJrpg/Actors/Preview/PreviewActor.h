@@ -26,7 +26,7 @@ protected:
 	UPROPERTY(VisibleAnywhere,BlueprintReadWrite)
 	USpringArmComponent* m_Spring;
 	UPROPERTY(VisibleAnywhere)
-	UPointLightComponent* m_Light;	
+	UPointLightComponent* m_Light;
 protected:
 	UPROPERTY()
 	UTextureRenderTarget2D* m_CaptureTexture;

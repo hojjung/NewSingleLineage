@@ -41,6 +41,7 @@ void UMyGameInstance::Init()
 	m_ChatManager = NewObject<UChatManager>(this);
 
 	m_AvatarManager = NewObject<UAvatarManager>(this);
+	m_SkillAuto = NewObject<UPlSkillAuto>(this);
 
 	m_AryStorage.Reset();
 	m_AryStorage.Add(NewObject<UInventory>(this));
@@ -52,8 +53,8 @@ void UMyGameInstance::Init()
 	m_AryStorage[2]->Init(FGlobalVariable::STORAGE_SIZE);
 	m_AryStorage[3]->Init(FGlobalVariable::STORAGE_SIZE);
 
-	m_SkillAuto = NewObject<UPlSkillAuto>(this);
-	
+
+	m_AvatarManager->Init();
 	m_PotionManager->Init();
 	m_SkillManager->Init();
 	m_Inven->Init(FGlobalVariable::INVEN_SIZE);

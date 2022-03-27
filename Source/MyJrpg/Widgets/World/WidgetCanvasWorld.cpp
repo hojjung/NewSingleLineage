@@ -138,7 +138,7 @@ void UWidgetCanvasWorld::AutoToggle()
 
 void UWidgetCanvasWorld::OpenSkin()
 {
-	m_SkinPanel->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
+	m_SkinPanel->Open();
 }
 
 void UWidgetCanvasWorld::OpenQuest()

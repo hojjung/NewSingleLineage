@@ -25,7 +25,7 @@ APreviewActor::APreviewActor()
 	m_MeshBody->bReceivesDecals = false;
 	m_MeshBody->bOwnerNoSee = false;
 	//
-	m_MeshBody->bCastDynamicShadow = false; //chanage for mobile
+	//m_MeshBody->bCastDynamicShadow = false; //chanage for mobile
 	m_MeshBody->VisibilityBasedAnimTickOption = EVisibilityBasedAnimTickOption::OnlyTickPoseWhenRendered;//최적화
 	m_MeshBody->bAffectDynamicIndirectLighting = true;
 	m_MeshBody->PrimaryComponentTick.TickGroup = TG_PrePhysics;
@@ -36,7 +36,7 @@ APreviewActor::APreviewActor()
 	m_Spring = CreateDefaultSubobject<USpringArmComponent>("Spring");
 	m_Spring->SetupAttachment(RootComponent);
 	m_Spring->SetRelativeRotation(FRotator(0.f, 200.f, 0));
-	m_Spring->TargetArmLength = 320.f;
+	m_Spring->TargetArmLength = 450.f;
 	m_Spring->bDoCollisionTest = 0;
 
 	m_Capture = CreateDefaultSubobject<USceneCaptureComponent2D>("Capture2D");
@@ -68,6 +68,8 @@ void APreviewActor::BeginPlay()
 	m_Capture->ShowOnlyActors.Add(this);
 
 	m_InitVisualRot = m_MeshBody->GetComponentRotation();
+
+	//HideMeshWithTick();
 }
 
 void APreviewActor::OnMeshVisualChanged(const FPlayerUnitEntityRow& charData)

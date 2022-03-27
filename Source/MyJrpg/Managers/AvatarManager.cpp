@@ -7,6 +7,18 @@
 #include "MyJrpg/Actors/Preview/PreviewActor.h"
 #include "MyJrpg/Pawns/MyPlayerPawn.h"
 
+void UAvatarManager::Init()
+{
+	UUnitEntityData::GetPlayerUnitTable->GetAllRows<FPlayerUnitEntityRow>("",m_ArySkins);
+
+	m_CrntSkin = nullptr;
+}
+
+const TArray<FPlayerUnitEntityRow*>& UAvatarManager::GetAllSkins() const
+{
+	return m_ArySkins;
+}
+
 void UAvatarManager::CreatePreviewActor()
 {
 	FActorSpawnParameters Param;
@@ -18,13 +30,15 @@ void UAvatarManager::CreatePreviewActor()
 
 void UAvatarManager::EquipSkin(const FName& id)
 {
-	const FPlayerUnitEntityRow* UnitRow = UUnitEntityData::GetPlayerUnitTable->FindRow<FPlayerUnitEntityRow>(id, "");
+	m_CrntSkin = UUnitEntityData::GetPlayerUnitTable->FindRow<FPlayerUnitEntityRow>(id, "");
 	
-	UMyLib::GetPlayer()->SetPlayerEntity(*UnitRow);
+	UMyLib::GetPlayer()->SetPlayerEntity(*m_CrntSkin);
 
-	m_PreviewActor->OnMeshVisualChanged(*UnitRow);
+	m_PreviewActor->OnMeshVisualChanged(*m_CrntSkin);
 
 	UMyLib::GetPlayerCon()->ClientForceGarbageCollection();
+
+	m_OnSkinChanged.Broadcast();
 }
 
 void UAvatarManager::SetIsTouched(bool b)
@@ -35,4 +49,19 @@ void UAvatarManager::SetIsTouched(bool b)
 void UAvatarManager::RotatePawn(float delta_x)
 {
 	m_PreviewActor->RotatePawn(delta_x);
+}
+
+void UAvatarManager::ShowPawn()
+{
+	m_PreviewActor->ShowMeshWithTick();
+}
+
+void UAvatarManager::HidePawn()
+{
+	m_PreviewActor->HideMeshWithTick();
+}
+
+const FPlayerUnitEntityRow* UAvatarManager::GetCrntSkin() const
+{
+	return m_CrntSkin;
 }
