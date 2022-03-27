@@ -7,7 +7,7 @@ void UAvatarManager::Init()
 {
 	UUnitEntityData::GetPlayerUnitTable->GetAllRows<FPlayerUnitEntityRow>("",m_ArySkins);
 
-	m_CrntSkin = nullptr;
+	m_CrntSkin = UUnitEntityData::GetPlayerUnitTable->FindRow<FPlayerUnitEntityRow>(TEXT("Player01"), "");
 }
 
 const TArray<FPlayerUnitEntityRow*>& UAvatarManager::GetAllSkins() const

@@ -177,7 +177,7 @@ void AMonsterPawn::Revive()
 
 	m_BodyMesh->SetScalarParameterValueOnMaterials(TimeParamName, TimeSec);
 	////
-	PlayAnimMontage(m_EntityAsset->m_SpawnAnim);
+	PlayAnimMontage(m_EntityAsset->m_SpawnAnim.Get());
 	//
 	float AnimLength = m_EntityAsset->m_SpawnAnim->GetPlayLength() - 0.4f;
 	//

@@ -77,7 +77,8 @@ void UPlayerAnimInst::KillAll()
 {
 	for(auto& Iter : m_AryHandle)
 	{
-		Iter.Get()->ReleaseHandle();
+		if(Iter.Get())
+			Iter.Get()->ReleaseHandle();
 	}
 
 	m_AryHandle.Reset();

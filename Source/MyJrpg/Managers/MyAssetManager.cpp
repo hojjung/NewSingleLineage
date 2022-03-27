@@ -1,5 +1,4 @@
 #include "MyAssetManager.h"
-
 #include "MyGameInstance.h"
 #include "Engine/Engine.h"
 #include "MyJrpg/MyJrpg.h"
@@ -20,21 +19,43 @@ UMyAssetManager* UMyAssetManager::Get()
 	}
 }
 
-UUnitEntityAsset* UMyAssetManager::LoadUnitAsset(TSoftObjectPtr<UUnitEntityAsset> assetSoftPath)
+void UMyAssetManager::StartInitialLoading()
 {
-	if(m_MapUnits.Contains(assetSoftPath.Get()))
+	Super::StartInitialLoading();
+	m_AryOptions.Reset(6);
+	m_AryOptions.Add(TEXT("op1"));
+	m_AryOptions.Add(TEXT("op2"));
+	m_AryOptions.Add(TEXT("op3"));
+	m_AryOptions.Add(TEXT("op4"));
+	m_AryOptions.Add(TEXT("op5"));
+	m_AryOptions.Add(TEXT("op6"));
+}
+
+UUnitEntityAsset* UMyAssetManager::LoadUnitAsset(UUnitEntityAsset* asset)
+{
+	if(m_MapUnits.Contains(asset))
 	{
-		m_MapUnits[assetSoftPath.Get()]++;
-		return assetSoftPath.Get();
+		m_MapUnits[asset]++;
+		return asset;
 	}
-	LoadPrimaryAsset(assetSoftPath.Get()->GetPrimaryAssetId());
+
+	LoadPrimaryAsset(asset->GetPrimaryAssetId(),m_AryOptions);
+
+	m_MapUnits.Add(asset,1);
 	
-	m_MapUnits.Add(assetSoftPath.Get(),1);
+	m_AryUnits.Add(asset);
 	
-	m_AryUnits.Add(assetSoftPath.Get());
-	
-	return assetSoftPath.Get();
+	return asset;
 }//
+TSharedPtr<FStreamableHandle> UMyAssetManager::LoadAnimMontage(TSoftObjectPtr<UAnimMontage> assetSoftPath)
+{
+	TSharedPtr<FStreamableHandle> Handle;
+		
+	GetStreamableManager().LoadSynchronous<UAnimMontage>(assetSoftPath.ToSoftObjectPath(),true,&Handle);
+	
+	return Handle;
+}
+
 void UMyAssetManager::UnloadUnit(UUnitEntityAsset* asset)
 {
 	if(!m_MapUnits.Contains(asset))

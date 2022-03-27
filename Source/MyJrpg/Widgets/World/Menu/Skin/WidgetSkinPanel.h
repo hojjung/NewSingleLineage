@@ -22,6 +22,8 @@ protected:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (BindWidget))
 	UButton* m_BtnClose;
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (BindWidget))
+	UButton* m_BtnEquip;
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (BindWidget))
 	UWidgetPreview* m_Preview;
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (BindWidget))
 	UWrapBox* m_Wrap;
@@ -43,5 +45,6 @@ public:
 	void Open();
 	UFUNCTION()
 	void OnClose();
-	
+	UFUNCTION()
+	void OnEquip();
 };

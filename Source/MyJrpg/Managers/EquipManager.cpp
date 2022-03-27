@@ -104,7 +104,7 @@ UParticleSystem* UEquipManager::GetBulletEffect()
 
 	const FColorDataRow* ColorData = UMyLib::GetItemData(FoundItem).m_ColorHandle.GetRow<FColorDataRow>("");
 
-	return ColorData->m_EffectRange;
+	return ColorData->m_Bullet;
 }
 
 void UEquipManager::UpdateEquip()

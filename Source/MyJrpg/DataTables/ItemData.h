@@ -102,8 +102,16 @@ public:
 	UTexture2D* m_GlowTexture;
 	UPROPERTY(EditAnywhere)
 	TSubclassOf<AAttachEquipmentBase> m_ClassEquip;//오오라,트레일,총알
-	UPROPERTY(EditAnywhere, meta=(EditCondition = "m_ItemType != EEquipSlotType::None", EditConditionHides))
-	UParticleSystem* m_EffectRange;
+	UPROPERTY(EditAnywhere)
+	UParticleSystem* m_HeadAura;
+	UPROPERTY(EditAnywhere)
+	UParticleSystem* m_Bullet;
+	UPROPERTY(EditAnywhere)
+	UParticleSystem* m_RangeAura;
+	UPROPERTY(EditAnywhere)
+	UParticleSystem* m_SwordTrail;
+	UPROPERTY(EditAnywhere)
+	UParticleSystem* m_SwordAura;
 };
 
 USTRUCT(BlueprintType)

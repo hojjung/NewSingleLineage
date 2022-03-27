@@ -27,7 +27,7 @@ APreviewActor::APreviewActor()
 	m_MeshBody->bReceivesDecals = false;
 	m_MeshBody->bOwnerNoSee = false;
 	//
-	//m_MeshBody->bCastDynamicShadow = false; //chanage for mobile
+	m_MeshBody->bCastDynamicShadow = false; //chanage for mobile
 	m_MeshBody->VisibilityBasedAnimTickOption = EVisibilityBasedAnimTickOption::OnlyTickPoseWhenRendered;//최적화
 	m_MeshBody->bAffectDynamicIndirectLighting = true;
 	m_MeshBody->PrimaryComponentTick.TickGroup = TG_PrePhysics;
@@ -81,9 +81,9 @@ void APreviewActor::OnMeshVisualChanged(const FPlayerUnitEntityRow& charData)
 		UMyAssetManager::Get()->UnloadUnit(m_Asset.Get());
 	}
 	m_Asset = UMyAssetManager::Get()->LoadUnitAsset(charData.m_UnitDataAsset);
-	m_MeshBody->SetSkeletalMesh(m_Asset->m_BodyMesh);
+	m_MeshBody->SetSkeletalMesh(m_Asset->m_BodyMesh.Get());
 	m_MeshBody->SetAnimationMode(EAnimationMode::AnimationBlueprint);
-	m_MeshBody->SetAnimClass(m_Asset->m_AnimBP);
+	m_MeshBody->SetAnimClass(m_Asset->m_AnimBP.Get());
 }
 
 void APreviewActor::ShowMeshWithTick()

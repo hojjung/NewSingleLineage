@@ -70,15 +70,17 @@ void ABaseUnitPawn::SetEntity(const FNpcUnitEntityRow& unitEntityRow)
 	m_PawnName = unitEntityRow.m_ShowingName;
 }
 
-void ABaseUnitPawn::LoadSetSkMeshAnim(TSoftObjectPtr<UUnitEntityAsset> asset)
+void ABaseUnitPawn::LoadSetSkMeshAnim(UUnitEntityAsset* asset)
 {
+	UMyAssetManager::Get()->UnloadUnit(m_EntityAsset.Get());
+	
 	m_EntityAsset = UMyAssetManager::Get()->LoadUnitAsset(asset);
 
-	m_BodyMesh->SetSkeletalMesh(m_EntityAsset->m_BodyMesh);
+	m_BodyMesh->SetSkeletalMesh(m_EntityAsset->m_BodyMesh.Get());
 
 	m_BodyMesh->SetAnimationMode(EAnimationMode::Type::AnimationBlueprint);
 
-	m_BodyMesh->SetAnimClass(m_EntityAsset->m_AnimBP);
+	m_BodyMesh->SetAnimClass(m_EntityAsset->m_AnimBP.Get());
 }
 
 void ABaseUnitPawn::ActiveMovement()

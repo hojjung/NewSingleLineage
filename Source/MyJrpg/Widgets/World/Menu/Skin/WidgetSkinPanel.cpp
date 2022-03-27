@@ -11,6 +11,8 @@ void UWidgetSkinPanel::NativeOnInitialized()
 
 	m_BtnClose->OnClicked.AddDynamic(this, &UWidgetSkinPanel::OnClose);
 
+	m_BtnEquip->OnClicked.AddDynamic(this, &UWidgetSkinPanel::OnEquip);
+
 	for(const FPlayerUnitEntityRow* PlSkin : UMyGameInstance::Get->m_AvatarManager->GetAllSkins())
 	{
 		UWidgetSkinElement* Ele = CreateWidget<UWidgetSkinElement>(this, m_ClassElement);
@@ -65,4 +67,13 @@ void UWidgetSkinPanel::OnClose()
 {
 	SetVisibility(ESlateVisibility::Collapsed);
 	UMyGameInstance::Get->m_AvatarManager->HidePawn();
+}
+
+void UWidgetSkinPanel::OnEquip()
+{
+	if (!m_CurrentFocused)
+	{
+		return;
+	}
+	UMyGameInstance::Get->m_AvatarManager->EquipSkin(m_CurrentFocused->GetCrntSkin());
 }

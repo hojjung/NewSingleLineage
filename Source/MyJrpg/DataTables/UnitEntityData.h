@@ -29,22 +29,22 @@ UCLASS(Blueprintable, hidecategories = (Object, Actor, Advanced, Navigation))
 class MYJRPG_API UUnitEntityAsset : public UPrimaryDataAsset
 {
 	GENERATED_BODY()
-	
+
 public://Visual
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	FText m_UnitName;
-	UPROPERTY(EditAnywhere, BlueprintReadOnly)
-	USkeletalMesh* m_BodyMesh;
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
-	TSubclassOf<UAnimInstance> m_AnimBP;
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
-	UAnimMontage* m_SpawnAnim;
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
-	UAnimMontage* m_BaseAttackAnim;
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
-	UAnimMontage* m_DeathMontage;
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
-	UAnimMontage* m_TookHitMontage;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, meta = (AssetBundles = "op1"))
+	TSoftObjectPtr<USkeletalMesh> m_BodyMesh;
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (AssetBundles = "op2"))
+	TSoftClassPtr<UAnimInstance> m_AnimBP;
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (AssetBundles = "op3"))
+	TSoftObjectPtr<UAnimMontage> m_SpawnAnim;
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (AssetBundles = "op4"))
+	TSoftObjectPtr<UAnimMontage> m_BaseAttackAnim;
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (AssetBundles = "op5"))
+	TSoftObjectPtr<UAnimMontage> m_DeathMontage;
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (AssetBundles = "op6"))
+	TSoftObjectPtr<UAnimMontage> m_TookHitMontage;
 };
 
 USTRUCT(BlueprintType)
@@ -54,7 +54,7 @@ struct FUnitEntityRow : public FEntityRow
 
 public:
 	UPROPERTY(EditDefaultsOnly,BlueprintReadOnly)
-	TSoftObjectPtr<UUnitEntityAsset> m_UnitDataAsset;
+	UUnitEntityAsset* m_UnitDataAsset;
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
 	FStatGroup m_StatTable;
 };
@@ -118,42 +118,4 @@ public:
 	TArray<FPlayerSkillAnim> m_ArySkillAnims;
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
 	FColorDataHandle m_Color;
-};
-//
-USTRUCT(BlueprintType)
-struct FUnitSpec//배틀액터 공통으로 사용하는 객체,그와 동시에 저장도 됨
-{
-	GENERATED_BODY()
-
-public:
-	FUnitSpec(): m_nCurrentExp(0), m_Stats()
-	{
-		m_nLevel = 1;
-	}
-
-	FUnitSpec(const FName& nameID,int level,int remainExp,const FPlayerUnitEntityRow* dataRow)
-	{
-		m_UnitID = nameID.ToString();
-		m_nLevel = level;
-		m_nCurrentExp=remainExp;
-	}
-
-	UPROPERTY(EditDefaultsOnly,BlueprintReadOnly)
-	FString m_UnitID;
-	UPROPERTY(EditDefaultsOnly,BlueprintReadOnly)
-	int m_nLevel;
-	UPROPERTY(EditDefaultsOnly,BlueprintReadOnly)
-	int m_nCurrentExp;
-	UPROPERTY(EditDefaultsOnly,BlueprintReadOnly)
-	FStatGroup m_Stats;
-	UPROPERTY(EditDefaultsOnly,BlueprintReadOnly)
-	TArray<FString> m_AryEquipItems;
-	UPROPERTY(EditDefaultsOnly,BlueprintReadOnly)
-	TArray<FString> m_AryEquipSkills;//스킬레벨 보단 상위호환 스킬로 갈아 끼우자
-	//스킬을 저장할순 있다만,스킬의 인스턴스는 어디에?
-public:
-	bool IsUnlocked() const
-	{
-		return m_nLevel > 0;
-	}
 };

@@ -3,6 +3,8 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "NPCPaletteDataAsset.h"
+#include "UnitEntityData.h"
 #include "UObject/NoExportTypes.h"
 #include "PetTable.generated.h"
 
@@ -14,7 +16,18 @@ class MYJRPG_API UPetTable : public UObject
 {
 	GENERATED_BODY()
 
-protected:
-	
-	
+public:
+	UPetTable();
+
+	static UDataTable* GetPetTable;
+};
+
+USTRUCT(BlueprintType)
+struct FPetRow : public FEntityRow
+{
+	GENERATED_BODY()
+
+public:
+	UPROPERTY(EditDefaultsOnly,BlueprintReadOnly)
+	TSoftObjectPtr<UUnitEntityAsset> m_PetAsset;
 };

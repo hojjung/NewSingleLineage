@@ -61,7 +61,7 @@ void AMyPlayerPawn::BeginPlay()
 
 	m_DissolveCam->SetActive(true);
 
-	UMyGameInstance::Get->m_AvatarManager->EquipSkin(TEXT("Player01"));
+	UMyGameInstance::Get->m_AvatarManager->EquipSkin(*UMyGameInstance::Get->m_AvatarManager->GetCrntSkin());
 }
 
 void AMyPlayerPawn::SetPlayerEntity(const FPlayerUnitEntityRow& unitEntityRow)

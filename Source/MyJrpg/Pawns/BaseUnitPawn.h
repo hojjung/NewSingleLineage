@@ -28,7 +28,7 @@ protected:
 	UPathFollowingComponent* m_PFComp;//UCrowdFollowingComponent
 	UPROPERTY(VisibleAnywhere,BlueprintReadWrite,Category="Movement")
 	UMyMovement* m_Movement;
-	UPROPERTY()
+	
 	TWeakObjectPtr<UUnitEntityAsset> m_EntityAsset;
 
 	FTimerHandle m_MoveStopTimer;
@@ -37,7 +37,7 @@ public:
 	FText m_PawnName;
 
 protected:
-	virtual void LoadSetSkMeshAnim(TSoftObjectPtr<UUnitEntityAsset> asset);
+	virtual void LoadSetSkMeshAnim(UUnitEntityAsset* asset);
 
 	void ActiveMovement();
 	//PathFollow	
