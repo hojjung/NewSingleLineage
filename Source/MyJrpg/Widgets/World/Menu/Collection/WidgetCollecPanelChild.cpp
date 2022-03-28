@@ -7,15 +7,19 @@
 
 void UWidgetCollecPanelChild::Init(const FName& collecID, const FItemCollecRow& row)
 {
+	int Iter = 0;
+	
 	for(const FItemCollecNeed& ItemNeed : row.m_AryItems)
 	{
 		UWidgetCollecItemEle* ItemEle = CreateWidget<UWidgetCollecItemEle>(this, m_ClassItemEle);
 
 		bool IsEquip = UMyLib::GetItemType( ItemNeed.m_Item.RowName) == EItemType::Equip;
 
-		ItemEle->Init(collecID, IsEquip, ItemNeed.m_Item, ItemNeed.m_nEnchantLv);
+		ItemEle->Init(collecID, Iter, IsEquip, ItemNeed.m_Item, ItemNeed.m_nEnchantLv);
 
 		m_HoriElements->AddChild(ItemEle);
+
+		Iter++;
 	}
 }
 

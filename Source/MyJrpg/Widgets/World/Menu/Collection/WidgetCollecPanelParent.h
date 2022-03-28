@@ -28,10 +28,8 @@ protected:
 	TSubclassOf<UWidgetCollecPanelChild> m_ClassChild;
 
 	FDelegateHandle m_UpdateElements;
-
-	FDelegateHandle m_UpdateStats;
-
-	FDelegateHandle m_UpdateTotalProgress;
+	
+	TArray<FDelegateHandle> m_AryUpdateElements;
 
 protected:
 	virtual void NativeOnInitialized() override;

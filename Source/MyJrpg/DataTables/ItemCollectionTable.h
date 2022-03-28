@@ -24,7 +24,7 @@ public:
 };
 
 USTRUCT(BlueprintType)
-struct FItemCollecNeed : public FTableRowBase
+struct FItemCollecNeed
 {
 	GENERATED_BODY()
 

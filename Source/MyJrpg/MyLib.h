@@ -88,4 +88,8 @@ public:
 	static FName GenerateEquipItemHashKey(const FName& id, const void *ptr);
 
 	static FName GetEquipIDFromHashID(const FName& hash_id);
+
+	static UInventory* FindEquipItem(const FName& id, int lv);
+
+	static UInventory* FindMiscItem(const FName& id);
 };

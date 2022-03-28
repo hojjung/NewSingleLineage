@@ -13,7 +13,9 @@ void UCollectionManager::Init()
 	
 	for(const auto& Key : m_AryItemKeys)
 	{
-		m_MapCollecSpec.Emplace(Key, TUnlockedItems(false, m_AryItemRows[Iter]->m_AryItems.Num()));
+		int Count = m_AryItemRows[Iter]->m_AryItems.Num();
+		TUnlockedItems Items;
+		m_MapCollecSpec.Emplace(Key,Items).Init(false,Count);
 
 		TSubclassOf<UOptionBase> Op = m_AryItemRows[Iter]->m_ClassOption;
 
@@ -77,6 +79,15 @@ const TArray<FName>& UCollectionManager::GetAryCollecKeys() const
 const TMap<FName, TArray<bool>>& UCollectionManager::GetMapCollecSpecs() const
 {
 	return m_MapCollecSpec;
+}
+
+bool UCollectionManager::IsItemRegistered(FName collectionID, int indexItem)
+{
+	if(!m_MapCollecSpec.Contains(collectionID))
+	{
+		return false;
+	}
+	return m_MapCollecSpec[collectionID][indexItem];
 }
 
 const TMap<TSubclassOf<UOptionBase>, UCollectionManager::TOptionGroups>& UCollectionManager::GetMapOptionGroups() const

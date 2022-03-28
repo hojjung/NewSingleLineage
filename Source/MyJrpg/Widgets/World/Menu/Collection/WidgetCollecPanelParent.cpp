@@ -9,6 +9,8 @@ void UWidgetCollecPanelParent::NativeOnInitialized()
 {
 	Super::NativeOnInitialized();
 
+	m_AryUpdateElements.Init(FDelegateHandle(), FGlobalVariable::STORAGE_SIZE + 1);
+
 	SetVisibility(ESlateVisibility::Collapsed);
 
 	m_BtnClose->OnClicked.AddDynamic(this, &UWidgetCollecPanelParent::OnClose);
@@ -44,6 +46,10 @@ void UWidgetCollecPanelParent::UpdateElements()
 
 		CollecChild->Update();
 	}
+
+	m_TotalStat->UpdateTotalProgress();
+	
+	m_TotalStat->UpdateStats();
 }
 
 void UWidgetCollecPanelParent::Open()
@@ -52,13 +58,14 @@ void UWidgetCollecPanelParent::Open()
 
 	m_UpdateElements = UMyGameInstance::Get->m_ItemCollecManager->m_OnCollecChanged.AddUObject(this, &UWidgetCollecPanelParent::UpdateElements);
 
-	m_UpdateStats = UMyGameInstance::Get->m_ItemCollecManager->m_OnCollecChanged.AddUObject(m_TotalStat, &UWidgetCollecStatParent::UpdateStats);
+	m_AryUpdateElements[0] = UMyGameInstance::Get->m_Inven->m_OnInvenChanged.AddUObject(this, &UWidgetCollecPanelParent::UpdateElements);
+	int Iter = 1;
+	for(UInventory* Storage : UMyGameInstance::Get->m_AryStorage)
+	{
+		m_AryUpdateElements[Iter] = Storage->m_OnInvenChanged.AddUObject(this, &UWidgetCollecPanelParent::UpdateElements);
 
-	m_UpdateTotalProgress = UMyGameInstance::Get->m_ItemCollecManager->m_OnCollecChanged.AddUObject(m_TotalStat, &UWidgetCollecStatParent::UpdateTotalProgress);
-
-	m_TotalStat->UpdateTotalProgress();
-	
-	m_TotalStat->UpdateStats();
+		Iter++;
+	}
 
 	UpdateElements();
 }
@@ -67,9 +74,14 @@ void UWidgetCollecPanelParent::OnClose()
 {
 	SetVisibility(ESlateVisibility::Collapsed);
 
-	UMyGameInstance::Get->m_ItemCollecManager->m_OnCollecChanged.Remove(m_UpdateStats);
-
-	UMyGameInstance::Get->m_ItemCollecManager->m_OnCollecChanged.Remove(m_UpdateTotalProgress);
-
 	UMyGameInstance::Get->m_ItemCollecManager->m_OnCollecChanged.Remove(m_UpdateElements);
+
+	UMyGameInstance::Get->m_Inven->m_OnInvenChanged.Remove(m_AryUpdateElements[0]);
+	int Iter = 1;
+	for(UInventory* Storage : UMyGameInstance::Get->m_AryStorage)
+	{
+		Storage->m_OnInvenChanged.Remove(m_AryUpdateElements[Iter]);
+
+		Iter++;
+	}
 }

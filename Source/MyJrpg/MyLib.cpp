@@ -361,3 +361,37 @@ FName UMyLib::GetEquipIDFromHashID(const FName& hash_id)
 	
 	return hash_id;
 }
+
+UInventory* UMyLib::FindEquipItem(const FName& id, int lv)
+{
+	 if(UMyGameInstance::Get->m_Inven->FindEquipItem(id, lv))
+	 {
+	 	return UMyGameInstance::Get->m_Inven;
+	 }
+	
+	for(auto Storage : UMyGameInstance::Get->m_AryStorage)
+	{
+		if(Storage->FindEquipItem(id, lv))
+		{
+			return Storage;
+		}
+	}
+	return nullptr;
+}
+
+UInventory* UMyLib::FindMiscItem(const FName& id)
+{
+	if(UMyGameInstance::Get->m_Inven->FindMisItem(id))
+	{
+		return UMyGameInstance::Get->m_Inven;
+	}
+	
+	for(auto Storage : UMyGameInstance::Get->m_AryStorage)
+	{
+		if(Storage->FindMisItem(id))
+		{
+			return Storage;
+		}
+	}
+	return nullptr;
+}

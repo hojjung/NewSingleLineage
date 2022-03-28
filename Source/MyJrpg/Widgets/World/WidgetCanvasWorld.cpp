@@ -53,6 +53,8 @@ void UWidgetCanvasWorld::NativeOnInitialized()
 	m_Enchant->SetVisibility(ESlateVisibility::Collapsed);
 
 	//Bind Event
+	m_BtnCollec->OnClicked.AddDynamic(this,&UWidgetCanvasWorld::OpenItemCollec);
+	
 	m_BtnMenu->OnClicked.AddDynamic(this,&UWidgetCanvasWorld::ToggleMenu);
 
 	m_BtnMenu->IsFocusable = false;

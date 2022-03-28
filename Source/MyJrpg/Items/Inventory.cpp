@@ -191,5 +191,9 @@ int UInventory::GetUsingSlotCount()
 
 const FName* UInventory::FindEquipItem(const FName& Oid, int lv)
 {
+	if (!m_MapEquipItemIdGroup.Contains(Oid))
+	{
+		return nullptr;
+	}
 	return m_MapEquipItemIdGroup[Oid].FindKey(lv);
 }

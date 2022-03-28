@@ -52,6 +52,8 @@ public:
 
 	const TMap<FName,TArray<bool>>& GetMapCollecSpecs() const;
 
+	bool IsItemRegistered(FName collectionID, int indexItem);
+
 	const TMap<TSubclassOf<UOptionBase>, TOptionGroups>& GetMapOptionGroups() const ;
 
 	FText GetTotalProgressText();
