@@ -1,5 +1,10 @@
-// Fill out your copyright notice in the Description page of Project Settings.
-
-
 #include "ItemCollectionTable.h"
 
+UDataTable* UItemCollectionTable::GetItemCollecTable = nullptr;
+
+UItemCollectionTable::UItemCollectionTable()
+{
+	static ConstructorHelpers::FObjectFinder<UDataTable> FoundTable(TEXT("DataTable'/Game/00_DataTables/Item/VillageEquipShop.VillageEquipShop'"));
+	//
+	GetItemCollecTable = FoundTable.Object;
+}

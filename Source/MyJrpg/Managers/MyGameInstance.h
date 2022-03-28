@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "AvatarManager.h"
+#include "CollectionManager.h"
 #include "CraftManager.h"
 #include "CurrencyManager.h"
 #include "EnchantManager.h"
@@ -77,6 +78,8 @@ public:
 	UEnchantManager* m_EnchantManager;
 	UPROPERTY()
 	UAvatarManager* m_AvatarManager;
+	UPROPERTY()
+	UCollectionManager* m_ItemCollecManager;
 	
 protected:
 	virtual void BeginDestroy() override;

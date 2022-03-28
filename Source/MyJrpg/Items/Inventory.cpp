@@ -71,10 +71,18 @@ bool UInventory::AddEquipItem(FName gid, int lv)
 	{
 		return false;
 	}
+	FName Oid = UMyLib::GetEquipIDFromHashID(gid);
 
 	m_AryTotalItems.Add(gid);
-		
-	m_MapEquipItems.Add(gid,lv);
+
+	if(m_MapEquipItemIdGroup.Contains(Oid))
+	{
+		m_MapEquipItemIdGroup[Oid].Add(gid,lv);
+	}
+	else
+	{
+		m_MapEquipItemIdGroup.Emplace(Oid,TEquipLevelPair()).Add(gid,lv);
+	}
 
 	m_OnInvenChanged.Broadcast();
 
@@ -104,7 +112,16 @@ void UInventory::RemoveItem(FName id, int amount)
 
 void UInventory::RemoveEquipItem(FName gid)
 {
-	m_MapEquipItems.Remove(gid);
+	FName Oid = UMyLib::GetEquipIDFromHashID(gid);
+
+	TMap<FName, int>& EquipIDMap = m_MapEquipItemIdGroup[Oid];
+
+	EquipIDMap.Remove(gid);
+
+	if (EquipIDMap.Num() <= 0)
+	{
+		m_MapEquipItemIdGroup.Remove(Oid);
+	}
 	
 	m_AryTotalItems.Remove(gid);
 
@@ -123,17 +140,23 @@ int UInventory::GetItemStack(FName ID)
 
 int UInventory::GetItemLevel(FName gID)
 {
-	return m_MapEquipItems[gID];
+	FName Oid = UMyLib::GetEquipIDFromHashID(gID);
+
+	return m_MapEquipItemIdGroup[Oid][gID];
 }
 
 void UInventory::AddItemLevel(FName gID, int addlv)
 {
-	m_MapEquipItems[gID]+=addlv;	
+	FName Oid = UMyLib::GetEquipIDFromHashID(gID);
+	
+	m_MapEquipItemIdGroup[Oid][gID]+=addlv;	
 }
 
 void UInventory::SubItemLevel(FName gID, int sublv)
 {
-	m_MapEquipItems[gID]-=sublv;
+	FName Oid = UMyLib::GetEquipIDFromHashID(gID);
+	
+	m_MapEquipItemIdGroup[Oid][gID]-=sublv;
 }
 
 const TArray<FName>& UInventory::GetAryTotalItemIDs() const
@@ -151,7 +174,7 @@ FName UInventory::GetItemID(int index)
 	return  m_AryTotalItems[index];
 }
 
-bool UInventory::HasItem(const FName& name, int amount)
+bool UInventory::FindMisItem(const FName& name, int amount)
 {
 	if(!m_MapMiscItems.Contains(name))
 	{
@@ -166,3 +189,7 @@ int UInventory::GetUsingSlotCount()
 	return m_AryTotalItems.Num();
 }
 
+const FName* UInventory::FindEquipItem(const FName& Oid, int lv)
+{
+	return m_MapEquipItemIdGroup[Oid].FindKey(lv);
+}

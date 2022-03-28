@@ -254,7 +254,7 @@ void UEnchantManager::DoEnchant()
 	
 	UMyLib::GetPlayerInven()->RemoveItem(m_CrntMat, 1);
 
-	if(!UMyLib::GetPlayerInven()->HasItem(m_CrntMat))
+	if(!UMyLib::GetPlayerInven()->FindMisItem(m_CrntMat))
 	{
 		m_CrntMat = NAME_None;
 	}

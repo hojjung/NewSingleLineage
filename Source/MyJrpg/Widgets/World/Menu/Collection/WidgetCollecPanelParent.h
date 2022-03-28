@@ -3,7 +3,10 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "WidgetCollecPanelChild.h"
+#include "WidgetCollecStatParent.h"
 #include "Blueprint/UserWidget.h"
+#include "Components/ScrollBox.h"
 #include "WidgetCollecPanelParent.generated.h"
 
 /**
@@ -13,5 +16,32 @@ UCLASS()
 class MYJRPG_API UWidgetCollecPanelParent : public UUserWidget
 {
 	GENERATED_BODY()
-	
+
+protected:
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (BindWidget))
+	UButton* m_BtnClose;
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (BindWidget))
+	UWidgetCollecStatParent* m_TotalStat;
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (BindWidget))
+	UScrollBox* m_Scroll;
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
+	TSubclassOf<UWidgetCollecPanelChild> m_ClassChild;
+
+	FDelegateHandle m_UpdateElements;
+
+	FDelegateHandle m_UpdateStats;
+
+	FDelegateHandle m_UpdateTotalProgress;
+
+protected:
+	virtual void NativeOnInitialized() override;
+
+	void CreateElements();
+
+	void UpdateElements();
+
+public:
+	void Open();
+	UFUNCTION()
+	void OnClose();
 };

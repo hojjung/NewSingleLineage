@@ -175,7 +175,7 @@ bool UCraftManager::IsMaterialEnough()
 	{
 		int Count = Cost.m_nStackCount * GetAmount();
 		
-		if(!UMyLib::GetPlayerInven()->HasItem(Cost.m_ItemDataRowHandle.RowName,Count))
+		if(!UMyLib::GetPlayerInven()->FindMisItem(Cost.m_ItemDataRowHandle.RowName,Count))
 		{
 			return false;
 		}

@@ -7,6 +7,7 @@
 #include "Hud/WidgetGameOver.h"
 #include "Hud/WidgetLevelUp.h"
 #include "Menu/CharacterInfoHUD/AlertInfoWindow.h"
+#include "Menu/Collection/WidgetCollecPanelParent.h"
 #include "Menu/Dialogue/WidgetLogWindow.h"
 #include "Menu/Enchant/WidgetEnchantBase.h"
 #include "Menu/Quest/WidgetQuestAcceptPanel.h"
@@ -112,6 +113,9 @@ protected:
 	//
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (BindWidget))
 	UWidgetSkinPanel* m_SkinPanel;
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (BindWidget))
+	UWidgetCollecPanelParent* m_ItemCollecPanel;
+	
 protected:
 	void HideHUD();
 
@@ -136,6 +140,8 @@ public:
 	void AutoToggle();
 	UFUNCTION()
 	void OpenSkin();
+	UFUNCTION()
+	void OpenItemCollec();
 	UFUNCTION()
 	void OpenQuest();
 	UFUNCTION()

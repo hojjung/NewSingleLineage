@@ -2,7 +2,6 @@
 #include "MyGameInstance.h"
 #include "Engine/Engine.h"
 #include "MyJrpg/MyJrpg.h"
-#include "MyJrpg/DataTables/PortraitData.h"
 
 UMyAssetManager* UMyAssetManager::Get()
 {

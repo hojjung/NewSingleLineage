@@ -44,6 +44,8 @@ void UMyGameInstance::Init()
 	m_AvatarManager = NewObject<UAvatarManager>(this);
 	m_SkillAuto = NewObject<UPlSkillAuto>(this);
 
+	m_ItemCollecManager = NewObject<UCollectionManager>(this);
+
 	m_AryStorage.Reset();
 	m_AryStorage.Add(NewObject<UInventory>(this));
 	m_AryStorage.Add(NewObject<UInventory>(this));
@@ -55,6 +57,7 @@ void UMyGameInstance::Init()
 	m_AryStorage[3]->Init(FGlobalVariable::STORAGE_SIZE);
 
 
+	m_ItemCollecManager->Init();
 	m_AvatarManager->Init();
 	m_PotionManager->Init();
 	m_SkillManager->Init();

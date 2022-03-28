@@ -141,6 +141,11 @@ void UWidgetCanvasWorld::OpenSkin()
 	m_SkinPanel->Open();
 }
 
+void UWidgetCanvasWorld::OpenItemCollec()
+{
+	m_ItemCollecPanel->Open();
+}
+
 void UWidgetCanvasWorld::OpenQuest()
 {
 	m_QuestPanel->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
