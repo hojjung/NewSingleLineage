@@ -83,10 +83,6 @@ const TMap<FName, TArray<bool>>& UCollectionManager::GetMapCollecSpecs() const
 
 bool UCollectionManager::IsItemRegistered(FName collectionID, int indexItem)
 {
-	if(!m_MapCollecSpec.Contains(collectionID))
-	{
-		return false;
-	}
 	return m_MapCollecSpec[collectionID][indexItem];
 }
 
@@ -98,6 +94,23 @@ const TMap<TSubclassOf<UOptionBase>, UCollectionManager::TOptionGroups>& UCollec
 FText UCollectionManager::GetTotalProgressText()
 {
 	FString Str = FString::Printf(TEXT("%d/%d"),GetCompleteCount(),GetTotalCount());
+
+	return FText::FromString(Str);
+}
+
+FText UCollectionManager::GetCollecProgressText(FName collectionID)
+{
+	int CompleCount = 0;
+	
+	TArray<bool>& ArySpec = m_MapCollecSpec[collectionID];
+
+	for(bool Unlocked : ArySpec)
+	{
+		if (Unlocked)
+			CompleCount++;
+	}
+	
+	FString Str = FString::Printf(TEXT("%d/%d"), CompleCount, ArySpec.Num());
 
 	return FText::FromString(Str);
 }
@@ -154,16 +167,7 @@ void UCollectionManager::AddItem(FName collectionID, int indexItem, UInventory* 
 		invenFrom->RemoveItem(WantAdd.m_Item.RowName, 1);
 	}
 
-	if(m_MapCollecSpec.Contains(collectionID))
-	{
-		TUnlockedItems& Pair = m_MapCollecSpec[collectionID];
-		
-		Pair[indexItem] = true;
-	}
-	else
-	{
-		m_MapCollecSpec.Emplace(collectionID,TUnlockedItems(nullptr, ItemRow.m_AryItems.Num()))[indexItem] = true;
-	}
+	m_MapCollecSpec.Emplace(collectionID,TUnlockedItems(nullptr, ItemRow.m_AryItems.Num()))[indexItem] = true;
 
 	m_nCompleteCount++;
 

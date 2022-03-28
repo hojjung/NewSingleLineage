@@ -58,6 +58,8 @@ public:
 
 	FText GetTotalProgressText();
 
+	FText GetCollecProgressText(FName collectionID);
+
 	float GetTotalProgress();
 
 	bool CheckCanAdd(FName collectionID, int indexItem, UInventory* invenFrom);

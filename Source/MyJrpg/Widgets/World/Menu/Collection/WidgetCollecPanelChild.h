@@ -29,6 +29,12 @@ protected:
 	TSubclassOf<UWidgetCollecItemEle> m_ClassItemEle;
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (BindWidget))
 	UTextBlock* m_TextProgress;
+
+	FName m_CollectionID;
+
+protected:
+	void SetOptionText(TSubclassOf<UOptionBase> classOp);
+	
 public:
 	void Init(const FName& collecID ,const FItemCollecRow& row);
 

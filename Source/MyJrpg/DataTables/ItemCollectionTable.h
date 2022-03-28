@@ -42,6 +42,8 @@ struct FItemCollecRow : public FTableRowBase
 
 public:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
+	FText m_TextCollecName;
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
 	TSubclassOf<UOptionBase> m_ClassOption;
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
 	TArray<FItemCollecNeed> m_AryItems;

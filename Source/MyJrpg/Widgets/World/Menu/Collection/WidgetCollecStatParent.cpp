@@ -31,13 +31,13 @@ void UWidgetCollecStatParent::CreateStats()
 
 void UWidgetCollecStatParent::UpdateTotalProgress()
 {
-	m_TotalPercent->SetText(m_Manager->GetTotalProgressText());
+	m_TotalProgress->SetRightText(m_Manager->GetTotalProgressText());
 
 	float Per = m_Manager->GetTotalProgress();
 
 	m_ProgressBar->SetPercent(Per);
 
-	FString Str = FString::Printf(TEXT("%2.1f"),Per);
+	FString Str = FString::Printf(TEXT("%2.1f%%"),Per);
 	
 	m_TotalPercent->SetText(FText::FromString(Str));
 }
