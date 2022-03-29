@@ -45,6 +45,7 @@ void UWidgetCollecPanelChild::SetOptionText(TSubclassOf<UOptionBase> classOp)
 	FString OptionText = FString::Format(*Op->GetOptionFormat(),ArgsValue);
 
 	ArgsOptionName.Add(Op->GetOptionName());
+	
 	ArgsOptionName.Add(OptionText);
 
 	FString TotalText = FString::Format(TEXT("{0}{1}"),ArgsOptionName);
@@ -64,5 +65,10 @@ void UWidgetCollecPanelChild::Update()//사용자가 지금 가진거랑 비교�
 	FText ProgressText = UMyGameInstance::Get->m_ItemCollecManager->GetCollecProgressText(m_CollectionID);
 	
 	m_TextProgress->SetText(ProgressText);
+}
+
+TArray<UWidget*> UWidgetCollecPanelChild::GetChildElements()
+{
+	return m_HoriElements->GetAllChildren();
 }
 

@@ -73,6 +73,11 @@ public:
 		return m_AryCraftDataKey[m_nIndex];
 	}
 
+	FORCEINLINE const FName& GetItemKey(int index) const
+    	{
+    		return m_AryCraftDataKey[index];
+    	}
+
 	FORCEINLINE const TArray<const FItemDataRow*>& GetAllCraftData() const
 	{
 		return m_AryCraftDataRow;

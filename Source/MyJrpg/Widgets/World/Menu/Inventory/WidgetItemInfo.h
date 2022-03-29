@@ -6,6 +6,8 @@
 
 #include "WidgetItemElement.h"
 #include "Blueprint/UserWidget.h"
+#include "Components/ScrollBox.h"
+#include "MyJrpg/Widgets/World/Menu/Collection/WidgetCollecStatChild.h"
 #include "MyJrpg/Widgets/World/Menu/StackSelector/WidgetStackCalculator.h"
 #include "WidgetItemInfo.generated.h"
 
@@ -32,33 +34,46 @@ protected:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (BindWidget))
 	UTextBlock* m_TextItemDesc;
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (BindWidget))
-	UTextBlock* m_TextItemEffect;//real option
+	UButton* m_BtnClose;
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (BindWidget))
 	UButton* m_BtnEraseItem;
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (BindWidget))
-	UButton* m_BtnClose;
+	UButton* m_BtnEnchant;
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (BindWidget))
-	UButton* m_BtnCalculator;
-	
-
+	UScrollBox* m_ScrollInfo;
+	UPROPERTY(EditDefaultsOnly)
+	TSubclassOf<UWidgetCollecStatChild> m_ClassOption;
 	UPROPERTY()
-	FName m_ItemKey;
+	TArray<UWidgetCollecStatChild*> m_AryOptions;
+	
 	UPROPERTY()
 	int m_nEraseAmount;
-	FName m_EquipItem;
+	UPROPERTY()
+	FName m_ItemKey;
 
 protected:
 	virtual void NativeOnInitialized() override;;
 	
+	void SetTypeInfo(EItemInfo info, EItemType type,const FItemDataRow& ItemData);
+
+	void UpdateStat(const FName& target, int level);
+
+	void CreateOption(const FString&& infoText, const FString&& formatText, int v);
+
+	void CreateOption(TSubclassOf<UOptionBase> op, int lv);
+	
 public:
+	void SetItemInfo(EItemInfo info,const FName& oID,UInventory* inven);
+	
+	UFUNCTION()
+	void OnOpenCalculator();
 	UFUNCTION()
 	void OnClose();
 	UFUNCTION()
 	void OnErase();
 	UFUNCTION()
-	void OnOpenCalculator();
-	
-	void SetItemInfo(const FName& itemSpecInfo);
+	void OnEnchant();
 };
 
+//획득처가있어야함
 

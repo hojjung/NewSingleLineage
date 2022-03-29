@@ -26,9 +26,10 @@ protected:
 
 protected:
 	virtual void NativeOnInitialized() override;
+
+	void OnHoldComplete();
 	
 public:
-	
 	void SetPrize(const FQuestReward& quest_reward);
 
 	void UpdatePrize();

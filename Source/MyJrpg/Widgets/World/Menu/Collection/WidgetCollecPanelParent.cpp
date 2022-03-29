@@ -16,6 +16,8 @@ void UWidgetCollecPanelParent::NativeOnInitialized()
 	m_BtnClose->OnClicked.AddDynamic(this, &UWidgetCollecPanelParent::OnClose);
 
 	CreateElements();
+	//
+	
 }
 
 void UWidgetCollecPanelParent::CreateElements()
@@ -31,6 +33,11 @@ void UWidgetCollecPanelParent::CreateElements()
 		PanelChild->Init(ItemCollec, *AryColleRows[Iter]);
 
 		PanelChild->Update();
+
+		for(UWidget* Ele : PanelChild->GetChildElements())
+		{
+			Cast<UWidgetCollecItemEle>(Ele)->m_OnFocus.AddUObject(this, &UWidgetCollecPanelParent::OnSelected);
+		}
 
 		m_Scroll->AddChild(PanelChild);
 
@@ -50,6 +57,27 @@ void UWidgetCollecPanelParent::UpdateElements()
 	m_TotalStat->UpdateTotalProgress();
 	
 	m_TotalStat->UpdateStats();
+}
+
+void UWidgetCollecPanelParent::ShowItemInfo(const FName& itemOid)
+{
+	
+}
+
+void UWidgetCollecPanelParent::OnSelected(UWidgetCollecItemEle* ele)
+{
+	if (m_CurrentFocused == ele)
+	{
+		return;
+	}
+	if (m_CurrentFocused)
+		m_CurrentFocused->SetMyUnfocus();
+	
+	m_CurrentFocused = ele;
+
+	m_CurrentFocused->SetMyFocus();
+	
+	ShowItemInfo(m_CurrentFocused->GetItemID());
 }
 
 void UWidgetCollecPanelParent::Open()

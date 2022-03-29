@@ -8,7 +8,7 @@ void UWidgetCraftCostElement::SetCraftCost(const FCraftItemCost& cost)
 	m_CraftData = &cost;
 	
 	const FItemDataRow* CraftData = m_CraftData->m_ItemDataRowHandle.GetRow<FItemDataRow>("");
-
+	
 	m_ItemElement->SetIcon(CraftData->m_ItemIcon);
 
 	m_ItemElement->SetGlowColor(CraftData->m_ColorHandle);
@@ -24,7 +24,9 @@ void UWidgetCraftCostElement::SetCraftCost(const FCraftItemCost& cost)
 
 void UWidgetCraftCostElement::OnHoldComplete()
 {
-	PRINTF("UWidgetCraftCostElement::OnHoldComplete");
+	FName ID = m_CraftData->m_ItemDataRowHandle.RowName;
+	
+	UMyLib::GetCanvas()->OpenItemInfo(EItemInfo::Craft,ID,nullptr);
 }
 
 void UWidgetCraftCostElement::UpdateCostAmount()

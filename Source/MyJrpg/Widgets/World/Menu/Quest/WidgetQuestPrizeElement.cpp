@@ -12,7 +12,17 @@ void UWidgetQuestPrizeElement::NativeOnInitialized()
 
 	m_QuestBaseEle->SetFocusable(false);
 
-	m_QuestBaseEle->SetHoldable(false);
+	m_QuestBaseEle->SetHoldable(true);
+
+	m_QuestBaseEle->m_OnHold.AddUObject(this,&UWidgetQuestPrizeElement::OnHoldComplete);
+}
+
+void UWidgetQuestPrizeElement::OnHoldComplete()
+{
+	FName ID = m_QuestReward.m_Item.RowName;
+
+	if (!ID.IsNone())
+		UMyLib::GetCanvas()->OpenItemInfo(EItemInfo::QuestReward,ID,nullptr);
 }
 
 void UWidgetQuestPrizeElement::SetPrize(const FQuestReward& quest_reward)

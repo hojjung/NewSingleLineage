@@ -26,7 +26,8 @@ protected:
 	UScrollBox* m_Scroll;
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
 	TSubclassOf<UWidgetCollecPanelChild> m_ClassChild;
-
+	UPROPERTY()
+	UWidgetCollecItemEle* m_CurrentFocused;
 	FDelegateHandle m_UpdateElements;
 	
 	TArray<FDelegateHandle> m_AryUpdateElements;
@@ -37,6 +38,10 @@ protected:
 	void CreateElements();
 
 	void UpdateElements();
+
+	void ShowItemInfo(const FName& itemOid);
+	
+	void OnSelected(UWidgetCollecItemEle* ele);
 
 public:
 	void Open();

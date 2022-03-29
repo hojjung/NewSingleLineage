@@ -29,8 +29,9 @@ FText UUWidgetShopItemElement::GetFocusText()
 
 void UUWidgetShopItemElement::OnHoldingComplete()
 {
-	PRINTF("UUWidgetShopItemElement::OnHoldingComplete");
-	//UMyLib::GetHUD()->GetCanvas()->OpenItemInfo(*GetItemSpec());
+	FName ID = m_TradeData->m_ItemDataRowHandle.RowName;
+	
+	UMyLib::GetCanvas()->OpenItemInfo(EItemInfo::Shop,ID,nullptr);
 
 	SetMyUnFocus();
 }

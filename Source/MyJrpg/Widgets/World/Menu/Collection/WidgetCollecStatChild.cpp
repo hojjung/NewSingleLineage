@@ -21,3 +21,16 @@ void UWidgetCollecStatChild::SetStatText(TTuple<TSubclassOf<UOptionBase>, TArray
 
 	m_StatText->SetRightText(FText::FromString(Str));
 }
+
+void UWidgetCollecStatChild::SetStatText(const FString&& infoText, const FString&& formatText, int v)
+{
+	m_StatText->SetLeftText(FText::FromString(infoText));
+
+	FStringFormatOrderedArguments Args;
+	
+	Args.Add(v);
+
+	FString Before = FString::Format(*formatText,Args);
+
+	m_StatText->SetRightText(FText::FromString(Before));
+}

@@ -52,8 +52,6 @@ void UWidgetSkinPanel::OnSelected(UWidgetSkinElement* ele)
 
 	m_CurrentFocused->SetMyFocus();
 	
-	m_CurrentFocused->UpdateEle();
-
 	UMyGameInstance::Get->m_AvatarManager->ShowPreviewSkin(m_CurrentFocused->GetCrntSkin());
 }
 

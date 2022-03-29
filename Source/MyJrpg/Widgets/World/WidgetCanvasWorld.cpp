@@ -262,10 +262,9 @@ UWidgetEquipInvenPanel* UWidgetCanvasWorld::GetEquipInvenMenu()
 	return m_EquipInvenPanel;
 }
 
-void UWidgetCanvasWorld::OpenItemInfo(const FName& itemSpec)
+void UWidgetCanvasWorld::OpenItemInfo(EItemInfo info,const FName& oID, UInventory* inven)
 {
-	//m_MenuBar->Get
-	m_ItemInfo->SetItemInfo(itemSpec);
+	m_ItemInfo->SetItemInfo(info,oID,inven);
 }
 
 void UWidgetCanvasWorld::HideHUD()

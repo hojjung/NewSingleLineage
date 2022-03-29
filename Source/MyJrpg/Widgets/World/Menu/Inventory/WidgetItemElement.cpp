@@ -87,7 +87,7 @@ FText UWidgetItemElement::GetFocusText()
 
 void UWidgetItemElement::OnHoldingComplete()
 {
-	UMyLib::GetCanvas()->OpenItemInfo(GetItemID());
+	UMyLib::GetCanvas()->OpenItemInfo(EItemInfo::Inven,GetItemID(),m_Inven.Get());
 
 	SetMyUnFocus();
 }
@@ -236,19 +236,18 @@ void UWidgetItemElement::UpdateElement()
 
 void UWidgetItemElement::UpdateElement(const FName& id)
 {
-	m_TextStackAmount->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
+	
 	
 	const FItemDataRow& ItemData = UMyLib::GetItemData(id);
 
 	if(UMyLib::GetItemType(ItemData) == EItemType::Equip)
 	{
-		int Level = m_Inven->GetItemLevel(id);
+		int Level = m_Inven.Get() ? m_Inven->GetItemLevel(id) : 0;
 
-		if(Level>0)
+		if(Level > 0)
 		{
-			FString LevelStr = FString::Printf(TEXT("+ %d"),Level);
-
-			m_TextStackAmount->SetText(FText::FromString(LevelStr));
+			m_TextStackAmount->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
+			m_TextStackAmount->SetText(FText::FromString(FString::Printf(TEXT("+ %d"),Level)));
 		}
 		else
 		{
@@ -266,9 +265,17 @@ void UWidgetItemElement::UpdateElement(const FName& id)
 	}
 	else
 	{
-		int StackCount =m_Inven->GetItemStack(id);
+		int StackCount = m_Inven.Get() ? m_Inven->GetItemStack(id) : 0;
 
-		m_TextStackAmount->SetText(FText::AsNumber(StackCount));	
+		if (StackCount > 0)
+		{
+			m_TextStackAmount->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
+			m_TextStackAmount->SetText(FText::AsNumber(StackCount));	
+		}
+		else
+		{
+			m_TextStackAmount->SetVisibility(ESlateVisibility::Collapsed);
+		}
 	}
 
 	m_ElementBase->SetHoldable(true);

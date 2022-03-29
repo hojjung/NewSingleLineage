@@ -130,3 +130,13 @@ class DeleterNot
 public:
 	void operator()(void*) {}
 };
+
+enum class EItemInfo
+{
+	Inven,
+	Market,
+	Collection,
+	QuestReward,
+	Craft,
+	Shop
+};

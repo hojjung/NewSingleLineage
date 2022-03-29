@@ -135,7 +135,7 @@ protected:
 public:
 	UWidgetEquipInvenPanel* GetEquipInvenMenu();
 
-	void OpenItemInfo(const FName& itemSpec);
+	void OpenItemInfo(EItemInfo info,const FName& oID,UInventory* inven);
 
 	UFUNCTION()
 	void ToggleMenu();

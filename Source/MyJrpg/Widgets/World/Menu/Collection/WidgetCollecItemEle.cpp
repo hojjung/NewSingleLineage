@@ -8,6 +8,12 @@ void UWidgetCollecItemEle::Init(const FName& collecID, int index, bool is_equip,
 
 	m_ImgLock->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
 
+	m_IconEle->SetHoldable(true);
+
+	m_IconEle->m_OnHold.AddUObject(this,&UWidgetCollecItemEle::OnHoldComplete);
+
+	m_IconEle->m_OnClick.AddUObject(this,&UWidgetCollecItemEle::OnClicked);
+
 	m_bIsEquip = is_equip;
 
 	m_bRegisterable = false;
@@ -38,6 +44,11 @@ void UWidgetCollecItemEle::Init(const FName& collecID, int index, bool is_equip,
 	{
 		m_TextEnchantLevel->SetVisibility(ESlateVisibility::Collapsed);
 	}
+}
+
+void UWidgetCollecItemEle::OnHoldComplete()
+{
+	UMyLib::GetCanvas()->OpenItemInfo(EItemInfo::Collection,m_ItemID,nullptr);
 }
 
 void UWidgetCollecItemEle::UpdateEquipItem()
@@ -87,8 +98,6 @@ void UWidgetCollecItemEle::Update()//포커싱이 되야지 등록을하잔아
 	}
 	if (UMyGameInstance::Get->m_ItemCollecManager->IsItemRegistered(m_CollecID,m_nIndex))
 	{
-		m_IconEle->SetHoldable(false);
-
 		m_IconEle->SetFocusable(false);
 
 		m_Checkbox->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
@@ -98,8 +107,6 @@ void UWidgetCollecItemEle::Update()//포커싱이 되야지 등록을하잔아
 		return;
 	}
 	m_bIsRegistered = false;
-
-	m_IconEle->SetHoldable(true);
 
 	m_IconEle->SetFocusable(true);
 
@@ -113,12 +120,29 @@ void UWidgetCollecItemEle::Update()//포커싱이 되야지 등록을하잔아
 	{
 		UpdateMiscItem();
 	}
-
-	
-	
 }
 
 bool UWidgetCollecItemEle::GetIsRegistered()
 {
 	return m_bIsRegistered;
+}
+
+const FName& UWidgetCollecItemEle::GetItemID() const
+{
+	return m_ItemID;
+}
+
+void UWidgetCollecItemEle::SetMyUnfocus()
+{
+	m_IconEle->SetMyUnFocus();
+}
+
+void UWidgetCollecItemEle::SetMyFocus()
+{
+	m_IconEle->SetMyFocus();
+}
+
+void UWidgetCollecItemEle::OnClicked()
+{
+	m_OnFocus.Broadcast(this);
 }

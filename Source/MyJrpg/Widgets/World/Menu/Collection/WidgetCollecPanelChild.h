@@ -39,4 +39,6 @@ public:
 	void Init(const FName& collecID ,const FItemCollecRow& row);
 
 	void Update();
+
+	TArray<UWidget*> GetChildElements();
 };

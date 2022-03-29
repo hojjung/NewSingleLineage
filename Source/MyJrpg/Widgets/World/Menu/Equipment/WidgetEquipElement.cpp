@@ -38,7 +38,13 @@ FText UWidgetEquipElement::GetFocusText()
 
 void UWidgetEquipElement::OnHoldingComplete()
 {
-	UMyLib::GetCanvas()->OpenItemInfo(GetEquippedItem());
+	FName ID = GetEquippedItem();
+
+	UInventory* Inven = UMyLib::GetPlayerInven();
+	
+	UMyLib::GetCanvas()->OpenItemInfo(EItemInfo::Inven,ID,Inven);
+
+	SetMyUnFocus();
 }
 
 void UWidgetEquipElement::SetSlot(EEquipSlotType slot)

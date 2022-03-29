@@ -67,10 +67,10 @@ FReply UWidgetBaseElement::NativeOnTouchMoved(const FGeometry& InGeometry, const
 FReply UWidgetBaseElement::NativeOnTouchEnded(const FGeometry& InGeometry, const FPointerEvent& InGestureEvent)
 {
 	Super::NativeOnTouchEnded(InGeometry, InGestureEvent);
-
+	
 	EndHolding();
-
-	if(m_bIsFocusable)
+	
+	if(m_bIsFocusable && m_fTimer < 0.7f)
 	{
 		OnClick();
 	}

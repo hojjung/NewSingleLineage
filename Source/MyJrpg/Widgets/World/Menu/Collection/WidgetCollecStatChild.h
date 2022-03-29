@@ -23,4 +23,6 @@ protected:
 
 public:
 	void SetStatText(TTuple<TSubclassOf<UOptionBase>,TArray<int>> opPair);
+
+	void SetStatText(const FString&& infoText, const FString&& formatText, int v);
 };

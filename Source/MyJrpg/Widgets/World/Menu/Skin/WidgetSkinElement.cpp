@@ -11,10 +11,6 @@ void UWidgetSkinElement::Init(const FPlayerUnitEntityRow& pl)
 	m_Ele->SetIcon(m_Skin->m_Icon);
 	m_Ele->m_OnClick.AddUObject(this,&UWidgetSkinElement::OnClicked);
 
-	
-
-
-	
 	UpdateEle();
 }
 
@@ -38,6 +34,8 @@ void UWidgetSkinElement::SetMyUnfocus()
 void UWidgetSkinElement::SetMyFocus()
 {
 	m_Ele->SetMyFocus();
+
+	UpdateEle();
 }
 
 void UWidgetSkinElement::SetConfirm()

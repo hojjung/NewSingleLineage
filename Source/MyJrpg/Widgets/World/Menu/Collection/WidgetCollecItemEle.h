@@ -16,6 +16,11 @@ class MYJRPG_API UWidgetCollecItemEle : public UUserWidget
 {
 	GENERATED_BODY()
 
+public:
+	DECLARE_MULTICAST_DELEGATE_OneParam(FOnFocus,UWidgetCollecItemEle*);
+
+	FOnFocus m_OnFocus;
+
 protected:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (BindWidget))
 	UWidgetBaseElement* m_IconEle;
@@ -44,6 +49,10 @@ protected:
 	void UpdateEquipItem();
 
 	void UpdateMiscItem();
+
+	void OnClicked();
+
+	void OnHoldComplete();
 	
 public:
 	void Init(const FName& collecID, int index, bool is_equip, const FItemDataHandle& item, int lv);
@@ -51,4 +60,10 @@ public:
 	void Update();
 
 	bool GetIsRegistered();
+
+	const FName& GetItemID() const;
+	
+	void SetMyUnfocus();
+	
+	void SetMyFocus();
 };

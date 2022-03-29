@@ -38,7 +38,9 @@ int UWidgetCraftableElement::GetIndex() const
 
 void UWidgetCraftableElement::OnHoldComplete()
 {
-	PRINTF("UWidgetCraftableElement::OnHoldComplete");
+	FName ID = UMyGameInstance::Get->m_CraftManager->GetItemKey(GetIndex());
+	
+	UMyLib::GetCanvas()->OpenItemInfo(EItemInfo::Craft,ID,nullptr);
 }
 
 void UWidgetCraftableElement::OnClicked()
