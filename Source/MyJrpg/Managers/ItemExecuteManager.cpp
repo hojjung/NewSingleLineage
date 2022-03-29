@@ -60,9 +60,9 @@ void UItemExecuteManager::EquipUnequipItem(const FName& itemSpec)
 	}
 }
 
-void UItemExecuteManager::ExecuteItem(const FName& itemID)//애초에 이건 장비템에 대해 전혀 신경안썼음,퀵슬롯에 장비템이 존재하는 건?
+void UItemExecuteManager::ExecuteItem(const FName& itemID,UInventory* inven)//애초에 이건 장비템에 대해 전혀 신경안썼음,퀵슬롯에 장비템이 존재하는 건?
 {
-	m_MapItems[itemID]->Use(itemID);
+	m_MapItems[itemID]->Use(itemID,inven);
 
 	if(m_OnItemUse.IsBound())
 	{

@@ -159,6 +159,11 @@ EItemType UMyLib::GetItemType(FName itemKey)
 	return GetItemType(DataRow);
 }
 
+bool UMyLib::IsEquip(FName itemKey)
+{
+	return UMyLib::GetItemType(itemKey) == EItemType::Equip;
+}
+
 EItemType UMyLib::GetItemType(const FItemDataRow& DataRow)
 {
 	if (DataRow.m_ItemType != EEquipSlotType::None)

@@ -158,7 +158,7 @@ void UWidgetItemElement::SellItem()
 
 	UWidgetStackCalculator* Calculator = UMyLib::GetCanvas()->OpenCalculator(0);
 
-	Calculator->m_OnNumberChanged.AddUObject(this,&UWidgetItemElement::OnSellConfirm);
+	Calculator->m_OnNumberAccept.AddUObject(this,&UWidgetItemElement::OnSellConfirm);
 
 	Calculator->m_OnGetMax.BindUObject(this,&UWidgetItemElement::GetMaxAmount);
 }
@@ -206,7 +206,7 @@ void UWidgetItemElement::UseItem()
 		{
 			if (UMyGameInstance::Get->m_EnchantManager->IsAbleTarget(ItemSpec))
 			{
-				UMyGameInstance::Get->m_EnchantManager->SetTargetEquip(ItemSpec);
+				UMyGameInstance::Get->m_EnchantManager->SetTargetEquip(ItemSpec,m_Inven.Get());
 			}
 			return;
 		}
@@ -219,7 +219,7 @@ void UWidgetItemElement::UseItem()
 		return;
 	}
 	
-	UMyGameInstance::Get->m_ItemExeManager->ExecuteItem(ItemSpec);
+	UMyGameInstance::Get->m_ItemExeManager->ExecuteItem(ItemSpec,m_Inven.Get());
 }
 
 void UWidgetItemElement::UpdateElement()

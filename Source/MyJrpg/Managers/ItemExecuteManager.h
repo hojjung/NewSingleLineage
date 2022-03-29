@@ -40,5 +40,5 @@ public:
 //
 	void EquipUnequipItem(const FName& itemSpec);
 
-	void ExecuteItem(const FName& itemID);
+	void ExecuteItem(const FName& itemID,UInventory* inven);
 };

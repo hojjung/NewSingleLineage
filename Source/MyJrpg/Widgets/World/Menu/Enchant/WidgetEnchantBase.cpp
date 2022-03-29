@@ -29,14 +29,14 @@ void UWidgetEnchantBase::Open()
 	//Update();
 }
 
-void UWidgetEnchantBase::SetEnchantEquipTarget(const FName& target)
+void UWidgetEnchantBase::SetEnchantEquipTarget(const FName& target, UInventory* inven)
 {
-	UMyGameInstance::Get->m_EnchantManager->SetTargetEquip(target);
+	UMyGameInstance::Get->m_EnchantManager->SetTargetEquip(target, inven);
 }
 
-void UWidgetEnchantBase::SetEnchantEquipMaterial(const FName& mat)
+void UWidgetEnchantBase::SetEnchantEquipMaterial(const FName& mat, UInventory* inven)
 {
-	UMyGameInstance::Get->m_EnchantManager->SetMaterialEquip(mat);
+	UMyGameInstance::Get->m_EnchantManager->SetMaterialEquip(mat, inven);
 }
 
 void UWidgetEnchantBase::OnClose()
@@ -76,6 +76,10 @@ void UWidgetEnchantBase::UpdateIcons(const FName& target, const FName& mat, int 
 
 void UWidgetEnchantBase::UpdateInfoTexts(const UEnchantManager* Enchant, const FName& target, const FName& mat, int level)
 {
+	FString AfterLevelStr  = FString::Printf(TEXT("+%d"),level + 1);
+	
+	m_TextLevel->SetText(FText::FromString(AfterLevelStr));
+	
 	if (target.IsNone() || mat.IsNone())
 	{
 		m_BarEnchantLevel->SetPercent(0);
@@ -93,10 +97,6 @@ void UWidgetEnchantBase::UpdateInfoTexts(const UEnchantManager* Enchant, const F
 	m_TextLevel->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
 	
 	m_TextInfo->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
-	
-	FString AfterLevelStr  = FString::Printf(TEXT("+%d"),level + 1);
-	
-	m_TextLevel->SetText(FText::FromString(AfterLevelStr));
 	//
 	float Percent = (float)level / (float)FGlobalVariable::ENCHANT_MAX;
 

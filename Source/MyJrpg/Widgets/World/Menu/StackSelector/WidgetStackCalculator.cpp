@@ -109,11 +109,14 @@ void UWidgetStackCalculator::SetTextNumber(int numberNew)
 {
 	m_nNumber = numberNew;
 
-	int MaxAmount = GetMaxAmount();//업데이트가 외부에서 되야함
-
-	if(m_nNumber > MaxAmount)
+	if (m_nNumber > 0)
 	{
-		m_nNumber = MaxAmount;
+		int MaxAmount = GetMaxAmount(); //업데이트가 외부에서 되야함
+
+		if (m_nNumber > MaxAmount)
+		{
+			m_nNumber = MaxAmount;
+		}
 	}
 	
 	FString Number = UKismetStringLibrary::Conv_IntToString(m_nNumber);;
@@ -235,7 +238,7 @@ void UWidgetStackCalculator::OnClose()
 {
 	OnClearToZero();
 
-	m_OnNumberChanged.Clear();
+	m_OnNumberAccept.Clear();
 
 	m_OnGetMax.Unbind();
 	
@@ -244,7 +247,7 @@ void UWidgetStackCalculator::OnClose()
 
 void UWidgetStackCalculator::OnAccpet()
 {
-	m_OnNumberChanged.Broadcast(m_nNumber);
+	m_OnNumberAccept.Broadcast(m_nNumber);
 	
 	OnClose();
 }

@@ -1,4 +1,3 @@
-// All right Reserve 2021 HereticByte
 
 #pragma once
 
@@ -7,6 +6,7 @@
 #include "UObject/NoExportTypes.h"
 #include "ItemExecuteBase.generated.h"
 
+class UInventory;
 /**
  * 
  */
@@ -15,5 +15,5 @@ class MYJRPG_API UItemExecuteBase : public UObject
 {
 	GENERATED_BODY()
 public:
-	virtual void Use(const FName& item) const {};
+	virtual void Use(const FName& item,UInventory* inven) const {};
 };

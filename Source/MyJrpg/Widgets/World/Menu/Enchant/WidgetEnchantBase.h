@@ -70,9 +70,9 @@ protected:
 public:
 	void Open();
 	
-	void SetEnchantEquipTarget(const FName& target);
+	void SetEnchantEquipTarget(const FName& target, UInventory* inven);
 
-	void SetEnchantEquipMaterial(const FName& mat);
+	void SetEnchantEquipMaterial(const FName& mat, UInventory* inven);
 
 	UFUNCTION()
 	void OnClose();

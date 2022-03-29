@@ -16,6 +16,8 @@ void UWidgetItemInfo::NativeOnInitialized()
 	m_ItemIcon->SetVisibility(ESlateVisibility::HitTestInvisible);
 
 	m_ItemIcon->SetMyInteractable(false);
+
+	m_ItemIcon->Clear();
 	
 	m_BtnClose->OnClicked.AddDynamic(this,&UWidgetItemInfo::OnClose);
 
@@ -24,9 +26,13 @@ void UWidgetItemInfo::NativeOnInitialized()
 	m_BtnEnchant->OnClicked.AddDynamic(this,&UWidgetItemInfo::OnEnchant);
 }
 
-void UWidgetItemInfo::SetTypeInfo(EItemInfo info, EItemType type, const FItemDataRow& ItemData)
+void UWidgetItemInfo::SetCollecItemInfo(const FName& collecID, int index, const FName& oID)
 {
-	
+	m_CollecID = collecID;
+
+	m_nCollecIndex = index;
+
+	SetItemInfo(EItemInfo::Collection,oID,nullptr);
 }
 
 void UWidgetItemInfo::SetItemInfo(EItemInfo info,const FName& oID,UInventory* inven)
@@ -37,12 +43,14 @@ void UWidgetItemInfo::SetItemInfo(EItemInfo info,const FName& oID,UInventory* in
 	{
 		Op->RemoveFromParent();
 	}
+
+	m_Inven = inven;
 	
 	m_AryOptions.Reset();
 	
 	m_ItemKey = oID;
 
-	m_ItemIcon->Init(EPanelType::Inven,inven);
+	m_ItemIcon->Init(EPanelType::Inven,m_Inven.Get());
 
 	const FItemDataRow& ItemData = UMyLib::GetItemData(m_ItemKey);
 
@@ -56,7 +64,7 @@ void UWidgetItemInfo::SetItemInfo(EItemInfo info,const FName& oID,UInventory* in
 
 	if (Type == EItemType::Equip)
 	{
-		int Lv = inven ? inven->GetItemLevel(oID) : 0;
+		int Lv = m_Inven.Get() ? m_Inven.Get()->GetItemLevel(oID) : 0;
 		
 		m_BtnEraseItem->SetIsEnabled(!UMyLib::GetEquip()->IsItemEquipped(m_ItemKey));
 		
@@ -66,6 +74,35 @@ void UWidgetItemInfo::SetItemInfo(EItemInfo info,const FName& oID,UInventory* in
 	SetTypeInfo(info,Type,ItemData);
 }
 
+
+void UWidgetItemInfo::SetTypeInfo(EItemInfo info, EItemType type, const FItemDataRow& ItemData)
+{
+	m_BtnEnchant->SetVisibility(ESlateVisibility::Collapsed);
+	m_BtnEraseItem->SetVisibility(ESlateVisibility::Collapsed);
+	m_BtnRegister->SetVisibility(ESlateVisibility::Collapsed);
+	
+	switch (info)
+	{
+	case EItemInfo::Inven:
+		m_BtnEraseItem->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
+		UpdateEnchantBtn();
+		break;
+	case EItemInfo::Market:
+		break;
+	case EItemInfo::Collection:
+		UpdateRegisterBtn();
+		UpdateEnchantBtn();
+		break;
+	case EItemInfo::QuestReward:
+		break;
+	case EItemInfo::Craft:
+		break;
+	case EItemInfo::Shop:
+		break;
+	default: ;
+	}	
+}	
+
 void UWidgetItemInfo::OnClose()
 {
 	SetVisibility(ESlateVisibility::Collapsed);
@@ -73,33 +110,89 @@ void UWidgetItemInfo::OnClose()
 
 void UWidgetItemInfo::OnErase()
 {
-	//패널에서 버릴 숫자를 정할수 있어야한다.
-	//if(m_EquipItem)
+	if(UMyLib::GetItemType(m_ItemKey) == EItemType::Equip)
 	{
-	//	UMyLib::GetPlayerInven()->RemoveItem(*m_EquipItem);
+		EraseConfirm();
 	}
-	//else if(m_ItemKey!=NAME_None)
+	else
 	{
-		UMyLib::GetPlayerInven()->RemoveItem(m_ItemKey,m_nEraseAmount);
+		UWidgetStackCalculator* Calc = UMyLib::GetCanvas()->OpenCalculator(0);
+		Calc->m_OnGetMax.BindUObject(this, &UWidgetItemInfo::GetMax);
+		Calc->m_OnNumberAccept.AddUObject(this,&UWidgetItemInfo::EraseConfirm);
 	}
-
 	OnClose();
+}
+
+
+int UWidgetItemInfo::GetMax()
+{
+	return m_Inven.Get()->GetItemStack(m_ItemKey);
+}
+
+void UWidgetItemInfo::EraseConfirm(int am)
+{
+	m_Inven.Get()->RemoveItem(m_ItemKey,am);
+}
+
+void UWidgetItemInfo::EraseConfirm()
+{
+	m_Inven.Get()->RemoveEquipItem(m_ItemKey);
+}
+
+void UWidgetItemInfo::UpdateEnchantBtn()//가지고있으면 해당 인벤으로
+ {
+ 	m_BtnEnchant->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
+ 
+ 	bool HasItem = false;
+ 
+ 	if (UMyLib::IsEquip(m_ItemKey))
+ 	{
+ 		HasItem = UMyLib::FindEquipItem(m_ItemKey,0) != nullptr;
+ 	}
+ 	else
+ 	{
+ 		HasItem = UMyLib::FindMiscItem(m_ItemKey) != nullptr;
+ 	}
+ 	m_BtnEnchant->SetIsEnabled(HasItem);
+ }
+
+void UWidgetItemInfo::UpdateRegisterBtn()
+{
+	m_BtnRegister->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
+
+	bool HasItem = false;
+
+	if (UMyLib::IsEquip(m_ItemKey))
+	{
+		int RequireLevel = UItemCollectionTable::GetItemCollecTable->FindRow<FItemCollecRow>(m_CollecID,"")->m_AryItems[m_nCollecIndex].m_nEnchantLv;
+		
+		HasItem = UMyLib::FindEquipItem(m_ItemKey,RequireLevel) != nullptr;
+	}
+	else
+	{
+		HasItem = UMyLib::FindMiscItem(m_ItemKey) != nullptr;
+	}
+	m_BtnRegister->SetIsEnabled(HasItem);
 }
 
 void UWidgetItemInfo::OnEnchant()
 {
+	UMyLib::GetCanvas()->OpenEnchant();
+
+	UInventory *Inven =  UMyLib::FindEquipItem(m_ItemKey,0);
 	
+	UMyGameInstance::Get->m_EnchantManager->SetTargetEquip(m_ItemKey,Inven);
+
+	OnClose();
 }
 
-void UWidgetItemInfo::OnOpenCalculator()
+void UWidgetItemInfo::OnRegister()
 {
-	UMyLib::GetCanvas()->OpenCalculator(0);
+	UMyGameInstance::Get->m_ItemCollecManager->AddItem(m_CollecID,m_nCollecIndex,m_Inven.Get());
 }
 
 void UWidgetItemInfo::UpdateStat(const FName& target, int level)
 {
-	
-	
 	const FItemDataRow& ItemData = UMyLib::GetItemData(target);
 
 	const FStatGroup TotalStat = (ItemData.m_EnchantStats * level) + ItemData.m_EquipStats;

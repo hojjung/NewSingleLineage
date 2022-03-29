@@ -61,7 +61,7 @@ void UUWidgetShopItemElement::OpenStackCalculator()
 
 	UWidgetStackCalculator* Calculator = UMyLib::GetCanvas()->OpenCalculator(m_nAmount);
 
-	Calculator->m_OnNumberChanged.AddUObject(this,&UUWidgetShopItemElement::OnBuyConfirm);
+	Calculator->m_OnNumberAccept.AddUObject(this,&UUWidgetShopItemElement::OnBuyConfirm);
 
 	Calculator->m_OnGetMax.BindUObject(this,&UUWidgetShopItemElement::GetMaxAmount);
 }

@@ -22,7 +22,7 @@ public:
 
 	DECLARE_DELEGATE_RetVal(int,FOnGetMax);
 
-	FOnNumberChanged m_OnNumberChanged;
+	FOnNumberChanged m_OnNumberAccept;
 
 	FOnGetMax m_OnGetMax;
 

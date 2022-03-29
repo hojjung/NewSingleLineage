@@ -40,17 +40,26 @@ protected:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (BindWidget))
 	UButton* m_BtnEnchant;
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (BindWidget))
+	UButton* m_BtnRegister;
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (BindWidget))
 	UScrollBox* m_ScrollInfo;
 	UPROPERTY(EditDefaultsOnly)
 	TSubclassOf<UWidgetCollecStatChild> m_ClassOption;
 	UPROPERTY()
 	TArray<UWidgetCollecStatChild*> m_AryOptions;
-	
+protected:
+	TWeakObjectPtr<UInventory> m_Inven;
 	UPROPERTY()
 	int m_nEraseAmount;
 	UPROPERTY()
 	FName m_ItemKey;
+	UPROPERTY()
+	FName m_CollecID;
+	UPROPERTY()
+	int m_nCollecIndex;
 
+	
+	
 protected:
 	virtual void NativeOnInitialized() override;;
 	
@@ -61,18 +70,30 @@ protected:
 	void CreateOption(const FString&& infoText, const FString&& formatText, int v);
 
 	void CreateOption(TSubclassOf<UOptionBase> op, int lv);
+
+	int GetMax();
+
+	void EraseConfirm(int am);
+
+	void EraseConfirm();
+
+	void UpdateRegisterBtn();
+
+	void UpdateEnchantBtn();
 	
 public:
-	void SetItemInfo(EItemInfo info,const FName& oID,UInventory* inven);
+	void SetItemInfo(EItemInfo info,const FName& oID, UInventory* inven);
+
+	void SetCollecItemInfo(const FName& collecID,int index,const FName& oID);
 	
-	UFUNCTION()
-	void OnOpenCalculator();
 	UFUNCTION()
 	void OnClose();
 	UFUNCTION()
 	void OnErase();
 	UFUNCTION()
 	void OnEnchant();
+	UFUNCTION()
+	void OnRegister();
 };
 
 //획득처가있어야함

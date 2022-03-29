@@ -90,7 +90,7 @@ void UEnchantManager::EnchantFail()
 		UMyGameInstance::Get->m_EquipManager->Unequip(m_CrntTarget);
 	}
 	
-	UMyLib::GetPlayerInven()->RemoveEquipItem(m_CrntTarget);
+	m_InvenTarget.Get()->RemoveEquipItem(m_CrntTarget);
 
 	m_CrntTarget = NAME_None;
 }
@@ -146,18 +146,22 @@ float UEnchantManager::GetEnchantPercent() const
 	return 0;
 }
 
-void UEnchantManager::SetTargetEquip(const FName& target)
+void UEnchantManager::SetTargetEquip(const FName& target, UInventory* inven)
 {
 	m_CrntTarget = target;
 
-	m_nCrntLevel = m_CrntTarget.IsNone() ? 0 : UMyLib::GetPlayerInven()->GetItemLevel(m_CrntTarget);
+	m_InvenTarget = inven;
+
+	m_nCrntLevel = m_CrntTarget.IsNone() ? 0 : m_InvenTarget.Get()->GetItemLevel(m_CrntTarget);
 
 	m_OnEnchantChanged.Broadcast();
 }
 
-void UEnchantManager::SetMaterialEquip(const FName& mat)
+void UEnchantManager::SetMaterialEquip(const FName& mat, UInventory* inven)
 {
 	m_CrntMat = mat;
+
+	m_InvenMat = inven;
 
 	if (!m_CrntTarget.IsNone() && !IsAbleTarget(m_CrntTarget))
 	{
@@ -182,7 +186,7 @@ bool UEnchantManager::IsAbleTarget(const FName& target)
 {
 	if (m_CrntMat.IsNone())
 	{
-		return false;
+		return true;
 	}
 	const FItemDataRow& FoundTarget = UMyLib::GetItemData(target);
 	
@@ -238,6 +242,10 @@ void UEnchantManager::Clear()
 	m_CrntMat = NAME_None;
 
 	m_CrntTarget = NAME_None;
+
+	m_InvenMat = nullptr;
+
+	m_InvenTarget = nullptr;
 }
 
 void UEnchantManager::DoEnchant()
@@ -245,21 +253,20 @@ void UEnchantManager::DoEnchant()
 	if (TryEnchant())
 	{
 		EnchantSuccess(false);
-		
 	}
 	else
 	{
 		EnchantFail();
 	}
 	
-	UMyLib::GetPlayerInven()->RemoveItem(m_CrntMat, 1);
+	m_InvenMat.Get()->RemoveItem(m_CrntMat, 1);
 
-	if(!UMyLib::GetPlayerInven()->FindMisItem(m_CrntMat))
+	if(!m_InvenMat.Get()->FindMisItem(m_CrntMat))
 	{
 		m_CrntMat = NAME_None;
 	}
 
-	m_nCrntLevel = m_CrntTarget.IsNone() ? 0 : UMyLib::GetPlayerInven()->GetItemLevel(m_CrntTarget);
+	m_nCrntLevel = m_CrntTarget.IsNone() ? 0 : m_InvenTarget.Get()->GetItemLevel(m_CrntTarget);
 
 	m_OnEnchantChanged.Broadcast();
 }

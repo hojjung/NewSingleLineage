@@ -48,6 +48,10 @@ bool UBadwordTable::NicknameHasBadWord(const FString& nameWant)
 		{
 			return true;
 		}
+		if (L'ㄱ' <= wChar && wChar <= L'ㅣ')
+		{
+			return true;
+		}
 	}
 
 	for (auto* BadWord : m_AryBadwordList)

@@ -234,7 +234,7 @@ void UWidgetCraftPanel::OpenCalculator()
 {
 	UWidgetStackCalculator* Calcu = UMyLib::GetCanvas()->OpenCalculator(m_nCnt);
 
-	Calcu->m_OnNumberChanged.AddUObject(this,&UWidgetCraftPanel::SetAmount);
+	Calcu->m_OnNumberAccept.AddUObject(this,&UWidgetCraftPanel::SetAmount);
 
 	Calcu->m_OnGetMax.BindUObject(this,&UWidgetCraftPanel::GetMaxAmount);
 }
