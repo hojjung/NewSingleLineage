@@ -147,7 +147,7 @@ public:
 	UPROPERTY(EditDefaultsOnly,BlueprintReadOnly)
 	FItemDataHandle m_ItemDataRowHandle;
 	UPROPERTY(EditDefaultsOnly,BlueprintReadOnly)
-	int m_nStackCount=1;
+	int m_nStackOrLevel=1;
 
 	TSoftObjectPtr<UTexture2D> GetItemIcon() const;
 };

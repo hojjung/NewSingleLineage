@@ -45,13 +45,15 @@ protected://
 	int m_nInvenMaxSize;
 
 public:
-	bool IsCountAvailable();
-	
+	bool IsCountAvailable(int addMore = 0);
+
 	int GetInvenSize();
 	
 	void Init(int size);
 	
 	int GetAvailalbeStackCount(FName id);
+
+	int GetRemainSlotCount();
 
 	bool AddItem(FName id,int amount = 1);
 
@@ -82,5 +84,7 @@ public:
 	const FName* FindEquipItem(const FName& Oid, int lv);
 
 	const FName* FindEquipItem(const FName& Oid);
+
+	int GetEquipItemCount(const FName& Oid, int lv);
 };
 

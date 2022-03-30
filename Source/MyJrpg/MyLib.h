@@ -101,6 +101,14 @@ public:
 	
 	static UInventory* FindMiscItem(const FName& id);
 
+	static bool FindMiscItem(const FName& id, int count);
+
+	static int GetMiscTotalCount(const FName& id);
+
+	static int GetEquipTotalCount(const FName& oID, int level);
+
+	static void RemoveMiscItem(const FName& id, int count);
+
 	static int GetRequireCollecLevel(const FName& collecID, int index);
 
 	static bool IsCollecItemEquip(const FName& collecID, int index);

@@ -18,13 +18,19 @@ void UShopManager::BuyItem(const FItemTradingData& item_trading_data, int amount
 
 	FName ItemID = item_trading_data.m_ItemDataRowHandle.RowName;
 
-	EItemType ItemType = UMyLib::GetItemType(ItemID);
-
-	if (ItemType == EItemType::Equip)
+	if (UMyLib::IsEquip(ItemID))
 	{
-		ItemID = UMyLib::GenerateEquipItemHashKey(ItemID, this);
-		if(!UMyLib::GetPlayerInven()->AddEquipItem(ItemID))
-			return;
+		int Iter = -1;
+
+		while (++Iter < amount)
+		{
+			ItemID = UMyLib::GenerateEquipItemHashKey(ItemID, this);
+			
+			if(!UMyLib::GetPlayerInven()->AddEquipItem(ItemID))
+			{
+				break;				
+			}
+		}
 	}
 	else
 	{

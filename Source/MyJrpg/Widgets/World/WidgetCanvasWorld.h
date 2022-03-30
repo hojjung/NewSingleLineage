@@ -162,7 +162,7 @@ public:
 
 	void OpenQuestPanel(bool isMain);
 
-	UWidgetStackCalculator* OpenCalculator(int cnt);
+	UWidgetStackCalculator* OpenCalculator(int cnt = 0);
 	
 	void StartDialogue(FName str);
 	

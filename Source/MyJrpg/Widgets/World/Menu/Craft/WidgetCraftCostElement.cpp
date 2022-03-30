@@ -31,31 +31,38 @@ void UWidgetCraftCostElement::OnHoldComplete()
 
 void UWidgetCraftCostElement::UpdateCostAmount()
 {
-	// FName* ItemSpecFromInven = UMyLib::GetPlayerInven()->GetItem(m_CraftData->m_ItemDataRowHandle.RowName);
-	//
-	// FName* ItemSpecFromStorage = UMyLib::GetPlayerStorage()->GetItem(m_CraftData->m_ItemDataRowHandle.RowName);
-	//
-	// int InvenStack = ItemSpecFromInven ? ItemSpecFromInven->m_nStack : 0;
-	//
-	// int StorageStack = ItemSpecFromStorage ? ItemSpecFromStorage->m_nStack : 0;
-	//
-	// int AmountCurrent = InvenStack+StorageStack;//창고와 인벤에서 가져와야함
-	//
-	// int AmountCost = m_CraftData->m_nStackCount * UMyGameInstance::Get->m_CraftManager->GetAmount();
-	//
-	// FString FormatAmount = FString::Printf(TEXT("%d/%d"),AmountCurrent,AmountCost);
-	//
-	// FText TextWant = FText::FromString(FormatAmount); 
-	//
-	// m_TextCostAmount->SetText(TextWant);
-	//
-	// if(AmountCurrent < AmountCost)
-	// {
-	// 	m_TextCostAmount->SetColorAndOpacity(FLinearColor::Red);
-	// }
-	// else
-	// {
-	// 	m_TextCostAmount->SetColorAndOpacity(FLinearColor::White);
-	// }
+	FString FormatAmount;
+
+	bool IsAvailable = false;
+
+	if(UMyLib::IsEquip(m_CraftData->m_ItemDataRowHandle.RowName))
+	{
+		IsAvailable = UMyLib::GetEquipTotalCount(m_CraftData->m_ItemDataRowHandle.RowName,m_CraftData->m_nStackOrLevel) > 0;
+
+		FormatAmount = FString::Printf(TEXT("Lv.%d"),m_CraftData->m_nStackOrLevel);
+	}
+	else
+	{
+		int AmountCurrent = UMyLib::GetMiscTotalCount(m_CraftData->m_ItemDataRowHandle.RowName);
+
+		int AmountCost = m_CraftData->m_nStackOrLevel * UMyGameInstance::Get->m_CraftManager->GetAmount();
+
+		FormatAmount = FString::Printf(TEXT("%d/%d"),AmountCurrent,AmountCost);
+		
+		IsAvailable = AmountCurrent >= AmountCost; 
+	}
+	
+	FText TextWant = FText::FromString(FormatAmount); 
+	
+	m_TextCostAmount->SetText(TextWant);
+	
+	if(IsAvailable)
+	{
+		m_TextCostAmount->SetColorAndOpacity(FLinearColor::White);
+	}
+	else
+	{
+		m_TextCostAmount->SetColorAndOpacity(FLinearColor::Red);
+	}
 }
 

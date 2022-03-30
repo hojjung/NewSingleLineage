@@ -32,8 +32,6 @@ protected:
 
 	const FItemTradingData* m_TradeData;
 
-	int m_nAmount;
-
 	int m_nMaxAmount;
 
 protected:

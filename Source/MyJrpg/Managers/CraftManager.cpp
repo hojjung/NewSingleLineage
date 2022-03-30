@@ -107,7 +107,7 @@ int UCraftManager::GetCraftAvailableCountWithMaterial()
 
 		int HasAmount = InvenAmount + StorageAmount; 
 		
-		int Count = Cost.m_nStackCount * GetAmount();
+		int Count = Cost.m_nStackOrLevel * GetAmount();
 
 		int MaxCount = HasAmount / Count;
 
@@ -156,9 +156,9 @@ bool UCraftManager::IsInvenHasSpace()
 {
 	int Amount = GetAmount();
 	
-	if(UMyLib::GetItemType(GetCrntItemKey()) == EItemType::Equip)
+	if(UMyLib::IsEquip(GetCrntItemKey()))
 	{
-		return UMyLib::GetPlayerInven()->IsCountAvailable();//소모품개수는,제작 개수를 결정할때 클램핑해주자.이함수는 제작후 남은 공간에 원하는 아이템을 넣을수 있는가
+		return UMyLib::GetPlayerInven()->IsCountAvailable(Amount);//소모품개수는,제작 개수를 결정할때 클램핑해주자.이함수는 제작후 남은 공간에 원하는 아이템을 넣을수 있는가
 	}
 	
 	return  Amount <= UMyGameInstance::Get->m_Inven->GetAvailalbeStackCount(GetCrntItemKey());	
@@ -173,14 +173,23 @@ bool UCraftManager::IsMaterialEnough()
 {
 	for(const FCraftItemCost& Cost : GetCrntItemRow().m_AryCostItem)
 	{
-		int Count = Cost.m_nStackCount * GetAmount();
-		
-		if(!UMyLib::GetPlayerInven()->FindMisItem(Cost.m_ItemDataRowHandle.RowName,Count))
+		if (UMyLib::IsEquip(Cost.m_ItemDataRowHandle.RowName))
 		{
-			return false;
+			if(!UMyLib::FindEquipItem(Cost.m_ItemDataRowHandle.RowName,Cost.m_nStackOrLevel))
+			{
+				return false;
+			}
+		}
+		else
+		{
+			int Count = Cost.m_nStackOrLevel * GetAmount();
+		
+			if(!UMyLib::FindMiscItem(Cost.m_ItemDataRowHandle.RowName,Count))
+			{
+				return false;
+			}	
 		}
 	}
-
 	return true;
 }
 
@@ -190,13 +199,17 @@ void UCraftManager::PurchaseItemForCraft()
 
 	for(const FCraftItemCost& Cost : GetCrntItemRow().m_AryCostItem)
 	{
-		int Count = Cost.m_nStackCount * GetAmount();
-		
-		int OverAmount =0;// = UMyLib::GetPlayerInven()->RemoveItem(Cost.m_ItemDataRowHandle.RowName,Count);
-
-		if(OverAmount<0)//NeedMore
+		if (UMyLib::IsEquip(Cost.m_ItemDataRowHandle.RowName))
 		{
-			UMyLib::GetPlayerStorage()->RemoveItem(Cost.m_ItemDataRowHandle.RowName,FMath::Abs(OverAmount));
+			const FName* gidItem;
+			UInventory* Inven = UMyLib::FindEquipItem(Cost.m_ItemDataRowHandle.RowName,Cost.m_nStackOrLevel,&gidItem);
+			Inven->RemoveEquipItem(*gidItem);
+		}
+		else
+		{
+			int Count = Cost.m_nStackOrLevel * GetAmount();
+
+			UMyLib::RemoveMiscItem(Cost.m_ItemDataRowHandle.RowName,Count);
 		}
 	}
 }
@@ -205,9 +218,20 @@ void UCraftManager::ReceiveItem()
 {
 	if(m_OnCraft.IsBound())
 	{
+		//for quest
 		m_OnCraft.Broadcast(GetCrntItemRow().m_TextShowingName);
 	}
+
+	if(!UMyLib::IsEquip(GetCrntItemKey()))
+	{
+		UMyLib::GetPlayerInven()->AddItem(GetCrntItemKey(),m_nCraftItemCount);
+	}
+	else
+	{
+		FName HashID = UMyLib::GenerateEquipItemHashKey(GetCrntItemKey(),this);
+
+		UMyLib::GetPlayerInven()->AddEquipItem(HashID);
+	}
 	
-	UMyLib::GetPlayerInven()->AddItem(GetCrntItemKey(),m_nCraftItemCount);
 }
 

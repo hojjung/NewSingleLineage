@@ -460,6 +460,79 @@ UInventory* UMyLib::FindMiscItem(const FName& id)
 	return nullptr;
 }
 
+bool UMyLib::FindMiscItem(const FName& id, int count)
+{
+	int InvenStack = UMyGameInstance::Get->m_Inven->GetItemStack(id);
+	
+	for(auto Storage : UMyGameInstance::Get->m_AryStorage)
+	{
+		InvenStack += Storage->GetItemStack(id);
+	}
+	
+	return InvenStack >= count;
+}
+
+int UMyLib::GetMiscTotalCount(const FName& id)
+{
+	int InvenStack = UMyGameInstance::Get->m_Inven->GetItemStack(id);
+	
+	for(auto Storage : UMyGameInstance::Get->m_AryStorage)
+	{
+		InvenStack += Storage->GetItemStack(id);
+	}
+	
+	return InvenStack;
+}
+
+int UMyLib::GetEquipTotalCount(const FName& oID, int level)
+{
+	int EquipCount = UMyGameInstance::Get->m_Inven->GetEquipItemCount(oID,level);
+	
+	for(auto Storage : UMyGameInstance::Get->m_AryStorage)
+	{
+		EquipCount += Storage->GetEquipItemCount(oID,level);
+	}
+	
+	return EquipCount;
+}
+
+void UMyLib::RemoveMiscItem(const FName& id, int count)
+{
+	int InvenStack = UMyGameInstance::Get->m_Inven->GetItemStack(id);
+
+	if(InvenStack >= count)
+	{
+		UMyGameInstance::Get->m_Inven->RemoveItem(id, count);
+		return;
+	}
+	else
+	{
+		if(InvenStack > 0)
+		{
+			UMyGameInstance::Get->m_Inven->RemoveItem(id, InvenStack);
+		}
+		count -= InvenStack;
+	}
+	for(auto Storage : UMyGameInstance::Get->m_AryStorage)
+	{
+		InvenStack = Storage->GetItemStack(id);
+
+		if(InvenStack >= count)
+		{
+			Storage->RemoveItem(id, count);
+			return;
+		}
+		else
+		{
+			if(InvenStack > 0)
+			{
+				Storage->RemoveItem(id, InvenStack);
+			}
+			count -= InvenStack;
+		}
+	}
+}
+
 int UMyLib::GetRequireCollecLevel(const FName& collecID, int index)
 {
 	return UItemCollectionTable::GetItemCollecTable->FindRow<FItemCollecRow>(collecID,"")->m_AryItems[index].m_nEnchantLv;

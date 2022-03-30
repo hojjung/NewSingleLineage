@@ -11,8 +11,6 @@ void UUWidgetShopItemElement::NativeOnInitialized()
 {
 	Super::NativeOnInitialized();
 
-	m_nAmount=1;
-
 	m_TradeData = nullptr;
 
 	m_ElementBase->m_OnHold.AddUObject(this,&UUWidgetShopItemElement::OnHoldingComplete);
@@ -40,8 +38,6 @@ void UUWidgetShopItemElement::OpenStackCalculator()
 {
 	PRINTF("UUWidgetShopItemElement::TryBuyItem");
 
-	m_nAmount=0;
-
 	int Gold = UMyGameInstance::Get->m_CurrencyManager->GetGold();
 	
 	int Cost = m_TradeData->GetCost(); 
@@ -54,12 +50,21 @@ void UUWidgetShopItemElement::OpenStackCalculator()
 	{
 		int AbleToBuy = Gold / Cost;
 
-		int AbleToDeposit = UMyGameInstance::Get->m_Inven->GetItemStack(m_TradeData->m_ItemDataRowHandle.RowName); 
+		int AbleToDeposit;
+
+		if(!UMyLib::IsEquip(m_TradeData->m_ItemDataRowHandle.RowName))
+		{
+			AbleToDeposit = UMyGameInstance::Get->m_Inven->GetItemStack(m_TradeData->m_ItemDataRowHandle.RowName);
+		}
+		else
+		{
+			AbleToDeposit = UMyGameInstance::Get->m_Inven->GetRemainSlotCount();
+		}
 
 		m_nMaxAmount = FMath::Min(AbleToBuy,AbleToDeposit);
 	}
 
-	UWidgetStackCalculator* Calculator = UMyLib::GetCanvas()->OpenCalculator(m_nAmount);
+	UWidgetStackCalculator* Calculator = UMyLib::GetCanvas()->OpenCalculator();
 
 	Calculator->m_OnNumberAccept.AddUObject(this,&UUWidgetShopItemElement::OnBuyConfirm);
 
@@ -96,16 +101,12 @@ bool UUWidgetShopItemElement::IsSlotEmpty()
 
 void UUWidgetShopItemElement::OnBuyConfirm(int amount)
 {
-	m_nAmount = amount;
-
-	if(m_nAmount<=0)
+	if(UMyLib::GetPlayerInven()->GetRemainSlotCount() < amount)
 	{
+		PRINTF("void UUWidgetShopItemElement::OnBuyConfirm(int amount) :: InvenMax");
 		return;
 	}
-
-	UMyGameInstance::Get->m_ShopManager->BuyItem(*m_TradeData,m_nAmount);
-	
-	m_nAmount=0;
+	UMyGameInstance::Get->m_ShopManager->BuyItem(*m_TradeData,amount);
 }
 
 int UUWidgetShopItemElement::GetMaxAmount()

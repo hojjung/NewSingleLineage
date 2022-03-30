@@ -9,9 +9,9 @@ void UInventory::Init(int size)
 	m_AryTotalItems.Reserve(m_nInvenMaxSize);
 }
 
-bool UInventory::IsCountAvailable()
+bool UInventory::IsCountAvailable(int addMore)
 {
-	return m_AryTotalItems.Num() < m_nInvenMaxSize;
+	return m_AryTotalItems.Num() + addMore< m_nInvenMaxSize;
 }
 
 int UInventory::GetInvenSize()
@@ -29,6 +29,11 @@ int UInventory::GetAvailalbeStackCount(FName id)
 	}
 
 	return FGlobalVariable::INVEN_MAXSTACK - m_MapMiscItems[id];
+}
+
+int UInventory::GetRemainSlotCount()
+{
+	return m_nInvenMaxSize - m_AryTotalItems.Num();
 }
 
 bool UInventory::AddItem(FName id, int amount)
@@ -135,6 +140,10 @@ bool UInventory::IsEquipItem(FName hasID)
 
 int UInventory::GetItemStack(FName ID)
 {
+	if(!m_MapMiscItems.Contains(ID))
+	{
+		return 0;
+	}
 	return m_MapMiscItems[ID];
 }
 
@@ -218,4 +227,25 @@ const FName* UInventory::FindEquipItem(const FName& Oid)
 		}
 	}
 	return nullptr;
+}
+
+int UInventory::GetEquipItemCount(const FName& Oid, int lv)
+{
+	int Sum = 0;
+	
+	FName Id = UMyLib::GetEquipIDFromHashID(Oid);
+	
+	if (!m_MapEquipItemIdGroup.Contains(Id))
+	{
+		return Sum;
+	}
+
+	for(const TTuple<FName, int>& Pair :  m_MapEquipItemIdGroup[Id])
+	{
+		if(Pair.Value == lv)
+		{
+			Sum++;
+		}
+	}
+	return Sum;
 }
