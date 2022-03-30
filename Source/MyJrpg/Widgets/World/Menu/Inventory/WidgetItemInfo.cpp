@@ -24,6 +24,8 @@ void UWidgetItemInfo::NativeOnInitialized()
 	m_BtnEraseItem->OnClicked.AddDynamic(this,&UWidgetItemInfo::OnErase);
 
 	m_BtnEnchant->OnClicked.AddDynamic(this,&UWidgetItemInfo::OnEnchant);
+
+	m_BtnRegister->OnClicked.AddDynamic(this,&UWidgetItemInfo::OnRegister);
 }
 
 void UWidgetItemInfo::SetCollecItemInfo(const FName& collecID, int index, const FName& oID)
@@ -140,21 +142,18 @@ void UWidgetItemInfo::EraseConfirm()
 }
 
 void UWidgetItemInfo::UpdateEnchantBtn()//가지고있으면 해당 인벤으로
- {
+{
  	m_BtnEnchant->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
- 
- 	bool HasItem = false;
- 
- 	if (UMyLib::IsEquip(m_ItemKey))
- 	{
- 		HasItem = UMyLib::FindEquipItem(m_ItemKey,0) != nullptr;
- 	}
- 	else
- 	{
- 		HasItem = UMyLib::FindMiscItem(m_ItemKey) != nullptr;
- 	}
- 	m_BtnEnchant->SetIsEnabled(HasItem);
- }
+
+	if (!UMyLib::IsEquip(m_ItemKey) || !UMyLib::FindEquipItem(m_ItemKey))
+	{
+		m_BtnEnchant->SetIsEnabled(false);
+
+		return ;
+	}
+
+	m_BtnEnchant->SetIsEnabled(true);
+}
 
 void UWidgetItemInfo::UpdateRegisterBtn()
 {
@@ -164,7 +163,7 @@ void UWidgetItemInfo::UpdateRegisterBtn()
 
 	if (UMyLib::IsEquip(m_ItemKey))
 	{
-		int RequireLevel = UItemCollectionTable::GetItemCollecTable->FindRow<FItemCollecRow>(m_CollecID,"")->m_AryItems[m_nCollecIndex].m_nEnchantLv;
+		int RequireLevel = UMyLib::GetRequireCollecLevel(m_CollecID,m_nCollecIndex);
 		
 		HasItem = UMyLib::FindEquipItem(m_ItemKey,RequireLevel) != nullptr;
 	}
@@ -175,20 +174,32 @@ void UWidgetItemInfo::UpdateRegisterBtn()
 	m_BtnRegister->SetIsEnabled(HasItem);
 }
 
-void UWidgetItemInfo::OnEnchant()
+void UWidgetItemInfo::OnEnchant()//강화가 두개의 상황이 존재함.그럼결국,콜렉션으로 열때 원본 아이템을 찾을수있어야함
 {
 	UMyLib::GetCanvas()->OpenEnchant();
 
-	UInventory *Inven =  UMyLib::FindEquipItem(m_ItemKey,0);
+	if(m_Inven.Get())
+	{
+		UMyGameInstance::Get->m_EnchantManager->SetTargetEquip(m_ItemKey,m_Inven.Get());
+
+		OnClose();
+		return;
+	}
+
+	const FName *FoundItem;
+
+	UInventory* Inven = UMyLib::FindEquipItem(m_ItemKey, &FoundItem);
 	
-	UMyGameInstance::Get->m_EnchantManager->SetTargetEquip(m_ItemKey,Inven);
+	UMyGameInstance::Get->m_EnchantManager->SetTargetEquip(*FoundItem,Inven);
 
 	OnClose();
 }
 
 void UWidgetItemInfo::OnRegister()
 {
-	UMyGameInstance::Get->m_ItemCollecManager->AddItem(m_CollecID,m_nCollecIndex,m_Inven.Get());
+	UMyGameInstance::Get->m_ItemCollecManager->AddItem(m_CollecID,m_nCollecIndex);
+
+	OnClose();
 }
 
 void UWidgetItemInfo::UpdateStat(const FName& target, int level)

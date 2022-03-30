@@ -63,6 +63,7 @@ public:
 	float GetTotalProgress();
 
 	bool CheckCanAdd(FName collectionID, int indexItem, UInventory* invenFrom);
+	void UpdateCompleteCollec(FName collectionID, int indexItem, const FItemCollecRow& ItemRow);
 
-	void AddItem(FName collectionID, int indexItem, UInventory* invenFrom);
+	void AddItem(FName collectionID, int indexItem);
 };

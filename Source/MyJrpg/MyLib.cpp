@@ -367,12 +367,71 @@ FName UMyLib::GetEquipIDFromHashID(const FName& hash_id)
 	return hash_id;
 }
 
-UInventory* UMyLib::FindEquipItem(const FName& id, int lv)
+UInventory* UMyLib::FindEquipItem(const FName& id)
 {
-	 if(UMyGameInstance::Get->m_Inven->FindEquipItem(id, lv))
+	if(UMyGameInstance::Get->m_Inven->FindEquipItem(id))
+	{
+		return UMyGameInstance::Get->m_Inven;
+	}
+	
+	for(auto Storage : UMyGameInstance::Get->m_AryStorage)
+	{
+		if(Storage->FindEquipItem(id))
+		{
+			return Storage;
+		}
+	}
+	return nullptr;
+}
+
+UInventory* UMyLib::FindEquipItem(const FName& id,const FName** gidItem)
+{
+	*gidItem = UMyGameInstance::Get->m_Inven->FindEquipItem(id);
+	
+	if(*gidItem)
+	{
+		return UMyGameInstance::Get->m_Inven;
+	}
+	
+	for(auto Storage : UMyGameInstance::Get->m_AryStorage)
+	{
+		*gidItem = Storage->FindEquipItem(id);
+		
+		if(*gidItem)
+		{
+			return Storage;
+		}
+	}
+	return nullptr;
+}
+
+UInventory* UMyLib::FindEquipItem(const FName& id, int lv,const FName** gidItem)
+{
+	*gidItem = UMyGameInstance::Get->m_Inven->FindEquipItem(id, lv);
+	
+	 if(*gidItem)
 	 {
 	 	return UMyGameInstance::Get->m_Inven;
 	 }
+	
+	for(auto Storage : UMyGameInstance::Get->m_AryStorage)
+	{
+		*gidItem = Storage->FindEquipItem(id, lv);
+		
+		if(*gidItem)
+		{
+			return Storage;
+		}
+	}
+	return nullptr;
+}
+
+UInventory* UMyLib::FindEquipItem(const FName& id, int lv)
+{
+	if(UMyGameInstance::Get->m_Inven->FindEquipItem(id, lv))
+	{
+		return UMyGameInstance::Get->m_Inven;
+	}
 	
 	for(auto Storage : UMyGameInstance::Get->m_AryStorage)
 	{
@@ -399,4 +458,16 @@ UInventory* UMyLib::FindMiscItem(const FName& id)
 		}
 	}
 	return nullptr;
+}
+
+int UMyLib::GetRequireCollecLevel(const FName& collecID, int index)
+{
+	return UItemCollectionTable::GetItemCollecTable->FindRow<FItemCollecRow>(collecID,"")->m_AryItems[index].m_nEnchantLv;
+}
+
+bool UMyLib::IsCollecItemEquip(const FName& collecID, int index)
+{
+	const FName ItemKey = UItemCollectionTable::GetItemCollecTable->FindRow<FItemCollecRow>(collecID,"")->m_AryItems[index].m_Item.RowName;
+
+	return UMyLib::IsEquip(ItemKey);
 }

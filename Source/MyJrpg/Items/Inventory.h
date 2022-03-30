@@ -80,5 +80,7 @@ public:
 	int GetUsingSlotCount();
 	
 	const FName* FindEquipItem(const FName& Oid, int lv);
+
+	const FName* FindEquipItem(const FName& Oid);
 };
 

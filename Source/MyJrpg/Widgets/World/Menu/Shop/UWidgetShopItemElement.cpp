@@ -48,7 +48,7 @@ void UUWidgetShopItemElement::OpenStackCalculator()
 
 	if(Cost<=0)
 	{
-		m_nMaxAmount = 1;
+		m_nMaxAmount = 10;
 	}
 	else
 	{

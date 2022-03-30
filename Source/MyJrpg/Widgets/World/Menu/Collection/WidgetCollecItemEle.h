@@ -62,6 +62,10 @@ public:
 	bool GetIsRegistered();
 
 	const FName& GetItemID() const;
+
+	const FName& GetCollecID() const;
+
+	int GetItemIndex() const;
 	
 	void SetMyUnfocus();
 	

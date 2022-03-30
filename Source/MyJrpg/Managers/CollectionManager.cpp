@@ -148,7 +148,30 @@ bool UCollectionManager::CheckCanAdd(FName collectionID, int indexItem, UInvento
 	return true;
 }
 
-void UCollectionManager::AddItem(FName collectionID, int indexItem, UInventory* invenFrom)
+void UCollectionManager::UpdateCompleteCollec(FName collectionID, int indexItem, const FItemCollecRow& ItemRow)
+{
+	auto& AryItems = m_MapCollecSpec[collectionID];
+	
+	AryItems[indexItem] = true;
+
+	int Sum = 0;
+	
+	for(auto Ele : AryItems)
+	{
+		if(Ele)
+		{
+			Sum++;
+		}
+	}
+
+	if(Sum >= AryItems.Num())
+	{
+		m_nCompleteCount++;
+		m_MapTotalStats[ItemRow.m_ClassOption][0]++;
+	}
+}
+
+void UCollectionManager::AddItem(FName collectionID, int indexItem)
 {
 	const FItemCollecRow& ItemRow = *UItemCollectionTable::GetItemCollecTable->FindRow<FItemCollecRow>(collectionID,"");
 
@@ -156,22 +179,23 @@ void UCollectionManager::AddItem(FName collectionID, int indexItem, UInventory* 
 
 	bool IsEquip = UMyLib::GetItemType(WantAdd.m_Item.RowName) == EItemType::Equip;
 
+	UInventory* InvenFrom = nullptr;
+
 	if(IsEquip)
 	{
-		const FName* FoundEquipItemGId = invenFrom->FindEquipItem(WantAdd.m_Item.RowName, WantAdd.m_nEnchantLv);
+		const FName* FoundItem = nullptr;
 		
-		invenFrom->RemoveEquipItem(*FoundEquipItemGId);
+		InvenFrom = UMyLib::FindEquipItem(WantAdd.m_Item.RowName, WantAdd.m_nEnchantLv,&FoundItem);
+		
+		InvenFrom->RemoveEquipItem(*FoundItem);
 	}
 	else
 	{
-		invenFrom->RemoveItem(WantAdd.m_Item.RowName, 1);
+		InvenFrom = UMyLib::FindMiscItem(WantAdd.m_Item.RowName);
+		InvenFrom->RemoveItem(WantAdd.m_Item.RowName, 1);
 	}
-
-	m_MapCollecSpec.Emplace(collectionID,TUnlockedItems(nullptr, ItemRow.m_AryItems.Num()))[indexItem] = true;
-
-	m_nCompleteCount++;
-
-	m_MapTotalStats[ItemRow.m_ClassOption][0]++;
+	//
+	UpdateCompleteCollec(collectionID, indexItem, ItemRow);
 
 	m_OnCollecChanged.Broadcast();
 }

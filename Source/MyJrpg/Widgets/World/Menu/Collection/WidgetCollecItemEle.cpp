@@ -48,12 +48,12 @@ void UWidgetCollecItemEle::Init(const FName& collecID, int index, bool is_equip,
 
 void UWidgetCollecItemEle::OnHoldComplete()
 {
-	UMyLib::GetCanvas()->OpenItemInfo(EItemInfo::Collection,m_ItemID,nullptr);
+	UMyLib::GetCanvas()->OpenItemInfo(EItemInfo::Inven,m_ItemID,nullptr);
 }
 
 void UWidgetCollecItemEle::UpdateEquipItem()
 {
-	if(UMyLib::FindEquipItem(m_ItemID,0) != nullptr)
+	if(UMyLib::FindEquipItem(m_ItemID) != nullptr)
 	{
 		m_ImgLock->SetVisibility(ESlateVisibility::Collapsed);
 		
@@ -100,9 +100,15 @@ void UWidgetCollecItemEle::Update()//포커싱이 되야지 등록을하잔아
 	{
 		m_IconEle->SetFocusable(false);
 
+		m_IconEle->SetHoldable(false);
+
 		m_Checkbox->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
 
 		m_bIsRegistered = true;
+
+		SetMyUnfocus();
+
+		m_ImgLock->SetVisibility(ESlateVisibility::HitTestInvisible);
 		
 		return;
 	}
@@ -130,6 +136,16 @@ bool UWidgetCollecItemEle::GetIsRegistered()
 const FName& UWidgetCollecItemEle::GetItemID() const
 {
 	return m_ItemID;
+}
+
+const FName& UWidgetCollecItemEle::GetCollecID() const
+{
+	return m_CollecID;
+}
+
+int UWidgetCollecItemEle::GetItemIndex() const
+{
+	return m_nIndex;
 }
 
 void UWidgetCollecItemEle::SetMyUnfocus()

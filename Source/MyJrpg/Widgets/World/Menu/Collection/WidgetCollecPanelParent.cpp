@@ -17,7 +17,7 @@ void UWidgetCollecPanelParent::NativeOnInitialized()
 
 	CreateElements();
 	//
-	
+	m_ItemInfo->SetVisibility(ESlateVisibility::Collapsed);
 }
 
 void UWidgetCollecPanelParent::CreateElements()
@@ -59,17 +59,8 @@ void UWidgetCollecPanelParent::UpdateElements()
 	m_TotalStat->UpdateStats();
 }
 
-void UWidgetCollecPanelParent::ShowItemInfo(const FName& itemOid)
-{
-	
-}
-
 void UWidgetCollecPanelParent::OnSelected(UWidgetCollecItemEle* ele)
 {
-	if (m_CurrentFocused == ele)
-	{
-		return;
-	}
 	if (m_CurrentFocused)
 		m_CurrentFocused->SetMyUnfocus();
 	
@@ -77,7 +68,7 @@ void UWidgetCollecPanelParent::OnSelected(UWidgetCollecItemEle* ele)
 
 	m_CurrentFocused->SetMyFocus();
 	
-	ShowItemInfo(m_CurrentFocused->GetItemID());
+	m_ItemInfo->SetCollecItemInfo(m_CurrentFocused->GetCollecID(),m_CurrentFocused->GetItemIndex(),m_CurrentFocused->GetItemID());
 }
 
 void UWidgetCollecPanelParent::Open()
@@ -112,4 +103,11 @@ void UWidgetCollecPanelParent::OnClose()
 
 		Iter++;
 	}
+
+	if (m_CurrentFocused)
+	{
+		m_CurrentFocused->SetMyUnfocus();
+		m_CurrentFocused = nullptr;
+	}
+	m_ItemInfo->OnClose();
 }

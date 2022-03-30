@@ -11,6 +11,8 @@ void UEquipManager::Init()
 
 bool UEquipManager::Equip(EEquipSlotType slotWant,const FName& itemWant)
 {
+	Unequip(slotWant);
+	
 	int Index = (int)slotWant - 1;
 	
 	m_AryEqupSlots[Index] = itemWant;
@@ -40,6 +42,11 @@ void UEquipManager::Unequip(EEquipSlotType slotWant)
 	int Index = (int)slotWant - 1;
 	
 	const FName& Temp = m_AryEqupSlots[Index];
+
+	if(Temp.IsNone())
+	{
+		return;
+	}
 
 	UnequipOption(Temp);
 

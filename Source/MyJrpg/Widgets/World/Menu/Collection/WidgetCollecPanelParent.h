@@ -7,6 +7,7 @@
 #include "WidgetCollecStatParent.h"
 #include "Blueprint/UserWidget.h"
 #include "Components/ScrollBox.h"
+#include "MyJrpg/Widgets/World/Menu/Inventory/WidgetItemInfo.h"
 #include "WidgetCollecPanelParent.generated.h"
 
 /**
@@ -24,6 +25,8 @@ protected:
 	UWidgetCollecStatParent* m_TotalStat;
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (BindWidget))
 	UScrollBox* m_Scroll;
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (BindWidget))
+	UWidgetItemInfo* m_ItemInfo;
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
 	TSubclassOf<UWidgetCollecPanelChild> m_ClassChild;
 	UPROPERTY()
@@ -39,8 +42,6 @@ protected:
 
 	void UpdateElements();
 
-	void ShowItemInfo(const FName& itemOid);
-	
 	void OnSelected(UWidgetCollecItemEle* ele);
 
 public:

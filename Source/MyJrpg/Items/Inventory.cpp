@@ -200,3 +200,22 @@ const FName* UInventory::FindEquipItem(const FName& Oid, int lv)
 
 	return m_MapEquipItemIdGroup[Id].FindKey(lv);
 }
+
+const FName* UInventory::FindEquipItem(const FName& Oid)
+{
+	FName Id = UMyLib::GetEquipIDFromHashID(Oid);
+	
+	if (!m_MapEquipItemIdGroup.Contains(Id))
+	{
+		return nullptr;
+	}
+
+	for(const TTuple<FName, int>& Pair :  m_MapEquipItemIdGroup[Id])
+	{
+		if(Pair.Value >= 0)
+		{
+			return &Pair.Key;
+		}
+	}
+	return nullptr;
+}

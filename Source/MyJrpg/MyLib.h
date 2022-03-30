@@ -91,7 +91,17 @@ public:
 
 	static FName GetEquipIDFromHashID(const FName& hash_id);
 
-	static UInventory* FindEquipItem(const FName& id, int lv);
+	static UInventory* FindEquipItem(const FName& id);
 
+	static UInventory* FindEquipItem(const FName& id,const FName** gidItem);
+
+	static UInventory* FindEquipItem(const FName& id, int lv,const FName** gidItem);
+	
+	static UInventory* FindEquipItem(const FName& id, int lv);
+	
 	static UInventory* FindMiscItem(const FName& id);
+
+	static int GetRequireCollecLevel(const FName& collecID, int index);
+
+	static bool IsCollecItemEquip(const FName& collecID, int index);
 };
