@@ -35,9 +35,9 @@ protected:
 	virtual void StartInitialLoading() override;
 
 public:
-	UUnitEntityAsset* LoadUnitAsset(UUnitEntityAsset* asset);
-
 	TSharedPtr<FStreamableHandle> LoadAnimMontage(TSoftObjectPtr<UAnimMontage> assetSoftPath);
+	
+	UUnitEntityAsset* LoadUnitAsset(UUnitEntityAsset* asset);
 
 	void UnloadUnit(UUnitEntityAsset* asset);
 

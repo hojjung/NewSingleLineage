@@ -1,6 +1,7 @@
 #include "WorldGameMode.h"
 #include "MyJrpg/Actors/MyPlayerController.h"
 #include "MyJrpg/Managers/MyGameInstance.h"
+#include "MyJrpg/Managers/PetManager.h"
 #include "MyJrpg/Pawns/MyPlayerPawn.h"
 #include "MyJrpg/Widgets/HUDs/MyHUD.h"
 
@@ -22,6 +23,7 @@ void AWorldGameMode::Tick(float DeltaSeconds)
 
 void AWorldGameMode::StartPlay()
 {
-	UMyGameInstance::Get->m_AvatarManager->CreatePreviewActor();	
+	UMyGameInstance::Get->m_AvatarManager->CreatePreviewActor();
+	UMyGameInstance::Get->m_PetManager->CreatePreviewActor();	
 	Super::StartPlay();
 }

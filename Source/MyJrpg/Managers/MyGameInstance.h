@@ -25,6 +25,7 @@
 
 class UEquipManager;
 class URewardManager;
+class UPetManager;
 /**
  * 
  */
@@ -80,6 +81,8 @@ public:
 	UAvatarManager* m_AvatarManager;
 	UPROPERTY()
 	UCollectionManager* m_ItemCollecManager;
+	UPROPERTY()
+	UPetManager* m_PetManager;
 	
 protected:
 	virtual void BeginDestroy() override;

@@ -6,6 +6,7 @@
 #include "Components/SceneCaptureComponent2D.h"
 #include "MyJrpg/MyJrpg.h"
 #include "MyJrpg/MyLib.h"
+#include "MyJrpg/DataTables/PetTable.h"
 #include "MyJrpg/Managers/MyAssetManager.h"
 #include "MyJrpg/Managers/MyGameInstance.h"
 
@@ -74,16 +75,27 @@ void APreviewActor::BeginPlay()
 	HideMeshWithTick();
 }
 
+void APreviewActor::SetEntity(UUnitEntityAsset* asset)
+{
+	if(m_SkinAsset.Get())
+	{
+		UMyAssetManager::Get()->UnloadUnit(m_SkinAsset.Get());
+	}
+	m_SkinAsset = UMyAssetManager::Get()->LoadUnitAsset(asset);
+	m_MeshBody->SetSkeletalMesh(m_SkinAsset->m_BodyMesh.Get());
+	m_MeshBody->SetAnimationMode(EAnimationMode::AnimationBlueprint);
+	m_MeshBody->SetAnimClass(m_SkinAsset->m_AnimBP.Get());	
+}
+
+
 void APreviewActor::OnMeshVisualChanged(const FPlayerUnitEntityRow& charData)
 {
-	if(m_Asset.Get())
-	{
-		UMyAssetManager::Get()->UnloadUnit(m_Asset.Get());
-	}
-	m_Asset = UMyAssetManager::Get()->LoadUnitAsset(charData.m_UnitDataAsset);
-	m_MeshBody->SetSkeletalMesh(m_Asset->m_BodyMesh.Get());
-	m_MeshBody->SetAnimationMode(EAnimationMode::AnimationBlueprint);
-	m_MeshBody->SetAnimClass(m_Asset->m_AnimBP.Get());
+	SetEntity(charData.m_UnitDataAsset);
+}
+
+void APreviewActor::OnMeshVisualChanged(const FPetRow& selected)
+{
+	SetEntity(selected.m_UnitDataAsset);
 }
 
 void APreviewActor::ShowMeshWithTick()
@@ -141,3 +153,4 @@ void APreviewActor::CalculateVisualActorRot(float delta)
 
 	m_MeshBody->SetWorldRotation(NewRot);
 }
+

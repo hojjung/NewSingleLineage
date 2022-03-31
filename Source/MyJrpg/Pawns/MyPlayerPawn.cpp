@@ -97,6 +97,16 @@ void AMyPlayerPawn::SetPlayerEntity(const FPlayerUnitEntityRow& unitEntityRow)
 	m_StatGroup.m_Hp = m_StatGroup.m_MaxHp;
 }
 
+void AMyPlayerPawn::SetPet(const FPetRow& petRow)
+{
+	m_AttchActorMng->SetPet(petRow);
+}
+
+void AMyPlayerPawn::UnEquipPet()
+{
+	m_AttchActorMng->UnEquipPet();
+}
+
 void AMyPlayerPawn::MoveForward(float AxisValue)
 {
 	m_Input.X = AxisValue;

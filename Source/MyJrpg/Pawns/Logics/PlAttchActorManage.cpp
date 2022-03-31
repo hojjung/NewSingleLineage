@@ -21,6 +21,29 @@ void UPlAttchActorManage::Init(AMyPlayerPawn* my_player_pawn)
 	UMyGameInstance::Get->m_EquipManager->m_OnEquipChanged.AddUObject(this,&UPlAttchActorManage::UpdateEquipActor);
 }
 
+void UPlAttchActorManage::SetPet(const FPetRow& pet_row)
+{
+	UnEquipPet();
+	
+	FActorSpawnParameters Param;
+
+	Param.bNoFail = true;
+	
+	FVector Loc = UMyLib::GetNavSys()->GetRandomReachablePointInRadius(GetWorld(),m_PlOwner->GetActorLocation(),400);
+
+	m_Pet = GetWorld()->SpawnActor<APetPawn>(APetPawn::StaticClass(),Loc,FRotator(0),Param);
+
+	m_Pet->SetPetEntity(pet_row);
+}
+
+void UPlAttchActorManage::UnEquipPet()
+{
+	if(m_Pet)
+	{
+		m_Pet->Destroy();
+	}
+}
+
 void UPlAttchActorManage::UpdateEquipActor()
 {
 	const TArray<FName>& AryEquips = UMyGameInstance::Get->m_EquipManager->GetEquipAry();

@@ -9,11 +9,17 @@ void UWidgetPreview::NativePreConstruct()
 	m_PreviewImage->SetBrushFromMaterial(m_PreviewMat);
 }
 
+void UWidgetPreview::Init(UObject* proxyObj,IPreviewProxy* proxy)
+{
+	m_PreviewProxy.SetObject(proxyObj);
+	m_PreviewProxy.SetInterface(proxy);
+}
+
 FReply UWidgetPreview::NativeOnTouchStarted(const FGeometry& InGeometry, const FPointerEvent& InGestureEvent)
 {
 	FReply Re =  Super::NativeOnTouchStarted(InGeometry, InGestureEvent);
 
-	UMyGameInstance::Get->m_AvatarManager->SetIsTouched(true);
+	m_PreviewProxy->SetIsTouched(true);
 	
 	return FReply::Handled();
 }
@@ -22,7 +28,7 @@ FReply UWidgetPreview::NativeOnTouchEnded(const FGeometry& InGeometry, const FPo
 {
 	FReply Re = Super::NativeOnTouchEnded(InGeometry, InGestureEvent);
 	
-	UMyGameInstance::Get->m_AvatarManager->SetIsTouched(false);
+	m_PreviewProxy->SetIsTouched(false);
 
 	return FReply::Handled();
 }
@@ -35,7 +41,7 @@ FReply UWidgetPreview::NativeOnTouchMoved(const FGeometry& InGeometry, const FPo
 
 	if(DeltaX != 0.f)
 	{
-		UMyGameInstance::Get->m_AvatarManager->RotatePawn(DeltaX);
+		m_PreviewProxy->RotatePawn(DeltaX);
 	}
 
 	return FReply::Handled();

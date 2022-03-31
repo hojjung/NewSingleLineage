@@ -4,39 +4,38 @@
 
 #include "CoreMinimal.h"
 #include "Blueprint/UserWidget.h"
-#include "MyJrpg/DataTables/UnitEntityData.h"
-#include "MyJrpg/Managers/AvatarManager.h"
+#include "Components/SizeBox.h"
+#include "Components/TextBlock.h"
+#include "MyJrpg/Managers/PetManager.h"
 #include "MyJrpg/Widgets/World/CommonElements/WidgetBaseElement.h"
-#include "WidgetSkinElement.generated.h"
+#include "WidgetPetElement.generated.h"
 
 /**
  * 
  */
 UCLASS()
-class MYJRPG_API UWidgetSkinElement : public UUserWidget
+class MYJRPG_API UWidgetPetElement : public UUserWidget
 {
 	GENERATED_BODY()
+	
 public:
-	DECLARE_MULTICAST_DELEGATE_OneParam(FOnClicked, UWidgetSkinElement*);
+	DECLARE_MULTICAST_DELEGATE_OneParam(FOnClicked, UWidgetPetElement*);
 
 	FOnClicked m_OnFocus;
 
 protected:
-	TWeakObjectPtr<UAvatarManager> m_AvatarManager;
+	TWeakObjectPtr<UPetManager> m_PetManager;
 
-	const FPlayerUnitEntityRow* m_Skin;
+	const FPetRow* m_Pet;
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (BindWidget))
 	UWidgetBaseElement* m_Ele;
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (BindWidget))
 	USizeBox* m_FocusParent;
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (BindWidget))
 	UTextBlock* m_TextFocus;
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (BindWidget))
-	UImage* m_ImgWeapon;
-
 	 
 public:
-	void Init(const FPlayerUnitEntityRow& pl);
+	void Init(const FPetRow& pl);
 	
 	void UpdateEle();
 	
@@ -44,7 +43,9 @@ public:
 	
 	void SetMyFocus();
 	
-	const FPlayerUnitEntityRow& GetCrntSkin();
+	void SetConfirm();
+
+	const FPetRow& GetCrntPet();
 
 protected:
 	void OnClicked();

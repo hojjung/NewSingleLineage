@@ -9,6 +9,8 @@ void UWidgetSkinPanel::NativeOnInitialized()
 {
 	Super::NativeOnInitialized();
 
+	m_Preview->Init(UMyGameInstance::Get->m_AvatarManager,UMyGameInstance::Get->m_AvatarManager);
+
 	m_BtnClose->OnClicked.AddDynamic(this, &UWidgetSkinPanel::OnClose);
 
 	m_BtnEquip->OnClicked.AddDynamic(this, &UWidgetSkinPanel::OnEquip);

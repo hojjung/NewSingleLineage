@@ -23,11 +23,15 @@ public:
 };
 
 USTRUCT(BlueprintType)
-struct FPetRow : public FEntityRow
+struct FPetRow : public FUnitEntityRow
 {
 	GENERATED_BODY()
 
-public:
-	UPROPERTY(EditDefaultsOnly,BlueprintReadOnly)
-	TSoftObjectPtr<UUnitEntityAsset> m_PetAsset;
+public://스텟과 보상
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (UIMin = "0.1"))
+	float m_fScale = 1.f;
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
+	FColorDataHandle m_Color;
+	UPROPERTY(EditAnywhere)
+	TArray<TSubclassOf<UOptionBase>> m_Options;
 };

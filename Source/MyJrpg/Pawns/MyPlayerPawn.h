@@ -10,6 +10,7 @@
 #include "Logics/BulletPool.h"
 #include "MyJrpg/Actors/Field/Bullet.h"
 #include "MyJrpg/Actors/Field/InteractActorBase.h"
+#include "MyJrpg/DataTables/PetTable.h"
 #include "MyJrpg/Pawns/BaseUnitPawn.h"
 #include "MyJrpg/Pawns/CombatUnitPawn.h"
 #include "MyJrpg/Widgets/WidgetComponents/InGameTextWidgetComp.h"
@@ -85,6 +86,10 @@ protected:
 
 public:
 	virtual void SetPlayerEntity(const FPlayerUnitEntityRow& unitEntityRow);
+
+	void SetPet(const FPetRow& petRow);
+
+	void UnEquipPet();
 	
 	virtual void BeginPlay() override;
 	

@@ -1,7 +1,9 @@
 #include "MyGameInstance.h"
+#include "MyGameInstance.h"
 #include "EquipManager.h"
 #include "MyAssetManager.h"
 #include "RewardManager.h"
+#include "PetManager.h"
 #include "GameFramework/GameUserSettings.h"
 #include "MyJrpg/MyLib.h"
 #include "MyJrpg/Items/Inventory.h"
@@ -46,6 +48,8 @@ void UMyGameInstance::Init()
 
 	m_ItemCollecManager = NewObject<UCollectionManager>(this);
 
+	m_PetManager = NewObject<UPetManager>(this);
+
 	m_AryStorage.Reset();
 	m_AryStorage.Add(NewObject<UInventory>(this));
 	m_AryStorage.Add(NewObject<UInventory>(this));
@@ -59,6 +63,7 @@ void UMyGameInstance::Init()
 
 	m_ItemCollecManager->Init();
 	m_AvatarManager->Init();
+	m_PetManager->Init();
 	m_PotionManager->Init();
 	m_SkillManager->Init();
 	m_Inven->Init(FGlobalVariable::INVEN_SIZE);

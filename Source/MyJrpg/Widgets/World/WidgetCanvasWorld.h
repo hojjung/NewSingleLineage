@@ -10,6 +10,7 @@
 #include "Menu/Collection/WidgetCollecPanelParent.h"
 #include "Menu/Dialogue/WidgetLogWindow.h"
 #include "Menu/Enchant/WidgetEnchantBase.h"
+#include "Menu/Pet/WidgetPetPanel.h"
 #include "Menu/Quest/WidgetQuestAcceptPanel.h"
 #include "Menu/Quest/WidgetQuestPanel.h"
 #include "Menu/StackSelector/WidgetStackCalculator.h"
@@ -69,6 +70,8 @@ protected:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (BindWidget))
 	UButton* m_BtnSkin;
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (BindWidget))
+	UButton* m_BtnPet;
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (BindWidget))
 	UButton* m_BtnCollec;
 	
 	//
@@ -118,6 +121,8 @@ protected:
 	UWidgetSkinPanel* m_SkinPanel;
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (BindWidget))
 	UWidgetCollecPanelParent* m_ItemCollecPanel;
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (BindWidget))
+	UWidgetPetPanel* m_PetPanel;
 	
 protected:
 	void HideHUD();
@@ -159,6 +164,8 @@ public:
 	void OpenStorage();
 	UFUNCTION()
 	void OpenZone();
+	UFUNCTION()
+	void OpenPet();
 
 	void OpenQuestPanel(bool isMain);
 

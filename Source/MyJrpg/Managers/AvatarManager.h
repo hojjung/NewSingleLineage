@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "MyJrpg/DataTables/UnitEntityData.h"
+#include "MyJrpg/Interfaces/PreviewProxy.h"
 #include "UObject/NoExportTypes.h"
 #include "AvatarManager.generated.h"
 
@@ -12,7 +13,7 @@ class APreviewActor;
  * 
  */
 UCLASS()
-class MYJRPG_API UAvatarManager : public UObject
+class MYJRPG_API UAvatarManager : public UObject, public IPreviewProxy
 {
 	GENERATED_BODY()
 
@@ -41,10 +42,10 @@ public:
 	void EquipSkin(const FPlayerUnitEntityRow& selected);
 	
 	void ShowPreviewSkin(const FPlayerUnitEntityRow& selected);
-	
-	void SetIsTouched(bool b);
-	
-	void RotatePawn(float delta_x);
+
+	virtual void SetIsTouched(bool b) override;
+
+	virtual void RotatePawn(float delta_x) override;
 
 	void ShowPawn();
 

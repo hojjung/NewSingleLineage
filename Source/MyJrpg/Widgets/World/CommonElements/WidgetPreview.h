@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "Blueprint/UserWidget.h"
 #include "Components/Image.h"
+#include "MyJrpg/Interfaces/PreviewProxy.h"
 #include "WidgetPreview.generated.h"
 
 /**
@@ -21,10 +22,14 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (ExposeOnSpawn))
 	UMaterialInterface* m_PreviewMat;
 
+	TScriptInterface<IPreviewProxy> m_PreviewProxy;
+	
 protected:
 	virtual void NativePreConstruct() override;
 	
 public:
+	void Init(UObject* proxyObj,IPreviewProxy* proxy);
+	
 	virtual FReply NativeOnTouchStarted(const FGeometry& InGeometry, const FPointerEvent& InGestureEvent) override;
 	
 	virtual FReply NativeOnTouchMoved(const FGeometry& InGeometry, const FPointerEvent& InGestureEvent) override;

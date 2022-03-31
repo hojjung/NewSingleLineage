@@ -9,6 +9,7 @@
 #include "MyJrpg/DataTables/UnitEntityData.h"
 #include "PreviewActor.generated.h"
 
+struct FPetRow;
 UCLASS()
 class MYJRPG_API APreviewActor : public AActor
 {
@@ -39,18 +40,22 @@ protected:
 
 	FRotator m_InitVisualRot;
 
-	TWeakObjectPtr<UUnitEntityAsset> m_Asset; 
-	
+	TWeakObjectPtr<UUnitEntityAsset> m_SkinAsset;
+
 protected:
 	virtual void BeginPlay() override;
 
 	virtual void Tick(float DeltaSeconds) override;
 
 	void CalculateVisualActorRot(float delta);
+
+	void SetEntity(UUnitEntityAsset* asset);
 	
 public:
 	void OnMeshVisualChanged(const FPlayerUnitEntityRow& charData);
-	
+
+	void OnMeshVisualChanged(const FPetRow& selected);
+
 	void ShowMeshWithTick();
 
 	void HideMeshWithTick();

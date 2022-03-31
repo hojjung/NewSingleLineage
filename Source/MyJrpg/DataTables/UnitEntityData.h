@@ -64,7 +64,7 @@ struct FNpcUnitEntityRow : public FUnitEntityRow
 {
 	GENERATED_BODY()
 public://스텟과 보상
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (UIMin = "0"))
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (UIMin = "100"))
 	float m_fAtkRange = 200.f;
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
 	TSubclassOf<UAI_LogicBase> m_ClassAI_Logic;

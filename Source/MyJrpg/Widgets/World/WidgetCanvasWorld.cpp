@@ -90,6 +90,8 @@ void UWidgetCanvasWorld::NativeOnInitialized()
 	UMyGameInstance::Get->m_PlayerStatManager->m_OnPlayerKilled.AddUObject(this, & UWidgetCanvasWorld::ShowGameOverWindow);
 
 	m_BtnSkin->OnClicked.AddDynamic(this,&UWidgetCanvasWorld::OpenSkin);
+	
+	m_BtnPet->OnClicked.AddDynamic(this,&UWidgetCanvasWorld::OpenPet);
 }
 
 void UWidgetCanvasWorld::ToggleMenu()
@@ -156,7 +158,6 @@ void UWidgetCanvasWorld::OpenQuest()
 void UWidgetCanvasWorld::OpenInventory()
 {
 	m_EquipInvenPanel->OpenInventory();
-	
 }
 
 void UWidgetCanvasWorld::OpenSkill()
@@ -183,6 +184,11 @@ void UWidgetCanvasWorld::OpenStorage()
 void UWidgetCanvasWorld::OpenZone()
 {
 	m_ZonePanel->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
+}
+
+void UWidgetCanvasWorld::OpenPet()
+{
+	m_PetPanel->Open();
 }
 
 void UWidgetCanvasWorld::OpenQuestPanel(bool isMain)
