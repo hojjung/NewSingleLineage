@@ -190,7 +190,7 @@ bool AMyPlayerPawn::IsInputMoving()
 
 void AMyPlayerPawn::SetPlayerSkMeshDefault()
 {
-	LoadSetSkMeshAnim(m_EntityAsset.Get());
+	LoadSetSkMeshAnim(m_EntityAsset);
 }
 
 float AMyPlayerPawn::TryAttack()

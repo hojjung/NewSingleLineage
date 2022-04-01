@@ -110,7 +110,7 @@ float ACombatUnitPawn::PlayBaseAttackAnim()
 
 UAnimMontage* ACombatUnitPawn::GetBaseAttackMontage()
 {
-	return m_EntityAsset->m_BaseAttackAnim.Get();
+	return m_EntityAsset->m_BaseAttackAnim;
 }
 
 void ACombatUnitPawn::ShowPopupText(float nbr, ETextType t)
@@ -221,7 +221,7 @@ void ACombatUnitPawn::PlayTookHitMontage()
 {
 	if (m_EntityAsset->m_TookHitMontage && m_fHitAnimCD < 0.f)
 	{
-		PlayAnimMontage(m_EntityAsset->m_TookHitMontage.Get(), 1);
+		PlayAnimMontage(m_EntityAsset->m_TookHitMontage, 1);
 	
 		m_fHitAnimCD = FMath::RandRange(1.5f, 5.f);
 	}
@@ -256,7 +256,7 @@ void ACombatUnitPawn::PlayDeathAnim()
 {
 	if(m_EntityAsset->m_DeathMontage)
 	{
-		PlayAnimMontage(m_EntityAsset->m_DeathMontage.Get());
+		PlayAnimMontage(m_EntityAsset->m_DeathMontage);
 
 		float AnimLength = m_EntityAsset->m_DeathMontage->GetPlayLength() - 0.4f;
 

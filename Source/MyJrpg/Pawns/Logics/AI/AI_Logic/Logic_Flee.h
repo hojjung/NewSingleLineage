@@ -4,18 +4,14 @@
 
 #include "CoreMinimal.h"
 #include "AI_LogicBase.h"
-#include "Logic_NoAttack.generated.h"
+#include "Logic_Flee.generated.h"
 
 /**
  * 
  */
 UCLASS()
-class MYJRPG_API ULogic_NoAttack : public UAI_LogicBase
+class MYJRPG_API ULogic_Flee : public UAI_LogicBase
 {
 	GENERATED_BODY()
-
-protected:
-	virtual void Init(ACombatUnitPawn* owner) override;
+	
 };
-
-

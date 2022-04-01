@@ -77,12 +77,21 @@ void APreviewActor::BeginPlay()
 
 void APreviewActor::SetEntity(UUnitEntityAsset* asset)
 {
-	if(m_SkinAsset.Get())
+	if(m_SkinAsset)
 	{
-		UMyAssetManager::Get()->UnloadUnit(m_SkinAsset.Get());
+		UMyAssetManager::Get()->UnloadUnit(m_SkinAsset);
+		m_SkinAsset = nullptr;
 	}
-	m_SkinAsset = UMyAssetManager::Get()->LoadUnitAsset(asset);
-	m_MeshBody->SetSkeletalMesh(m_SkinAsset->m_BodyMesh.Get());
+	UMyAssetManager::Get()->LoadUnitAsset(asset,FStreamableDelegate::CreateUObject(this, &APreviewActor::OnLoadComplete,asset->GetPrimaryAssetId()));
+}
+
+void APreviewActor::OnLoadComplete(FPrimaryAssetId assetID)
+{
+	UUnitEntityAsset* entityData = Cast<UUnitEntityAsset>(UMyAssetManager::Get()->GetPrimaryAssetObject(assetID));
+	
+	m_SkinAsset = entityData;
+	
+	m_MeshBody->SetSkeletalMesh(m_SkinAsset->m_BodyMesh);
 	m_MeshBody->SetAnimationMode(EAnimationMode::AnimationBlueprint);
 	m_MeshBody->SetAnimClass(m_SkinAsset->m_AnimBP.Get());	
 }
@@ -138,6 +147,13 @@ void APreviewActor::Tick(float delta)
 	Super::Tick(delta);
 
 	CalculateVisualActorRot(delta);
+}
+
+void APreviewActor::EndPlay(const EEndPlayReason::Type EndPlayReason)
+{
+	Super::EndPlay(EndPlayReason);
+	if(m_SkinAsset)
+		UMyAssetManager::Get()->UnloadUnit(m_SkinAsset);
 }
 
 void APreviewActor::CalculateVisualActorRot(float delta)

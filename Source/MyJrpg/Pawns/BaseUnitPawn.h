@@ -28,8 +28,8 @@ protected:
 	UPathFollowingComponent* m_PFComp;//UCrowdFollowingComponent
 	UPROPERTY(VisibleAnywhere,BlueprintReadWrite,Category="Movement")
 	UMyMovement* m_Movement;
-	
-	TWeakObjectPtr<UUnitEntityAsset> m_EntityAsset;
+	UPROPERTY()
+	UUnitEntityAsset* m_EntityAsset;
 
 	FTimerHandle m_MoveStopTimer;
 public:
@@ -37,8 +37,12 @@ public:
 	FText m_PawnName;
 
 protected:
+	virtual void EndPlay(const EEndPlayReason::Type EndPlayReason) override;
+	
 	virtual void LoadSetSkMeshAnim(UUnitEntityAsset* asset);
 
+	virtual void OnLoadComplete(FPrimaryAssetId assetID);
+	
 	void ActiveMovement();
 	//PathFollow	
 	FPathFollowingRequestResult MoveTo(const FAIMoveRequest& MoveRequest, FNavPathSharedPtr* OutPath = nullptr);
@@ -48,6 +52,7 @@ protected:
 	bool BuildPathfindingQuery(const FAIMoveRequest& MoveRequest, FPathFindingQuery& Query) const;
 
 	FAIRequestID RequestMove(const FAIMoveRequest& MoveRequest, FNavPathSharedPtr Path);
+
 
 public:
 	virtual void SetEntity(const FNpcUnitEntityRow& unitEntityRow);//Init

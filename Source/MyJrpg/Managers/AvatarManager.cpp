@@ -35,9 +35,9 @@ void UAvatarManager::EquipSkin(const FPlayerUnitEntityRow& selected)
 {
 	m_CrntSkin = &selected;
 
-	UMyLib::GetPlayer()->SetPlayerEntity(*m_CrntSkin);
-	
 	ShowPreviewSkin(*m_CrntSkin);
+	
+	UMyLib::GetPlayer()->SetPlayerEntity(*m_CrntSkin);
 
 	m_OnSkinChanged.Broadcast();
 }

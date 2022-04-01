@@ -30,21 +30,9 @@ void UMyAssetManager::StartInitialLoading()
 	m_AryOptions.Add(TEXT("op6"));
 }
 
-UUnitEntityAsset* UMyAssetManager::LoadUnitAsset(UUnitEntityAsset* asset)
+void UMyAssetManager::LoadUnitAsset(const UUnitEntityAsset* asset, FStreamableDelegate dele)
 {
-	if(m_MapUnits.Contains(asset))
-	{
-		m_MapUnits[asset]++;
-		return asset;
-	}
-
-	LoadPrimaryAsset(asset->GetPrimaryAssetId(),m_AryOptions);
-
-	m_MapUnits.Add(asset,1);
-	
-	m_AryUnits.Add(asset);
-	
-	return asset;
+	LoadPrimaryAsset(asset->GetPrimaryAssetId(),m_AryOptions,dele);
 }//
 TSharedPtr<FStreamableHandle> UMyAssetManager::LoadAnimMontage(TSoftObjectPtr<UAnimMontage> assetSoftPath)
 {
@@ -55,39 +43,12 @@ TSharedPtr<FStreamableHandle> UMyAssetManager::LoadAnimMontage(TSoftObjectPtr<UA
 	return Handle;
 }
 
-void UMyAssetManager::UnloadUnit(UUnitEntityAsset* asset)
+void UMyAssetManager::UnloadUnit(const UUnitEntityAsset* asset)
 {
-	if(!m_MapUnits.Contains(asset))
-	{
-		return;
-	}
-	
-	int& Count = m_MapUnits[asset];
-	
-	Count--;
-	
-	if (Count <= 0)
-	{
-		m_MapUnits.Remove(asset);
-		
-		m_AryUnits.Remove(asset);
-	}
-	
 	UKismetSystemLibrary::UnloadPrimaryAsset(asset->GetPrimaryAssetId());
-	
-	UKismetSystemLibrary::CollectGarbage();
 }
 
 void UMyAssetManager::ClearUnits()
 {
-	for(UUnitEntityAsset* Unit : m_AryUnits)
-	{
-		UKismetSystemLibrary::UnloadPrimaryAsset(Unit->GetPrimaryAssetId());
-	}
-	
-	m_AryUnits.Reset();
-
-	m_MapUnits.Reset();
-
 	UKismetSystemLibrary::CollectGarbage();
 }

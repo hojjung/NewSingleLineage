@@ -16,11 +16,11 @@ void UPlayerAnimInst::Init(const FPlayerUnitEntityRow& row, AMyPlayerPawn* pl)
 
 	for(const FPlayerSkillAnim& AnimData : row.m_ArySkillAnims)
 	{
-		TSharedPtr<FStreamableHandle> Handle = UMyAssetManager::Get()->LoadAnimMontage(AnimData.m_SkillMotion);
-
-		m_AryHandle.Add(Handle);
-		m_AryAnims.Add(AnimData.m_SkillMotion.Get());
-		m_MapSkills.Add(AnimData.m_SkillID,AnimData.m_SkillMotion.Get());
+		// TSharedPtr<FStreamableHandle> Handle = UMyAssetManager::Get()->LoadAnimMontage(AnimData.m_SkillMotion);
+		//
+		// m_AryHandle.Add(Handle);
+		// m_AryAnims.Add(AnimData.m_SkillMotion.Get());
+		// m_MapSkills.Add(AnimData.m_SkillID,AnimData.m_SkillMotion.Get());
 	}
 	
 	UMyGameInstance::Get->m_EquipManager->m_OnEquipChanged.AddUObject(this, &UPlayerAnimInst::OnEquipChanged);

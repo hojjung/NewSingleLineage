@@ -22,13 +22,6 @@ public:
 	static UMyAssetManager* Get();
 	
 protected:
-	UPROPERTY()
-	TArray<UUnitEntityAsset*> m_AryUnits;
-	
-	TMap<UUnitEntityAsset*,int> m_MapUnits;
-
-	TMap<FSoftObjectPath,TSharedPtr<FStreamableHandle>> m_ParticleEffectMap;
-
 	TArray<FName> m_AryOptions;
 
 protected:
@@ -37,9 +30,9 @@ protected:
 public:
 	TSharedPtr<FStreamableHandle> LoadAnimMontage(TSoftObjectPtr<UAnimMontage> assetSoftPath);
 	
-	UUnitEntityAsset* LoadUnitAsset(UUnitEntityAsset* asset);
+	void LoadUnitAsset(const UUnitEntityAsset* asset, FStreamableDelegate dele);
 
-	void UnloadUnit(UUnitEntityAsset* asset);
+	void UnloadUnit(const UUnitEntityAsset* asset);
 
 	void ClearUnits();
 };

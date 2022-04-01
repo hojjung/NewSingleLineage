@@ -33,18 +33,23 @@ class MYJRPG_API UUnitEntityAsset : public UPrimaryDataAsset
 public://Visual
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	FText m_UnitName;
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, meta = (AssetBundles = "op1"))
-	TSoftObjectPtr<USkeletalMesh> m_BodyMesh;
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (AssetBundles = "op2"))
-	TSoftClassPtr<UAnimInstance> m_AnimBP;
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (AssetBundles = "op3"))
-	TSoftObjectPtr<UAnimMontage> m_SpawnAnim;
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (AssetBundles = "op4"))
-	TSoftObjectPtr<UAnimMontage> m_BaseAttackAnim;
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (AssetBundles = "op5"))
-	TSoftObjectPtr<UAnimMontage> m_DeathMontage;
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (AssetBundles = "op6"))
-	TSoftObjectPtr<UAnimMontage> m_TookHitMontage;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+	USkeletalMesh* m_BodyMesh;
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
+	TSubclassOf<UAnimInstance> m_AnimBP;
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
+	UAnimMontage* m_SpawnAnim;
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
+	UAnimMontage* m_BaseAttackAnim;
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
+	UAnimMontage* m_DeathMontage;
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
+	UAnimMontage* m_TookHitMontage;
+
+	virtual FPrimaryAssetId GetPrimaryAssetId() const override
+	{
+		return FPrimaryAssetId("Unit", GetFName());
+	}
 };
 
 USTRUCT(BlueprintType)

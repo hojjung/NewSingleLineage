@@ -39,17 +39,21 @@ protected:
 	bool m_bTouched;
 
 	FRotator m_InitVisualRot;
-
-	TWeakObjectPtr<UUnitEntityAsset> m_SkinAsset;
+	UPROPERTY()
+	UUnitEntityAsset* m_SkinAsset;
 
 protected:
 	virtual void BeginPlay() override;
 
 	virtual void Tick(float DeltaSeconds) override;
 
+	virtual void EndPlay(const EEndPlayReason::Type EndPlayReason) override;
+
 	void CalculateVisualActorRot(float delta);
 
 	void SetEntity(UUnitEntityAsset* asset);
+
+	void OnLoadComplete(FPrimaryAssetId assetID);
 	
 public:
 	void OnMeshVisualChanged(const FPlayerUnitEntityRow& charData);

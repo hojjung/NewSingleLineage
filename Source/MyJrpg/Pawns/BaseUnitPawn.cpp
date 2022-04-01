@@ -72,15 +72,35 @@ void ABaseUnitPawn::SetEntity(const FNpcUnitEntityRow& unitEntityRow)
 
 void ABaseUnitPawn::LoadSetSkMeshAnim(UUnitEntityAsset* asset)
 {
-	UMyAssetManager::Get()->UnloadUnit(m_EntityAsset.Get());
+	if(m_EntityAsset)
+	{
+		UMyAssetManager::Get()->UnloadUnit(m_EntityAsset);
+		m_EntityAsset = nullptr;
+	}
 	
-	m_EntityAsset = UMyAssetManager::Get()->LoadUnitAsset(asset);
+	UMyAssetManager::Get()->LoadUnitAsset(asset, FStreamableDelegate::CreateUObject(this, &ABaseUnitPawn::OnLoadComplete,asset->GetPrimaryAssetId()));
 
-	m_BodyMesh->SetSkeletalMesh(m_EntityAsset->m_BodyMesh.Get());
+	OnLoadComplete(asset->GetPrimaryAssetId());
+}
+
+void ABaseUnitPawn::OnLoadComplete(FPrimaryAssetId assetID)
+{
+	UUnitEntityAsset* entityData = Cast<UUnitEntityAsset>(UMyAssetManager::Get()->GetPrimaryAssetObject(assetID));
+
+	m_EntityAsset = entityData;
+	
+	m_BodyMesh->SetSkeletalMesh(m_EntityAsset->m_BodyMesh);
 
 	m_BodyMesh->SetAnimationMode(EAnimationMode::Type::AnimationBlueprint);
 
 	m_BodyMesh->SetAnimClass(m_EntityAsset->m_AnimBP.Get());
+}
+
+void ABaseUnitPawn::EndPlay(const EEndPlayReason::Type EndPlayReason)
+{
+	Super::EndPlay(EndPlayReason);
+	if(m_EntityAsset)
+		UMyAssetManager::Get()->UnloadUnit(m_EntityAsset);
 }
 
 void ABaseUnitPawn::ActiveMovement()
@@ -245,6 +265,8 @@ FAIRequestID ABaseUnitPawn::RequestMove(const FAIMoveRequest& MoveRequest, FNavP
 	RequestID = m_PFComp->RequestMove(MoveRequest, Path);
 	return RequestID;
 }
+
+
 
 float ABaseUnitPawn::GetRadius() const
 {
