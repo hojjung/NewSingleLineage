@@ -95,6 +95,13 @@ void AMyPlayerPawn::SetPlayerEntity(const FPlayerUnitEntityRow& unitEntityRow)
 	UMyGameInstance::Get->m_PlayerStatManager->SetBaseStat(unitEntityRow.m_StatTable);
 	UMyGameInstance::Get->m_PlayerStatManager->UpdateStat();
 	m_StatGroup.m_Hp = m_StatGroup.m_MaxHp;
+
+	const FPetRow* PetRow = UMyGameInstance::Get->m_PetManager->GetCrntPet();
+
+	if(PetRow)
+	{
+		SetPet(*PetRow);
+	}
 }
 
 void AMyPlayerPawn::SetPet(const FPetRow& petRow)

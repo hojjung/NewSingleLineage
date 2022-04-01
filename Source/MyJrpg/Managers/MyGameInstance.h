@@ -19,6 +19,7 @@
 #include "SpawnManager.h"
 #include "Engine/GameInstance.h"
 #include "MyJrpg/DataTables/BadwordTable.h"
+#include "MyJrpg/GameRules/GameRuleBase.h"
 #include "MyJrpg/Pawns/Logics/PlSkillAuto.h"
 #include "Web/ChatManager.h"
 #include "MyGameInstance.generated.h"
@@ -83,6 +84,8 @@ public:
 	UCollectionManager* m_ItemCollecManager;
 	UPROPERTY()
 	UPetManager* m_PetManager;
+	UPROPERTY()
+	UGameRuleBase* m_GameRule;
 	
 protected:
 	virtual void BeginDestroy() override;

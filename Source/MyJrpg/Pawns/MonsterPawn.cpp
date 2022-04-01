@@ -199,6 +199,13 @@ void AMonsterPawn::OnReviveAnimEnd()
 
 }
 
+void AMonsterPawn::SetReviveTimer()
+{
+	FTimerHandle m_ReviveHandle;//may be need member cache and manual cancel
+	
+	GetWorldTimerManager().SetTimer(m_ReviveHandle,this,&AMonsterPawn::Revive, FMath::RandRange(m_fMinReviveTimer,m_fMaxReviveTimer), false);
+}
+
 void AMonsterPawn::Dead()
 {
 	m_ShadowMeshComp->SetVisibility(false);
@@ -207,11 +214,7 @@ void AMonsterPawn::Dead()
 	
 	Super::Dead();
 
-	UMyGameInstance::Get->m_RewardManager->OnMonsterDead(this);
-
-	FTimerHandle m_ReviveHandle;//may be need member cache and manual cancel
-	
-	GetWorldTimerManager().SetTimer(m_ReviveHandle,this,&AMonsterPawn::Revive, FMath::RandRange(m_fMinReviveTimer,m_fMaxReviveTimer), false);
+	UMyGameInstance::Get->m_GameRule->OnMonsterDead(this);
 
 	PRINTF("AMonsterPawn::Dead");
 }

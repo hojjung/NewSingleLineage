@@ -40,10 +40,6 @@ public:
 	
 	bool IsGameStart();
 	
-	void HideCurrentLevel();
-
-	void ShowCurrentLevel();
-
 	const FZoneDataRow* GetZoneDataCurrent() const;
 
 	const FDropDataRow* GetDropData() const;

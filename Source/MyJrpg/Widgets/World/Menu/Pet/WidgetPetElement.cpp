@@ -39,19 +39,6 @@ void UWidgetPetElement::SetMyFocus()
 	UpdateEle();
 }
 
-void UWidgetPetElement::SetConfirm()
-{
-	bool IsEquipped = m_PetManager->GetCrntPet() == m_Pet;
-
-	if (IsEquipped)
-	{
-		//장착해제
-		//기본 변신으로 돌아감
-		return;
-	}
-	//언락이 된 변신이라면 변신,아니라면 애초에 장착을 묻지도 말아야함
-}
-
 const FPetRow& UWidgetPetElement::GetCrntPet()
 {
 	return *m_Pet;

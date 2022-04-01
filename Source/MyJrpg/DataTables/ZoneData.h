@@ -8,6 +8,7 @@
 #include "UObject/NoExportTypes.h"
 #include "ZoneData.generated.h"
 
+class UGameRuleBase;
 class UNPCPaletteDataAsset;
 struct FNPCSpawnData;
 /**
@@ -46,6 +47,11 @@ struct FZoneDataRow : public FTableRowBase
 	GENERATED_BODY()
 
 public:
+	FZoneDataRow();
+
+public:
+	UPROPERTY(EditDefaultsOnly,BlueprintReadOnly)
+	TSubclassOf<UGameRuleBase> m_ClassGameRule;
 	UPROPERTY(EditDefaultsOnly,BlueprintReadOnly)
 	FText m_ShowingName;
 	UPROPERTY(EditDefaultsOnly,BlueprintReadOnly,meta = (MultiLine="true"))

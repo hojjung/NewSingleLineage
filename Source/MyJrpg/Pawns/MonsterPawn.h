@@ -55,6 +55,8 @@ protected:
 	void OnReviveAnimEnd();
 
 public:
+	void SetReviveTimer();
+	
 	void Speech(FText text);
 
 	void Speech(FString text);

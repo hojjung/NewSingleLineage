@@ -145,25 +145,3 @@ AMonsterPawn* USpawnManager::SpawnNpcActor(const FNPCSpawnData& SpawnData, const
 
 	return NpcActor;
 }
-
-void USpawnManager::HideActors()
-{
-	for (auto* Pawn : m_AryNpcActors)
-	{
-		if (Pawn)
-		{
-			Pawn->SetActive(false);
-		}
-	}
-}
-
-void USpawnManager::ShowActors()
-{
-	for (AMonsterPawn* Pawn : m_AryNpcActors)
-	{
-		if (Pawn)
-		{
-			Pawn->SetActive(true);
-		}
-	}
-}

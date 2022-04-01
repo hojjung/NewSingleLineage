@@ -30,10 +30,6 @@ public:
 	ACombatUnitPawn* GetNearNpc(FVector callerLoc, float range = 0, TSet<ACombatUnitPawn*>* ignore = nullptr);
 
 public:
-	void HideActors();
-	
-	void ShowActors();
-	
 	void SetSpawnActors(const UNPCPaletteDataAsset* npcAssets);
 	
 	void SpawnPlayer(const FVector& loc, const FRotator& rot);

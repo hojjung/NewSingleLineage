@@ -43,8 +43,6 @@ public:
 	
 	void SetMyFocus();
 	
-	void SetConfirm();
-
 	const FPetRow& GetCrntPet();
 
 protected:

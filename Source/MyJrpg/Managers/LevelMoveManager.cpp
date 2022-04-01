@@ -29,6 +29,8 @@ void ULevelMoveManager::OpenMyLevel(const FZoneDataRow& zoneData, int index)
 
 void ULevelMoveManager::OpenMyLevel(FName zoneData, int index)
 {
+	UMyGameInstance::Get->m_GameRule = nullptr;
+	
 	const FZoneDataRow* DataRow = UZoneData::GetZoneTable->FindRow<FZoneDataRow>(zoneData, "");
 	
 	OpenMyLevel(*DataRow,index);
@@ -37,8 +39,13 @@ void ULevelMoveManager::OpenMyLevel(FName zoneData, int index)
 void ULevelMoveManager::OnOpenWorldLevelComplete()
 {
 	UBUITween::Shutdown();
-	
-	UMyGameInstance::Get->m_SpawnManager->SetSpawnActors(m_ZoneData->m_AryZones[m_nStageIndex].m_SpawnDataNpc);
+
+	if(m_ZoneData->m_ClassGameRule->IsValidLowLevel())
+	{
+		UMyGameInstance::Get->m_GameRule = NewObject<UGameRuleBase>(this, m_ZoneData->m_ClassGameRule);
+
+		UMyGameInstance::Get->m_GameRule->Init(m_ZoneData->m_AryZones[m_nStageIndex]);
+	}
 
 	UMyGameInstance::Get->m_EquipManager->UpdateEquip();
 
@@ -61,16 +68,6 @@ void ULevelMoveManager::OnOpenWorldLevelComplete()
 bool ULevelMoveManager::IsGameStart()
 {
 	return m_bIsGameStart;
-}
-
-void ULevelMoveManager::HideCurrentLevel()
-{
-	UMyGameInstance::Get->m_SpawnManager->HideActors();
-}
-
-void ULevelMoveManager::ShowCurrentLevel()
-{
-	UMyGameInstance::Get->m_SpawnManager->ShowActors();
 }
 
 const FZoneDataRow* ULevelMoveManager::GetZoneDataCurrent() const
