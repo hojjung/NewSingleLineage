@@ -35,12 +35,8 @@ protected:
 	UCameraDissolve* m_DissolveCam;
 	UPROPERTY(VisibleAnywhere)
 	UCameraComponent* m_TopCamera;
-	UPROPERTY(EditAnywhere)
-	TArray<TEnumAsByte< EObjectTypeQuery>> m_AryTargetingObjectType;
 	UPROPERTY()
 	FVector m_Input;
-	UPROPERTY()
-	TArray<AActor*> m_AryIgnores;
 	UPROPERTY()
 	bool m_bOnceMoveLock;
 	UPROPERTY()
@@ -121,9 +117,7 @@ public:
 
 	bool CanMoveInSkill();
 
-	const TArray<AActor*>& GetTraceIgnoredActors() const;
-
-	const TArray<TEnumAsByte< EObjectTypeQuery>>& GetTraceObjTypes() const;
+	
 
 	void UpdateStat(const FStatGroup& stat_group);
 	

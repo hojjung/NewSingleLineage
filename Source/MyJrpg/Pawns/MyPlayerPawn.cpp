@@ -255,16 +255,6 @@ bool AMyPlayerPawn::CanMoveInSkill()
 	return m_bCanMoveInSkill;
 }
 
-const TArray<AActor*>& AMyPlayerPawn::GetTraceIgnoredActors() const
-{
-	return m_AryIgnores;
-}
-
-const TArray<TEnumAsByte<EObjectTypeQuery>>& AMyPlayerPawn::GetTraceObjTypes() const
-{
-	return m_AryTargetingObjectType;
-}
-
 void AMyPlayerPawn::UpdateStat(const FStatGroup& stat_group)
 {
 	float HpPercent = GetHpPercent();

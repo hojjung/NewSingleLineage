@@ -42,22 +42,14 @@ void UWidgetStorage::UpdateText()
 	int CurrentCount = CrntStorage->GetUsingSlotCount();
 	
 	int MaxCount = CrntStorage->GetInvenSize();
+
+	int Index = UMyGameInstance::Get->GetCrntStorageIndex() + 1;
 	
-	FText StorageText = NSLOCTEXT("UWidgetStorage","StorageText","Storage");
+	FText StorageText = NSLOCTEXT("UWidgetStorage","StorageText","창고");
 	
-	FString StorageStr = FString::Printf(TEXT("%s %d/%d"),*StorageText.ToString(),CurrentCount,MaxCount);
+	FString StorageStr = FString::Printf(TEXT("%s(%d) %d/%d"),*StorageText.ToString(),Index,CurrentCount,MaxCount);
 	//
-	CurrentCount = UMyLib::GetPlayerInven()->GetUsingSlotCount();
-	
-	MaxCount = UMyLib::GetPlayerInven()->GetInvenSize();
-	
-	FText InvenText = NSLOCTEXT("UWidgetStorage","InvenText","Inventory");
-	
-	FString InvenStr = FString::Printf(TEXT("%s %d/%d"),*InvenText.ToString(),CurrentCount,MaxCount);
-	//
-	FString TotalStr = FString::Printf(TEXT("%s %s"),*StorageStr,*InvenStr);
-	
-	m_TxtStorageInvenCount->SetText(FText::FromString(TotalStr));
+	m_TxtStorageInvenCount->SetText(FText::FromString(StorageStr));
 }
 
 void UWidgetStorage::AddInvenDelegate()

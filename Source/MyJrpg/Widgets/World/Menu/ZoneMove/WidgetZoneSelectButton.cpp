@@ -38,6 +38,10 @@ void UWidgetZoneSelectButton::UpdateText()
 
 void UWidgetZoneSelectButton::CreateMonsters(const FZone& zone_data)
 {
+	m_HoriMonsterParents->ClearChildren();
+
+	m_SetMonsters.Reset();
+	
 	if(!zone_data.m_SpawnDataNpc)
 	{
 		return;
@@ -95,7 +99,7 @@ void UWidgetZoneSelectButton::CreateItems(const FZone& zone_data)
 
 void UWidgetZoneSelectButton::SetZone(const FZone& zone)
 {
-	m_HoriMonsterParents->ClearChildren();
+
 
 	m_HoriItemParents->ClearChildren();
 	

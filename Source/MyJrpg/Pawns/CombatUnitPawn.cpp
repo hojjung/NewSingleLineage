@@ -223,7 +223,7 @@ void ACombatUnitPawn::PlayTookHitMontage()
 	{
 		PlayAnimMontage(m_EntityAsset->m_TookHitMontage, 1);
 	
-		m_fHitAnimCD = FMath::RandRange(1.5f, 5.f);
+		m_fHitAnimCD = FMath::RandRange(5.5f, 25.f);
 	}
 }
 
@@ -318,6 +318,16 @@ bool ACombatUnitPawn::IsRangeMode()
 USceneComponent* ACombatUnitPawn::GetBulletTarget()
 {
 	return m_BulletTarget;
+}
+
+const TArray<AActor*>& ACombatUnitPawn::GetTraceIgnoredActors() const
+{
+	return m_AryIgnores;
+}
+
+const TArray<TEnumAsByte<EObjectTypeQuery>>& ACombatUnitPawn::GetTraceObjTypes() const
+{
+	return m_AryTargetingObjectType;
 }
 
 void ACombatUnitPawn::Dead()
@@ -444,49 +454,3 @@ float ACombatUnitPawn::GetHpPercent() const
 {
 	return  (float)m_StatGroup.m_Hp / (float)m_StatGroup.m_MaxHp;
 }
-
-
-// EKarmaLike ANPCPawn::GetLikeKarma()
-// {
-// 	int Karma = UFantasySurvGameInstance::Get->m_KarmaManager->GetKarma();
-//
-// 	bool bIsAngleNPC = GetIsAngelNPC();
-//
-// 	if(GetEnemy() && GetEnemy() == GetFocusedTarget())
-// 	{
-// 		return  EKarmaLike::Hate;
-// 	}
-//
-// 	if (bIsAngleNPC)
-// 	{
-// 		if (Karma >= m_nLikeKarma)
-// 		{
-// 			return EKarmaLike::Like;
-// 		}
-// 		else if (Karma <= m_nHateKarma)
-// 		{
-// 			return EKarmaLike::Hate;
-// 		}
-// 	}
-// 	else
-// 	{
-// 		if (Karma <= m_nLikeKarma)
-// 		{
-// 			return EKarmaLike::Like;
-// 		}
-// 		else if (Karma >= m_nHateKarma)
-// 		{
-// 			return EKarmaLike::Hate;
-// 		}
-// 	}
-//
-// 	return EKarmaLike::Neutral;
-// }
-
-
-//int RandAccu = UnityEngine.Random.Range(1, 99);
-//
-//print("공격성공 확률:" + Accu.ToString());
-//print("공격주사위 결과:" + RandAccu.ToString());
-//
-//if (Accu > RandAccu)

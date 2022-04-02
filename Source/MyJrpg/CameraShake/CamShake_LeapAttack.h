@@ -13,5 +13,7 @@ UCLASS()
 class MYJRPG_API UCamShake_LeapAttack : public UMatineeCameraShake
 {
 	GENERATED_BODY()
-	
+
+public:
+	UCamShake_LeapAttack();
 };

@@ -3,14 +3,14 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "MyJrpg/Pawns/Logics/AI/AI_Logic/AI_LogicBase.h"
-#include "Logic_PetFollwer.generated.h"
+#include "Blueprint/UserWidget.h"
+#include "WidgetBossHp.generated.h"
 
 /**
  * 
  */
 UCLASS()
-class MYJRPG_API ULogic_PetFollwer : public UAI_LogicBase
+class MYJRPG_API UWidgetBossHp : public UUserWidget
 {
 	GENERATED_BODY()
 	

@@ -3,3 +3,7 @@
 
 #include "CamShake_LeapAttack.h"
 
+UCamShake_LeapAttack::UCamShake_LeapAttack()
+{
+	
+}

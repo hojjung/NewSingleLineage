@@ -46,13 +46,13 @@ protected:
 protected:
 	FString CurrentState();
 	
-	void CheckSetState();
+	virtual void CheckSetState();
 	
 	void OnIdle();
 
 	void OnChase();
 	
-	void OnCombat();
+	virtual void OnCombat();
 
 public:
 	virtual void Init(ACombatUnitPawn* pawnUnit) override;

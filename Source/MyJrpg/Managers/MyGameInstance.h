@@ -104,4 +104,9 @@ public:
 	UInventory* GetStorage();
 
 	void SelectStorage(int index);
+
+	FORCEINLINE int GetCrntStorageIndex() const
+	{
+		return m_nStorageIndex;
+	}
 };

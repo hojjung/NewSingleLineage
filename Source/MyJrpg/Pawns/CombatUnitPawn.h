@@ -16,18 +16,17 @@ class MYJRPG_API ACombatUnitPawn : public ABaseUnitPawn
 	GENERATED_BODY()
 public:
 	ACombatUnitPawn(const FObjectInitializer& objInit);
+
 	
 protected:
-	FSkillTrigger m_OnSkillTrigger;
-	
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 	UStaticMeshComponent* m_ShadowMeshComp;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 	USceneComponent* m_BulletTarget;
-	
-	TWeakObjectPtr<ACombatUnitPawn> m_FocusedTarget;//TScriptInterface<IInteractable>
-	
-	FStatGroup m_StatGroup;
+	UPROPERTY(EditAnywhere)
+	TArray<TEnumAsByte< EObjectTypeQuery>> m_AryTargetingObjectType;
+	UPROPERTY()
+	TArray<AActor*> m_AryIgnores;
 	UPROPERTY()
 	UAI_LogicBase* m_AiFsm;
 	UPROPERTY()
@@ -58,6 +57,12 @@ protected:
 	FFloatCurve m_CurveDeathAnim;
 
 	FTimerHandle m_SilenceTimer;
+	
+	TWeakObjectPtr<ACombatUnitPawn> m_FocusedTarget;//TScriptInterface<IInteractable>
+	
+	FSkillTrigger m_OnSkillTrigger;
+	
+	FStatGroup m_StatGroup;
 
 private:
 	void CreateSetDeathCurve(float fullLength);
@@ -136,4 +141,9 @@ public:
 	virtual bool IsRangeMode();
 
 	USceneComponent* GetBulletTarget();
+
+public:
+	const TArray<AActor*>& GetTraceIgnoredActors() const;
+
+	const TArray<TEnumAsByte< EObjectTypeQuery>>& GetTraceObjTypes() const;
 };
