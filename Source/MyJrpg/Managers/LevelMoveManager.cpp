@@ -38,14 +38,16 @@ void ULevelMoveManager::OpenMyLevel(FName zoneData, int index)
 
 void ULevelMoveManager::OnOpenWorldLevelComplete()
 {
+	UMyAssetManager::Get()->ClearUnits();
+	
 	UBUITween::Shutdown();
 
 	if(m_ZoneData->m_ClassGameRule->IsValidLowLevel())
 	{
 		UMyGameInstance::Get->m_GameRule = NewObject<UGameRuleBase>(this, m_ZoneData->m_ClassGameRule);
 
-		UMyGameInstance::Get->m_GameRule->Init(m_ZoneData->m_AryZones[m_nStageIndex]);
 	}
+	UMyGameInstance::Get->m_SpawnManager->SetSpawnActors(m_ZoneData->m_AryZones[m_nStageIndex].m_SpawnDataNpc);
 
 	UMyGameInstance::Get->m_EquipManager->UpdateEquip();
 

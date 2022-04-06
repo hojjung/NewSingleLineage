@@ -17,7 +17,7 @@ class MYJRPG_API UGameRuleBase : public UObject
 	GENERATED_BODY()
 
 public:
-	virtual void Init(const FZone& zone) {}
+	virtual void OnMonsterCreate(AMonsterPawn* monster_pawn) {};
 	
-	virtual void OnMonsterDead(AMonsterPawn* monster_pawn) {};
+	virtual void OnMonsterDead(AMonsterPawn* monster_pawn) {}
 };

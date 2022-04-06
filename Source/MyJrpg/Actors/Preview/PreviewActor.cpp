@@ -75,36 +75,32 @@ void APreviewActor::BeginPlay()
 	HideMeshWithTick();
 }
 
-void APreviewActor::SetEntity(UUnitEntityAsset* asset)
+void APreviewActor::SetEntity(TSoftObjectPtr<UUnitEntityAsset> asset)
 {
-	if(m_SkinAsset)
-	{
-		UMyAssetManager::Get()->UnloadUnit(m_SkinAsset);
-		m_SkinAsset = nullptr;
-	}
-	UMyAssetManager::Get()->LoadUnitAsset(asset,FStreamableDelegate::CreateUObject(this, &APreviewActor::OnLoadComplete,asset->GetPrimaryAssetId()));
-}
-
-void APreviewActor::OnLoadComplete(FPrimaryAssetId assetID)
-{
-	UUnitEntityAsset* entityData = Cast<UUnitEntityAsset>(UMyAssetManager::Get()->GetPrimaryAssetObject(assetID));
+	const UUnitEntityAsset* entityData = UMyAssetManager::Get()->LoadUnitAsset(asset);
 	
 	m_SkinAsset = entityData;
 	
 	m_MeshBody->SetSkeletalMesh(m_SkinAsset->m_BodyMesh);
 	m_MeshBody->SetAnimationMode(EAnimationMode::AnimationBlueprint);
-	m_MeshBody->SetAnimClass(m_SkinAsset->m_AnimBP.Get());	
-}
+	m_MeshBody->SetAnimClass(m_SkinAsset->m_AnimBP);
 
+	m_MeshBody->SetRelativeRotation(m_SkinAsset->m_RotOffset);
+	
+	for(const FAttach& Attach : asset->m_AryAttaches)
+	{
+		
+	}
+}
 
 void APreviewActor::OnMeshVisualChanged(const FPlayerUnitEntityRow& charData)
 {
-	SetEntity(charData.m_UnitDataAsset);
+	SetEntity(charData.m_UnitDataAsset.Get());
 }
 
 void APreviewActor::OnMeshVisualChanged(const FPetRow& selected)
 {
-	SetEntity(selected.m_UnitDataAsset);
+	SetEntity(selected.m_UnitDataAsset.Get());
 }
 
 void APreviewActor::ShowMeshWithTick()
@@ -153,7 +149,7 @@ void APreviewActor::EndPlay(const EEndPlayReason::Type EndPlayReason)
 {
 	Super::EndPlay(EndPlayReason);
 	if(m_SkinAsset)
-		UMyAssetManager::Get()->UnloadUnit(m_SkinAsset);
+		m_SkinAsset = nullptr;
 }
 
 void APreviewActor::CalculateVisualActorRot(float delta)

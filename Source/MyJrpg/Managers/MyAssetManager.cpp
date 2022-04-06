@@ -18,21 +18,15 @@ UMyAssetManager* UMyAssetManager::Get()
 	}
 }
 
-void UMyAssetManager::StartInitialLoading()
+const UUnitEntityAsset* UMyAssetManager::LoadUnitAsset(TSoftObjectPtr<UUnitEntityAsset> asset)
 {
-	Super::StartInitialLoading();
-	m_AryOptions.Reset(6);
-	m_AryOptions.Add(TEXT("op1"));
-	m_AryOptions.Add(TEXT("op2"));
-	m_AryOptions.Add(TEXT("op3"));
-	m_AryOptions.Add(TEXT("op4"));
-	m_AryOptions.Add(TEXT("op5"));
-	m_AryOptions.Add(TEXT("op6"));
-}
+	TSharedPtr<FStreamableHandle> Handle;
+	
+	UUnitEntityAsset* LoadedAsset = GetStreamableManager().LoadSynchronous<UUnitEntityAsset>(asset.ToSoftObjectPath(),true, &Handle);
+	
+	m_SetUnits.Add(Handle);
 
-void UMyAssetManager::LoadUnitAsset(const UUnitEntityAsset* asset, FStreamableDelegate dele)
-{
-	LoadPrimaryAsset(asset->GetPrimaryAssetId(),m_AryOptions,dele);
+	return LoadedAsset; 
 }//
 TSharedPtr<FStreamableHandle> UMyAssetManager::LoadAnimMontage(TSoftObjectPtr<UAnimMontage> assetSoftPath)
 {
@@ -43,12 +37,14 @@ TSharedPtr<FStreamableHandle> UMyAssetManager::LoadAnimMontage(TSoftObjectPtr<UA
 	return Handle;
 }
 
-void UMyAssetManager::UnloadUnit(const UUnitEntityAsset* asset)
-{
-	UKismetSystemLibrary::UnloadPrimaryAsset(asset->GetPrimaryAssetId());
-}
-
 void UMyAssetManager::ClearUnits()
 {
+	for(auto Handle : m_SetUnits)
+	{
+		Handle->ReleaseHandle();
+	}
+
+	m_SetUnits.Reset();
+	
 	UKismetSystemLibrary::CollectGarbage();
 }

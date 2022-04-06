@@ -24,6 +24,20 @@ public:
 	static UDataTable* GetNpcUnitTable;
 };
 
+USTRUCT(BlueprintType)
+struct FAttach
+{
+	GENERATED_BODY()
+
+public:
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+	FName m_SocketName;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+	USkeletalMesh* m_SkMesh;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+	UStaticMesh* m_StMesh;
+};
+
 
 UCLASS(Blueprintable, hidecategories = (Object, Actor, Advanced, Navigation))
 class MYJRPG_API UUnitEntityAsset : public UPrimaryDataAsset
@@ -31,10 +45,10 @@ class MYJRPG_API UUnitEntityAsset : public UPrimaryDataAsset
 	GENERATED_BODY()
 
 public://Visual
-	UPROPERTY(EditAnywhere, BlueprintReadOnly)
-	FText m_UnitName;
-	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
 	USkeletalMesh* m_BodyMesh;
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
+	FRotator m_RotOffset;
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
 	TSubclassOf<UAnimInstance> m_AnimBP;
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
@@ -45,6 +59,10 @@ public://Visual
 	UAnimMontage* m_DeathMontage;
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
 	UAnimMontage* m_TookHitMontage;
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
+	TArray<UAnimMontage*> m_AryAdditionalAnims;
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
+	TArray<FAttach> m_AryAttaches; 
 
 	virtual FPrimaryAssetId GetPrimaryAssetId() const override
 	{
@@ -59,7 +77,7 @@ struct FUnitEntityRow : public FEntityRow
 
 public:
 	UPROPERTY(EditDefaultsOnly,BlueprintReadOnly)
-	UUnitEntityAsset* m_UnitDataAsset;
+	TSoftObjectPtr<UUnitEntityAsset> m_UnitDataAsset;
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
 	FStatGroup m_StatTable;
 };
@@ -71,6 +89,8 @@ struct FNpcUnitEntityRow : public FUnitEntityRow
 public://스텟과 보상
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (UIMin = "100"))
 	float m_fAtkRange = 200.f;
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
+	bool m_bIsBoss = false;
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
 	TSubclassOf<UAI_LogicBase> m_ClassAI_Logic;
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)

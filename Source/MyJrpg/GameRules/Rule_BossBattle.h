@@ -13,5 +13,9 @@ UCLASS()
 class MYJRPG_API URule_BossBattle : public UGameRuleBase
 {
 	GENERATED_BODY()
+
+protected:
+	virtual void OnMonsterCreate(AMonsterPawn* monster_pawn) override;
 	
+	virtual void OnMonsterDead(AMonsterPawn* monster_pawn) override;
 };

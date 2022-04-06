@@ -20,19 +20,14 @@ public:
 	UMyAssetManager() {}
 	
 	static UMyAssetManager* Get();
-	
-protected:
-	TArray<FName> m_AryOptions;
 
 protected:
-	virtual void StartInitialLoading() override;
+	TSet<TSharedPtr<FStreamableHandle>> m_SetUnits;
 
 public:
 	TSharedPtr<FStreamableHandle> LoadAnimMontage(TSoftObjectPtr<UAnimMontage> assetSoftPath);
 	
-	void LoadUnitAsset(const UUnitEntityAsset* asset, FStreamableDelegate dele);
-
-	void UnloadUnit(const UUnitEntityAsset* asset);
+	const UUnitEntityAsset* LoadUnitAsset(TSoftObjectPtr<UUnitEntityAsset> asset);
 
 	void ClearUnits();
 };

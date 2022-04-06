@@ -5,7 +5,7 @@
 USkill_TurnDemon::USkill_TurnDemon(const FObjectInitializer& obj)
 {
 	static ConstructorHelpers::FObjectFinder<UUnitEntityAsset> FoundAsset(TEXT("UnitEntityAsset'/Game/01_DataAssets/Units/PlayerUnit/Player02.Player02'"));
-	m_TurnSk = FoundAsset.Object;  
+	m_AssetSoftLink = FoundAsset.Object;  
 }
 //ParticleSystem'/Game/04_VisualEffect/FantasyRPGVFXPack/Particles/PS_General_FireBig.PS_General_FireBig'
 void USkill_TurnDemon::EndSkillAnim()

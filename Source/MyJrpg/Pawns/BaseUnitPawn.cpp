@@ -70,37 +70,24 @@ void ABaseUnitPawn::SetEntity(const FNpcUnitEntityRow& unitEntityRow)
 	m_PawnName = unitEntityRow.m_ShowingName;
 }
 
-void ABaseUnitPawn::LoadSetSkMeshAnim(UUnitEntityAsset* asset)
+void ABaseUnitPawn::LoadSetSkMeshAnim(TSoftObjectPtr<UUnitEntityAsset> asset)
 {
-	if(m_EntityAsset)
-	{
-		UMyAssetManager::Get()->UnloadUnit(m_EntityAsset);
-		m_EntityAsset = nullptr;
-	}
-	
-	UMyAssetManager::Get()->LoadUnitAsset(asset, FStreamableDelegate::CreateUObject(this, &ABaseUnitPawn::OnLoadComplete,asset->GetPrimaryAssetId()));
+	m_EntityAsset = UMyAssetManager::Get()->LoadUnitAsset(asset);
 
-	OnLoadComplete(asset->GetPrimaryAssetId());
-}
-
-void ABaseUnitPawn::OnLoadComplete(FPrimaryAssetId assetID)
-{
-	UUnitEntityAsset* entityData = Cast<UUnitEntityAsset>(UMyAssetManager::Get()->GetPrimaryAssetObject(assetID));
-
-	m_EntityAsset = entityData;
-	
 	m_BodyMesh->SetSkeletalMesh(m_EntityAsset->m_BodyMesh);
 
 	m_BodyMesh->SetAnimationMode(EAnimationMode::Type::AnimationBlueprint);
 
 	m_BodyMesh->SetAnimClass(m_EntityAsset->m_AnimBP.Get());
+
+	m_BodyMesh->SetRelativeRotation(asset->m_RotOffset);
 }
 
 void ABaseUnitPawn::EndPlay(const EEndPlayReason::Type EndPlayReason)
 {
 	Super::EndPlay(EndPlayReason);
 	if(m_EntityAsset)
-		UMyAssetManager::Get()->UnloadUnit(m_EntityAsset);
+		m_EntityAsset = nullptr;
 }
 
 void ABaseUnitPawn::ActiveMovement()

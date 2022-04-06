@@ -14,11 +14,9 @@ class MYJRPG_API USkill_TurnBase : public USkill_BuffBase
 {
 	GENERATED_BODY()
 protected:
+	TSoftObjectPtr<UUnitEntityAsset> m_AssetSoftLink;
 	UPROPERTY()
-	UUnitEntityAsset* m_TurnSk;
-
-protected:
-	void OnLoadComplete(UUnitEntityAsset* asset);
+	const UUnitEntityAsset* m_LoadedAssest;
 
 protected:
 	virtual void EndSkillAnim() override;//is trigger

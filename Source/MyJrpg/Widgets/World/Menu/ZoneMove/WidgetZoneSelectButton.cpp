@@ -47,28 +47,28 @@ void UWidgetZoneSelectButton::CreateMonsters(const FZone& zone_data)
 		return;
 	}
 	
-	for(const FNPCSpawnData& Data : zone_data.m_SpawnDataNpc->m_ArySpawnDatas)
-	{
-		const FNpcUnitEntityRow* NpcEntity = UUnitEntityData::GetNpcUnitTable->FindRow<FNpcUnitEntityRow>(Data.m_IDEntity, "");
-
-		if(m_SetMonsters.Contains(NpcEntity))
-		{
-			continue;
-		}
-
-		m_SetMonsters.Add(NpcEntity);//소트?
-	}
-
-	m_SetMonsters.Sort([](const FNpcUnitEntityRow& LHS, const FNpcUnitEntityRow& RHS)  { return LHS.m_fExp > RHS.m_fExp; });
-
-	for(const FNpcUnitEntityRow* Unit : m_SetMonsters)
-	{
-		UWidgetZoneMonsterElement* SelectButton = CreateWidget<UWidgetZoneMonsterElement>(this,m_ClassMonster);
-
-		SelectButton->SetUnit(Unit);
-		//출현 몬스터
-		m_HoriMonsterParents->AddChildToHorizontalBox(SelectButton);
-	}
+	// for(const FNPCSpawnData& Data : zone_data.m_SpawnDataNpc->m_ArySpawnDatas)
+	// {
+	// 	const FNpcUnitEntityRow* NpcEntity = UUnitEntityData::GetNpcUnitTable->FindRow<FNpcUnitEntityRow>(Data.m_IDEntity, "");
+	//
+	// 	if(m_SetMonsters.Contains(NpcEntity))
+	// 	{
+	// 		continue;
+	// 	}
+	//
+	// 	m_SetMonsters.Add(NpcEntity);//소트?
+	// }
+	//
+	// m_SetMonsters.Sort([](const FNpcUnitEntityRow& LHS, const FNpcUnitEntityRow& RHS)  { return LHS.m_fExp > RHS.m_fExp; });
+	//
+	// for(const FNpcUnitEntityRow* Unit : m_SetMonsters)
+	// {
+	// 	UWidgetZoneMonsterElement* SelectButton = CreateWidget<UWidgetZoneMonsterElement>(this,m_ClassMonster);
+	//
+	// 	SelectButton->SetUnit(Unit);
+	// 	//출현 몬스터
+	// 	m_HoriMonsterParents->AddChildToHorizontalBox(SelectButton);
+	// }
 }
 
 void UWidgetZoneSelectButton::CreateItems(const FZone& zone_data)

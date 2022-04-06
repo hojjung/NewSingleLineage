@@ -42,7 +42,9 @@ protected:
 	FVector m_SpawnPoint;
 	UPROPERTY()
 	FRotator m_SpawnRot;
-
+	UPROPERTY()
+	bool m_bIsBoss;
+	
 protected:
 	void PlayHitFlash();
 	
@@ -74,6 +76,8 @@ public:
 	float GetRewardExp() const;
 
 	float GetRewardGold() const;
+
+	bool IsBoss() const;
 };
 
 

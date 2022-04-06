@@ -40,7 +40,7 @@ protected:
 
 	FRotator m_InitVisualRot;
 	UPROPERTY()
-	UUnitEntityAsset* m_SkinAsset;
+	const UUnitEntityAsset* m_SkinAsset;
 
 protected:
 	virtual void BeginPlay() override;
@@ -51,10 +51,8 @@ protected:
 
 	void CalculateVisualActorRot(float delta);
 
-	void SetEntity(UUnitEntityAsset* asset);
+	void SetEntity(TSoftObjectPtr<UUnitEntityAsset> asset);
 
-	void OnLoadComplete(FPrimaryAssetId assetID);
-	
 public:
 	void OnMeshVisualChanged(const FPlayerUnitEntityRow& charData);
 

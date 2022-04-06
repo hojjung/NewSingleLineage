@@ -10,23 +10,7 @@
 #include "WidgetBaseElement.generated.h"
 
 struct FColorDataHandle;
-/**
- * 인벤토리
- * 장비칸
- * 스킬정보
- * 제작
- * 아이템 드랍 몬스터정보
- *
- * 클릭과 꾹누루기 지원필요
- *
- * 클릭과 홀드로 주는 정보가 다른데?
- *
- * 정보를 아예 따로 담아줘,자식이 담게하기
- *
- * 포커싱도 항상되야함,그게 온클릭임
- *
- * 칸을 비우는것도 가능해야함
- */
+
 UCLASS()
 class MYJRPG_API UWidgetBaseElement : public UUserWidget
 {

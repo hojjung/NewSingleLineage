@@ -29,7 +29,7 @@ protected:
 	UPROPERTY(VisibleAnywhere,BlueprintReadWrite,Category="Movement")
 	UMyMovement* m_Movement;
 	UPROPERTY()
-	UUnitEntityAsset* m_EntityAsset;
+	const UUnitEntityAsset* m_EntityAsset;
 
 	FTimerHandle m_MoveStopTimer;
 public:
@@ -39,10 +39,8 @@ public:
 protected:
 	virtual void EndPlay(const EEndPlayReason::Type EndPlayReason) override;
 	
-	virtual void LoadSetSkMeshAnim(UUnitEntityAsset* asset);
+	virtual void LoadSetSkMeshAnim(TSoftObjectPtr<UUnitEntityAsset> asset);
 
-	virtual void OnLoadComplete(FPrimaryAssetId assetID);
-	
 	void ActiveMovement();
 	//PathFollow	
 	FPathFollowingRequestResult MoveTo(const FAIMoveRequest& MoveRequest, FNavPathSharedPtr* OutPath = nullptr);

@@ -1,6 +1,7 @@
 #include "MonsterPawn.h"
 
 #include "Components/MyMovement.h"
+#include "Logics/AI/AI_Logic/AI_LogicBase.h"
 #include "Logics/AI/AI_Sensor/Sensor_LogicBase.h"
 #include "MyJrpg/MyLib.h"
 #include "MyJrpg/Managers/MyGameInstance.h"
@@ -87,6 +88,8 @@ void AMonsterPawn::SetEntity(const FNpcUnitEntityRow& unitEntityRow)
 		m_Pool = NewObject<UBulletPool>(this);
 		m_Pool->InitPool(GetStat().m_Dmg,5,unitEntityRow.m_Bullet,this,unitEntityRow.m_fBulletScale);
 	}
+
+	m_bIsBoss = unitEntityRow.m_bIsBoss; 
 }
 
 void AMonsterPawn::SetReviveTime(float min, float max)
@@ -128,6 +131,11 @@ float AMonsterPawn::GetRewardExp() const
 float AMonsterPawn::GetRewardGold() const
 {
 	return m_fGold;
+}
+
+bool AMonsterPawn::IsBoss() const
+{
+	return m_bIsBoss;
 }
 
 void AMonsterPawn::PlayHitFlash()
