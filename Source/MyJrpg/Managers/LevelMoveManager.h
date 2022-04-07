@@ -8,7 +8,6 @@
 #include "UObject/NoExportTypes.h"
 #include "LevelMoveManager.generated.h"
 
-struct FDropDataRow;
 struct FZoneDataRow;
 /**
  * 
@@ -29,6 +28,7 @@ protected:
 	bool m_bIsGameStart = false;
 
 	int m_nStageIndex;
+
 public:
 	void StartGame();
 
@@ -42,6 +42,6 @@ public:
 	
 	const FZoneDataRow* GetZoneDataCurrent() const;
 
-	const FDropDataRow* GetDropData() const;
+	const FName& GetCrntZoneID() const;
 };
 

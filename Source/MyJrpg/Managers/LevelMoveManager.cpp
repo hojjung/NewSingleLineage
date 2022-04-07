@@ -77,15 +77,7 @@ const FZoneDataRow* ULevelMoveManager::GetZoneDataCurrent() const
 	return m_ZoneData;
 }
 
-const FDropDataRow* ULevelMoveManager::GetDropData() const
+const FName& ULevelMoveManager::GetCrntZoneID() const
 {
-	const FDropDataRowHandle& DropTable = GetZoneDataCurrent()->m_AryZones[m_nStageIndex].m_DropHandle;
-
-	if (DropTable.RowName == NAME_None)
-	{
-		return nullptr;
-	}
-	
-	return DropTable.GetRow<FDropDataRow>("");
+	return m_ZoneData->m_AryZones[m_nStageIndex].m_ZoneUniqueID;
 }
-

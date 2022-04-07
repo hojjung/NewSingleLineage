@@ -3,7 +3,6 @@
 #include "MyGameInstance.h"
 #include "RewardManager.h"
 #include "MyJrpg/MyLib.h"
-#include "MyJrpg/DataTables/FieldPropData.h"
 #include "MyJrpg/Pawns/CombatUnitPawn.h"
 #include "MyJrpg/Pawns/MonsterPawn.h"
 #include "MyJrpg/Pawns/MyPlayerPawn.h"

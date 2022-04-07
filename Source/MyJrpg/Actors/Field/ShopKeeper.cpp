@@ -4,7 +4,6 @@
 #include "ShopKeeper.h"
 
 #include "MyJrpg/MyLib.h"
-#include "MyJrpg/DataTables/ShopData.h"
 
 AShopKeeper::AShopKeeper()
 {
@@ -26,5 +25,5 @@ AShopKeeper::AShopKeeper()
 //AnimSequence'/Game/09_SharedAnimations/NpcAnims/NPC_Anim_Showing_Goods_2.NPC_Anim_Showing_Goods_2'
 void AShopKeeper::OnInteract()
 {
-	UMyLib::GetCanvas()->OpenShop(UShopData::GetShopTable);
+	UMyLib::GetCanvas()->OpenShop(TEXT("Shop"));
 }

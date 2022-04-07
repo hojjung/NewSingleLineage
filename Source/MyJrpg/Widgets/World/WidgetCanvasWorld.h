@@ -159,7 +159,7 @@ public:
 	UFUNCTION()
 	void OpenCraft();
 	UFUNCTION()
-	void OpenShop(const UDataTable* dT);
+	void OpenShop(const FName& traderID);
 	UFUNCTION()
 	void OpenStorage();
 	UFUNCTION()

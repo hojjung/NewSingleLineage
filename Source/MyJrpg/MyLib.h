@@ -56,6 +56,8 @@ public:
 
 	static bool IsEquip(FName itemKey);
 
+	static bool IsEquip(const FItemDataRow& DataRow);
+
 	static EItemType GetItemType(const FItemDataRow&);
 
 	static UNavigationSystemV1* GetNavSys()

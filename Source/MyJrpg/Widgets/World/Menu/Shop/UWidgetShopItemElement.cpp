@@ -11,7 +11,7 @@ void UUWidgetShopItemElement::NativeOnInitialized()
 {
 	Super::NativeOnInitialized();
 
-	m_TradeData = nullptr;
+	m_ItemID = NAME_None;
 
 	m_ElementBase->m_OnHold.AddUObject(this,&UUWidgetShopItemElement::OnHoldingComplete);
 
@@ -27,9 +27,7 @@ FText UUWidgetShopItemElement::GetFocusText()
 
 void UUWidgetShopItemElement::OnHoldingComplete()
 {
-	FName ID = m_TradeData->m_ItemDataRowHandle.RowName;
-	
-	UMyLib::GetCanvas()->OpenItemInfo(EItemInfo::Shop,ID,nullptr);
+	UMyLib::GetCanvas()->OpenItemInfo(EItemInfo::Shop,m_ItemID,nullptr);
 
 	SetMyUnFocus();
 }
@@ -39,8 +37,10 @@ void UUWidgetShopItemElement::OpenStackCalculator()
 	PRINTF("UUWidgetShopItemElement::TryBuyItem");
 
 	int Gold = UMyGameInstance::Get->m_CurrencyManager->GetGold();
+
+	const FItemDataRow& ItemData = *UItemData::GetItemTable->FindRow<FItemDataRow>(m_ItemID,"");
 	
-	int Cost = m_TradeData->GetCost(); 
+	int Cost = ItemData.m_nPlayerSpentGoldBuy; 
 
 	if(Cost<=0)
 	{
@@ -52,9 +52,9 @@ void UUWidgetShopItemElement::OpenStackCalculator()
 
 		int AbleToDeposit;
 
-		if(!UMyLib::IsEquip(m_TradeData->m_ItemDataRowHandle.RowName))
+		if(!UMyLib::IsEquip(m_ItemID))
 		{
-			AbleToDeposit = UMyGameInstance::Get->m_Inven->GetItemStack(m_TradeData->m_ItemDataRowHandle.RowName);
+			AbleToDeposit = UMyGameInstance::Get->m_Inven->GetItemStack(m_ItemID);
 		}
 		else
 		{
@@ -96,7 +96,7 @@ void UUWidgetShopItemElement::OnClicked()
 
 bool UUWidgetShopItemElement::IsSlotEmpty()
 {
-	return !m_TradeData;
+	return m_ItemID.IsNone();
 }
 
 void UUWidgetShopItemElement::OnBuyConfirm(int amount)
@@ -106,7 +106,7 @@ void UUWidgetShopItemElement::OnBuyConfirm(int amount)
 		PRINTF("void UUWidgetShopItemElement::OnBuyConfirm(int amount) :: InvenMax");
 		return;
 	}
-	UMyGameInstance::Get->m_ShopManager->BuyItem(*m_TradeData,amount);
+	UMyGameInstance::Get->m_ShopManager->BuyItem(m_ItemID,amount);
 }
 
 int UUWidgetShopItemElement::GetMaxAmount()
@@ -121,15 +121,15 @@ void UUWidgetShopItemElement::SetMyUnFocus()
 	m_ElementBase->SetMyUnFocus();
 }
 
-void UUWidgetShopItemElement::UpdateElement(const FItemTradingData& tradeData)
+void UUWidgetShopItemElement::UpdateElement(const FName& tradeData)
 {
-	m_TradeData = &tradeData;
+	m_ItemID = tradeData;
 	
 	m_TextCost->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
 	
-	const FItemDataRow& ItemData = *tradeData.m_ItemDataRowHandle.GetRow<FItemDataRow>("");
+	const FItemDataRow& ItemData = *UItemData::GetItemTable->FindRow<FItemDataRow>(m_ItemID,"");
 
-	m_TextCost->SetText(FText::AsNumber(tradeData.GetCost()));
+	m_TextCost->SetText(FText::AsNumber(ItemData.m_nPlayerSpentGoldBuy));
 
 	m_ElementBase->SetHoldable(true);
 
@@ -140,6 +140,8 @@ void UUWidgetShopItemElement::UpdateElement(const FItemTradingData& tradeData)
 
 void UUWidgetShopItemElement::Clear()
 {
+	m_ItemID = NAME_None;
+	
 	m_ElementBase->Clear();
 
 	m_ElementBase->SetHoldable(false);

@@ -31,7 +31,7 @@ protected:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (BindWidget))
 	UWidgetInventory* m_InvenPanel;
 protected:
-	TArray<const FItemTradingData*> m_AryShopData;
+	TArray<FName> m_AryItemKeys;
 	UPROPERTY()
 	TArray<UUWidgetShopItemElement*> m_AryItemEles;
 
@@ -54,7 +54,7 @@ protected:
 	
 	void OnFocus(UUWidgetShopItemElement* ele);
 
-	bool IsSameType(const FItemTradingData* item);
+	bool IsSameType(const FName& itemID);
 	
 	void UpdateShopPanel();
 	
@@ -72,5 +72,5 @@ public:
 	UFUNCTION()
 	void OnFilterEquips();
 
-	void SetShopPanel(const UDataTable* shopTable);
+	void SetShopPanel(const FName& shopTable);
 };

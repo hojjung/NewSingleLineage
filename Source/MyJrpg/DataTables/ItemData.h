@@ -23,7 +23,7 @@ public:
 		m_Hp = 100;
 		m_Dmg = 10;
 		m_AtkSpeed = 1.0f;
-		m_MoveSpeed = 600;
+		m_MoveSpeed = 300;
 		m_CriPer = 0;
 		m_DmgReduce = 0;
 		m_CriDmg = 1.5f;
@@ -65,15 +65,15 @@ public:
 	UPROPERTY(EditDefaultsOnly)
 	float m_MoveSpeed;
 	
-	FStatGroup operator+(const FStatGroup& stat_group) const;
+	FStatGroup  operator + (const FStatGroup& stat_group) const;
 	
-	FStatGroup operator * (const FStatGroup& stat_group) const;
+	FStatGroup  operator * (const FStatGroup& stat_group) const;
 
-	FStatGroup operator * (float m) const;
+	FStatGroup  operator * (float m) const;
 
-	FStatGroup operator * (int m) const;
+	FStatGroup  operator * (int m) const;
 
-	FStatGroup& operator+=(const FStatGroup& stat_group);
+	FStatGroup& operator+= (const FStatGroup& stat_group);
 
 	FStatGroup& operator-=(const FStatGroup& stat_group);
 };
@@ -153,6 +153,18 @@ public:
 };
 
 USTRUCT(BlueprintType)
+struct FDropData
+{
+	GENERATED_BODY()
+
+public:
+	UPROPERTY(EditDefaultsOnly,BlueprintReadOnly)
+	FName m_ZoneUniqueID;
+	UPROPERTY(EditDefaultsOnly)
+	int m_nExpectDropCount=5;//5번에 한번,20% 드랍이란뜻임
+};
+
+USTRUCT(BlueprintType)
 struct FItemDataRow : public FTableRowBase
 {
 	GENERATED_USTRUCT_BODY()
@@ -167,16 +179,14 @@ public:
 public:
 	UPROPERTY(EditDefaultsOnly)
 	FText m_TextShowingName;
-	UPROPERTY(EditDefaultsOnly,meta = (MultiLine="true"))
-	FText m_TextDesc;
 	UPROPERTY(EditDefaultsOnly)
 	TSoftObjectPtr<UTexture2D> m_ItemIcon;
 	UPROPERTY(EditDefaultsOnly)
 	EEquipSlotType m_ItemType;
 	UPROPERTY(EditDefaultsOnly)
-	int m_nSellValue = 50;
+	int m_nPlayerEarnGoldSell = 50;
 	UPROPERTY(EditDefaultsOnly)
-    int m_nBuyValue = 50;
+    int m_nPlayerSpentGoldBuy = 50;
 	UPROPERTY(EditDefaultsOnly)
 	FColorDataHandle m_ColorHandle;
 	UPROPERTY(EditAnywhere, meta=(EditCondition = "m_ItemType != EEquipSlotType::None", EditConditionHides))
@@ -190,7 +200,11 @@ public:
 	UPROPERTY(EditAnywhere, meta=(EditCondition = "m_ItemType != EEquipSlotType::Weapon", EditConditionHides))
 	TSubclassOf<UItemExecuteBase> m_ClassExeItem;
 	UPROPERTY(EditDefaultsOnly,BlueprintReadOnly)
-	TArray<FCraftItemCost> m_AryCostItem;
-	UPROPERTY(EditDefaultsOnly,BlueprintReadOnly)
 	int m_nCraftCost=1;
+	UPROPERTY(EditDefaultsOnly,BlueprintReadOnly)
+	TArray<FCraftItemCost> m_AryCostItem;
+	UPROPERTY(EditDefaultsOnly)
+	TArray<FName> m_AryTraderIDs;
+	UPROPERTY(EditDefaultsOnly)
+	TArray<FDropData> m_AryDropDatas;
 };

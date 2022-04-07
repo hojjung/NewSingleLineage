@@ -26,11 +26,12 @@ public:
 protected:
 	UPROPERTY()
 	int m_nCraftItemCount;
-	UPROPERTY()
-	int m_nIndex;
-	TArray<FName> m_AryCraftDataKey;
-	
-	TArray<const FItemDataRow*> m_AryCraftDataRow;
+
+	TMap<FName, const FCraftItemCost*> m_MapCraftingItems;
+
+	FName m_CrntID;
+
+	const FItemDataRow* m_CrntItemData;
 	
 protected:
 	bool IsInvenHasSpace();
@@ -50,9 +51,9 @@ protected:
 	int GetCraftAvailableCountWithStackSize();
 	
 public:
-	void InitLoadAllCraftItemData();
+	void Init();
 	
-	void SetCraftItem(int index);
+	void SetCraftItem(const FName& id);
 
 	void Clear();
 	
@@ -62,28 +63,17 @@ public:
 
 	int GetTotalCost();
 
-public:
-	FORCEINLINE const FItemDataRow& GetCrntItemRow() const
-	{
-		return *m_AryCraftDataRow[m_nIndex];
-	}
-
-	FORCEINLINE const FName& GetCrntItemKey() const
-	{
-		return m_AryCraftDataKey[m_nIndex];
-	}
-
-	FORCEINLINE const FName& GetItemKey(int index) const
-    	{
-    		return m_AryCraftDataKey[index];
-    	}
-
-	FORCEINLINE const TArray<const FItemDataRow*>& GetAllCraftData() const
-	{
-		return m_AryCraftDataRow;
-	}
-
-	FORCEINLINE int GetAmount() const;
+	int GetAmount();
 	
 	int GetMaxAmount();
+
+public:
+	void AddCraftItemData(const FName& itemKey, const FCraftItemCost& craft);
+
+	const TMap<FName, const FCraftItemCost*>& GetCraftItems() const
+	{
+		return m_MapCraftingItems;
+	}
+
+	const FItemDataRow* GetCrntItemRow() const;
 };

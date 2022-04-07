@@ -3,7 +3,8 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "MyJrpg/DataTables/DropData.h"
+#include "MyJrpg/DataTables/ItemData.h"
+#include "MyJrpg/DataTables/UnitEntityData.h"
 #include "MyJrpg/Widgets/World/CommonElements/WidgetBaseElement.h"
 #include "WidgetZoneItemElement.generated.h"
 
@@ -21,7 +22,10 @@ protected:
 
 protected:
 	const FItemDataRow* m_ItemRow;
-	
+
+	int m_nCntDrop;
 public:
 	void SetZone(const FDropRewardItem& data);
+
+	int GetSortValue() const;
 };

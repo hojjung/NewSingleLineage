@@ -1,8 +1,6 @@
 #include "RewardManager.h"
-
 #include "MyGameInstance.h"
 #include "MyJrpg/MyLib.h"
-#include "MyJrpg/DataTables/DropData.h"
 #include "MyJrpg/DataTables/ZoneData.h"
 #include "MyJrpg/Items/Inventory.h"
 #include "MyJrpg/Quest/Reward/RewardLogicBase.h"
@@ -47,71 +45,59 @@ void URewardManager::ReceiveQuestReward(const FQuestReward& qReward)
 
 void URewardManager::RequestMonsterReward()
 {
-	const FDropDataRow* ZoneData = UMyGameInstance::Get->m_LevelMoveManager->GetDropData();
+	const FName& ZoneId = UMyGameInstance::Get->m_LevelMoveManager->GetCrntZoneID();
 
-	if(!ZoneData)
+	const TArray<FDropRewardItem>* AryDropDatas = UMyGameInstance::Get->m_RewardManager->GetDropItems(ZoneId);
+
+	if(AryDropDatas)
 	{
-		return;
-	}
-
-	const TArray<FDropRewardItem>& AryDropDatas = ZoneData->m_AryDropItem;
-	
-	for(auto& DropItem : AryDropDatas)
-	{
-		int RandIndex = FMath::RandRange(0,DropItem.m_nExpectDropCount - 1);
-
-		if(RandIndex == 0)
+		for(const auto& DropItem : *AryDropDatas)
 		{
-			int Amount = 1;
-			
-			EItemType type = UMyLib::GetItemType(DropItem.m_Item.RowName);
+			int RandIndex = FMath::RandRange(0,DropItem.m_nExpectDropCount - 1);
 
-			if (type == EItemType::Equip)
+			if(RandIndex == 0)
 			{
-				FName HashID = UMyLib::GenerateEquipItemHashKey(DropItem.m_Item.RowName,this);
+				int Amount = 1;
 			
-				UMyGameInstance::Get->m_Inven->AddEquipItem(HashID);
+				EItemType type = UMyLib::GetItemType(DropItem.m_Item.RowName);
 
-				continue;;
-			}
+				if (type == EItemType::Equip)
+				{
+					FName HashID = UMyLib::GenerateEquipItemHashKey(DropItem.m_Item.RowName,this);
+			
+					UMyGameInstance::Get->m_Inven->AddEquipItem(HashID);
+
+					continue;;
+				}
 		
-			UMyGameInstance::Get->m_Inven->AddItem(DropItem.m_Item.RowName,Amount);
+				UMyGameInstance::Get->m_Inven->AddItem(DropItem.m_Item.RowName,Amount);
+			}
 		}
 	}
 }
 
 bool URewardManager::RequestQuestReward(const TArray<FQuestReward>& aryQuest)
 {
-	bool Result = false;
 	for(const FQuestReward& QQ : aryQuest)
 	{
 		if(QQ.m_Item.RowName != NAME_None)
 		{
 			int Amount  = QQ.m_nAmount;
 			
-			// if(EItemType::Equip == UMyLib::GetItemType(QQ.m_Item.RowName))
-			// {
-			// 	Result = UMyGameInstance::Get->m_Inven->CheckEmptySlot(Amount);
-			//
-			// 	if(!Result)
-			// 	{
-			// 		return false;
-			// 	}
-			// }
-			// else
-			// {
-			// 	Result = UMyGameInstance::Get->m_Inven->CheckEmptyStack(QQ.m_Item.RowName,Amount);
-			//
-			// 	if(!Result)
-			// 	{
-			// 		Result = UMyGameInstance::Get->m_Inven->CheckEmptySlot(Amount);
-			//
-			// 		if(!Result)
-			// 		{
-			// 			return false;
-			// 		}
-			// 	}
-			// }
+			if(EItemType::Equip == UMyLib::GetItemType(QQ.m_Item.RowName))
+			{
+				if(UMyGameInstance::Get->m_Inven->GetRemainSlotCount() < Amount)
+				{
+					return false;
+				}
+			}
+			else
+			{
+				if(UMyGameInstance::Get->m_Inven->GetAvailalbeStackCount(QQ.m_Item.RowName) < Amount)
+				{
+					return false;
+				}
+			}
 		}
 	}
 
@@ -134,4 +120,25 @@ void URewardManager::OnMonsterDead(const AMonsterPawn* monster)
 	m_OnExpGold.Broadcast(monster->GetRewardExp(),monster->GetRewardGold());
 	
 	RequestMonsterReward();
+}
+
+void URewardManager::AddDropItemData(const FDropData& drop, const FName& itemID)
+{
+	if(m_MapDropItems.Contains(drop.m_ZoneUniqueID))
+	{
+		m_MapDropItems[drop.m_ZoneUniqueID].Emplace(FDropRewardItem(itemID, drop.m_nExpectDropCount));
+		return;
+	}
+
+	FDropRewardItem DropItem (itemID, drop.m_nExpectDropCount);
+	m_MapDropItems.Emplace(drop.m_ZoneUniqueID, TArray<FDropRewardItem>(&DropItem,1));
+}
+
+const TArray<FDropRewardItem>* URewardManager::GetDropItems(FName zoneID) const
+{
+	if(!m_MapDropItems.Contains(zoneID))
+	{
+		return nullptr;
+	}
+	return &m_MapDropItems[zoneID];
 }

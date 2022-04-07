@@ -47,6 +47,8 @@ protected:
 	
 	UPROPERTY()
 	int m_nIndex;
+	UPROPERTY()
+	TArray<UWidgetZoneItemElement*> m_AryZoneElements;
 	
 protected:
 	void UpdateText();
@@ -54,11 +56,13 @@ protected:
 	void CreateMonsters(const FZone& zone_data);
 
 	void CreateItems(const FZone& zone_data);
+
+	void CreateZoneElement(const TArray<FDropRewardItem>& AryItems);
 	
 public:
 	void Init(const FZoneDataRow& zone_data);
 	
-	void SetZone(const FZone& zone);
+	void SetZone();
 
 	UFUNCTION()
 	void MoveToZone();

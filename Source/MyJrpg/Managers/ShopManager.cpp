@@ -7,26 +7,26 @@
 #include "MyJrpg/MyLib.h"
 #include "MyJrpg/Items/Inventory.h"
 
-void UShopManager::BuyItem(const FItemTradingData& item_trading_data, int amount)
+void UShopManager::BuyItem(const FName& itemID, int amount)
 {
-	int TotalCost = item_trading_data.GetCost()*amount;
+	const FItemDataRow* ItemDataRow = UItemData::GetItemTable->FindRow<FItemDataRow>(itemID, "");
+
+	int TotalCost = ItemDataRow->m_nPlayerSpentGoldBuy * amount;
 	
 	if(!UMyGameInstance::Get->m_CurrencyManager->CheckGoldEnough(TotalCost))
 	{
 		return;
 	}
 
-	FName ItemID = item_trading_data.m_ItemDataRowHandle.RowName;
-
-	if (UMyLib::IsEquip(ItemID))
+	if (UMyLib::IsEquip(itemID))
 	{
 		int Iter = -1;
 
 		while (++Iter < amount)
 		{
-			ItemID = UMyLib::GenerateEquipItemHashKey(ItemID, this);
+			FName HashID = UMyLib::GenerateEquipItemHashKey(itemID, this);
 			
-			if(!UMyLib::GetPlayerInven()->AddEquipItem(ItemID))
+			if(!UMyLib::GetPlayerInven()->AddEquipItem(HashID))
 			{
 				break;				
 			}
@@ -34,18 +34,18 @@ void UShopManager::BuyItem(const FItemTradingData& item_trading_data, int amount
 	}
 	else
 	{
-		if(!UMyLib::GetPlayerInven()->AddItem(ItemID,amount))
+		if(!UMyLib::GetPlayerInven()->AddItem(itemID,amount))
 			return;
 	}
 	
 	UMyGameInstance::Get->m_CurrencyManager->SubGold(TotalCost);
 	
-	m_OnItemBought.Broadcast(item_trading_data.m_ItemDataRowHandle.GetRow<FItemDataRow>("")->m_TextShowingName);
+	m_OnItemBought.Broadcast(ItemDataRow->m_TextShowingName);
 }
 
 void UShopManager::SellItem(const FName& ability_spec, int amount)
 {
-	int SellGold = amount * UMyLib::GetItemData(ability_spec).m_nSellValue;
+	int SellGold = amount * UMyLib::GetItemData(ability_spec).m_nPlayerEarnGoldSell;
 
 	if (UMyLib::GetItemType(ability_spec) == EItemType::Equip)
 	{
@@ -57,3 +57,18 @@ void UShopManager::SellItem(const FName& ability_spec, int amount)
 	}
 	UMyGameInstance::Get->m_CurrencyManager->AddGold(SellGold);
 }
+
+ void UShopManager::AddTradeItemData(const FName& traderID, const FName& itemID)
+ {
+	if(m_MapTraderItems.Contains(traderID))
+	{
+		m_MapTraderItems[traderID].Emplace(itemID);
+		return;
+	}
+	m_MapTraderItems.Emplace(traderID, TArray<FName>(&itemID,1));
+ }
+
+ const TArray<FName>& UShopManager::GetShopItems(const FName& traderID)
+ {
+	return m_MapTraderItems[traderID];
+ }

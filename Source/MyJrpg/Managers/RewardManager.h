@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "MyJrpg/DataTables/QuestData.h"
+#include "MyJrpg/DataTables/UnitEntityData.h"
 #include "UObject/NoExportTypes.h"
 #include "RewardManager.generated.h"
 
@@ -28,6 +29,9 @@ public:
 	FOnMonsterDead m_OnMonsterDead;
 
 protected:
+	TMap<FName,TArray<FDropRewardItem>> m_MapDropItems;
+
+protected:
 	void ReceiveQuestReward(const FQuestReward& qReward);
 
 public:
@@ -36,4 +40,8 @@ public:
 	bool RequestQuestReward(const TArray<FQuestReward>& aryQuest);
 
 	void OnMonsterDead(const AMonsterPawn* monster);
+	
+	void AddDropItemData(const FDropData& drop, const FName& itemID);
+
+	const TArray<FDropRewardItem>* GetDropItems(FName zoneID) const;
 };

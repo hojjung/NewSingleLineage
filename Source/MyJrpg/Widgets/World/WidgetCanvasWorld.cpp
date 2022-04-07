@@ -170,9 +170,9 @@ void UWidgetCanvasWorld::OpenCraft()
 	m_CraftPanel->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
 }
 
-void UWidgetCanvasWorld::OpenShop(const UDataTable* dT)
+void UWidgetCanvasWorld::OpenShop(const FName& traderID)
 {
-	m_ShopPanel->SetShopPanel(dT);
+	m_ShopPanel->SetShopPanel(traderID);
 }
 
 void UWidgetCanvasWorld::OpenStorage()

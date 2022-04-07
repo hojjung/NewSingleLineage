@@ -89,7 +89,8 @@ public:
 	
 protected:
 	virtual void BeginDestroy() override;
-	
+	void IterateItemTableToRegister();
+
 public:
 	virtual void Init() override;
 

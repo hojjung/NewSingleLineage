@@ -1,5 +1,6 @@
 #include "WidgetZoneSelectButton.h"
 #include "MyJrpg/Managers/MyGameInstance.h"
+#include "MyJrpg/Managers/RewardManager.h"
 
 void UWidgetZoneSelectButton::Init(const FZoneDataRow& zone_data)
 {
@@ -15,7 +16,7 @@ void UWidgetZoneSelectButton::Init(const FZoneDataRow& zone_data)
 
 	m_BtnRightIndex->OnClicked.AddDynamic(this,&UWidgetZoneSelectButton::OnRightClick);
 
-	SetZone(m_ZoneData->m_AryZones[m_nIndex]);
+	SetZone();
 
 	if (m_ZoneData->m_AryZones.Num()<=1)
 	{
@@ -47,62 +48,70 @@ void UWidgetZoneSelectButton::CreateMonsters(const FZone& zone_data)
 		return;
 	}
 	
-	// for(const FNPCSpawnData& Data : zone_data.m_SpawnDataNpc->m_ArySpawnDatas)
-	// {
-	// 	const FNpcUnitEntityRow* NpcEntity = UUnitEntityData::GetNpcUnitTable->FindRow<FNpcUnitEntityRow>(Data.m_IDEntity, "");
-	//
-	// 	if(m_SetMonsters.Contains(NpcEntity))
-	// 	{
-	// 		continue;
-	// 	}
-	//
-	// 	m_SetMonsters.Add(NpcEntity);//소트?
-	// }
-	//
-	// m_SetMonsters.Sort([](const FNpcUnitEntityRow& LHS, const FNpcUnitEntityRow& RHS)  { return LHS.m_fExp > RHS.m_fExp; });
-	//
-	// for(const FNpcUnitEntityRow* Unit : m_SetMonsters)
-	// {
-	// 	UWidgetZoneMonsterElement* SelectButton = CreateWidget<UWidgetZoneMonsterElement>(this,m_ClassMonster);
-	//
-	// 	SelectButton->SetUnit(Unit);
-	// 	//출현 몬스터
-	// 	m_HoriMonsterParents->AddChildToHorizontalBox(SelectButton);
-	// }
-}
-
-void UWidgetZoneSelectButton::CreateItems(const FZone& zone_data)
-{
-	if(zone_data.m_DropHandle.RowName == NAME_None)
+	for(const FNPCSpawnData& Data : zone_data.m_SpawnDataNpc->m_ArySpawnDatas)
 	{
-		return;
+		const FNpcUnitEntityRow* NpcEntity = UUnitEntityData::GetNpcUnitTable->FindRow<FNpcUnitEntityRow>(Data.m_IDEntity, "");
+	
+		if(m_SetMonsters.Contains(NpcEntity))
+		{
+			continue;
+		}
+	
+		m_SetMonsters.Add(NpcEntity);//소트?
 	}
-	//copy yes
-	TArray<FDropRewardItem> AryItems = zone_data.m_DropHandle.GetRow<FDropDataRow>("")->m_AryDropItem;
-
+	
+	m_SetMonsters.Sort([](const FNpcUnitEntityRow& LHS, const FNpcUnitEntityRow& RHS)  { return LHS.m_fExp > RHS.m_fExp; });
+	
 	for(const FNpcUnitEntityRow* Unit : m_SetMonsters)
 	{
-		AryItems.Append(Unit->m_AryDropItem);
-	}
-
-	AryItems.Sort([](const FDropRewardItem& ll, const FDropRewardItem& rr){return ll.m_nExpectDropCount > rr.m_nExpectDropCount;});
+		UWidgetZoneMonsterElement* SelectButton = CreateWidget<UWidgetZoneMonsterElement>(this,m_ClassMonster);
 	
+		SelectButton->SetUnit(Unit);
+		//출현 몬스터
+		m_HoriMonsterParents->AddChildToHorizontalBox(SelectButton);
+	}
+}
+
+void UWidgetZoneSelectButton::CreateZoneElement(const TArray<FDropRewardItem>& AryItems)
+{
 	for(const FDropRewardItem& Data : AryItems)
 	{
 		UWidgetZoneItemElement* SelectButton = CreateWidget<UWidgetZoneItemElement>(this,m_ClassItem);
 
 		SelectButton->SetZone(Data);
-		//스텍을 안띄워줄거니까 따로 존재해야한다고 본다.아이템 인스턴스가 아닌 아이템 데이터
-		m_HoriItemParents->AddChildToHorizontalBox(SelectButton);
+
+		m_AryZoneElements.Add(SelectButton);
 	}
 }
 
-void UWidgetZoneSelectButton::SetZone(const FZone& zone)
+void UWidgetZoneSelectButton::CreateItems(const FZone& zone_data)
 {
-
-
 	m_HoriItemParents->ClearChildren();
+
+	m_AryZoneElements.Reset();
 	
+	const TArray<FDropRewardItem>* AryDropItems = UMyGameInstance::Get->m_RewardManager->GetDropItems(zone_data.m_ZoneUniqueID);
+
+	if(AryDropItems && AryDropItems->Num() > 0)
+	{
+		CreateZoneElement(*AryDropItems);	
+	}
+	
+	for(const FNpcUnitEntityRow* Unit : m_SetMonsters)
+	{
+		CreateZoneElement(Unit->m_AryDropItem);
+	}
+
+	m_AryZoneElements.Sort([](const UWidgetZoneItemElement& ll, const UWidgetZoneItemElement& rr){return ll.GetSortValue() > rr.GetSortValue();});
+
+	for(UWidgetZoneItemElement* Ele : m_AryZoneElements)
+	{
+		m_HoriItemParents->AddChildToHorizontalBox(Ele);
+	}
+}
+
+void UWidgetZoneSelectButton::SetZone()
+{
 	m_TextMapName->SetText(m_ZoneData->m_ShowingName);
 
 	m_TextMapDesc->SetText(m_ZoneData->m_Desc);
@@ -125,7 +134,7 @@ void UWidgetZoneSelectButton::OnLeftClick()
 
 	m_nIndex = FMath::Max(m_nIndex,0);
 
-	SetZone(m_ZoneData->m_AryZones[m_nIndex]);
+	SetZone();
 }
 
 void UWidgetZoneSelectButton::OnRightClick()
@@ -134,5 +143,5 @@ void UWidgetZoneSelectButton::OnRightClick()
 	
 	m_nIndex = FMath::Min(m_nIndex,m_ZoneData->m_AryZones.Num() - 1);
 
-	SetZone(m_ZoneData->m_AryZones[m_nIndex]);
+	SetZone();
 }

@@ -17,7 +17,7 @@ class MYJRPG_API UWidgetCraftableElement : public UUserWidget
 	GENERATED_BODY()
 
 public:
-	DECLARE_MULTICAST_DELEGATE_TwoParams(FOnClicked,UWidgetCraftableElement*, int);
+	DECLARE_MULTICAST_DELEGATE_TwoParams(FOnClicked,UWidgetCraftableElement*, FName);
 
 	FOnClicked m_OnClicked;
 	
@@ -25,7 +25,9 @@ protected:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (BindWidget))
 	UWidgetBaseElement* m_ItemElement;
 
-	int m_nIndex;
+	FName m_ItemID;
+
+	const FItemDataRow* m_ItemData;
 	
 protected:
 	void OnHoldComplete();//인포 띄워주기
@@ -33,11 +35,11 @@ protected:
 	void OnClicked();//제작재료 생성시켜주기
 
 public:
-	void SetCraftable(int index);
+	void SetCraftable(const FName& id);
 
 	void SetUnfocus();
 
 	void SetMyFocus();
 
-	int GetIndex() const;
+	const FItemDataRow& GetItemDataRow() const;
 };

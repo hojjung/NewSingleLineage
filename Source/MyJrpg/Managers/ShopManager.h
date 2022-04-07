@@ -3,7 +3,6 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "MyJrpg/DataTables/ShopData.h"
 #include "UObject/NoExportTypes.h"
 #include "ShopManager.generated.h"
 
@@ -18,8 +17,16 @@ public:
 	DECLARE_MULTICAST_DELEGATE_OneParam(FOnMonsterDead,FText);
 
 	FOnMonsterDead m_OnItemBought;
+
+protected:
+	TMap<FName,TArray<FName>> m_MapTraderItems;
+	
 public:
-	void BuyItem(const FItemTradingData& item_trading_data, int amount);
+	void BuyItem(const FName& itemID, int amount);
 	
 	void SellItem(const FName& id, int amount);
+	
+	void AddTradeItemData(const FName& traderID, const FName& itemID);
+	
+	const TArray<FName>& GetShopItems(const FName& traderID);
 };

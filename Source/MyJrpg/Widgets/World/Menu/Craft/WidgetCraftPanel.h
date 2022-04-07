@@ -86,9 +86,9 @@ protected:
 protected:
 	virtual void NativeOnInitialized() override;
 	
-	void CreateAllCraftWidget(const TArray<const FItemDataRow*>& aryCraftDatas);
+	void CreateAllCraftWidget(const TMap<FName, const FCraftItemCost*>& mapItems);
 
-	void OnSelectCraftItem(UWidgetCraftableElement* selectedElement, int index);
+	void OnSelectCraftItem(UWidgetCraftableElement* selectedElement, FName id);
 
 	void CreateCostWidgets(const FItemDataRow& costData);
 

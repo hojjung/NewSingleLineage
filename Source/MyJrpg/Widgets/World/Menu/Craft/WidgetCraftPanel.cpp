@@ -28,7 +28,7 @@ void UWidgetCraftPanel::NativeOnInitialized()//Texture2D'/Game/Sprites/UI/HarmoB
 
 	m_GoldIcon->SetFocusable(false);
 	//모든 제작품목 가져옴
-	CreateAllCraftWidget(UMyGameInstance::Get->m_CraftManager->GetAllCraftData());
+	CreateAllCraftWidget(UMyGameInstance::Get->m_CraftManager->GetCraftItems());
 
 	m_CurrentCraftItem->SetVisibility(ESlateVisibility::Collapsed);
 
@@ -63,34 +63,30 @@ void UWidgetCraftPanel::NativeOnInitialized()//Texture2D'/Game/Sprites/UI/HarmoB
 	UpdateCraftablePanel();
 }
 
-void UWidgetCraftPanel::CreateAllCraftWidget(const TArray<const FItemDataRow*>& aryCraftDatas)
+void UWidgetCraftPanel::CreateAllCraftWidget(const TMap<FName, const FCraftItemCost*>& mapItems)
 {
-	int I = 0;
-	
-	for(auto& CraftData : aryCraftDatas)
+	for(auto& CraftData : mapItems)
 	{
 		UWidgetCraftableElement* SelectButton = CreateWidget<UWidgetCraftableElement>(this,m_ClassCraftableElement);
 
-		SelectButton->SetCraftable(I);
+		SelectButton->SetCraftable(CraftData.Key);
 
 		SelectButton->m_OnClicked.AddUObject(this,&UWidgetCraftPanel::OnSelectCraftItem);
 
 		m_ScrollCraftables->AddChild(SelectButton);
 
 		SelectButton->SetPadding(FMargin(0,30,0,0));
-
-		I++;
 	}
 }
 
-void UWidgetCraftPanel::OnSelectCraftItem(UWidgetCraftableElement* selectedElement, int index)
+void UWidgetCraftPanel::OnSelectCraftItem(UWidgetCraftableElement* selectedElement, FName id)
 {
 	if(m_SelectedElement.Get())
 	{
 		m_SelectedElement->SetUnfocus();
 	}
 
-	UMyGameInstance::Get->m_CraftManager->SetCraftItem(index);
+	UMyGameInstance::Get->m_CraftManager->SetCraftItem(id);
 
 	m_SelectedElement = selectedElement;
 
@@ -98,7 +94,7 @@ void UWidgetCraftPanel::OnSelectCraftItem(UWidgetCraftableElement* selectedEleme
 
 	SetAmount(1);
 	
-	const FItemDataRow& TargetItem = UMyGameInstance::Get->m_CraftManager->GetCrntItemRow();
+	const FItemDataRow& TargetItem = *UMyGameInstance::Get->m_CraftManager->GetCrntItemRow();
 	
 	CreateCostWidgets(TargetItem);
 
@@ -161,9 +157,7 @@ void UWidgetCraftPanel::UpdateCraftablePanel()
 	{
 		UWidgetCraftableElement* CraftWidget = Cast<UWidgetCraftableElement>(ChildWidget);
 
-		int Index = CraftWidget->GetIndex();
-
-		const FItemDataRow& FoundItem = *UMyGameInstance::Get->m_CraftManager->GetAllCraftData()[Index];
+		const FItemDataRow& FoundItem = CraftWidget->GetItemDataRow();
 
 		if (IsFilterType(FoundItem))
 		{

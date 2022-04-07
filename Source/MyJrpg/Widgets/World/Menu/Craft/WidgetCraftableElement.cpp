@@ -2,15 +2,15 @@
 
 #include "MyJrpg/Managers/MyGameInstance.h"
 
-void UWidgetCraftableElement::SetCraftable(int index)
+void UWidgetCraftableElement::SetCraftable(const FName& id)
 {
-	m_nIndex = index;
-	
-	auto& Row = UMyGameInstance::Get->m_CraftManager->GetAllCraftData()[m_nIndex];
-	
-	m_ItemElement->SetIcon(Row->m_ItemIcon);
+	m_ItemID =  id;
 
-	m_ItemElement->SetGlowColor(Row->m_ColorHandle);
+	m_ItemData = UItemData::GetItemTable->FindRow<FItemDataRow>(m_ItemID, "");
+	
+	m_ItemElement->SetIcon(m_ItemData->m_ItemIcon);
+
+	m_ItemElement->SetGlowColor(m_ItemData->m_ColorHandle);
 
 	m_ItemElement->m_OnClick.AddUObject(this,&UWidgetCraftableElement::OnClicked);
 
@@ -31,21 +31,19 @@ void UWidgetCraftableElement::SetMyFocus()
 	m_ItemElement->SetMyFocus();
 }
 
-int UWidgetCraftableElement::GetIndex() const
+const FItemDataRow& UWidgetCraftableElement::GetItemDataRow() const
 {
-	return m_nIndex;
+	return *m_ItemData;
 }
 
 void UWidgetCraftableElement::OnHoldComplete()
 {
-	FName ID = UMyGameInstance::Get->m_CraftManager->GetItemKey(GetIndex());
-	
-	UMyLib::GetCanvas()->OpenItemInfo(EItemInfo::Craft,ID,nullptr);
+	UMyLib::GetCanvas()->OpenItemInfo(EItemInfo::Craft,m_ItemID,nullptr);
 }
 
 void UWidgetCraftableElement::OnClicked()
 {
-	m_OnClicked.Broadcast(this,m_nIndex);
+	m_OnClicked.Broadcast(this,m_ItemID);
 }
 
 

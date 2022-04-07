@@ -95,12 +95,12 @@ void APreviewActor::SetEntity(TSoftObjectPtr<UUnitEntityAsset> asset)
 
 void APreviewActor::OnMeshVisualChanged(const FPlayerUnitEntityRow& charData)
 {
-	SetEntity(charData.m_UnitDataAsset.Get());
+	SetEntity(charData.m_UnitDataAsset);
 }
 
 void APreviewActor::OnMeshVisualChanged(const FPetRow& selected)
 {
-	SetEntity(selected.m_UnitDataAsset.Get());
+	SetEntity(selected.m_UnitDataAsset);
 }
 
 void APreviewActor::ShowMeshWithTick()

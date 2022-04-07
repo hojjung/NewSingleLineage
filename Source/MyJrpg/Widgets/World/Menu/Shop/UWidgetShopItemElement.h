@@ -5,7 +5,6 @@
 #include "CoreMinimal.h"
 #include "Blueprint/UserWidget.h"
 #include "Components/TextBlock.h"
-#include "MyJrpg/DataTables/ShopData.h"
 #include "MyJrpg/Widgets/World/CommonElements/WidgetBaseElement.h"
 #include "UWidgetShopItemElement.generated.h"
 
@@ -30,7 +29,7 @@ protected:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (BindWidget))
 	UTextBlock* m_TextCost;
 
-	const FItemTradingData* m_TradeData;
+	FName m_ItemID;
 
 	int m_nMaxAmount;
 
@@ -52,7 +51,7 @@ protected:
 	int GetMaxAmount();
 
 public:
-	void UpdateElement(const FItemTradingData& tradeData);
+	void UpdateElement(const FName& tradeData);
 	
 	void Clear();
 

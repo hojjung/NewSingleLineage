@@ -2,6 +2,7 @@
 
 #include "Components/WrapBoxSlot.h"
 #include "MyJrpg/MyLib.h"
+#include "MyJrpg/Managers/MyGameInstance.h"
 
 void UWidgetShopPanel::NativeOnInitialized()
 {
@@ -46,14 +47,14 @@ void UWidgetShopPanel::OnFocus(UUWidgetShopItemElement* ele)
 	m_CurrentFocused = ele;
 }
 
-bool UWidgetShopPanel::IsSameType(const FItemTradingData* item)
+bool UWidgetShopPanel::IsSameType(const FName& itemID)
 {
 	if(m_bNoFilter)
 	{
 		return true;
 	}
 	
-	EItemType Type = UMyLib::GetItemType(item->m_ItemDataRowHandle.RowName);
+	EItemType Type = UMyLib::GetItemType(itemID);
 	
 	return Type == m_FilterCategoryItem;
 }
@@ -84,19 +85,19 @@ void UWidgetShopPanel::OnFilterEquips()
 	SetItemFilter(EItemType::Equip);
 }
 
-void UWidgetShopPanel::SetShopPanel(const UDataTable* shopTable)
+void UWidgetShopPanel::SetShopPanel(const FName& shopTable)
 {
 	SetVisibility(ESlateVisibility::SelfHitTestInvisible);
 	
 	m_AryItemEles.Reset();
 
-	m_AryShopData.Reset();
-	
 	m_InvenBox->ClearChildren();
 
-	shopTable->GetAllRows("",m_AryShopData);
+	m_AryItemKeys.Reset();
+	
+	m_AryItemKeys = UMyGameInstance::Get->m_ShopManager->GetShopItems(shopTable);
 
-	for(const FItemTradingData* TradeData : m_AryShopData)
+	for(const FName& ItemKey : m_AryItemKeys)
 	{
 		UUWidgetShopItemElement* ItemEle = CreateWidget<UUWidgetShopItemElement>(this, m_ClassWidgetItemEle);
 
@@ -121,7 +122,7 @@ void UWidgetShopPanel::UpdateShopPanel()
 	int ItemIndex = 0;
 	int Index = 0;
 	
-	for (const FItemTradingData* ShopData : m_AryShopData)
+	for (const FName& ShopData : m_AryItemKeys)
 	{
 		if(!IsSameType(ShopData))
 		{
@@ -129,7 +130,7 @@ void UWidgetShopPanel::UpdateShopPanel()
 			continue;
 		}
 		
-		m_AryItemEles[Index]->UpdateElement(*ShopData);
+		m_AryItemEles[Index]->UpdateElement(ShopData);
 
 		Index++;
 		ItemIndex++;
@@ -160,8 +161,6 @@ void UWidgetShopPanel::ClosePanel()
 
 	m_AryItemEles.Reset();
 
-	m_AryShopData.Reset();
-	
 	m_InvenBox->ClearChildren();
 	
 	m_InvenPanel->ClosePanel();

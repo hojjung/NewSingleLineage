@@ -3,7 +3,6 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "DropData.h"
 #include "Engine/DataTable.h"
 #include "UObject/NoExportTypes.h"
 #include "ZoneData.generated.h"
@@ -34,11 +33,11 @@ struct FZone
 
 public:
 	UPROPERTY(EditDefaultsOnly,BlueprintReadOnly)
+	FName m_ZoneUniqueID;
+	UPROPERTY(EditDefaultsOnly,BlueprintReadOnly)
 	FName m_MapName;
 	UPROPERTY(EditDefaultsOnly,BlueprintReadOnly)
 	UNPCPaletteDataAsset* m_SpawnDataNpc;
-	UPROPERTY(EditDefaultsOnly,BlueprintReadOnly)
-	FDropDataRowHandle m_DropHandle;
 };
 
 USTRUCT(BlueprintType)//Key is ZoneName,OpenLevel

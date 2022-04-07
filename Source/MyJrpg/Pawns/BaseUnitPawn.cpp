@@ -80,7 +80,7 @@ void ABaseUnitPawn::LoadSetSkMeshAnim(TSoftObjectPtr<UUnitEntityAsset> asset)
 
 	m_BodyMesh->SetAnimClass(m_EntityAsset->m_AnimBP.Get());
 
-	m_BodyMesh->SetRelativeRotation(asset->m_RotOffset);
+	m_BodyMesh->AddRelativeRotation(asset->m_RotOffset);
 }
 
 void ABaseUnitPawn::EndPlay(const EEndPlayReason::Type EndPlayReason)

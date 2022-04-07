@@ -1,10 +1,5 @@
-// Fill out your copyright notice in the Description page of Project Settings.
-
-
 #include "BlackSmith.h"
-
 #include "MyJrpg/MyLib.h"
-#include "MyJrpg/DataTables/ShopData.h"
 
 ABlackSmith::ABlackSmith()
 {
@@ -25,5 +20,5 @@ ABlackSmith::ABlackSmith()
 //AnimSequence'/Game/09_SharedAnimations/NpcAnims/NPC_Anim__Smith_Working.NPC_Anim__Smith_Working'
 void ABlackSmith::OnInteract()
 {
-	UMyLib::GetCanvas()->OpenShop(UShopData::GetBlackSmithTable);
+	UMyLib::GetCanvas()->OpenShop(TEXT("BlackSmith"));
 }

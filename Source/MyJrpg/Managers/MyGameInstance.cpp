@@ -18,6 +18,48 @@ void UMyGameInstance::BeginDestroy()
 	Get = nullptr;
 }
 
+void UMyGameInstance::IterateItemTableToRegister()
+{
+	TArray<const FItemDataRow *> AryItemRows;
+	
+	UItemData::GetItemTable->GetAllRows("",AryItemRows);
+	TArray<FName> AryItemNames =  UItemData::GetItemTable->GetRowNames();
+
+	int Iter = -1;
+	while (++Iter < AryItemRows.Num())
+	{
+		const auto& DropDatas = AryItemRows[Iter]->m_AryDropDatas;
+		
+		if(DropDatas.Num() > 0)
+		{
+			for(const auto& Drop : DropDatas)
+			{
+				m_RewardManager->AddDropItemData(Drop, AryItemNames[Iter]);
+			}
+		}
+
+		const auto& CraftDatas = AryItemRows[Iter]->m_AryCostItem;
+
+		if(CraftDatas.Num() > 0)
+		{
+			for(const auto& Craft : CraftDatas)
+			{
+				m_CraftManager->AddCraftItemData(AryItemNames[Iter], Craft);
+			}
+		}
+
+		const auto& TradeDatas = AryItemRows[Iter]->m_AryTraderIDs;
+
+		if(TradeDatas.Num() > 0)
+		{
+			for(const auto& Trade : TradeDatas)
+			{
+				m_ShopManager->AddTradeItemData(Trade, AryItemNames[Iter]);
+			}
+		}
+	}
+}
+
 void UMyGameInstance::Init()
 {
 	Super::Init();
@@ -69,11 +111,13 @@ void UMyGameInstance::Init()
 	m_Inven->Init(FGlobalVariable::INVEN_SIZE);
 	m_QuestManager->Init();
 	m_CurrencyManager->Init(0);
-	m_CraftManager->InitLoadAllCraftItemData();
+	m_CraftManager->Init();
 	m_ItemExeManager->Init();
 	m_PlayerStatManager->Init();
 	m_EquipManager->Init();
 	m_BadwordTable->Init();
+	//
+	IterateItemTableToRegister();
 }
 
 void UMyGameInstance::LoadComplete(const float LoadTime, const FString& MapName)

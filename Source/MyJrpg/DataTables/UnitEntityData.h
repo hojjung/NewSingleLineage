@@ -6,7 +6,6 @@
 #include "Engine/DataAsset.h"
 #include "Engine/DataTable.h"
 #include "UObject/NoExportTypes.h"
-#include "DropData.h"
 #include "UnitEntityData.generated.h"
 
 
@@ -80,6 +79,30 @@ public:
 	TSoftObjectPtr<UUnitEntityAsset> m_UnitDataAsset;
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
 	FStatGroup m_StatTable;
+};
+
+USTRUCT(BlueprintType)
+struct FDropRewardItem
+{
+	GENERATED_BODY()
+
+public:
+	FDropRewardItem(FName id, int cnt)
+	{
+		m_Item.RowName = id;
+
+		m_nExpectDropCount = cnt;
+	}
+	FDropRewardItem()
+	{
+		
+	}
+
+public:
+	UPROPERTY(EditDefaultsOnly)
+	FItemDataHandle m_Item;
+	UPROPERTY(EditDefaultsOnly)
+	int m_nExpectDropCount=5;//5번에 한번,20% 드랍이란뜻임
 };
 
 USTRUCT(BlueprintType)

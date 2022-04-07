@@ -62,8 +62,6 @@ void UWidgetItemInfo::SetItemInfo(EItemInfo info,const FName& oID,UInventory* in
 	
 	m_TextItemName->SetText(ItemData.m_TextShowingName);
 
-	m_TextItemDesc->SetText(ItemData.m_TextDesc);
-
 	if (Type == EItemType::Equip)
 	{
 		int Lv = m_Inven.Get() ? m_Inven.Get()->GetItemLevel(oID) : 0;
