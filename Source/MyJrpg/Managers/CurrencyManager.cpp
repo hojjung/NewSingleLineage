@@ -27,11 +27,13 @@ bool UCurrencyManager::SubGold(int amount)
 
 void UCurrencyManager::AddGold(int amount)
 {
-	m_nGold += amount;
-
-	if(m_nGold>INT64_MAX)
+	if((INT64_MAX - amount) < m_nGold)
 	{
-		m_nGold = INT64_MAX; 
+		m_nGold = INT64_MAX;
+	}
+	else
+	{
+		m_nGold += amount;
 	}
 
 	m_GoldChanged.Broadcast();
