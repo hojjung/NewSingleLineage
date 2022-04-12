@@ -32,9 +32,27 @@ protected:
 	TSubclassOf<UWidgetZoneSelectButton> m_ClassButton;
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (BindWidget))
 	UScrollBox* m_ScrollWorldButton;//Test
+	UPROPERTY()
+	TArray<UWidgetZoneSelectButton*> m_AryDefaultZoneBtns;
+	UPROPERTY()
+	TArray<UWidgetZoneSelectButton*> m_ArySpecialZoneBtns;
+	UPROPERTY()
+	TArray<UWidgetZoneSelectButton*> m_AryBossZoneBtns;
+
+	TArray<UWidgetZoneSelectButton*>* m_PtrCrnt;
 	
 protected:
 	virtual void NativeOnInitialized() override;
 	
 	void CreateButtons();
+
+	void SetCrntZoneAry(TArray<UWidgetZoneSelectButton*>& aryWant);
+	
+public:
+	UFUNCTION()
+	void OnClickWorldBtn();
+	UFUNCTION()
+	void OnClickSpecialBtn();
+	UFUNCTION()
+	void OnClickBossBtn();
 };

@@ -5,7 +5,7 @@
 
 ANpcActor::ANpcActor()
 {
-	m_Capsule->InitCapsuleSize(34.0f, 300);
+	m_Capsule->InitCapsuleSize(34.0f, 88);
 	
 	m_MeshComp = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("m_MeshComp"));
 	m_MeshComp->SetCollisionEnabled(ECollisionEnabled::NoCollision);

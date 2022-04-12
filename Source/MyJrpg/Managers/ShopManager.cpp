@@ -68,7 +68,11 @@ void UShopManager::SellItem(const FName& ability_spec, int amount)
 	m_MapTraderItems.Emplace(traderID, TArray<FName>(&itemID,1));
  }
 
- const TArray<FName>& UShopManager::GetShopItems(const FName& traderID)
+ const TArray<FName>* UShopManager::GetShopItems(const FName& traderID)
  {
-	return m_MapTraderItems[traderID];
+	if(m_MapTraderItems.Contains(traderID))
+	{
+		return &m_MapTraderItems[traderID];	
+	}
+	return nullptr;
  }

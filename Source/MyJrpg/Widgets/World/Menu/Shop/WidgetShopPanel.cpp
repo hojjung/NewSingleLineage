@@ -92,22 +92,23 @@ void UWidgetShopPanel::SetShopPanel(const FName& shopTable)
 	m_AryItemEles.Reset();
 
 	m_InvenBox->ClearChildren();
-
-	m_AryItemKeys.Reset();
 	
 	m_AryItemKeys = UMyGameInstance::Get->m_ShopManager->GetShopItems(shopTable);
 
-	for(const FName& ItemKey : m_AryItemKeys)
+	if (m_AryItemKeys)
 	{
-		UUWidgetShopItemElement* ItemEle = CreateWidget<UUWidgetShopItemElement>(this, m_ClassWidgetItemEle);
+		for (const FName& ItemKey : *m_AryItemKeys)
+		{
+			UUWidgetShopItemElement* ItemEle = CreateWidget<UUWidgetShopItemElement>(this, m_ClassWidgetItemEle);
 
-		ItemEle->Clear();
+			ItemEle->Clear();
 
-		m_InvenBox->AddChildToWrapBox(ItemEle)->SetPadding(FMargin(2));
-		
-		ItemEle->m_OnFocus.AddUObject(this,&UWidgetShopPanel::OnFocus);
-		
-		m_AryItemEles.Add(ItemEle);
+			m_InvenBox->AddChildToWrapBox(ItemEle)->SetPadding(FMargin(2));
+
+			ItemEle->m_OnFocus.AddUObject(this, &UWidgetShopPanel::OnFocus);
+
+			m_AryItemEles.Add(ItemEle);
+		}
 	}
 	
 	ClearFilter();
@@ -121,22 +122,25 @@ void UWidgetShopPanel::UpdateShopPanel()
 {
 	int ItemIndex = 0;
 	int Index = 0;
-	
-	for (const FName& ShopData : m_AryItemKeys)
-	{
-		if(!IsSameType(ShopData))
-		{
-			ItemIndex++;
-			continue;
-		}
-		
-		m_AryItemEles[Index]->UpdateElement(ShopData);
 
-		Index++;
-		ItemIndex++;
+	if (m_AryItemKeys)
+	{
+		for (const FName& ShopData : *m_AryItemKeys)
+		{
+			if (!IsSameType(ShopData))
+			{
+				ItemIndex++;
+				continue;
+			}
+
+			m_AryItemEles[Index]->UpdateElement(ShopData);
+
+			Index++;
+			ItemIndex++;
+		}
 	}
 
-	for(; Index<m_AryItemEles.Num();Index++)
+	for (; Index < m_AryItemEles.Num(); Index++)
 	{
 		m_AryItemEles[Index]->Clear();
 	}

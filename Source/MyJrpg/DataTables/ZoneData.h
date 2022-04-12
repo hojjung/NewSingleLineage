@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "Engine/DataTable.h"
+#include "MyJrpg/MyJrpg.h"
 #include "UObject/NoExportTypes.h"
 #include "ZoneData.generated.h"
 
@@ -49,6 +50,8 @@ public:
 	FZoneDataRow();
 
 public:
+	UPROPERTY(EditDefaultsOnly,BlueprintReadOnly)
+	EMapType m_MapType;
 	UPROPERTY(EditDefaultsOnly,BlueprintReadOnly)
 	TSubclassOf<UGameRuleBase> m_ClassGameRule;
 	UPROPERTY(EditDefaultsOnly,BlueprintReadOnly)

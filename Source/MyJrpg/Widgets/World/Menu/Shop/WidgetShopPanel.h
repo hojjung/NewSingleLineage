@@ -31,9 +31,10 @@ protected:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (BindWidget))
 	UWidgetInventory* m_InvenPanel;
 protected:
-	TArray<FName> m_AryItemKeys;
 	UPROPERTY()
 	TArray<UUWidgetShopItemElement*> m_AryItemEles;
+	
+	const TArray<FName>* m_AryItemKeys;
 
 	TWeakObjectPtr<UUWidgetShopItemElement> m_CurrentFocused;
 	

@@ -28,5 +28,5 @@ public:
 	
 	void AddTradeItemData(const FName& traderID, const FName& itemID);
 	
-	const TArray<FName>& GetShopItems(const FName& traderID);
+	const TArray<FName>* GetShopItems(const FName& traderID);
 };

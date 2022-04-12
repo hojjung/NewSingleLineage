@@ -140,3 +140,13 @@ enum class EItemInfo
 	Craft,
 	Shop
 };
+
+
+UENUM(BlueprintType)
+enum class EMapType : uint8
+{
+	Default,
+	Special,
+	Boss,
+	Length UMETA(Hidden)
+};
