@@ -66,9 +66,11 @@ void FNPCPaletteEdMode::Exit()
 		Toolkit.Reset();
 	}
 
-	ClearPlacedAsset();
+	ClearPlacedAssetActor();
 
 	UnbindDelegate();
+
+	ClearAssetsToPlace();
 
 	// Call parent implementation
 	FEdMode::Exit();
@@ -282,7 +284,7 @@ FText FNPCPaletteEdMode::GetAssetName(FEntityRow* row)
 	return row->m_ShowingName;
 }
 
-void FNPCPaletteEdMode::ClearPlacedAsset()
+void FNPCPaletteEdMode::ClearPlacedAssetActor()
 {
 	bool bNeedSaveActorData = m_MyPlacedActors.Num() > 0;
 
@@ -380,7 +382,7 @@ void FNPCPaletteEdMode::SetNPCAsset(UNPCPaletteDataAsset* assetNew)
 
 	if (m_CurrentAsset.Get())
 	{
-		ClearPlacedAsset();
+		ClearPlacedAssetActor();
 	}
 
 	m_CurrentAsset = assetNew;

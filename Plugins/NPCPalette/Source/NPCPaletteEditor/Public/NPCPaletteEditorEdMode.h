@@ -46,7 +46,7 @@ public: //IPlacementMode
 	
 	void StopPlacing();
 
-	bool IsCurrentlyPlacing() const { return m_DeleHandle.IsValid(); };
+	bool IsCurrentlyPlacing() const { return AssetsToPlace.Num() > 0; };
 
 	void StartPlacing(const TArray< FAssetData >& Assets, UActorFactory* Factory = NULL );
 
@@ -96,7 +96,7 @@ public:
 
 	FText GetAssetName(FEntityRow* row);
 	
-	void ClearPlacedAsset();
+	void ClearPlacedAssetActor();
 
 	void SpawnPlacedActor();
 
