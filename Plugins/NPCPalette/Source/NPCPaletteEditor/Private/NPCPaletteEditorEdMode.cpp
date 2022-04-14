@@ -403,6 +403,8 @@ void FNPCPaletteEdMode::BindDelegate()
 void FNPCPaletteEdMode::UnbindDelegate()
 {
 	FEditorDelegates::OnAssetDragStarted.Remove(m_DeleHandle);
+
+	m_DeleHandle.Reset();
 }
 
 bool FNPCPaletteEdMode::CreateNPCItemStruct(const FNPCSpawnData& dataIn,FNPCPaletteItem& outItem)

@@ -7,7 +7,7 @@ void UWidgetZoneSelectPanel::NativeOnInitialized()
 {
 	Super::NativeOnInitialized();
 
-	m_PtrCrnt = nullptr;
+	m_CrntScroll = nullptr;
 
 	m_BtnWorldMap->OnClicked.AddDynamic(this, &UWidgetZoneSelectPanel::OnClickWorldBtn);
 
@@ -16,6 +16,8 @@ void UWidgetZoneSelectPanel::NativeOnInitialized()
 	m_BtnBossMap->OnClicked.AddDynamic(this, &UWidgetZoneSelectPanel::OnClickBossBtn);
 
 	CreateButtons();
+
+	OnClickWorldBtn();
 }
 
 void UWidgetZoneSelectPanel::CreateButtons()
@@ -26,14 +28,6 @@ void UWidgetZoneSelectPanel::CreateButtons()
 
 	UZoneData::GetZoneTable->GetAllRows<FZoneDataRow>(TEXT(""),AryZoneDataRow);
 
-	m_AryDefaultZoneBtns.Reset();
-
-	m_ArySpecialZoneBtns.Reset();
-
-	m_AryBossZoneBtns.Reset();
-
-	m_ScrollWorldButton->ClearChildren();
-	
 	int I = 0;
 	
 	for(const FZoneDataRow* ZoneData : AryZoneDataRow)
@@ -42,66 +36,58 @@ void UWidgetZoneSelectPanel::CreateButtons()
 
 		SelectButton->Init(*ZoneData);
 
-		SelectButton->SetVisibility(ESlateVisibility::Hidden);
-		
 		switch (ZoneData->m_MapType)
 		{
 		case EMapType::Default:
-			m_AryDefaultZoneBtns.Add(SelectButton);
+			m_ScrollWorld->AddChild(SelectButton);
 			break;
 		case EMapType::Special:
-			m_ArySpecialZoneBtns.Add(SelectButton);
+			m_ScrollSpecial->AddChild(SelectButton);
 			break;
 		case EMapType::Boss:
-			m_AryBossZoneBtns.Add(SelectButton);
+			m_ScrollBoss->AddChild(SelectButton);
 			break;
 		}
-		m_ScrollWorldButton->AddChild(SelectButton);
-
 		I++;
 	}
 
-	m_PtrCrnt = nullptr;
+	m_ScrollWorld->SetVisibility(ESlateVisibility::Collapsed);
 
-	OnClickWorldBtn();
+	m_ScrollSpecial->SetVisibility(ESlateVisibility::Collapsed);
+
+	m_ScrollBoss->SetVisibility(ESlateVisibility::Collapsed);
 }
 
-void UWidgetZoneSelectPanel::SetCrntZoneAry(TArray<UWidgetZoneSelectButton*>& aryWant)
+void UWidgetZoneSelectPanel::SetCrntZoneScrollVisible(UScrollBox* scroll)
 {
-	if(m_PtrCrnt == &aryWant)
+	if(m_CrntScroll == scroll)
 	{
 		return;
 	}
 	
-	if(m_PtrCrnt)
+	if(m_CrntScroll)
 	{
-		for(UWidgetZoneSelectButton* Btn : *m_PtrCrnt)
-		{
-			Btn->SetVisibility(ESlateVisibility::Collapsed);
-		}	
+		m_CrntScroll->SetVisibility(ESlateVisibility::Collapsed);
 	}
 	
-	for(UWidgetZoneSelectButton* Btn : aryWant)
-	{
-		Btn->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
-	}
+	m_CrntScroll = scroll;	
 
-	m_PtrCrnt = &aryWant;	
+	m_CrntScroll->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
 }
 
 void UWidgetZoneSelectPanel::OnClickWorldBtn()
 {
-	SetCrntZoneAry(m_AryDefaultZoneBtns);
+	SetCrntZoneScrollVisible(m_ScrollWorld);
 }
 
 void UWidgetZoneSelectPanel::OnClickSpecialBtn()
 {
-	SetCrntZoneAry(m_ArySpecialZoneBtns);
+	SetCrntZoneScrollVisible(m_ScrollSpecial);
 }
 
 void UWidgetZoneSelectPanel::OnClickBossBtn()
 {
-	SetCrntZoneAry(m_AryBossZoneBtns);
+	SetCrntZoneScrollVisible(m_ScrollBoss);
 }
 
 

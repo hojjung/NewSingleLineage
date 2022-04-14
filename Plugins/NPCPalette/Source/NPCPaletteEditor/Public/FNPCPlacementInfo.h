@@ -97,7 +97,9 @@ struct FNPCPaletteItem//실제 엔피씨 객체 최소단위
 		}
 		else
 		{
-			DisplayName = m_SelectedEntityRow->m_ShowingName;	
+			FString StrFormat = FString::Printf(TEXT("%s:%s"),*m_SelectedEntityRow->m_ShowingName.ToString(),*m_RowID.ToString());
+			
+			DisplayName = FText::FromString(StrFormat);	
 		}
 
 	}

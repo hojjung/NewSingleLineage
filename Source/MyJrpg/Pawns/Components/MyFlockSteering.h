@@ -30,4 +30,6 @@ protected:
 	FVector GetFlockDir();
 
 	virtual void ApplyControlInputToVelocity(float DeltaTime) override;
+
+	virtual void NotifyBumpedPawn(APawn* BumpedPawn) override;
 };

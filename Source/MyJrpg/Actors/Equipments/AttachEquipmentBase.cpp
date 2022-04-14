@@ -8,6 +8,7 @@ AAttachEquipmentBase::AAttachEquipmentBase()
 {
 	PrimaryActorTick.bCanEverTick = false;
 	m_SocketID = TEXT("Trail_End");
+	
 }
 
 FName AAttachEquipmentBase::GetSocketName()

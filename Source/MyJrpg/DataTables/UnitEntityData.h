@@ -47,7 +47,7 @@ public://Visual
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
 	USkeletalMesh* m_BodyMesh;
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
-	FRotator m_RotOffset;
+	float m_RotYawOffset;
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
 	TSubclassOf<UAnimInstance> m_AnimBP;
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
@@ -122,8 +122,12 @@ public://스텟과 보상
 	UParticleSystem* m_Bullet;
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (UIMin = "0.1"))
 	float m_fBulletScale = 1.f;
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (UIMin = "34" ,UIMax = "88"))
+	float m_fCapsuleRadius = 60.f;
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (UIMin = "0.1"))
 	float m_fScale = 1.f;
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (UIMin = "0.1"))
+	float m_fShadowScale = 6.f;
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (UIMin = "1"))
 	float m_fExp = 100.f;
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (UIMin = "0"))

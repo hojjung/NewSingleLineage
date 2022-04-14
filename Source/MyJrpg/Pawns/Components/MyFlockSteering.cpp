@@ -127,3 +127,8 @@ void UMyFlockSteering::ApplyControlInputToVelocity(float DeltaTime)
 
 	ConsumeInputVector();
 }
+
+void UMyFlockSteering::NotifyBumpedPawn(APawn* BumpedPawn)
+{
+	
+}

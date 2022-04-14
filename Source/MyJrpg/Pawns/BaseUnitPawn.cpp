@@ -68,6 +68,10 @@ void ABaseUnitPawn::SetEntity(const FNpcUnitEntityRow& unitEntityRow)
 	m_BodyMesh->SetRelativeScale3D(FVector(unitEntityRow.m_fScale));
 
 	m_PawnName = unitEntityRow.m_ShowingName;
+
+	m_Capsule->SetCapsuleRadius(unitEntityRow.m_fCapsuleRadius);
+
+	m_Movement->NavAgentProps.AgentRadius = unitEntityRow.m_fCapsuleRadius;
 }
 
 void ABaseUnitPawn::LoadSetSkMeshAnim(TSoftObjectPtr<UUnitEntityAsset> asset)
@@ -80,7 +84,7 @@ void ABaseUnitPawn::LoadSetSkMeshAnim(TSoftObjectPtr<UUnitEntityAsset> asset)
 
 	m_BodyMesh->SetAnimClass(m_EntityAsset->m_AnimBP.Get());
 
-	m_BodyMesh->AddRelativeRotation(asset->m_RotOffset);
+	m_BodyMesh->AddRelativeRotation(FRotator(0,asset->m_RotYawOffset,0));
 }
 
 void ABaseUnitPawn::EndPlay(const EEndPlayReason::Type EndPlayReason)

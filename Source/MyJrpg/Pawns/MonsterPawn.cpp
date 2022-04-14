@@ -9,7 +9,7 @@
 #include "MyJrpg/Widgets/WidgetComponents/WidgetPawnInfoComp.h"
 #include "MyJrpg/Widgets/WidgetComponents/WidgetSpeechBubbleComp.h"
 
-AMonsterPawn::AMonsterPawn(const FObjectInitializer& obj): Super(obj.SetDefaultSubobjectClass<UMyFlockSteering>(TEXT("m_Movement")))//
+AMonsterPawn::AMonsterPawn(const FObjectInitializer& obj): Super(obj.SetDefaultSubobjectClass<UMyFlockSteering>(TEXT("m_Movement")))
 {
 	m_SoundComp = CreateDefaultSubobject<UAudioComponent>(TEXT("Audio01"));
 	m_SoundComp->SetupAttachment(RootComponent);
@@ -71,7 +71,7 @@ void AMonsterPawn::SetEntity(const FNpcUnitEntityRow& unitEntityRow)
 
 	m_HitParticle->SetRelativeLocation(FVector(0,0,HalfZ));
 
-	m_ShadowMeshComp->SetRelativeScale3D(FVector(unitEntityRow.m_fScale*6.f));
+	m_ShadowMeshComp->SetRelativeScale3D(FVector(unitEntityRow.m_fShadowScale));
 	
 	m_SpawnPoint = GetActorLocation();
 

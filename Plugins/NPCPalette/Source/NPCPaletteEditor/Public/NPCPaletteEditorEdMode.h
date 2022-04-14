@@ -46,7 +46,7 @@ public: //IPlacementMode
 	
 	void StopPlacing();
 
-	bool IsCurrentlyPlacing() const { return AssetsToPlace.Num() > 0; };
+	bool IsCurrentlyPlacing() const { return m_DeleHandle.IsValid(); };
 
 	void StartPlacing(const TArray< FAssetData >& Assets, UActorFactory* Factory = NULL );
 

@@ -31,22 +31,20 @@ protected:
 	UPROPERTY(EditAnywhere)
 	TSubclassOf<UWidgetZoneSelectButton> m_ClassButton;
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (BindWidget))
-	UScrollBox* m_ScrollWorldButton;//Test
+	UScrollBox* m_ScrollWorld;
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (BindWidget))
+	UScrollBox* m_ScrollSpecial;
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (BindWidget))
+	UScrollBox* m_ScrollBoss;
 	UPROPERTY()
-	TArray<UWidgetZoneSelectButton*> m_AryDefaultZoneBtns;
-	UPROPERTY()
-	TArray<UWidgetZoneSelectButton*> m_ArySpecialZoneBtns;
-	UPROPERTY()
-	TArray<UWidgetZoneSelectButton*> m_AryBossZoneBtns;
-
-	TArray<UWidgetZoneSelectButton*>* m_PtrCrnt;
+	UScrollBox* m_CrntScroll;
 	
 protected:
 	virtual void NativeOnInitialized() override;
 	
 	void CreateButtons();
 
-	void SetCrntZoneAry(TArray<UWidgetZoneSelectButton*>& aryWant);
+	void SetCrntZoneScrollVisible(UScrollBox* scroll);
 	
 public:
 	UFUNCTION()

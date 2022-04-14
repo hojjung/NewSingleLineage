@@ -85,7 +85,7 @@ void APreviewActor::SetEntity(TSoftObjectPtr<UUnitEntityAsset> asset)
 	m_MeshBody->SetAnimationMode(EAnimationMode::AnimationBlueprint);
 	m_MeshBody->SetAnimClass(m_SkinAsset->m_AnimBP);
 
-	m_MeshBody->SetRelativeRotation(m_SkinAsset->m_RotOffset);
+	m_MeshBody->SetRelativeRotation(FRotator(0,m_SkinAsset->m_RotYawOffset,0));
 	
 	for(const FAttach& Attach : asset->m_AryAttaches)
 	{

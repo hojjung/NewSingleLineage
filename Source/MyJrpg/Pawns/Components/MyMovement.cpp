@@ -6,6 +6,7 @@
 #include "Kismet/KismetMathLibrary.h"
 #include "MyJrpg/MyJrpg.h"
 #include "MyJrpg/Pawns/BaseUnitPawn.h"
+#include "MyJrpg/Pawns/CombatUnitPawn.h"
 #include "Navigation/NavLinkProxy.h"
 
 UMyMovement::UMyMovement(const FObjectInitializer& obj)
@@ -17,9 +18,6 @@ UMyMovement::UMyMovement(const FObjectInitializer& obj)
 	bUseFixedBrakingDistanceForPaths = true;
 	TurningBoost = 8.0f;
 	bPositionCorrected = false;
-
-	NavAgentProps.AgentHeight = 88;
-	NavAgentProps.AgentRadius = 34;
 
 	ResetMoveState();
 }
@@ -91,20 +89,6 @@ void UMyMovement::SetActive(bool new_active, bool reset)
 	}
 }
 
-const INavigationDataInterface* UMyMovement::GetNavData() const
-{
-	const UWorld* World = GetWorld();
-
-	if (World == nullptr || World->GetNavigationSystem() == nullptr)
-	{
-		return nullptr;
-	}
-
-	const INavigationDataInterface* NavData = FNavigationSystem::GetNavDataForActor(*GetPawnOwner());
-
-	return NavData;
-}
-
 void UMyMovement::TickRotate(float deltaTime)
 {
 	FRotator CurrentRotation = GetOwner()->GetActorRotation();
@@ -134,3 +118,22 @@ FRotator UMyMovement::ComputeOrientToMovementRotation(const FRotator& CurrentRot
 
 	return Velocity.GetSafeNormal().Rotation();
 }
+
+
+void UMyMovement::HandleImpact(const FHitResult& Hit, float TimeSlice, const FVector& MoveDelta)
+{
+	IPathFollowingAgentInterface* PFAgent = GetPathFollowingAgent();
+	if (PFAgent)
+	{
+		// Also notify path following!
+		PFAgent->OnMoveBlockedBy(Hit);
+	}
+
+	APawn* OtherPawn = Cast<APawn>(Hit.GetActor());
+	
+	if (OtherPawn)
+	{
+		NotifyBumpedPawn(OtherPawn);
+	}
+}
+
