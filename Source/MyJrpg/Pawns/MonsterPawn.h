@@ -63,7 +63,7 @@ public:
 
 	void Speech(FString text);
 	
-	virtual void SetEntity(const FNpcUnitEntityRow& unitEntityRow) override;
+	virtual void SetEntity(const FName& id,const FNpcUnitEntityRow& unitEntityRow) override;
 
 	virtual void Dead() override;
 	

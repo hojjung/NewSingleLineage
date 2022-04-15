@@ -111,7 +111,7 @@ bool URewardManager::RequestQuestReward(const TArray<FQuestReward>& aryQuest)
 
 void URewardManager::OnMonsterDead(const AMonsterPawn* monster)
 {
-	m_OnMonsterDead.Broadcast(monster->m_PawnName);
+	m_OnMonsterDead.Broadcast(monster->GetEntityID());
 
 	UMyGameInstance::Get->m_CurrencyManager->AddGold(monster->GetRewardGold());
 

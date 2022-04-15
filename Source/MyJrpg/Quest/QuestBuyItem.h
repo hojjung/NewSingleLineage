@@ -17,5 +17,5 @@ protected:
 
 	virtual void CompleteQuest() override;
 
-	void OnItemBuy(const FText monsterName);
+	void OnItemBuy(const FName& itemID);
 };

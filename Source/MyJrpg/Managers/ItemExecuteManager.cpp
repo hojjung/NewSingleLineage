@@ -66,8 +66,6 @@ void UItemExecuteManager::ExecuteItem(const FName& itemID,UInventory* inven)//ì•
 
 	if(m_OnItemUse.IsBound())
 	{
-		FText ItemName = UMyLib::GetItemData(itemID).m_TextShowingName;
-		
-		m_OnItemUse.Broadcast(ItemName);
+		m_OnItemUse.Broadcast(itemID);
 	}
 }

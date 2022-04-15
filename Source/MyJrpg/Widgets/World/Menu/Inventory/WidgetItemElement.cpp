@@ -139,7 +139,7 @@ void UWidgetItemElement::SellItem()
 
 	bool IsEquip =  UMyLib::GetItemType(ID) == EItemType::Equip;
 
-	if(IsEquip)
+	if(IsEquip || m_Inven->GetItemStack(ID) == 1)
 	{
 		m_nAmount = 1;
 		
@@ -149,10 +149,8 @@ void UWidgetItemElement::SellItem()
 
 		return;
 	}
-
+	
 	m_nAmount=0;
-
-	int Gold = UMyGameInstance::Get->m_CurrencyManager->GetGold();
 
 	m_nMaxAmount = m_Inven->GetItemStack(ID);
 

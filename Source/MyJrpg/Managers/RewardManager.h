@@ -22,7 +22,7 @@ class MYJRPG_API URewardManager : public UObject
 
 public:
 	DECLARE_MULTICAST_DELEGATE_TwoParams(FOnExpGoldEarned, float, float);
-	DECLARE_MULTICAST_DELEGATE_OneParam(FOnMonsterDead,FText);
+	DECLARE_MULTICAST_DELEGATE_OneParam(FOnMonsterDead,const FName&);
 	
 	FOnExpGoldEarned m_OnExpGold;
 

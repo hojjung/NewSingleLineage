@@ -48,6 +48,11 @@ void UQuestLogicBase::IncreaseAmount()
 	PRINTF("Quest %d/%d",m_Spec->m_nValue,m_Spec->m_QuestData->m_nMaxTargetAmount);
 
 	m_OnProgressChanged.Broadcast();
+
+	if(CanCompleteQuest())
+	{
+		m_OnQuestCompleteable.Broadcast();	
+	}
 }
 
 void UQuestLogicBase::ReceiveRewards()

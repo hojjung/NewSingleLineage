@@ -57,8 +57,10 @@ ABaseUnitPawn::ABaseUnitPawn(const FObjectInitializer& objInit): Super(objInit)
 	m_PFComp = CreateDefaultSubobject<UPathFollowingComponent>(TEXT("PathFollowingComponent"));
 }
 
-void ABaseUnitPawn::SetEntity(const FNpcUnitEntityRow& unitEntityRow)
+void ABaseUnitPawn::SetEntity(const FName& id, const FNpcUnitEntityRow& unitEntityRow)
 {
+	m_EntityID = id;
+	
 	m_PFComp->SetMovementComponent(m_Movement);	
 	m_PFComp->Initialize();
 	m_Movement->SetPathFollowingAgent(m_PFComp);
@@ -274,6 +276,11 @@ void ABaseUnitPawn::StopMove()
 bool ABaseUnitPawn::IsRange()
 {
 	return false;
+}
+
+const FName& ABaseUnitPawn::GetEntityID() const
+{
+	return m_EntityID;
 }
 
 EPathFollowingRequestResult::Type ABaseUnitPawn::MoveToLocation(FVector loc, float acceptRadius)

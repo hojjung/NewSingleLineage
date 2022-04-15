@@ -49,7 +49,7 @@ void UMyCheatManager::AddQuest(FName id)
 
 void UMyCheatManager::TryCompleteQuest(FName id)
 {
-	UMyGameInstance::Get->m_QuestManager->CompleteMainQuest(id);
+	
 }
 
 void UMyCheatManager::SetPlayerAsset(FName id)

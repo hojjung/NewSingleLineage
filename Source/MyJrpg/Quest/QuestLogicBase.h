@@ -39,6 +39,8 @@ public:
 	DECLARE_MULTICAST_DELEGATE(FOnProgressChanged);
 
 	FOnProgressChanged m_OnProgressChanged;
+	
+	FOnProgressChanged m_OnQuestCompleteable;
 
 protected:
 	FQuestSpec* m_Spec = nullptr;

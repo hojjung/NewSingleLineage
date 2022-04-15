@@ -19,5 +19,5 @@ protected:
 
 	virtual void CompleteQuest() override;
 
-	void OnMonsterDead(const FText monsterName);
+	void OnMonsterDead(const FName& monsterName);
 };

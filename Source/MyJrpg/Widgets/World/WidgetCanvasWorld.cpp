@@ -83,11 +83,11 @@ void UWidgetCanvasWorld::NativeOnInitialized()
 
 	m_Calculator->SetVisibility(ESlateVisibility::Collapsed);
 
-	UMyGameInstance::Get->m_LevelMoveManager->m_OnLvelMoveComp.AddUObject(this, & UWidgetCanvasWorld::ShowZone);
+	UMyGameInstance::Get->m_LevelMoveManager->m_OnLvelMoveCompText.AddUObject(this, &UWidgetCanvasWorld::ShowZone);
 
-	UMyGameInstance::Get->m_PlayerStatManager->m_OnLevelChanged.AddUObject(this, & UWidgetCanvasWorld::ShowLevelUpWindow);
+	UMyGameInstance::Get->m_PlayerStatManager->m_OnLevelChanged.AddUObject(this, &UWidgetCanvasWorld::ShowLevelUpWindow);
 
-	UMyGameInstance::Get->m_PlayerStatManager->m_OnPlayerKilled.AddUObject(this, & UWidgetCanvasWorld::ShowGameOverWindow);
+	UMyGameInstance::Get->m_PlayerStatManager->m_OnPlayerKilled.AddUObject(this, &UWidgetCanvasWorld::ShowGameOverWindow);
 
 	m_BtnSkin->OnClicked.AddDynamic(this,&UWidgetCanvasWorld::OpenSkin);
 	

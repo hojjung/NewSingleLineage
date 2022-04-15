@@ -43,5 +43,5 @@ void UWidgetQuestElement::OnCompleteQuest()
 		return;
 	}
 	
-	UMyGameInstance::Get->m_QuestManager->CompleteQuest(m_Quest.Get());
+	UMyGameInstance::Get->m_QuestManager->CompleteQuest(m_Quest);
 }

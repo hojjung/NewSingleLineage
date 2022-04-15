@@ -110,7 +110,7 @@ void UWidgetItemInfo::OnClose()
 
 void UWidgetItemInfo::OnErase()
 {
-	if(UMyLib::GetItemType(m_ItemKey) == EItemType::Equip)
+	if(UMyLib::GetItemType(m_ItemKey) == EItemType::Equip || m_Inven->GetItemStack(m_ItemKey) == 1)
 	{
 		EraseConfirm();
 	}
@@ -122,7 +122,6 @@ void UWidgetItemInfo::OnErase()
 	}
 	OnClose();
 }
-
 
 int UWidgetItemInfo::GetMax()
 {

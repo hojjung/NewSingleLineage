@@ -40,22 +40,26 @@ void UShopManager::BuyItem(const FName& itemID, int amount)
 	
 	UMyGameInstance::Get->m_CurrencyManager->SubGold(TotalCost);
 	
-	m_OnItemBought.Broadcast(ItemDataRow->m_TextShowingName);
+	m_OnItemBought.Broadcast(itemID);
 }
 
-void UShopManager::SellItem(const FName& ability_spec, int amount)
+void UShopManager::SellItem(const FName& itemID, int amount)
 {
-	int SellGold = amount * UMyLib::GetItemData(ability_spec).m_nPlayerEarnGoldSell;
+	const FItemDataRow& ItemDataRow = UMyLib::GetItemData(itemID);
+	
+	int SellGold = amount * ItemDataRow.m_nPlayerEarnGoldSell;
 
-	if (UMyLib::GetItemType(ability_spec) == EItemType::Equip)
+	if (UMyLib::GetItemType(itemID) == EItemType::Equip)
 	{
-		UMyLib::GetPlayerInven()->RemoveEquipItem(ability_spec);
+		UMyLib::GetPlayerInven()->RemoveEquipItem(itemID);
 	}
 	else
 	{
-		UMyLib::GetPlayerInven()->RemoveItem(ability_spec,amount);
+		UMyLib::GetPlayerInven()->RemoveItem(itemID,amount);
 	}
 	UMyGameInstance::Get->m_CurrencyManager->AddGold(SellGold);
+
+	m_OnItemSell.Broadcast(itemID);
 }
 
  void UShopManager::AddTradeItemData(const FName& traderID, const FName& itemID)

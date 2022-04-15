@@ -14,9 +14,11 @@ class MYJRPG_API UShopManager : public UObject
 {
 	GENERATED_BODY()
 public:
-	DECLARE_MULTICAST_DELEGATE_OneParam(FOnMonsterDead,FText);
+	DECLARE_MULTICAST_DELEGATE_OneParam(FOnItemTradeDone,const FName&);
 
-	FOnMonsterDead m_OnItemBought;
+	FOnItemTradeDone m_OnItemBought;
+
+	FOnItemTradeDone m_OnItemSell;
 
 protected:
 	TMap<FName,TArray<FName>> m_MapTraderItems;

@@ -20,8 +20,8 @@ protected:
 	UTextBlock* m_TextQuestName;
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (BindWidget))
 	UTextBlock* m_TextQuestDesc;
-
-	TWeakObjectPtr<UQuestLogicBase> m_Quest;
+	UPROPERTY()
+	UQuestLogicBase* m_Quest;
 
 	FDelegateHandle m_DeleHandle;
 

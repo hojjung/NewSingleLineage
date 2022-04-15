@@ -105,13 +105,14 @@ void UInventory::RemoveItem(FName id, int amount)
 		m_MapMiscItems.Remove(id);
 		
 		m_AryTotalItems.Remove(id);
-		
+
+		m_OnNewItemRemoved.Broadcast(id);
 	}
 	else
 	{
 		Amount -= amount;
 	}
-	m_OnNewItemAdded.Broadcast(id);
+	
 	m_OnInvenChanged.Broadcast();
 }
 
@@ -126,6 +127,8 @@ void UInventory::RemoveEquipItem(FName gid)
 	if (EquipIDMap.Num() <= 0)
 	{
 		m_MapEquipItemIdGroup.Remove(Oid);
+
+		m_OnNewItemRemoved.Broadcast(Oid);
 	}
 	
 	m_AryTotalItems.Remove(gid);

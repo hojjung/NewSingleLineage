@@ -4,13 +4,13 @@
 
 #include "CoreMinimal.h"
 #include "QuestLogicBase.h"
-#include "QuestCraftItem.generated.h"
+#include "QuestSellItem.generated.h"
 
 /**
  * 
  */
 UCLASS()
-class MYJRPG_API UQuestCraftItem : public UQuestLogicBase
+class MYJRPG_API UQuestSellItem : public UQuestLogicBase
 {
 	GENERATED_BODY()
 
@@ -19,5 +19,5 @@ protected:
 
 	virtual void CompleteQuest() override;
 
-	void OnItemCraft(const FName& itemID);
+	void OnItemSell(const FName& itemID);
 };

@@ -18,11 +18,10 @@ class MYJRPG_API UCraftManager : public UObject
 	GENERATED_BODY()
 
 public:
-	DECLARE_MULTICAST_DELEGATE_OneParam(FOnCraft,FText);
+	DECLARE_MULTICAST_DELEGATE_OneParam(FOnCraft,const FName&);
 
 	FOnCraft m_OnCraft;
 	
-
 protected:
 	UPROPERTY()
 	int m_nCraftItemCount;

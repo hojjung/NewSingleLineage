@@ -19,5 +19,5 @@ protected:
 
 	virtual void CompleteQuest() override;
 
-	void OnPortalMove(const FText& zoneName);
+	void OnPortalMove(const FName& zoneName);
 };

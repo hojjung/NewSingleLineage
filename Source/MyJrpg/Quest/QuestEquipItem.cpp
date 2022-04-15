@@ -23,11 +23,11 @@ void UQuestEquipItem::CompleteQuest()
 
 void UQuestEquipItem::OnEquipItemChanged()
 {
-	for(const FName& AbSpec : UMyGameInstance::Get->m_EquipManager->GetEquipAry())
+	for(const FName& itemID : UMyGameInstance::Get->m_EquipManager->GetEquipAry())
 	{
-		FText ItemName = UMyLib::GetItemData(AbSpec).m_TextShowingName;
+		FName Oid = UMyLib::GetEquipIDFromHashID(itemID);
 		
-		if(m_Spec->m_QuestData->m_TargetName.EqualTo(ItemName))
+		if(m_Spec->m_QuestData->m_TargetName == Oid)
 		{
 			IncreaseAmount();
 			return;

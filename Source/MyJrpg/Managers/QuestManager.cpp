@@ -61,6 +61,8 @@ void UQuestManager::RegisterMainQuest(FName id)
 	m_MapMainQuestLogic.Add(&QuestSpecCreated,QuestLogicCreated);
 
 	QuestLogicCreated->RegisterQuest(QuestSpecCreated);
+
+	QuestLogicCreated->m_OnQuestCompleteable.AddUObject(this, &UQuestManager::RegisterNextMainquest);
 	
 	m_OnQuestChanged.Broadcast();
 
@@ -100,73 +102,61 @@ void UQuestManager::RegisterSubQuest(FName id)
 	m_OnQuestAdd.Broadcast(QuestLogicCreated,false);
 }
 
-void UQuestManager::CompleteMainQuest(FName id)
+void UQuestManager::CompleteMainQuest(UQuestLogicBase* logic)
 {
-	const FQuestDataRow& QuestDataFound = GetMainQuestData(id);
+	const FQuestDataRow& QuestDataFound = GetMainQuestData(logic->GetQuestSpec().m_QuestID);
 
-	const FQuestSpec& QuestSpec = m_MapMainQuestSpec[&QuestDataFound];
-
-	UQuestLogicBase* QuestLogic = m_MapMainQuestLogic[&QuestSpec];
-
-	if(!QuestLogic->CanCompleteQuest())
+	if(!logic->CanCompleteQuest())
 	{
 		return;
 	}
 	
-	QuestLogic->CompleteQuest();
+	logic->CompleteQuest();
 	
-	m_OnQuestRemove.Broadcast(QuestLogic,true);
+	m_OnQuestRemove.Broadcast(logic,true);
 
-	m_AryMainQuestLogic.Remove(QuestLogic);
+	m_AryMainQuestLogic.Remove(logic);
 
-	m_MapMainQuestLogic.Remove(&QuestSpec);
+	m_MapMainQuestLogic.Remove(&(logic->GetQuestSpec()));
 
 	m_MapMainQuestSpec.Remove(&QuestDataFound);
 
 	m_OnQuestChanged.Broadcast();
 }
 
-void UQuestManager::CompleteSubQuest(FName id)
+void UQuestManager::CompleteSubQuest(UQuestLogicBase* logic)
 {
-	const FQuestDataRow& QuestDataFound = GetSubQuestData(id);
+	const FQuestDataRow& QuestDataFound = GetSubQuestData(logic->GetQuestSpec().m_QuestID);
 
-	const FQuestSpec& QuestSpec = m_MapSubQuestSpec[&QuestDataFound];
-
-	UQuestLogicBase* QuestLogic = m_MapSubQuestLogic[&QuestSpec];
-
-	if(!QuestLogic->CanCompleteQuest())
+	if(!logic->CanCompleteQuest())
 	{
 		return;
 	}
 
-	QuestLogic->CompleteQuest();
+	logic->CompleteQuest();
 
-	m_OnQuestRemove.Broadcast(QuestLogic,false);
+	m_OnQuestRemove.Broadcast(logic,false);
 	
-	m_ArySubQuestLogic.Remove(QuestLogic);
+	m_ArySubQuestLogic.Remove(logic);
 
-	m_MapSubQuestLogic.Remove(&QuestSpec);
+	m_MapSubQuestLogic.Remove(&(logic->GetQuestSpec()));
 
 	m_MapSubQuestSpec.Remove(&QuestDataFound);
 
 	m_OnQuestChanged.Broadcast();
 }
 
-void UQuestManager::CompleteQuest(const UQuestLogicBase* quest)
+void UQuestManager::CompleteQuest(UQuestLogicBase* quest)
 {
 	const FQuestSpec& QSpec = quest->GetQuestSpec();
 	
 	if(m_MapMainQuestLogic.Contains(&QSpec))
 	{
-		CompleteMainQuest(QSpec.m_QuestID);
-
-		++m_nCurrentMainQuestIndex;
-		
-		RegisterMainQuestByIndex(m_nCurrentMainQuestIndex);
+		CompleteMainQuest(quest);
 	}
 	else if(m_MapSubQuestLogic.Contains(&QSpec))
 	{
-		CompleteSubQuest(QSpec.m_QuestID);
+		CompleteSubQuest(quest);
 	}
 }
 
@@ -213,8 +203,9 @@ UQuestLogicBase* UQuestManager::GetCurrentMainQuest()
 	return QuestLogic;
 }
 
-
-
-//누구든 던전에서 변신 조각을 얻을수 있다
-//현질하면 던전 입장횟수가 증가 더 빨리 얻어짐
-//하위변신을 열어야 상위 변신 열어짐
+void UQuestManager::RegisterNextMainquest()
+{
+	++m_nCurrentMainQuestIndex;
+		
+	RegisterMainQuestByIndex(m_nCurrentMainQuestIndex);
+}

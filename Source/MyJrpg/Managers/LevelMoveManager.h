@@ -18,9 +18,13 @@ class MYJRPG_API ULevelMoveManager : public UObject
 	GENERATED_BODY()
 
 public:
-	DECLARE_MULTICAST_DELEGATE_OneParam(FOnLevelMoveComplete,const FText&);
+	DECLARE_MULTICAST_DELEGATE_OneParam(FOnLevelMoveComplete,const FName&);
+
+	DECLARE_MULTICAST_DELEGATE_OneParam(FOnLevelMoveCompleteText,const FText&);
 
 	FOnLevelMoveComplete m_OnLvelMoveComp;
+	
+	FOnLevelMoveCompleteText m_OnLvelMoveCompText;
 	
 protected:
 	const FZoneDataRow* m_ZoneData;

@@ -53,7 +53,7 @@ ASummonUnitPawn* USpawnManager::SummonUnit(FName unit_id, FVector loc, float lif
 
 	if (EntityRow)
 	{
-		NpcActor->SetEntity(*EntityRow);
+		NpcActor->SetEntity(unit_id,*EntityRow);
 
 		NpcActor->SetLifeTime(lifetime);
 	}
@@ -135,7 +135,7 @@ AMonsterPawn* USpawnManager::SpawnNpcActor(const FNPCSpawnData& SpawnData, const
 
 	if (EntityRow)
 	{
-		NpcActor->SetEntity(*EntityRow);
+		NpcActor->SetEntity(SpawnData.m_IDEntity,*EntityRow);
 
 		NpcActor->SetReviveTime(EntityRow->m_fMinSpawnTime, EntityRow->m_fMaxSpawnTime);
 

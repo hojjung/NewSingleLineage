@@ -19,9 +19,9 @@ void UQuestCraftItem::CompleteQuest()
 	Super::CompleteQuest();
 }
 
-void UQuestCraftItem::OnItemCraft(const FText monsterName)
+void UQuestCraftItem::OnItemCraft(const FName& itemID)
 {
-	if(!m_Spec->m_QuestData->m_TargetName.EqualTo(monsterName))
+	if(m_Spec->m_QuestData->m_TargetName != itemID)
 	{
 		return;
 	}

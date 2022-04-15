@@ -213,8 +213,7 @@ void UCraftManager::ReceiveItem()
 {
 	if(m_OnCraft.IsBound())
 	{
-		//for quest
-		m_OnCraft.Broadcast(m_CrntItemData->m_TextShowingName);
+		m_OnCraft.Broadcast(m_CrntID);
 	}
 
 	if(!UMyLib::IsEquip(*m_CrntItemData))

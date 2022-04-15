@@ -57,11 +57,11 @@ AMonsterPawn::AMonsterPawn(const FObjectInitializer& obj): Super(obj.SetDefaultS
 	m_SoundComp->SetSound(FoundHitSound.Object);
 }
 
-void AMonsterPawn::SetEntity(const FNpcUnitEntityRow& unitEntityRow)
+void AMonsterPawn::SetEntity(const FName& id,const FNpcUnitEntityRow& unitEntityRow)
 {
 	m_fAttackRange = unitEntityRow.m_fAtkRange;
 	
-	Super::SetEntity(unitEntityRow);
+	Super::SetEntity(id,unitEntityRow);
 
 	float Z =  m_BodyMesh->Bounds.BoxExtent.Z;
 

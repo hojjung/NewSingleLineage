@@ -19,9 +19,9 @@ void UQuestPortalMove::CompleteQuest()
 	Super::CompleteQuest();
 }
 
-void UQuestPortalMove::OnPortalMove(const FText& zoneName)
+void UQuestPortalMove::OnPortalMove(const FName& zoneName)
 {
-	if(!m_Spec->m_QuestData->m_TargetName.EqualTo(zoneName))
+	if(m_Spec->m_QuestData->m_TargetName != zoneName)
 	{
 		return;
 	}

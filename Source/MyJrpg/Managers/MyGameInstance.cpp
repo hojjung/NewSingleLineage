@@ -60,6 +60,8 @@ void UMyGameInstance::IterateItemTableToRegister()
 	}
 }
 
+
+
 void UMyGameInstance::Init()
 {
 	Super::Init();
@@ -118,6 +120,12 @@ void UMyGameInstance::Init()
 	m_BadwordTable->Init();
 	//
 	IterateItemTableToRegister();
+	FirstTimeItemSetup();
+}
+
+void UMyGameInstance::FirstTimeItemSetup()
+{
+	m_AryStorage[0]->AddItem(TEXT("misc_gold24k"),1);	
 }
 
 void UMyGameInstance::LoadComplete(const float LoadTime, const FString& MapName)

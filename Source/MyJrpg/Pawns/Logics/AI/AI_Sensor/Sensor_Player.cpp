@@ -26,6 +26,14 @@ void USensor_Player::UpdateAISensing()
 		
 		return;
 	}
+
+	if(m_PlayerOwner->GetFocusedTarget())
+	{
+		if(m_PlayerOwner->GetFocusedTarget()->IsAlive())
+		{
+			return;
+		}
+	}
 	
 	ACombatUnitPawn* Pawn = GetSensedPawn();
 

@@ -32,9 +32,10 @@ protected:
 	const UUnitEntityAsset* m_EntityAsset;
 
 	FTimerHandle m_MoveStopTimer;
-public:
-	UPROPERTY()
+	
 	FText m_PawnName;
+
+	FName m_EntityID;
 
 protected:
 	virtual void EndPlay(const EEndPlayReason::Type EndPlayReason) override;
@@ -53,7 +54,7 @@ protected:
 
 
 public:
-	virtual void SetEntity(const FNpcUnitEntityRow& unitEntityRow);//Init
+	virtual void SetEntity(const FName& id, const FNpcUnitEntityRow& unitEntityRow);//Init
 	
 	virtual EPathFollowingRequestResult::Type MoveToLocation(FVector loc, float acceptRadius = 0.f);
 
@@ -92,5 +93,7 @@ public:
 	void StopMove();
 	
 	virtual bool IsRange();
+
+	const FName& GetEntityID() const;
 };
 

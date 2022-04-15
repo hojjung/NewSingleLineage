@@ -21,7 +21,7 @@ class MYJRPG_API UItemExecuteManager : public UObject
 	GENERATED_BODY()
 
 public:
-	DECLARE_MULTICAST_DELEGATE_OneParam(FOnItemExe,FText);
+	DECLARE_MULTICAST_DELEGATE_OneParam(FOnItemExe,const FName&);
 
 	FOnItemExe m_OnItemUse;
 

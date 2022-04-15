@@ -16,9 +16,9 @@ void UQuestBuyItem::CompleteQuest()
 	Super::CompleteQuest();
 }
 
-void UQuestBuyItem::OnItemBuy(const FText monsterName)
+void UQuestBuyItem::OnItemBuy(const FName& itemID)
 {
-	if(!m_Spec->m_QuestData->m_TargetName.EqualTo(monsterName))
+	if(m_Spec->m_QuestData->m_TargetName != itemID)
 	{
 		return;
 	}

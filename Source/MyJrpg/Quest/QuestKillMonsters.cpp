@@ -17,9 +17,9 @@ void UQuestKillMonsters::CompleteQuest()
 	Super::CompleteQuest();
 }
 
-void UQuestKillMonsters::OnMonsterDead(const FText monsterName)
+void UQuestKillMonsters::OnMonsterDead(const FName& monsterName)
 {
-	if(!m_Spec->m_QuestData->m_TargetName.EqualTo(monsterName))
+	if(m_Spec->m_QuestData->m_TargetName != monsterName)
 	{
 		return;
 	}

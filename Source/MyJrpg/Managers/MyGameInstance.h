@@ -89,9 +89,13 @@ public:
 	
 protected:
 	virtual void BeginDestroy() override;
+	
 	void IterateItemTableToRegister();
+	
+	void FirstTimeItemSetup();
 
 public:
+	
 	virtual void Init() override;
 
 	virtual void LoadComplete(const float LoadTime, const FString& MapName) override;

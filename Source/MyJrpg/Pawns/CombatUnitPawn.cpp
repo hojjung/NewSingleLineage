@@ -118,9 +118,9 @@ void ACombatUnitPawn::ShowPopupText(float nbr, ETextType t)
 	UMyLib::GetPlayerCon()->ShowInGameWorldText(nbr,this,t);
 }
 
-void ACombatUnitPawn::SetEntity(const FNpcUnitEntityRow& unitEntityRow)
+void ACombatUnitPawn::SetEntity(const FName& id, const FNpcUnitEntityRow& unitEntityRow)
 {
-	Super::SetEntity(unitEntityRow);
+	Super::SetEntity(id, unitEntityRow);
 	
 	if(unitEntityRow.m_ClassAI_Logic)
 	{

@@ -41,9 +41,15 @@ protected:
 	TArray<UQuestLogicBase*> m_ArySubQuestLogic;
 
 	int m_nCurrentMainQuestIndex;
+	
 protected:
 	FName GetMainQuestID(int index);
 
+	void RegisterNextMainquest();
+	
+	void CompleteMainQuest(UQuestLogicBase* logic);
+
+	void CompleteSubQuest(UQuestLogicBase* logic);
 public:
 	void Init();
 
@@ -57,11 +63,9 @@ public:
 
 	void RegisterSubQuest(FName id);
 
-	void CompleteMainQuest(FName id);
+	
 
-	void CompleteSubQuest(FName id);
-
-	void CompleteQuest(const UQuestLogicBase* quest);
+	void CompleteQuest(UQuestLogicBase* quest);
 
 	void SetMainQuestValue(int v);
 
@@ -79,3 +83,5 @@ public:
 		return m_ArySubQuestLogic;
 	}
 };
+
+

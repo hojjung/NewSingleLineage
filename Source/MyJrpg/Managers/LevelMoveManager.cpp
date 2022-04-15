@@ -64,7 +64,9 @@ void ULevelMoveManager::OnOpenWorldLevelComplete()
 		tLevelName = m_ZoneData->m_ShowingName;
 	}
 	
-	m_OnLvelMoveComp.Broadcast(tLevelName);
+	m_OnLvelMoveComp.Broadcast(GetCrntZoneID());
+
+	m_OnLvelMoveCompText.Broadcast(tLevelName);
 }
 
 bool ULevelMoveManager::IsGameStart()

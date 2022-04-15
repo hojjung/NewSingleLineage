@@ -34,7 +34,7 @@ void UWidgetQuestHUDChild::NativeDestruct()
 {
 	Super::NativeDestruct();
 
-	if(m_Quest.Get())
+	if(m_Quest)
 	{
 		m_Quest->m_OnProgressChanged.Remove(m_DeleHandle);
 	}
@@ -42,7 +42,7 @@ void UWidgetQuestHUDChild::NativeDestruct()
 
 void UWidgetQuestHUDChild::OnClick()
 {
-	if(!m_Quest.Get())
+	if(!m_Quest)
 	{
 		return;
 	}
@@ -52,7 +52,7 @@ void UWidgetQuestHUDChild::OnClick()
 
 void UWidgetQuestHUDChild::SetQuest(UQuestLogicBase* quest, bool isMain)
 {
-	if (m_Quest.Get() == quest)
+	if (m_Quest == quest)
 	{
 		UpdateQuestElement();
 		
@@ -60,7 +60,7 @@ void UWidgetQuestHUDChild::SetQuest(UQuestLogicBase* quest, bool isMain)
 	}
 	m_bIsMain = isMain;
 	
-	if(m_Quest.Get())
+	if(m_Quest)
 	{
 		m_Quest->m_OnProgressChanged.Remove(m_DeleHandle);
 	}
@@ -74,7 +74,7 @@ void UWidgetQuestHUDChild::SetQuest(UQuestLogicBase* quest, bool isMain)
 
 UQuestLogicBase* UWidgetQuestHUDChild::GetQuest()
 {
-	return m_Quest.Get();
+	return m_Quest;
 }
 
 void UWidgetQuestHUDChild::UpdateQuestElement()

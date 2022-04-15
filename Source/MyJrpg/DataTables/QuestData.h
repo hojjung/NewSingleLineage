@@ -50,7 +50,7 @@ public:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly,meta = (MultiLine="true") )
 	FText m_QuestDesc;
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
-	FText m_TargetName;
+	FName m_TargetName;
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
 	int m_nMaxTargetAmount;
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)

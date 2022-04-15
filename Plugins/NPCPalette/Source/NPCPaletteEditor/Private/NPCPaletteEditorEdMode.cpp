@@ -383,6 +383,7 @@ void FNPCPaletteEdMode::SetNPCAsset(UNPCPaletteDataAsset* assetNew)
 	if (m_CurrentAsset.Get())
 	{
 		ClearPlacedAssetActor();
+		ClearAssetsToPlace();
 	}
 
 	m_CurrentAsset = assetNew;

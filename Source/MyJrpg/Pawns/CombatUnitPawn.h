@@ -91,7 +91,7 @@ protected:
 	virtual void ShowPopupText(float nbr, ETextType t);
 	
 public:
-	virtual void SetEntity(const FNpcUnitEntityRow& unitEntityRow) override;
+	virtual void SetEntity(const FName& id, const FNpcUnitEntityRow& unitEntityRow) override;
 
 	virtual void Tick(float DeltaSeconds) override;
 	
