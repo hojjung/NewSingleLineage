@@ -44,6 +44,8 @@ protected:
 	const FZoneDataRow* m_ZoneData;
 
 	TSet<const FNpcUnitEntityRow*> m_SetMonsters;
+
+	TSet<FName> m_SetRewardItems;
 	
 	UPROPERTY()
 	int m_nIndex;

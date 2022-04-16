@@ -22,7 +22,7 @@ void UWidgetStorage::NativeOnInitialized()
 
 void UWidgetStorage::OpenPanel()
 {
-	SetVisibility(ESlateVisibility::SelfHitTestInvisible);
+	Super::OpenPanel();
 	AddInvenDelegate();
 	m_InvenPanel->OpenPanel();
 }

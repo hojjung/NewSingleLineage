@@ -24,4 +24,7 @@ protected:
 public:
 	UFUNCTION()
 	virtual void ClosePanel();
+
+	UFUNCTION()
+	virtual void OpenPanel();
 };

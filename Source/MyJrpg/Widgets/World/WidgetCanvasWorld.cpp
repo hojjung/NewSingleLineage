@@ -32,54 +32,29 @@ void UWidgetCanvasWorld::NativeOnInitialized()
 	//Close Menu
 	m_ItemInfo->SetVisibility(ESlateVisibility::Collapsed);
 
-	m_EquipInvenPanel->SetVisibility(ESlateVisibility::Collapsed);
-
-	m_SkillPanel->SetVisibility(ESlateVisibility::Collapsed);
-	
-	m_CraftPanel->SetVisibility(ESlateVisibility::Collapsed);
-
-	m_ShopPanel->SetVisibility(ESlateVisibility::Collapsed);
-
-	m_StoragePanel->SetVisibility(ESlateVisibility::Collapsed);
-
-	m_ZonePanel->SetVisibility(ESlateVisibility::Collapsed);
-
-	m_QuestPanel->SetVisibility(ESlateVisibility::Collapsed);
-
 	m_DialoguePanel->SetVisibility(ESlateVisibility::Collapsed);
-
-	m_QuestAcceptPanel->SetVisibility(ESlateVisibility::Collapsed);
 
 	m_Enchant->SetVisibility(ESlateVisibility::Collapsed);
 
+	m_QuestAcceptPanel->SetVisibility(ESlateVisibility::Collapsed);
 	//Bind Event
 	m_BtnCollec->OnClicked.AddDynamic(this,&UWidgetCanvasWorld::OpenItemCollec);
 	
 	m_BtnMenu->OnClicked.AddDynamic(this,&UWidgetCanvasWorld::ToggleMenu);
 
-	m_BtnMenu->IsFocusable = false;
-
 	m_BtnToggleAuto->OnClicked.AddDynamic(this,&UWidgetCanvasWorld::AutoToggle);
 
-	m_BtnToggleAuto->IsFocusable = false;
-	
 	m_BtnEquipInven->OnClicked.AddDynamic(this,&UWidgetCanvasWorld::OpenInventory);
-
-	m_BtnEquipInven->IsFocusable = false;
 
 	m_BtnSkill->OnClicked.AddDynamic(this,&UWidgetCanvasWorld::OpenSkill);
 
-	m_BtnSkill->IsFocusable = false;
-
 	m_BtnCraft->OnClicked.AddDynamic(this,&UWidgetCanvasWorld::OpenCraft);
-
-	m_BtnCraft->IsFocusable = false;
 
 	m_QuickBar->SetInvenSkill(m_EquipInvenPanel->GetInvenPanel(),m_SkillPanel);
 
 	m_BtnQuest->OnClicked.AddDynamic(this,&UWidgetCanvasWorld::OpenQuest);
 
-	m_BtnQuest->IsFocusable = false;
+	m_BtnMapMove->OnClicked.AddDynamic(this,&UWidgetCanvasWorld::OpenZone);
 
 	m_Calculator->SetVisibility(ESlateVisibility::Collapsed);
 
@@ -167,7 +142,7 @@ void UWidgetCanvasWorld::OpenSkill()
 
 void UWidgetCanvasWorld::OpenCraft()
 {
-	m_CraftPanel->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
+	m_CraftPanel->OpenPanel();
 }
 
 void UWidgetCanvasWorld::OpenShop(const FName& traderID)
@@ -178,12 +153,11 @@ void UWidgetCanvasWorld::OpenShop(const FName& traderID)
 void UWidgetCanvasWorld::OpenStorage()
 {
 	m_StoragePanel->OpenPanel();
-	
 }
 
 void UWidgetCanvasWorld::OpenZone()
 {
-	m_ZonePanel->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
+	m_ZonePanel->OpenPanel();
 }
 
 void UWidgetCanvasWorld::OpenPet()

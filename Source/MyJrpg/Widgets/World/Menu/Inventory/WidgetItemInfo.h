@@ -78,6 +78,8 @@ protected:
 	void UpdateRegisterBtn();
 
 	void UpdateEnchantBtn();
+
+	FText GetTypeText(EItemType t);
 	
 public:
 	void SetItemInfo(EItemInfo info,const FName& oID, UInventory* inven);

@@ -73,7 +73,6 @@ public:
 	
 	FName GetItemID() const;
 
-
 	void UpdateElement(const FName& id);
 	
 	void Clear();

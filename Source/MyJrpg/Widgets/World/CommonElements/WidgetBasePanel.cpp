@@ -10,9 +10,16 @@ void UWidgetBasePanel::NativeOnInitialized()
 	m_BtnClose->OnClicked.AddDynamic(this,&UWidgetBasePanel::ClosePanel);
 
 	m_BtnClose->IsFocusable = false;
+
+	SetVisibility(ESlateVisibility::Collapsed);
 }
 
 void UWidgetBasePanel::ClosePanel()
 {
 	SetVisibility(ESlateVisibility::Collapsed);
+}
+
+void UWidgetBasePanel::OpenPanel()
+{
+	SetVisibility(ESlateVisibility::SelfHitTestInvisible);
 }

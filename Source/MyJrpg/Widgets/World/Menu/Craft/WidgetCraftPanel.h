@@ -68,7 +68,7 @@ protected:
 	UWidgetCraftFilterBtns* m_EquipFilter;
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (BindWidget))
 	UWidgetCraftColorFilterBtns* m_ColorFilter;
-	
+
 protected:
 	UPROPERTY()
 	TArray<UWidgetCraftCostElement*> m_AryEle;
@@ -80,6 +80,8 @@ protected:
 	EEquipSlotType m_FilterCategoryEquip;
 
 	FName m_FilterColorData;
+
+	FDelegateHandle m_DeleUpdate;
 
 	int m_nCnt;
 
@@ -104,6 +106,8 @@ protected:
 	
 public:
 	virtual void ClosePanel() override;
+
+	virtual void OpenPanel() override;
 	
 	UFUNCTION()
 	void Craft();

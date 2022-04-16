@@ -76,6 +76,13 @@ void UWidgetZoneSelectButton::CreateZoneElement(const TArray<FDropRewardItem>& A
 {
 	for(const FDropRewardItem& Data : AryItems)
 	{
+		if(m_SetRewardItems.Contains(Data.m_Item.RowName))
+		{
+			return;
+		}
+		
+		m_SetRewardItems.Add(Data.m_Item.RowName);
+		
 		UWidgetZoneItemElement* SelectButton = CreateWidget<UWidgetZoneItemElement>(this,m_ClassItem);
 
 		SelectButton->SetZone(Data);
@@ -89,6 +96,8 @@ void UWidgetZoneSelectButton::CreateItems(const FZone& zone_data)
 	m_HoriItemParents->ClearChildren();
 
 	m_AryZoneElements.Reset();
+
+	m_SetRewardItems.Reset();
 	
 	const TArray<FDropRewardItem>* AryDropItems = UMyGameInstance::Get->m_RewardManager->GetDropItems(zone_data.m_ZoneUniqueID);
 

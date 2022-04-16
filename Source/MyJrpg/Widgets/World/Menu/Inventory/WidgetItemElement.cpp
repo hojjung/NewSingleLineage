@@ -133,8 +133,6 @@ void UWidgetItemElement::MoveItem(UInventory* addHere,UInventory* removeHere,con
 
 void UWidgetItemElement::SellItem()
 {
-	PRINTF("UUWidgetShopItemElement::TryBuyItem");
-
 	const FName ID = m_Inven->GetItemID(m_nIndex);
 
 	bool IsEquip =  UMyLib::GetItemType(ID) == EItemType::Equip;
@@ -234,8 +232,6 @@ void UWidgetItemElement::UpdateElement()
 
 void UWidgetItemElement::UpdateElement(const FName& id)
 {
-	
-	
 	const FItemDataRow& ItemData = UMyLib::GetItemData(id);
 
 	if(UMyLib::GetItemType(ItemData) == EItemType::Equip)
@@ -288,6 +284,16 @@ void UWidgetItemElement::OnClicked()
 	if(IsSlotEmpty())
 	{
 		return;
+	}
+
+	if (m_PanelType == EPanelType::Inven)
+	{
+		EItemType ItemType = UMyLib::GetItemType(GetItemID());
+
+		if (ItemType == EItemType::None || ItemType == EItemType::misc)
+		{
+			return;
+		}
 	}
 
 	if(m_TextFocus->IsVisible())

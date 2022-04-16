@@ -172,6 +172,10 @@ void UWidgetCraftPanel::UpdateCraftablePanel()
 
 void UWidgetCraftPanel::UpdateCraftCostPanel()
 {
+	if(!UMyGameInstance::Get->m_CraftManager->GetCrntItemRow())
+	{
+		return;
+	}
 	for(UWidgetCraftCostElement* Ele : m_AryEle)
 	{
 		Ele->UpdateCostAmount();
@@ -281,6 +285,15 @@ void UWidgetCraftPanel::ClosePanel()
 	m_BtnCraft->SetVisibility(ESlateVisibility::Collapsed);
 
 	m_GoldIcon->SetVisibility(ESlateVisibility::Collapsed);
+
+	UMyGameInstance::Get->m_Inven->m_OnInvenChanged.Remove(m_DeleUpdate);
+}
+
+void UWidgetCraftPanel::OpenPanel()
+{
+	Super::OpenPanel();
+
+	m_DeleUpdate = UMyGameInstance::Get->m_Inven->m_OnInvenChanged.AddUObject(this,&UWidgetCraftPanel::UpdateCraftCostPanel);
 }
 
 bool UWidgetCraftPanel::IsFilterType(const FItemDataRow& itemData)

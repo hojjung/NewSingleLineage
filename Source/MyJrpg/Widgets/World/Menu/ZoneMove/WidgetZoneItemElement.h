@@ -24,6 +24,12 @@ protected:
 	const FItemDataRow* m_ItemRow;
 
 	int m_nCntDrop;
+
+	FName m_ID;
+
+protected:
+	void OnHoldComplete();
+	
 public:
 	void SetZone(const FDropRewardItem& data);
 

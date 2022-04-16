@@ -48,7 +48,7 @@ protected:
 	
 	void RemoveInvenDelegate();
 public:
-	void OpenPanel();
+	virtual void OpenPanel() override;
 
 	virtual void ClosePanel() override;
 	UFUNCTION()

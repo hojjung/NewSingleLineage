@@ -80,6 +80,8 @@ void UWidgetItemInfo::SetTypeInfo(EItemInfo info, EItemType type, const FItemDat
 	m_BtnEnchant->SetVisibility(ESlateVisibility::Collapsed);
 	m_BtnEraseItem->SetVisibility(ESlateVisibility::Collapsed);
 	m_BtnRegister->SetVisibility(ESlateVisibility::Collapsed);
+
+	m_TextItemType->SetText(GetTypeText(type));
 	
 	switch (info)
 	{
@@ -150,6 +152,17 @@ void UWidgetItemInfo::UpdateEnchantBtn()//가지고있으면 해당 인벤으로
 	}
 
 	m_BtnEnchant->SetIsEnabled(true);
+}
+
+FText UWidgetItemInfo::GetTypeText(EItemType t)
+{
+	switch (t)
+	{
+		case EItemType::Consume: return NSLOCTEXT("UWidgetItemInfo","TypeConsume","소모품");
+		case EItemType::Equip: return NSLOCTEXT("UWidgetItemInfo","TypeEquip","장비");
+	}
+
+	return NSLOCTEXT("UWidgetItemInfo","TypeMisc","재료");
 }
 
 void UWidgetItemInfo::UpdateRegisterBtn()

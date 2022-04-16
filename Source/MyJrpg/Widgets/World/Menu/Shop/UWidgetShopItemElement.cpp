@@ -80,7 +80,14 @@ void UUWidgetShopItemElement::OnClicked()
 
 	if(m_TextFocus->IsVisible())
 	{
-		OpenStackCalculator();
+		if(UMyLib::IsEquip(m_ItemID))
+		{
+			UMyGameInstance::Get->m_ShopManager->BuyItem(m_ItemID,1);
+		}
+		else
+		{
+			OpenStackCalculator();
+		}
 		SetMyUnFocus();
 		return;
 	}
