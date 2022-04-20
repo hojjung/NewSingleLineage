@@ -38,8 +38,8 @@ APreviewActor::APreviewActor()
 	//
 	m_Spring = CreateDefaultSubobject<USpringArmComponent>("Spring");
 	m_Spring->SetupAttachment(RootComponent);
-	m_Spring->SetRelativeRotation(FRotator(0.f, 200.f, 0));
-	m_Spring->TargetArmLength = 450.f;
+	m_Spring->SetRelativeRotation(FRotator(-5.f, 200.f, 0));
+	m_Spring->TargetArmLength = 250.f;
 	m_Spring->bDoCollisionTest = 0;
 
 	m_Capture = CreateDefaultSubobject<USceneCaptureComponent2D>("Capture2D");
@@ -50,7 +50,7 @@ APreviewActor::APreviewActor()
 	m_Capture->CaptureSource = ESceneCaptureSource::SCS_SceneColorHDR;
 	m_Capture->SetTickableWhenPaused(true);
 	m_Capture->ProjectionType = ECameraProjectionMode::Perspective;
-	m_Capture->FOVAngle = 30.f;
+	m_Capture->FOVAngle = 55.f;
 	//
 	m_Light = CreateDefaultSubobject<UPointLightComponent>("m_Light");
 	m_Light->SetupAttachment(RootComponent);
@@ -90,6 +90,11 @@ void APreviewActor::SetEntity(TSoftObjectPtr<UUnitEntityAsset> asset)
 	{
 		
 	}
+}
+
+void APreviewActor::SetMeshScale(float s)
+{
+	m_MeshBody->SetRelativeScale3D(FVector(s));
 }
 
 void APreviewActor::OnMeshVisualChanged(const FPlayerUnitEntityRow& charData)

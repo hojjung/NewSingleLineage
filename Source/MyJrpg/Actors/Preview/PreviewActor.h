@@ -54,6 +54,8 @@ protected:
 	void SetEntity(TSoftObjectPtr<UUnitEntityAsset> asset);
 
 public:
+	void SetMeshScale(float s);
+	
 	void OnMeshVisualChanged(const FPlayerUnitEntityRow& charData);
 
 	void OnMeshVisualChanged(const FPetRow& selected);
