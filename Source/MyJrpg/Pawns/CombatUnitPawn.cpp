@@ -118,6 +118,23 @@ void ACombatUnitPawn::ShowPopupText(float nbr, ETextType t)
 	UMyLib::GetPlayerCon()->ShowInGameWorldText(nbr,this,t);
 }
 
+void ACombatUnitPawn::TrySnapToGround()
+{
+	FVector ActorLoc = GetActorLocation();
+	FNavLocation Loc;
+	if(!UMyLib::GetNavSys()->ProjectPointToNavigation(ActorLoc,Loc))
+	{
+		if(UMyLib::GetNavSys()->GetRandomPointInNavigableRadius(ActorLoc,1000,Loc))
+		{
+			SetActorLocation(Loc);			
+		}
+		else
+		{
+			PRINTF("ACombatUnitPawn::Im Flying");
+		}
+	}
+}
+
 void ACombatUnitPawn::SetEntity(const FName& id, const FNpcUnitEntityRow& unitEntityRow)
 {
 	Super::SetEntity(id, unitEntityRow);
@@ -143,19 +160,7 @@ void ACombatUnitPawn::SetEntity(const FName& id, const FNpcUnitEntityRow& unitEn
 
 	m_Movement->MaxSpeed = m_StatGroup.m_MoveSpeed;
 
-	FVector ActorLoc = GetActorLocation();
-	FNavLocation Loc;
-	if(!UMyLib::GetNavSys()->ProjectPointToNavigation(ActorLoc,Loc))
-	{
-		if(UMyLib::GetNavSys()->GetRandomPointInNavigableRadius(ActorLoc,1000,Loc))
-		{
-			SetActorLocation(Loc);			
-		}
-		else
-		{
-			PRINTF("ACombatUnitPawn::Im Flying");
-		}
-	}
+	m_TeamID = unitEntityRow.m_FriendTeamID;
 }
 
 void ACombatUnitPawn::Tick(float DeltaSeconds)
@@ -328,6 +333,16 @@ const TArray<AActor*>& ACombatUnitPawn::GetTraceIgnoredActors() const
 const TArray<TEnumAsByte<EObjectTypeQuery>>& ACombatUnitPawn::GetTraceObjTypes() const
 {
 	return m_AryTargetingObjectType;
+}
+
+const FName& ACombatUnitPawn::GetTeamID() const
+{
+	return m_TeamID;
+}
+
+bool ACombatUnitPawn::IsSneak() const
+{
+	return false;
 }
 
 void ACombatUnitPawn::Dead()

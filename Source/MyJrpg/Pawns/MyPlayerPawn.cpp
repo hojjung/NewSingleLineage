@@ -23,6 +23,7 @@ AMyPlayerPawn::AMyPlayerPawn(const FObjectInitializer& objInit):Super(objInit)
 	m_bIsSkillUsing = false;
 	m_bCanMoveInSkill = false;
 	m_bIsInvincible = false;
+	m_bIsSneaking = false;
 
 	m_Light = CreateDefaultSubobject<UPointLightComponent>("m_Light");
 	m_Light->SetupAttachment(m_Capsule);
@@ -35,14 +36,14 @@ AMyPlayerPawn::AMyPlayerPawn(const FObjectInitializer& objInit):Super(objInit)
 
 	m_DissolveCam = CreateDefaultSubobject<UCameraDissolve>(TEXT("CamDissolve00"));
 	m_DissolveCam->SetupAttachment(RootComponent);
-	m_DissolveCam->SetRelativeRotation(FRotator(-52, -45.f, 0.f)); //-45.f
-	m_DissolveCam->TargetArmLength = 2800; //1375
-	m_DissolveCam->m_SocketOffset = FVector(0,0,-250.0f);
+	m_DissolveCam->SetRelativeRotation(FRotator(-45, -45.f, 0.f)); //-45.f
+	m_DissolveCam->TargetArmLength = 2000; //1375
+	m_DissolveCam->m_SocketOffset = FVector(0,0,-50);
 	m_DissolveCam->CameraLagSpeed=30;
 	//
 	m_TopCamera = CreateDefaultSubobject<UCameraComponent>(TEXT("FollowCamera00"));
 	m_TopCamera->SetupAttachment(m_DissolveCam);
-	m_TopCamera->FieldOfView = 20.f;
+	m_TopCamera->FieldOfView = 65.f;
 	//
 	m_AryTargetingObjectType.Reset();
 	m_AryTargetingObjectType.Add(EObjectTypeQuery::ObjectTypeQuery3);
@@ -181,6 +182,7 @@ void AMyPlayerPawn::SetupPlayerInputComponent(UInputComponent* PlayerInputCompon
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
 	PlayerInputComponent->BindAxis(TEXT("MoveForward"), this, &AMyPlayerPawn::MoveForward);
 	PlayerInputComponent->BindAxis(TEXT("MoveRight"), this, &AMyPlayerPawn::MoveRight);
+	PlayerInputComponent->BindAction(TEXT("Sneak"), EInputEvent::IE_Pressed,this, &AMyPlayerPawn::SetSneak);
 }
 
 bool AMyPlayerPawn::IsInputMoving()
@@ -293,6 +295,11 @@ void AMyPlayerPawn::ShootBaseRangeAttack()
 UAnimMontage* AMyPlayerPawn::GetBaseAttackMontage()
 {
 	return m_AnimInst->GetBasAttackAnim();
+}
+
+void AMyPlayerPawn::SetSneak()
+{
+	m_bIsSneaking = !m_bIsSneaking;
 }
 
 void AMyPlayerPawn::OnNotifyTrigger(const FName& name)
@@ -416,3 +423,9 @@ bool AMyPlayerPawn::IsRange()
 {
 	return UMyGameInstance::Get->m_EquipManager->IsRangeStance();
 }
+
+bool AMyPlayerPawn::IsSneak() const
+{
+	return m_bIsSneaking;
+}
+

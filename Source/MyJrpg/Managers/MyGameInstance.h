@@ -8,6 +8,7 @@
 #include "CraftManager.h"
 #include "CurrencyManager.h"
 #include "EnchantManager.h"
+#include "FriendKarmaManager.h"
 #include "ItemExecuteManager.h"
 #include "LevelMoveManager.h"
 #include "ParticleEffectManager.h"
@@ -86,6 +87,8 @@ public:
 	UPetManager* m_PetManager;
 	UPROPERTY()
 	UGameRuleBase* m_GameRule;
+	UPROPERTY()
+	UFriendKarmaManager* m_TeamKarma;
 	
 protected:
 	virtual void BeginDestroy() override;

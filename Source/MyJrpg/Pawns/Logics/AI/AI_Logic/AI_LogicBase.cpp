@@ -1,6 +1,7 @@
 #include "AI_LogicBase.h"
 
 #include "MyJrpg/MyLib.h"
+#include "MyJrpg/Managers/MyGameInstance.h"
 #include "MyJrpg/Pawns/CombatUnitPawn.h"
 
 void UAI_LogicBase::Init(ACombatUnitPawn* owner)
@@ -22,4 +23,52 @@ bool UAI_LogicBase::CheckTargetRange(float rangeSqr)
 bool UAI_LogicBase::CheckAngle(float angleEuler)
 {
 	return UMyLib::CheckAngle(m_Owner,m_Owner->GetFocusedTarget(),angleEuler);
+}
+
+EKarma UAI_LogicBase::GetUnitKarma(const ACombatUnitPawn* Other)
+{
+	const FName& TeamID = Other->GetTeamID();
+
+	int Karma = UMyGameInstance::Get->m_TeamKarma->GetKarma(TeamID);
+
+	if(Karma >= FGlobalVariable::KARMA_FRIEND)
+	{
+		return EKarma::Friendly;
+	}
+	else if(Karma <= FGlobalVariable::KARMA_FOE)
+	{
+		return EKarma::Hate;
+	}
+	return  EKarma::Neutral;
+}
+
+void UAI_LogicBase::OnTargetFocused(const ACombatUnitPawn* Other)
+{
+	switch (GetUnitKarma(Other))
+	{
+	case EKarma::Neutral:
+		OnFocusNeutral();
+		break;
+	case EKarma::Friendly:
+		OnFocusFriendly();
+		break;
+	case EKarma::Hate:
+		OnFocusHate();
+		break;
+	}
+}
+
+void UAI_LogicBase::OnFocusNeutral()
+{
+	
+}
+
+void UAI_LogicBase::OnFocusFriendly()
+{
+	
+}
+
+void UAI_LogicBase::OnFocusHate()
+{
+	
 }

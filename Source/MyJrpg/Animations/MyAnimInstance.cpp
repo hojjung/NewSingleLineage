@@ -1,6 +1,5 @@
 #include "MyAnimInstance.h"
-
-#include "MyJrpg/Pawns/BaseUnitPawn.h"
+#include "MyJrpg/Pawns/CombatUnitPawn.h"
 
 void FMyAnimInstanceProxy::InitializeObjects(UAnimInstance* InAnimInstance)
 {
@@ -18,14 +17,14 @@ void UMyAnimInstance::NativeBeginPlay()
 {
 	Super::NativeBeginPlay();
 
-	m_Owner=Cast<ABaseUnitPawn>( TryGetPawnOwner());
+	m_Owner=Cast<ACombatUnitPawn>( TryGetPawnOwner());
 }
 
 void UMyAnimInstance::NativeInitializeAnimation()
 {
 	Super::NativeInitializeAnimation();
 
-	m_Owner=Cast<ABaseUnitPawn>( TryGetPawnOwner());
+	m_Owner=Cast<ACombatUnitPawn>( TryGetPawnOwner());
 }
 
 void UMyAnimInstance::UpdateMoveFlag()
@@ -38,6 +37,5 @@ void UMyAnimInstance::UpdateMoveFlag()
 //#endif
 	m_bIsMoving=m_Owner->IsMoving();
 	m_bIsRange=m_Owner->IsRange();
-	//UninitializeAnimation();
-	//ParallelEvaluateAnimation()
+	m_bIsSneaking=m_Owner->IsSneak();
 }

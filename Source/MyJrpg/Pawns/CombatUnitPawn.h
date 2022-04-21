@@ -64,6 +64,8 @@ protected:
 	
 	FStatGroup m_StatGroup;
 
+	FName m_TeamID;
+
 private:
 	void CreateSetDeathCurve(float fullLength);
 	
@@ -89,7 +91,8 @@ protected:
 	virtual UAnimMontage* GetBaseAttackMontage();
 
 	virtual void ShowPopupText(float nbr, ETextType t);
-	
+	void TrySnapToGround();
+
 public:
 	virtual void SetEntity(const FName& id, const FNpcUnitEntityRow& unitEntityRow) override;
 
@@ -146,4 +149,8 @@ public:
 	const TArray<AActor*>& GetTraceIgnoredActors() const;
 
 	const TArray<TEnumAsByte< EObjectTypeQuery>>& GetTraceObjTypes() const;
+
+	const FName& GetTeamID() const;
+
+	virtual bool IsSneak() const;
 };

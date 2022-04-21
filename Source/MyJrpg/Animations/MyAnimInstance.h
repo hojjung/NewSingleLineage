@@ -5,7 +5,7 @@
 #include "Animation/AnimInstanceProxy.h"
 #include "MyAnimInstance.generated.h"
 
-class ABaseUnitPawn;
+class ACombatUnitPawn;
 class UMyAnimInstance;
 
 USTRUCT(BlueprintType)
@@ -31,11 +31,13 @@ public:
 	UPROPERTY(Transient, BlueprintReadOnly,meta = (AllowPrivateAccess = "true"))
 	FMyAnimInstanceProxy m_Proxy;
 	UPROPERTY()
-	ABaseUnitPawn* m_Owner;
+	ACombatUnitPawn* m_Owner;
 	UPROPERTY(Transient,VisibleAnywhere,BlueprintReadWrite)
 	bool m_bIsMoving;
 	UPROPERTY(Transient,VisibleAnywhere,BlueprintReadWrite)
 	bool m_bIsRange;
+	UPROPERTY(Transient,VisibleAnywhere,BlueprintReadWrite)
+	bool m_bIsSneaking;
 public:
 	virtual void NativeBeginPlay() override;
 

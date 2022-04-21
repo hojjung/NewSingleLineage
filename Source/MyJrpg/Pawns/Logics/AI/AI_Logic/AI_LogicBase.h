@@ -13,6 +13,17 @@ protected:
 	UPROPERTY()
 	ACombatUnitPawn* m_Owner;
 
+protected:
+	EKarma GetUnitKarma(const ACombatUnitPawn* Other);
+
+	virtual void OnTargetFocused(const ACombatUnitPawn* Other);
+
+	virtual void OnFocusNeutral();
+
+	virtual void OnFocusFriendly();
+
+	virtual void OnFocusHate();
+	
 public:
 	virtual void Init(ACombatUnitPawn* owner);
 

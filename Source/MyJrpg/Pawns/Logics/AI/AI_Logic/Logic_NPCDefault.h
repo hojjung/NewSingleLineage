@@ -43,6 +43,8 @@ protected:
 
 	float m_fDeltaTime;
 
+	float m_fAlertTimer;
+
 protected:
 	FString CurrentState();
 	
@@ -53,6 +55,17 @@ protected:
 	void OnChase();
 	
 	virtual void OnCombat();
+
+	void AlertEnemyToAllies();
+
+protected:
+	virtual void OnFocusFriendly() override;
+
+	virtual void OnFocusNeutral() override;
+
+	virtual void OnFocusHate() override;
+
+	
 
 public:
 	virtual void Init(ACombatUnitPawn* pawnUnit) override;

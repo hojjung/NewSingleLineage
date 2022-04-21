@@ -2,6 +2,7 @@
 #include "CoreMinimal.h"
 #include "MyJrpg/Interfaces/PreviewProxy.h"
 #include "UObject/NoExportTypes.h"
+#include "UObject/StrongObjectPtr.h"
 #include "PetManager.generated.h"
 
 class APreviewActor;

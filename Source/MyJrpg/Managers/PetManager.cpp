@@ -1,5 +1,4 @@
 #include "PetManager.h"
-
 #include "MyJrpg/MyLib.h"
 #include "MyJrpg/Actors/Preview/PreviewActor.h"
 #include "MyJrpg/DataTables/PetTable.h"

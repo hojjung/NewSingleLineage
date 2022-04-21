@@ -64,7 +64,9 @@ protected:
 	
 	FTimerHandle m_InvincTimer;
 
-	TWeakObjectPtr<ACombatUnitPawn> m_LastAttacker; 
+	TWeakObjectPtr<ACombatUnitPawn> m_LastAttacker;
+
+	bool m_bIsSneaking;
 
 private:
 	void DealBaseMeleeAttack();
@@ -73,7 +75,8 @@ private:
 
 	virtual UAnimMontage* GetBaseAttackMontage() override;
 
-protected:
+	void SetSneak();
+
 	void MoveForward(float AxisValue);
 
 	void MoveRight(float AxisValue);
@@ -117,8 +120,6 @@ public:
 
 	bool CanMoveInSkill();
 
-	
-
 	void UpdateStat(const FStatGroup& stat_group);
 	
 	virtual bool TakeDmg(float amount, ACombatUnitPawn* attacker) override;
@@ -148,6 +149,10 @@ public:
 	void RemoveBulletPool();
 
 	virtual bool IsRange() override;
+
+	virtual bool IsSneak() const override;
+
+	
 };
 
 

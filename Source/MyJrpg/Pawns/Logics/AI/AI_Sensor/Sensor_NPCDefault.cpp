@@ -8,7 +8,7 @@
 
 USensor_NPCDefault::USensor_NPCDefault()
 {
-	m_SightRadius = 900.f;
+	m_SightRadius = 700.f;
 }
 
 void USensor_NPCDefault::Init(ACombatUnitPawn* owner)
@@ -22,6 +22,7 @@ void USensor_NPCDefault::UpdateAISensing()
 	{
 		return;
 	}
+	
 	ACombatUnitPawn* Pawn = GetSensedPawn();
 
 	if (Pawn)
@@ -44,7 +45,7 @@ void USensor_NPCDefault::UpdateAISensing()
 	}
 }
 
-bool USensor_NPCDefault::CheckDistAndAngle(const ABaseUnitPawn* Other)
+bool USensor_NPCDefault::CheckDistAndAngle(const ACombatUnitPawn* Other)
 {
 	if (!Other)
 	{
@@ -52,25 +53,34 @@ bool USensor_NPCDefault::CheckDistAndAngle(const ABaseUnitPawn* Other)
 	}
 
 	FVector const OtherLoc = Other->GetActorLocation();
-
+	
 	FVector const SensorLoc = GetSensorLocation();
-
+	
 	FVector const SelfToOther = OtherLoc - SensorLoc;
 
-	m_fCurrentTargetDist = SelfToOther.SizeSquared();
-
-	if (m_fCurrentTargetDist > FMath::Square(m_SightRadius))
+	float const SelfToOtherDistSquared = SelfToOther.SizeSquared();
+	
+	if (SelfToOtherDistSquared > FMath::Square(m_SightRadius))
 	{
 		return false;
 	}
 
-	return true;
+	if(!Other->IsSneak())
+	{
+		return true;//은신안하면 사거리로 보이고, 은신하면 부채꼴
+	}
+	
+	FVector const SelfToOtherDir = SelfToOther.GetSafeNormal();
+
+	FVector const MyFacingDir = GetSensorRotation().Vector();
+	
+	return (SelfToOtherDir | MyFacingDir) >= m_PeripheralVisionCosine;
 }
 
 ACombatUnitPawn* USensor_NPCDefault::GetSensedPawn()
 {
 	AMyPlayerPawn* Player = UMyLib::GetPlayer();
-
+	
 	if (!HasLineOfSightTo(Player))
 	{
 		return nullptr;

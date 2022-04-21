@@ -87,27 +87,7 @@ void ULogic_Player::CheckSetState()
 		return;
 	}
 
-	float Range = m_fMeleeRangeSqr;
-
-	if (m_Owner->IsRangeMode())
-	{
-		if(!m_Owner->LineOfSightTo(NPCPawn))
-		{
-			Range = 100;	
-		}
-		else
-		{
-			Range = m_fRangeRangeSqr;
-		}
-	}
-
-	if (!CheckTargetRange(Range))
-	{
-		m_CurrentState = EFSM::Chase;
-		return;
-	}	
-
-	m_CurrentState = EFSM::Combat;
+	OnTargetFocused(NPCPawn);
 }
 
 void ULogic_Player::OnIdle()
@@ -140,6 +120,45 @@ void ULogic_Player::OnInteract()
 {
 	
 }
+
+void ULogic_Player::OnFocusFriendly()
+{
+	m_CurrentState = EFSM::Idle;
+}
+
+void ULogic_Player::OnFocusNeutral()
+{
+	OnFocusFriendly();
+}
+
+void ULogic_Player::OnFocusHate()
+{
+	ACombatUnitPawn* NPCPawn = Cast<ACombatUnitPawn>( m_Owner->GetFocusedTarget());
+	
+	float Range = m_fMeleeRangeSqr;
+
+	if (m_Owner->IsRangeMode())
+	{
+		if(!m_Owner->LineOfSightTo(NPCPawn))
+		{
+			Range = 100;	
+		}
+		else
+		{
+			Range = m_fRangeRangeSqr;
+		}
+	}
+
+	if (!CheckTargetRange(Range))
+	{
+		m_CurrentState = EFSM::Chase;
+		return;
+	}	
+
+	m_CurrentState = EFSM::Combat;
+}
+
+
 
 void ULogic_Player::ResetStartPosition(FVector loc)
 {

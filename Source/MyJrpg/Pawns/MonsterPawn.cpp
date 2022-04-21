@@ -86,6 +86,7 @@ void AMonsterPawn::SetEntity(const FName& id,const FNpcUnitEntityRow& unitEntity
 	if(unitEntityRow.m_Bullet)
 	{
 		m_Pool = NewObject<UBulletPool>(this);
+		
 		m_Pool->InitPool(GetStat().m_Dmg,5,unitEntityRow.m_Bullet,this,unitEntityRow.m_fBulletScale);
 	}
 
@@ -190,6 +191,8 @@ void AMonsterPawn::Revive()
 	float AnimLength = m_EntityAsset->m_SpawnAnim->GetPlayLength() - 0.4f;
 	//
 	GetWorldTimerManager().SetTimer(m_DeathAnimTimer, this, &AMonsterPawn::OnReviveAnimEnd, AnimLength, false);
+
+	TrySnapToGround();
 }
 
 void AMonsterPawn::OnReviveAnimEnd()
@@ -204,7 +207,6 @@ void AMonsterPawn::OnReviveAnimEnd()
 	SetActorTickEnabled(true);
 
 	m_StatGroup.m_Hp = m_fMaxHp;
-
 }
 
 void AMonsterPawn::SetReviveTimer()

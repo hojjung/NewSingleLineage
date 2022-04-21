@@ -1,5 +1,4 @@
 #include "Sensor_LogicBase.h"
-
 #include "TimerManager.h"
 #include "Engine/Engine.h"
 #include "MyJrpg/Pawns/CombatUnitPawn.h"
@@ -7,10 +6,11 @@
 #include "Perception/AISense_Team.h"
 #include "Perception/PawnSensingComponent.h"
 
-
 USensor_LogicBase::USensor_LogicBase()
 {
 	m_SensingInterval = 0.3f;
+
+	SetPeripheralVisionAngle(25);
 }
 
 void USensor_LogicBase::Init(ACombatUnitPawn* owner)
@@ -19,7 +19,6 @@ void USensor_LogicBase::Init(ACombatUnitPawn* owner)
 	
 	SetSensingUpdatesEnabled(true);
 }
-
 
 void USensor_LogicBase::SetSensingUpdatesEnabled(const bool bEnabled)
 {
@@ -145,7 +144,7 @@ bool USensor_LogicBase::IsSensorActor(const AActor* Actor) const
 	return (Actor == GetSensorActor());
 }
 
-bool USensor_LogicBase::CheckDistAndAngle(const ABaseUnitPawn* Other)
+bool USensor_LogicBase::CheckDistAndAngle(const ACombatUnitPawn* Other)
 {
 	if (!Other)
 	{
@@ -165,5 +164,16 @@ bool USensor_LogicBase::CheckDistAndAngle(const ABaseUnitPawn* Other)
 		return false;
 	}
 	
-	return true;
+	FVector const SelfToOtherDir = SelfToOther.GetSafeNormal();
+
+	FVector const MyFacingDir = GetSensorRotation().Vector();
+	
+	return (SelfToOtherDir | MyFacingDir) >= m_PeripheralVisionCosine;
+}
+
+void USensor_LogicBase::SetPeripheralVisionAngle(const float NewPeripheralVisionAngle)
+{
+	m_PeripheralVisionAngle = NewPeripheralVisionAngle;
+	
+	m_PeripheralVisionCosine = FMath::Cos(FMath::DegreesToRadians(m_PeripheralVisionAngle));
 }

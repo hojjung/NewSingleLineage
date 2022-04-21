@@ -17,6 +17,13 @@ class MYJRPG_API USensor_LogicBase : public UObject
 {
 	GENERATED_BODY()
 
+public:
+	DECLARE_DELEGATE_OneParam(FSeePawnDelegate, APawn*);
+	DECLARE_DELEGATE_ThreeParams(FHearNoiseDelegate, APawn*, const FVector&, float);
+	
+public:
+	USensor_LogicBase();
+
 protected:
 	UPROPERTY()
 	ACombatUnitPawn* m_Owner;
@@ -24,17 +31,15 @@ protected:
 	float m_SensingInterval;
 
 	float m_SightRadius;
-public:
-	DECLARE_DELEGATE_OneParam(FSeePawnDelegate, APawn*);
-	DECLARE_DELEGATE_ThreeParams(FHearNoiseDelegate, APawn*, const FVector&, float);
+
+	float m_PeripheralVisionCosine;
+
+	float m_PeripheralVisionAngle;
+	
+	FTimerHandle TimerHandle_OnTimer;
 
 public:
-	USensor_LogicBase();
-	
 	virtual void Init(ACombatUnitPawn* owner);
-	//
-    
-	FTimerHandle TimerHandle_OnTimer;
 	
 protected:
 	void OnTimer();
@@ -43,7 +48,9 @@ protected:
 
 	virtual void UpdateAISensing();
 
-	virtual bool CheckDistAndAngle(const ABaseUnitPawn* Other);
+	virtual bool CheckDistAndAngle(const ACombatUnitPawn* Other);
+
+	void SetPeripheralVisionAngle(const float NewPeripheralVisionAngle);
 
 public:
 	void SetSensingInterval(const float NewSensingInterval);

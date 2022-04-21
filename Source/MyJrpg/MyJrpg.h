@@ -69,6 +69,14 @@ namespace FGlobalVariable
 	static const int QUICKSLOT_MAX = 5;
 
 	static const int ENCHANT_MAX = 20;
+
+	static const int KARMA_MAX = 100;
+	
+	static const int KARMA_MIN = -100;
+
+	static const int KARMA_FRIEND = 50;
+	
+	static const int KARMA_FOE = -50;
 };
 
 #define PRINTFSCREEN(Format, ...) if (GEngine) GEngine->AddOnScreenDebugMessage(-1, 3.5, FColor::Green, *FString::Printf(TEXT(Format), ##__VA_ARGS__),true)
@@ -150,3 +158,17 @@ enum class EMapType : uint8
 	Boss,
 	Length UMETA(Hidden)
 };
+
+enum class EKarma
+{
+	Neutral,
+	Friendly,
+	Hate
+};
+
+template<typename T>
+  TSharedPtr<T> MakeSharedUObject(T* obj)
+{
+	TSharedRef< TStrongObjectPtr<T> > SharedRefToStrongObjPtr = MakeShared< TStrongObjectPtr<T> >(obj);
+	return TSharedPtr<T>(SharedRefToStrongObjPtr, SharedRefToStrongObjPtr->Get());
+}

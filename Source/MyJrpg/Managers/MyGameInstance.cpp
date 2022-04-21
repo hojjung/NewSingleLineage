@@ -94,6 +94,8 @@ void UMyGameInstance::Init()
 
 	m_PetManager = NewObject<UPetManager>(this);
 
+	m_TeamKarma = NewObject<UFriendKarmaManager>(this);
+
 	m_AryStorage.Reset();
 	m_AryStorage.Add(NewObject<UInventory>(this));
 	m_AryStorage.Add(NewObject<UInventory>(this));
@@ -118,6 +120,7 @@ void UMyGameInstance::Init()
 	m_PlayerStatManager->Init();
 	m_EquipManager->Init();
 	m_BadwordTable->Init();
+	m_TeamKarma->Init();
 	//
 	IterateItemTableToRegister();
 	FirstTimeItemSetup();

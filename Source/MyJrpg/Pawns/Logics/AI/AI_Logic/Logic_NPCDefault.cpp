@@ -1,6 +1,7 @@
 #include "Logic_NPCDefault.h"
 #include "NavigationSystem.h"
 #include "MyJrpg/MyJrpg.h"
+#include "MyJrpg/MyLib.h"
 #include "MyJrpg/Pawns/CombatUnitPawn.h"
 #include "Navigation/PathFollowingComponent.h"
 
@@ -8,6 +9,8 @@
 void ULogic_NPCDefault::Init(ACombatUnitPawn* pawnUnit)
 {
 	Super::Init(pawnUnit);
+
+	m_fAlertTimer = -1.f;
 
 	m_fIdleTimer = -1.f;
 
@@ -64,29 +67,7 @@ void ULogic_NPCDefault::CheckSetState()
 	}
 	else
 	{
-		ACombatUnitPawn* TargetNPC =  Cast<ACombatUnitPawn>(m_Owner->GetFocusedTarget());
-
-		if (!TargetNPC->IsAlive())
-		{
-			SetIdle();
-
-			return;
-		}
-
-		float Range = GetAttackRangeSqr();
-
-		if (m_Owner->IsRangeMode() && !m_Owner->LineOfSightTo(TargetNPC))
-		{
-			Range = 100;
-		}
-		
-		if (!CheckTargetRange(Range))
-		{
-			m_CurrentState = EFSM::Chase;
-			return;
-		}	
-
-		m_CurrentState = EFSM::Combat;
+		OnTargetFocused(m_Owner);
 	}
 }
 
@@ -148,6 +129,77 @@ void ULogic_NPCDefault::OnCombat()
 	{
 		m_Owner->TryAttack();
 	}
+}
+
+void ULogic_NPCDefault::AlertEnemyToAllies()
+{
+	if(m_fAlertTimer > 0.f)
+	{
+		m_fAlertTimer -= m_fDeltaTime;
+
+		return;
+	}
+	m_fAlertTimer = FMath::FRandRange(2.f, 5.f);
+	
+	FVector Start = m_Owner->GetActorLocation();
+
+	TArray<AActor*> OutHits;
+	
+	//DrawDebugSphere(GetWorld(),Start,450,12,FColor::Red,false,1);
+	if(!UMyLib::SphereOverlapActors(m_Owner,m_Owner->GetActorRotation(),Start,450,
+		m_Owner->GetTraceObjTypes(),AMonsterPawn::StaticClass(),m_Owner->GetTraceIgnoredActors(),OutHits))
+	{
+		return;
+	}
+
+	for(auto Ally : OutHits)
+	{
+		AMonsterPawn* Mob = Cast<AMonsterPawn>(Ally);
+
+		//if(Mob->GetTeamID() == m_Owner->GetTeamID())
+		{
+			Mob->SetFocusedTarget(m_Owner->GetFocusedTarget());
+		}
+	}
+}
+
+void ULogic_NPCDefault::OnFocusFriendly()
+{
+	OnFocusNeutral();
+}
+
+void ULogic_NPCDefault::OnFocusNeutral()
+{
+	SetIdle();
+}
+
+void ULogic_NPCDefault::OnFocusHate()
+{
+	ACombatUnitPawn* TargetNPC =  Cast<ACombatUnitPawn>(m_Owner->GetFocusedTarget());
+	
+	if (!TargetNPC->IsAlive())
+	{
+		SetIdle();
+
+		return;
+	}
+	AlertEnemyToAllies();
+
+	float Range = GetAttackRangeSqr();
+
+	if (m_Owner->IsRangeMode() && !m_Owner->LineOfSightTo(TargetNPC))
+	{
+		Range = 100;
+	}
+		
+	if (!CheckTargetRange(Range))
+	{
+		m_CurrentState = EFSM::Chase;
+		
+		return;
+	}	
+
+	m_CurrentState = EFSM::Combat;
 }
 
 void ULogic_NPCDefault::ResetStartPosition(FVector loc)

@@ -115,6 +115,10 @@ public://스텟과 보상
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
 	bool m_bIsBoss = false;
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
+	bool m_bIsRespawn = true;
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
+	FName m_FriendTeamID;
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
 	TSubclassOf<UAI_LogicBase> m_ClassAI_Logic;
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
 	TSubclassOf<USensor_LogicBase> m_ClassAI_Sensor;
@@ -138,6 +142,7 @@ public://스텟과 보상
 	float m_fMaxSpawnTime = 5;
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
 	TArray<FDropRewardItem> m_AryDropItem;
+	
 };
 
 USTRUCT(BlueprintType)

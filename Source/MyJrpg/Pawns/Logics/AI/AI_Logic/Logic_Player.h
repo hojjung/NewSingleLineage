@@ -53,6 +53,13 @@ protected:
 
 	void OnInteract();
 
+protected:
+	virtual void OnFocusFriendly() override;
+
+	virtual void OnFocusHate() override;
+
+	virtual void OnFocusNeutral() override;
+
 public:
 	virtual void Init(ACombatUnitPawn* owner) override;
 

@@ -16,15 +16,16 @@ class MYJRPG_API USensor_NPCDefault : public USensor_LogicBase
 	GENERATED_BODY()
 
 public:
+	DECLARE_DELEGATE_OneParam(FSeePawnDelegate, APawn*);
+	DECLARE_DELEGATE_ThreeParams(FHearNoiseDelegate, APawn*, const FVector&, float);
+	
+public:
 	USensor_NPCDefault();
 	
 protected:
 	FVector m_LastSeenLocation;
 	
-public:
-	DECLARE_DELEGATE_OneParam(FSeePawnDelegate, APawn*);
-	DECLARE_DELEGATE_ThreeParams(FHearNoiseDelegate, APawn*, const FVector&, float);
-
+protected:
 	virtual void Init(ACombatUnitPawn* owner) override;
 
 	float m_fCurrentTargetDist;
@@ -33,5 +34,5 @@ public:
 
 	virtual void UpdateAISensing() override;
 
-	virtual bool CheckDistAndAngle(const ABaseUnitPawn* Other) override;
+	virtual bool CheckDistAndAngle(const ACombatUnitPawn* Other) override;
 };

@@ -16,6 +16,9 @@ void UWidgetConfirm::NativeOnInitialized()
 	m_URL_Private = TEXT("https://sites.google.com/d/1eNgJYa-FX0S-TKT_1oi3EwmuFPsj_Taf/p/1BQMc0eId0ROySCOxCIdI18dfaCqWvnh_/edit");
 
 	m_URL_Refund = TEXT("https://sites.google.com/d/1v7y1DvwBQM8vmNTKL2WO-Z4-NfBZJ1hK/p/1gcJeDXzLEGjHh2KXwu7hpnNISTkGvR6o/edit");
+	//Test
+
+	UMyGameInstance::Get->StartGame();
 }
 
 void UWidgetConfirm::OnConfirm()
