@@ -34,8 +34,10 @@ public:
 	UArrowComponent* m_ArrowComponent;
 	UPROPERTY(VisibleAnywhere)
 	UWidgetComponent* m_WidgetComp;
-	UPROPERTY(VisibleAnywhere)
+	UPROPERTY(VisibleAnywhere, Category="NPCPalette")
 	FName m_RowID;
+	UPROPERTY(EditAnywhere, Category="NPCPalette")
+	TArray<FName> m_AryDatas;
 
 	void SetTextIcon(FText,UTexture2D*);
 	

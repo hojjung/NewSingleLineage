@@ -90,7 +90,11 @@ void AMonsterPawn::SetEntity(const FName& id,const FNpcUnitEntityRow& unitEntity
 		m_Pool->InitPool(GetStat().m_Dmg,5,unitEntityRow.m_Bullet,this,unitEntityRow.m_fBulletScale);
 	}
 
-	m_bIsBoss = unitEntityRow.m_bIsBoss; 
+	m_bIsBoss = unitEntityRow.m_bIsBoss;
+
+	m_TalkID = unitEntityRow.m_TalkID;
+
+	CreateInventory();
 }
 
 void AMonsterPawn::SetReviveTime(float min, float max)
@@ -137,6 +141,16 @@ float AMonsterPawn::GetRewardGold() const
 bool AMonsterPawn::IsBoss() const
 {
 	return m_bIsBoss;
+}
+
+const FName& AMonsterPawn::GetTalkID() const
+{
+	return m_TalkID;
+}
+
+UInventory* AMonsterPawn::GetInven()
+{
+	return m_Inven;
 }
 
 void AMonsterPawn::PlayHitFlash()
@@ -207,6 +221,12 @@ void AMonsterPawn::OnReviveAnimEnd()
 	SetActorTickEnabled(true);
 
 	m_StatGroup.m_Hp = m_fMaxHp;
+}
+
+void AMonsterPawn::CreateInventory()
+{
+	m_Inven = NewObject<UInventory>(this);
+	m_Inven->Init(FGlobalVariable::MOB_INVEN);
 }
 
 void AMonsterPawn::SetReviveTimer()

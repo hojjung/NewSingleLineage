@@ -19,8 +19,6 @@ class MYJRPG_API UWidgetExpGauge : public UUserWidget
 
 protected:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (BindWidget))
-	UTextBlock* m_TextExp;
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (BindWidget))
 	UProgressBar* m_ExpBar;
 public:
 	void SetProgressValue(float v);

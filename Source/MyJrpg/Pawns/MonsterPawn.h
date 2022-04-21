@@ -44,6 +44,10 @@ protected:
 	FRotator m_SpawnRot;
 	UPROPERTY()
 	bool m_bIsBoss;
+	UPROPERTY()
+	UInventory* m_Inven;
+
+	FName m_TalkID;
 	
 protected:
 	void PlayHitFlash();
@@ -56,13 +60,15 @@ protected:
 
 	void OnReviveAnimEnd();
 
+	void CreateInventory();
+	
 public:
 	void SetReviveTimer();
 	
 	void Speech(FText text);
 
 	void Speech(FString text);
-	
+
 	virtual void SetEntity(const FName& id,const FNpcUnitEntityRow& unitEntityRow) override;
 
 	virtual void Dead() override;
@@ -78,6 +84,10 @@ public:
 	float GetRewardGold() const;
 
 	bool IsBoss() const;
+	
+	const FName& GetTalkID() const;
+
+	UInventory* GetInven();
 };
 
 

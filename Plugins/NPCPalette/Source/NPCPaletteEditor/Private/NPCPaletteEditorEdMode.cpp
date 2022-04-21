@@ -317,9 +317,7 @@ void FNPCPaletteEdMode::ClearPlacedAssetActor()
 
 				Data.m_EntityParentTable = GizmoActor->m_CurrentNPC.m_EntityParentTable;
 
-				//FName
-				//Data.m_IDEntity =
-				//이러면 항상 들어감
+				Data.m_AryDatas = GizmoActor->m_AryDatas;
 
 				m_CurrentAsset->m_ArySpawnDatas.Add(Data);
 			}

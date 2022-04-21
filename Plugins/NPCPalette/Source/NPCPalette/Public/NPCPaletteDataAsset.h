@@ -29,6 +29,9 @@ public:
 	FName m_IDEntity;
 
 	UPROPERTY(EditAnywhere, Category="NPCPalette")
+	TArray<FName> m_AryDatas;
+
+	UPROPERTY(EditAnywhere, Category="NPCPalette")
 	FVector  m_SpawnPosition;
 	
 	UPROPERTY(EditAnywhere, Category="NPCPalette")	

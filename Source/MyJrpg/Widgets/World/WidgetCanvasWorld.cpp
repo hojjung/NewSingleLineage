@@ -186,13 +186,13 @@ UWidgetStackCalculator* UWidgetCanvasWorld::OpenCalculator(int cnt)
 	return m_Calculator;
 }
 
-void UWidgetCanvasWorld::StartDialogue(FName str)
+void UWidgetCanvasWorld::StartDialogue(FName str, AActor* speaker)
 {
 	m_DialoguePanel->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
 
 	UDialogue* Dial = UDialogueTable::GetDialogue(str);
 
-	m_DialoguePanel->StartDialogue(nullptr,Dial);
+	m_DialoguePanel->StartDialogue(speaker, Dial);
 }
 
 void UWidgetCanvasWorld::TryAcceptQuest(FName qId)
@@ -289,4 +289,10 @@ void UWidgetCanvasWorld::ShowGameOverWindow(const ACombatUnitPawn* killer)
 	m_WindowGameOver->SetKiller(killer);
 
 	PlayAnimation(GameOver);
+}
+
+void UWidgetCanvasWorld::StartPickPocket(AMonsterPawn* mob)
+{
+	m_PickpocketPanel->SetTargetPawn(mob);
+	m_PickpocketPanel->OpenPanel();
 }

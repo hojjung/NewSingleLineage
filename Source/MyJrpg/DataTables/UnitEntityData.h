@@ -119,6 +119,8 @@ public://스텟과 보상
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
 	FName m_FriendTeamID;
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
+	FName m_TalkID;
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
 	TSubclassOf<UAI_LogicBase> m_ClassAI_Logic;
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
 	TSubclassOf<USensor_LogicBase> m_ClassAI_Sensor;

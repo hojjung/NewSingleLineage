@@ -74,9 +74,7 @@ private:
 	void ShootBaseRangeAttack();
 
 	virtual UAnimMontage* GetBaseAttackMontage() override;
-
-	void SetSneak();
-
+	
 	void MoveForward(float AxisValue);
 
 	void MoveRight(float AxisValue);
@@ -152,7 +150,7 @@ public:
 
 	virtual bool IsSneak() const override;
 
-	
+	void SetSneak();
 };
 
 

@@ -8,10 +8,6 @@
 void UWidgetExpGauge::SetProgressValue(float v)
 {
 	m_ExpBar->SetPercent(v);
-
-	FString FormatStr = FString::Printf(TEXT("%2.2f%%"),v * 100.f);
-
-	m_TextExp->SetText(FText::FromString(FormatStr));
 }
 
 bool UWidgetExpGauge::Initialize()

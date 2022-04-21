@@ -77,6 +77,8 @@ namespace FGlobalVariable
 	static const int KARMA_FRIEND = 50;
 	
 	static const int KARMA_FOE = -50;
+
+	static const int MOB_INVEN = 10;
 };
 
 #define PRINTFSCREEN(Format, ...) if (GEngine) GEngine->AddOnScreenDebugMessage(-1, 3.5, FColor::Green, *FString::Printf(TEXT(Format), ##__VA_ARGS__),true)

@@ -6,15 +6,18 @@
 #include "Components/WrapBox.h"
 #include "Hud/WidgetGameOver.h"
 #include "Hud/WidgetLevelUp.h"
+#include "Interact/WidgetInteract.h"
 #include "Menu/CharacterInfoHUD/AlertInfoWindow.h"
 #include "Menu/Collection/WidgetCollecPanelParent.h"
 #include "Menu/Dialogue/WidgetLogWindow.h"
 #include "Menu/Enchant/WidgetEnchantBase.h"
 #include "Menu/Pet/WidgetPetPanel.h"
+#include "Menu/Pickpocket/WidgetPickpocketPanel.h"
 #include "Menu/Quest/WidgetQuestAcceptPanel.h"
 #include "Menu/Quest/WidgetQuestPanel.h"
 #include "Menu/StackSelector/WidgetStackCalculator.h"
 #include "MyJrpg/Pawns/CombatUnitPawn.h"
+#include "MyJrpg/Pawns/MonsterPawn.h"
 #include "WidgetCanvasWorld.generated.h"
 
 class UWidgetSkinPanel;
@@ -49,8 +52,6 @@ protected:
 	UWidgetQuickslotBar* m_QuickBar;
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (BindWidget))
 	UWidgetItemInfo* m_ItemInfo;
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (BindWidget))
-	UButton* m_BtnToggleAuto;
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (BindWidget))
 	UWrapBox* m_WrapboxMenu;
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (BindWidget))
@@ -103,6 +104,8 @@ protected:
 	UWidgetQuestPanel* m_QuestPanel;
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (BindWidget))
 	UWidgetLogWindow* m_DialoguePanel;
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (BindWidget))
+	UWidgetPickpocketPanel* m_PickpocketPanel;
 	//
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (BindWidget))
 	UWidgetStackCalculator* m_Calculator;
@@ -125,7 +128,9 @@ protected:
 	UWidgetCollecPanelParent* m_ItemCollecPanel;
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (BindWidget))
 	UWidgetPetPanel* m_PetPanel;
-	
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (BindWidget))
+	UWidgetInteract* m_InteractPanel; 
+	//
 protected:
 	void HideHUD();
 
@@ -173,13 +178,10 @@ public:
 
 	UWidgetStackCalculator* OpenCalculator(int cnt = 0);
 	
-	void StartDialogue(FName str);
-	
 	void TryAcceptQuest(FName qId);
 
 	void OpenEnchant();
 	
-public:
 	void ShowSkillFail(const FString& string);
 
 	void ShowZone(const FText& nameT);
@@ -187,4 +189,8 @@ public:
 	void ShowLevelUpWindow();
 
 	void ShowGameOverWindow(const ACombatUnitPawn* killer);
+	
+	void StartDialogue(FName str, AActor* speaker = nullptr);
+	
+	void StartPickPocket(AMonsterPawn* mob);
 };
