@@ -52,3 +52,21 @@ void UWidgetSpeechBubbleComp::Speech(const FText& text)
 
 	RequestRedraw();
 }
+
+void UWidgetSpeechBubbleComp::SetText(const FText& text)
+{
+	SetVisibility(true);
+	
+	UUserWidget* WidgetObj = GetUserWidgetObject();
+
+	if (!WidgetObj)
+	{
+		return;
+	}
+
+	UWidgetSpeechBubble* WidgetMy = Cast<UWidgetSpeechBubble>(WidgetObj);
+
+	WidgetMy->SetText(text);
+
+	RequestRedraw();
+}

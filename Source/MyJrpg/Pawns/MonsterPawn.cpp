@@ -247,12 +247,11 @@ void AMonsterPawn::SetFocusedTarget(IFocusable* target)
 		}
 	}
 	Super::SetFocusedTarget(target);
-
 }
 
 void AMonsterPawn::SetReviveTimer()
 {
-	FTimerHandle m_ReviveHandle;//may be need member cache and manual cancel
+	FTimerHandle m_ReviveHandle;
 	
 	GetWorldTimerManager().SetTimer(m_ReviveHandle,this,&AMonsterPawn::Revive, FMath::RandRange(m_fMinReviveTimer,m_fMaxReviveTimer), false);
 }

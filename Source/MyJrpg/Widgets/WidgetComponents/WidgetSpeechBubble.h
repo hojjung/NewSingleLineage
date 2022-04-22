@@ -48,5 +48,6 @@ protected:
 public:
 	void Speech(const FText& text);
 	
+	void SetText(const FText& text);
 };
 

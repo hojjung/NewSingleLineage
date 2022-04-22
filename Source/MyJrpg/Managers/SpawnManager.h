@@ -22,14 +22,18 @@ protected:
 	UPROPERTY()
 	TArray<AMonsterPawn*> m_AryNpcActors;
 	UPROPERTY()
+	TArray<AItemActor*> m_AryItemActors;
+	UPROPERTY()
 	TArray<ASummonUnitPawn*> m_AryAllyActors;
 
 protected:
-	AMonsterPawn* SpawnNpcActor(const FNPCSpawnData& SpawnData,const UNPCPaletteDataAsset* dataAsset);
+	AMonsterPawn* SpawnNpcActor(const FNPCSpawnData& SpawnData);
+	
+	AItemActor* SpawnItemActor(const FNPCSpawnData& spawn_data);
+	
 public:
 	ACombatUnitPawn* GetNearNpc(FVector callerLoc, float range = 0, TSet<ACombatUnitPawn*>* ignore = nullptr);
-
-public:
+	
 	void SetSpawnActors(const UNPCPaletteDataAsset* npcAssets);
 	
 	void SpawnPlayer(const FVector& loc, const FRotator& rot);
@@ -40,7 +44,4 @@ public:
 	{
 		return m_AryNpcActors;
 	}
-	//
-	const TArray<AMonsterPawn*>& GetGridMobs(const AMonsterPawn* from_me);
 };
-

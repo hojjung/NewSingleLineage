@@ -9,6 +9,11 @@ void UWidgetSpeechBubble::Speech(const FText& text)
 	RunStringTypingTimer(text.ToString(),0.045f);
 }
 
+void UWidgetSpeechBubble::SetText(const FText& text)
+{
+	m_TextText->SetText(text);
+}
+
 void UWidgetSpeechBubble::RunStringTypingTimer(FString originalString, float charDelay)
 {
 	if (originalString.IsEmpty())

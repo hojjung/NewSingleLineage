@@ -149,13 +149,15 @@ void ULogic_NPCDefault::AlertEnemyToAllies()
 		return;
 	}
 
+	IFocusable* FocusedTarget = m_Owner->GetFocusedTarget<IFocusable>();
+	
 	for(auto Ally : OutHits)
 	{
 		AMonsterPawn* Mob = Cast<AMonsterPawn>(Ally);
 
-		//if(Mob->GetTeamID() == m_Owner->GetTeamID())
+		if(Mob->GetFocusedTarget<IFocusable>() != FocusedTarget)
 		{
-			Mob->SetFocusedTarget(m_Owner->GetFocusedTarget<IFocusable>());
+			Mob->SetFocusedTarget(FocusedTarget);
 		}
 	}
 }

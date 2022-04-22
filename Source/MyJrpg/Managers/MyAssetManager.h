@@ -26,6 +26,8 @@ protected:
 
 public:
 	TSharedPtr<FStreamableHandle> LoadAnimMontage(TSoftObjectPtr<UAnimMontage> assetSoftPath);
+
+	UTexture2D* LoadTexture(TSoftObjectPtr<UTexture2D> assetSoftPath);
 	
 	const UUnitEntityAsset* LoadUnitAsset(TSoftObjectPtr<UUnitEntityAsset> asset);
 

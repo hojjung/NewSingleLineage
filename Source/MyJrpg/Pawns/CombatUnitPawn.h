@@ -136,7 +136,7 @@ public:// get
 	void StopSilence();
 	
 public:
-	template<typename T = UObject>
+	template<typename T = IFocusable>
 	T* GetFocusedTarget() const
 	{
 		return Cast<T>(m_FocusedTarget.GetObject());

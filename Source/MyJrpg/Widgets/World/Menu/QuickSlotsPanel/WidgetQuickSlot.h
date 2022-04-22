@@ -14,7 +14,6 @@
 #include "WidgetQuickSlot.generated.h"
 
 class UWidgetCooldownProgress;
-struct FItemSpec;
 class UWidgetQuickslotBar;
 /**
  * 스킬 혹은 아이템을 등록을 시켜준다

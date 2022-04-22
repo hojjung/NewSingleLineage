@@ -3,6 +3,7 @@
 #include "MyGameInstance.h"
 #include "RewardManager.h"
 #include "MyJrpg/MyLib.h"
+#include "MyJrpg/Actors/Field/ItemActor.h"
 #include "MyJrpg/Pawns/CombatUnitPawn.h"
 #include "MyJrpg/Pawns/MonsterPawn.h"
 #include "MyJrpg/Pawns/MyPlayerPawn.h"
@@ -18,15 +19,17 @@ void USpawnManager::SetSpawnActors(const UNPCPaletteDataAsset* npcAssets)
 	
 	m_AryNpcActors.Reset();
 
+	m_AryItemActors.Reset();
+
 	for (const FNPCSpawnData& SpawnDataEle : npcAssets->m_ArySpawnDatas)
 	{
 		if (SpawnDataEle.m_EntityParentTable->RowStruct->IsChildOf(FNpcUnitEntityRow::StaticStruct()))
 		{
-			SpawnNpcActor(SpawnDataEle, npcAssets);
+			SpawnNpcActor(SpawnDataEle);
 		}
 		else if(SpawnDataEle.m_EntityParentTable->RowStruct->IsChildOf(FItemDataRow::StaticStruct()))
 		{
-			//SpawnItem
+			SpawnItemActor(SpawnDataEle);
 		}
 	}
 }
@@ -126,7 +129,7 @@ ACombatUnitPawn* USpawnManager::GetNearNpc(FVector callerLoc, float range, TSet<
 	return NearPawn;
 }
 
-AMonsterPawn* USpawnManager::SpawnNpcActor(const FNPCSpawnData& SpawnData, const UNPCPaletteDataAsset* dataAsset)
+AMonsterPawn* USpawnManager::SpawnNpcActor(const FNPCSpawnData& SpawnData)
 {
 	FActorSpawnParameters Param;
 
@@ -137,7 +140,7 @@ AMonsterPawn* USpawnManager::SpawnNpcActor(const FNPCSpawnData& SpawnData, const
 	AMonsterPawn* NpcActor = UMyLib::GetUWorld()->SpawnActor<AMonsterPawn>(
 		AMonsterPawn::StaticClass(), SpawnData.m_SpawnPosition, SpawnData.m_SpawnRotation, Param);
 
-	const FNpcUnitEntityRow* EntityRow = UUnitEntityData::GetNpcUnitTable->FindRow<FNpcUnitEntityRow>(
+	const FNpcUnitEntityRow* EntityRow = SpawnData.m_EntityParentTable->FindRow<FNpcUnitEntityRow>(
 		SpawnData.m_IDEntity, "");
 
 	if (EntityRow)
@@ -153,6 +156,30 @@ AMonsterPawn* USpawnManager::SpawnNpcActor(const FNPCSpawnData& SpawnData, const
 	}
 
 	m_AryNpcActors.Add(NpcActor);
+
+	return NpcActor;
+}
+
+AItemActor* USpawnManager::SpawnItemActor(const FNPCSpawnData& spawn_data)
+{
+	FActorSpawnParameters Param;
+
+	Param.bNoFail = true;
+
+	Param.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
+
+	AItemActor* NpcActor = UMyLib::GetUWorld()->SpawnActor<AItemActor>(
+		AItemActor::StaticClass(), spawn_data.m_SpawnPosition, spawn_data.m_SpawnRotation, Param);
+
+	const FItemDataRow* EntityRow = spawn_data.m_EntityParentTable->FindRow<FItemDataRow>(
+		spawn_data.m_IDEntity, "");
+
+	if (EntityRow)
+	{
+		NpcActor->Init(spawn_data.m_IDEntity,1);
+	}
+
+	m_AryItemActors.Add(NpcActor);
 
 	return NpcActor;
 }

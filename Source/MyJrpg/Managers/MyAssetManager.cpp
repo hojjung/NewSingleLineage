@@ -37,6 +37,11 @@ TSharedPtr<FStreamableHandle> UMyAssetManager::LoadAnimMontage(TSoftObjectPtr<UA
 	return Handle;
 }
 
+UTexture2D* UMyAssetManager::LoadTexture(TSoftObjectPtr<UTexture2D> assetSoftPath)
+{
+	return GetStreamableManager().LoadSynchronous<UTexture2D>(assetSoftPath.ToSoftObjectPath(),false);
+}
+
 void UMyAssetManager::ClearUnits()
 {
 	for(auto Handle : m_SetUnits)

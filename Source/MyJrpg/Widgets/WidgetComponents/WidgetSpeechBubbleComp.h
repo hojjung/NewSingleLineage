@@ -24,4 +24,6 @@ protected:
 	virtual void BeginPlay() override;
 public:
 	void Speech(const FText& text);
+
+	void SetText(const FText& text);
 };

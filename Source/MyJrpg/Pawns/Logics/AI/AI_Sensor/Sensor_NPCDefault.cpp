@@ -20,7 +20,7 @@ void USensor_NPCDefault::UpdateAISensing()
 {
 	if (UMyGameInstance::Get->m_TeamKarma->IsFoe(m_Owner) && m_Owner->GetFocusedTarget())
 	{
-		return;
+		return;//영원한 추격? 그만 쫓아오는 로직도 있어야하지 않나?
 	}
 	
 	ACombatUnitPawn* Pawn = GetSensedPawn();
@@ -65,9 +65,9 @@ bool USensor_NPCDefault::CheckDistAndAngle(const ACombatUnitPawn* Other)
 		return false;
 	}
 
-	if(!Other->IsSneak())
+	if(!Other->IsSneak())//은신을 안했다며
 	{
-		return true;//은신안하면 사거리로 보이고, 은신하면 부채꼴
+		return true;//찾을수있다?
 	}
 	
 	FVector const SelfToOtherDir = SelfToOther.GetSafeNormal();
