@@ -62,6 +62,10 @@ FText UWidgetItemElement::GetFocusText()
 		return NSLOCTEXT("UWidgetItemElement","FocusSell","팔기?");
 	case EPanelType::Enchant:
 		return NSLOCTEXT("UWidgetItemElement","Enchant","선택?");
+	case EPanelType::PickPocketPl:
+		return NSLOCTEXT("UWidgetItemElement","PickPocketPl","선물?");
+	case EPanelType::PickPocketTarget:
+		return GetPickPocketText();
 	}
 
 	EItemType Type = UMyLib::GetItemType(ItemData);
@@ -130,6 +134,28 @@ void UWidgetItemElement::MoveItem(UInventory* addHere,UInventory* removeHere,con
 	}
 }
 
+void UWidgetItemElement::TryPickPocketItem(UInventory* addHere, AMonsterPawn* target, const FName& ItemSpec, bool IsEquipItem)
+{
+	float PickPocketRate = 0.52f;
+
+	float Rand = FMath::RandRange(0,1);
+
+	if(Rand <= PickPocketRate)
+	{
+		MoveItem(addHere,target->GetInven(),ItemSpec,IsEquipItem);
+
+		return;
+	}
+
+	UMyGameInstance::Get->m_TeamKarma->DecreaseKarma(target->GetTeamID(),60);
+
+	UWidgetPickpocketPanel* Panel = UMyLib::GetCanvas()->GetPickpocketMenu();
+
+	Panel->GetCurrentTargetPawn()->SetFocusedTarget(UMyLib::GetPlayer());
+
+	Panel->ClosePanel();
+}
+
 
 void UWidgetItemElement::SellItem()
 {
@@ -194,6 +220,12 @@ void UWidgetItemElement::UseItem()
 	case EPanelType::StorageWithdraw:
 		MoveItem(UMyLib::GetPlayerInven(),UMyLib::GetPlayerStorage(),ItemSpec, IsEquipItem);
 		return;
+	case EPanelType::PickPocketPl:
+		MoveItem(UMyLib::GetPickPocketTarget()->GetInven(), UMyLib::GetPlayerInven(), ItemSpec, IsEquipItem);
+		return;
+	case EPanelType::PickPocketTarget:
+		TryPickPocketItem(UMyLib::GetPlayerInven(),UMyLib::GetPickPocketTarget(),ItemSpec, IsEquipItem);
+		return;
 	case EPanelType::ShopSell:
 		SellItem();
 		return;
@@ -228,6 +260,17 @@ void UWidgetItemElement::UpdateElement()
 	}
 
 	UpdateElement(GetItemID());
+}
+
+FText UWidgetItemElement::GetPickPocketText()
+{
+	FText T = NSLOCTEXT("UWidgetItemElement","PickPocketTarget","훔치기:");
+
+	float PickPocketRate = 0.52f;
+
+	FString StrF = FString::Printf(TEXT("%s%.0f%%"),*T.ToString(), PickPocketRate * 100.f);
+
+	return FText::FromString(StrF);
 }
 
 void UWidgetItemElement::UpdateElement(const FName& id)
@@ -333,5 +376,3 @@ void UWidgetItemElement::SetMyInteractable(bool isInteractAble)
 {
 	m_ElementBase->SetHoldable(isInteractAble);
 }
-
-

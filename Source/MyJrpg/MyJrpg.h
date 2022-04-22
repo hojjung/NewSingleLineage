@@ -132,7 +132,9 @@ enum class EPanelType
 	StorageWithdraw,
 	ShopBuy,
 	ShopSell,
-	Enchant
+	Enchant,
+	PickPocketTarget,
+	PickPocketPl
 };
 
 class DeleterNot

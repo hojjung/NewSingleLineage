@@ -60,8 +60,10 @@ protected:
 	void OnReviveAnimEnd();
 
 	void CreateInventory();
-	
+
 public:
+	virtual void SetFocusedTarget(IFocusable* target) override;
+	
 	void SetReviveTimer();
 	
 	void Speech(FText text);

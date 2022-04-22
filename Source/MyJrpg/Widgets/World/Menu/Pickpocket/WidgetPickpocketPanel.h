@@ -48,4 +48,6 @@ public:
 	virtual void OpenPanel() override;
 
 	virtual void ClosePanel() override;
+
+	AMonsterPawn* GetCurrentTargetPawn();
 };

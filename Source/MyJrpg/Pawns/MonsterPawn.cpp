@@ -229,6 +229,27 @@ void AMonsterPawn::CreateInventory()
 	m_Inven->Init(FGlobalVariable::MOB_INVEN);
 }
 
+void AMonsterPawn::SetFocusedTarget(IFocusable* target)
+{
+	if (target)
+	{
+		switch (UMyGameInstance::Get->m_TeamKarma->GetUnitKarma(this))
+		{
+		case EKarma::Neutral:
+			Speech(TEXT("처신 잘하라고"));
+			break;
+		case EKarma::Friendly:
+			Speech(TEXT("좋은 아침이야~!"));
+			break;
+		case EKarma::Hate:
+			Speech(TEXT("넌 뒤졌어"));
+			break;
+		}
+	}
+	Super::SetFocusedTarget(target);
+
+}
+
 void AMonsterPawn::SetReviveTimer()
 {
 	FTimerHandle m_ReviveHandle;//may be need member cache and manual cancel
@@ -246,6 +267,8 @@ void AMonsterPawn::Dead()
 
 	UMyGameInstance::Get->m_GameRule->OnMonsterDead(this);
 
+	m_SpeechBubbleComp->SetVisibility(false);
+
 	PRINTF("AMonsterPawn::Dead");
 }
 
@@ -261,6 +284,14 @@ bool AMonsterPawn::TakeDmg(float amount, ACombatUnitPawn* attacker)
 		m_PawnInfo->SetVisibility(true);
 		m_PawnInfo->SetPawnInfo(this);
 	}
+
+	if(!GetFocusedTarget())
+	{
+		amount *= 1.5f;
+		SetFocusedTarget(attacker);
+	}
+	
+	UMyGameInstance::Get->m_TeamKarma->DecreaseKarma(GetTeamID(),60);
 	
 	if(!Super::TakeDmg(amount, attacker))
 	{

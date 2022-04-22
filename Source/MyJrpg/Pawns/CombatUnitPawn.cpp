@@ -398,11 +398,6 @@ bool ACombatUnitPawn::TakeDmg(float amount, ACombatUnitPawn* attacker)
 {
 	ETextType TextType = ETextType::NormalRight;
 	
-	if(!GetFocusedTarget())
-	{
-		SetFocusedTarget(attacker);
-	}
-
 	if(!TryHit(attacker->GetStat()))
 	{
 		ShowPopupText(0,ETextType::Miss);

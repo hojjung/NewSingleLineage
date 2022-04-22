@@ -137,14 +137,13 @@ void ULogic_NPCDefault::AlertEnemyToAllies()
 
 		return;
 	}
-	m_fAlertTimer = FMath::FRandRange(2.f, 5.f);
+	m_fAlertTimer = FMath::FRandRange(3.f, 7.f);
 	
 	FVector Start = m_Owner->GetActorLocation();
 
 	TArray<AActor*> OutHits;
 	
-	//DrawDebugSphere(GetWorld(),Start,450,12,FColor::Red,false,1);
-	if(!UMyLib::SphereOverlapActors(m_Owner,m_Owner->GetActorRotation(),Start,450,
+	if(!UMyLib::SphereOverlapActors(m_Owner,m_Owner->GetActorRotation(),Start,700,
 		m_Owner->GetTraceObjTypes(),AMonsterPawn::StaticClass(),m_Owner->GetTraceIgnoredActors(),OutHits))
 	{
 		return;

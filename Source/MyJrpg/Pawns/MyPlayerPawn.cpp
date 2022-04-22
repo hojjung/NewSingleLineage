@@ -225,6 +225,13 @@ void AMyPlayerPawn::ShowPopupText(float nbr, ETextType t)
 	//not use
 }
 
+void AMyPlayerPawn::SetFocusedTarget(IFocusable* target)
+{
+	Super::SetFocusedTarget(target);
+
+	m_OnFocus.Broadcast(target);
+}
+
 void AMyPlayerPawn::SetPlayerAsset(FName keyId)
 {
 	const FPlayerUnitEntityRow* UnitRow = UUnitEntityData::GetPlayerUnitTable->FindRow<FPlayerUnitEntityRow>(keyId, "");
@@ -300,6 +307,15 @@ UAnimMontage* AMyPlayerPawn::GetBaseAttackMontage()
 void AMyPlayerPawn::SetSneak()
 {
 	m_bIsSneaking = !m_bIsSneaking;
+
+	if(m_bIsSneaking)
+	{
+		m_Movement->m_fSpeedMultiple = 0.65f;
+	}
+	else
+	{
+		m_Movement->m_fSpeedMultiple = 1.f;
+	}
 }
 
 void AMyPlayerPawn::OnNotifyTrigger(const FName& name)

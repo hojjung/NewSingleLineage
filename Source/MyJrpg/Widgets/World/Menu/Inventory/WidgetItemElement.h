@@ -12,6 +12,7 @@
 #include "MyJrpg/Widgets/World/CommonElements/WidgetBaseElement.h"
 #include "WidgetItemElement.generated.h"
 
+class AMonsterPawn;
 class UWidgetGaugeBar;
 class UWidgetInventory;
 class UDDO_InvenItem;
@@ -59,6 +60,8 @@ protected:
 
 	void MoveItem(UInventory* addHere,UInventory* removeHere,const FName& ItemSpec, bool IsEquipItem);
 
+	void TryPickPocketItem(UInventory* addHere,AMonsterPawn* target,const FName& ItemSpec, bool IsEquipItem);
+
 	void SellItem();
 
 	void OnSellConfirm(int amount);
@@ -66,6 +69,9 @@ protected:
 	int GetMaxAmount();
 	
 	void UpdateElement();
+
+	FText GetPickPocketText();
+	
 public:
 	void Init(EPanelType panel,UInventory* inven);
 
@@ -88,5 +94,4 @@ public:
 	int GetIndex();
 
 	void SetMyInteractable(bool isInteractAble);
-
 };

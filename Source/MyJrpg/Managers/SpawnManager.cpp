@@ -20,7 +20,14 @@ void USpawnManager::SetSpawnActors(const UNPCPaletteDataAsset* npcAssets)
 
 	for (const FNPCSpawnData& SpawnDataEle : npcAssets->m_ArySpawnDatas)
 	{
-		SpawnNpcActor(SpawnDataEle, npcAssets);
+		if (SpawnDataEle.m_EntityParentTable->RowStruct->IsChildOf(FNpcUnitEntityRow::StaticStruct()))
+		{
+			SpawnNpcActor(SpawnDataEle, npcAssets);
+		}
+		else if(SpawnDataEle.m_EntityParentTable->RowStruct->IsChildOf(FItemDataRow::StaticStruct()))
+		{
+			//SpawnItem
+		}
 	}
 }
 

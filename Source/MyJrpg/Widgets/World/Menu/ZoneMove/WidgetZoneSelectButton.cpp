@@ -50,14 +50,17 @@ void UWidgetZoneSelectButton::CreateMonsters(const FZone& zone_data)
 	
 	for(const FNPCSpawnData& Data : zone_data.m_SpawnDataNpc->m_ArySpawnDatas)
 	{
-		const FNpcUnitEntityRow* NpcEntity = UUnitEntityData::GetNpcUnitTable->FindRow<FNpcUnitEntityRow>(Data.m_IDEntity, "");
-	
-		if(m_SetMonsters.Contains(NpcEntity))
+		if(Data.m_EntityParentTable->RowStruct->IsChildOf(FNpcUnitEntityRow::StaticStruct()))
 		{
-			continue;
-		}
+			const FNpcUnitEntityRow* NpcEntity = Data.m_EntityParentTable->FindRow<FNpcUnitEntityRow>(Data.m_IDEntity, "");
 	
-		m_SetMonsters.Add(NpcEntity);//소트?
+			if(m_SetMonsters.Contains(NpcEntity))
+			{
+				continue;
+			}
+	
+			m_SetMonsters.Add(NpcEntity);			
+		}
 	}
 	
 	m_SetMonsters.Sort([](const FNpcUnitEntityRow& LHS, const FNpcUnitEntityRow& RHS)  { return LHS.m_fExp > RHS.m_fExp; });

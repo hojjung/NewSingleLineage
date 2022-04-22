@@ -18,7 +18,7 @@ void USensor_NPCDefault::Init(ACombatUnitPawn* owner)
 
 void USensor_NPCDefault::UpdateAISensing()
 {
-	if (m_Owner->GetFocusedTarget())
+	if (UMyGameInstance::Get->m_TeamKarma->IsFoe(m_Owner) && m_Owner->GetFocusedTarget())
 	{
 		return;
 	}

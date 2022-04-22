@@ -18,7 +18,7 @@ UMyMovement::UMyMovement(const FObjectInitializer& obj)
 	bUseFixedBrakingDistanceForPaths = true;
 	TurningBoost = 8.0f;
 	bPositionCorrected = false;
-
+	m_fSpeedMultiple = 1;
 	ResetMoveState();
 }
 
@@ -42,7 +42,7 @@ void UMyMovement::TickComponent(float DeltaTime, ELevelTick TickType, FActorComp
 
 	bPositionCorrected = false;
 
-	FVector Delta = (Velocity * DeltaTime) + m_ImpactVector;
+	FVector Delta = (Velocity * DeltaTime * m_fSpeedMultiple) + m_ImpactVector;
 
 	if (!Delta.IsNearlyZero(1e-6f))
 	{

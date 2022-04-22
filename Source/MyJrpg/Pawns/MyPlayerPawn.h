@@ -26,6 +26,10 @@ class MYJRPG_API AMyPlayerPawn : public ACombatUnitPawn
 	GENERATED_BODY()
 
 public:
+	DECLARE_MULTICAST_DELEGATE_OneParam(FOnPlayerFocusTarget, IFocusable*);
+
+	FOnPlayerFocusTarget m_OnFocus;
+public:
 	AMyPlayerPawn(const FObjectInitializer& objInit);
 
 protected:
@@ -82,6 +86,8 @@ private:
 	virtual void ShowPopupText(float nbr, ETextType t) override;
 
 public:
+	virtual void SetFocusedTarget(IFocusable* target) override;
+	
 	virtual void SetPlayerEntity(const FPlayerUnitEntityRow& unitEntityRow);
 
 	void SetPet(const FPetRow& petRow);

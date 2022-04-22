@@ -83,13 +83,12 @@ void UWidgetCanvasWorld::ToggleMenu()
 			{
 				Owner->SetVisibility(ESlateVisibility::Collapsed);
 				m_BtnMenu->SetVisibility(ESlateVisibility::Visible);
-				m_QuestHUD->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
+				
 			}))
 		.Begin();
 	}
 	else
 	{
-		m_QuestHUD->SetVisibility(ESlateVisibility::Collapsed);
 		m_WrapboxMenu->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
 		UBUITween::Create(m_WrapboxMenu,0.1f)
 		.FromOpacity(0)
@@ -228,6 +227,11 @@ void UWidgetCanvasWorld::OnAnimationFinishedPlaying(UUMGSequencePlayer& Player)
 UWidgetEquipInvenPanel* UWidgetCanvasWorld::GetEquipInvenMenu()
 {
 	return m_EquipInvenPanel;
+}
+
+UWidgetPickpocketPanel* UWidgetCanvasWorld::GetPickpocketMenu()
+{
+	return m_PickpocketPanel;
 }
 
 void UWidgetCanvasWorld::OpenItemInfo(EItemInfo info,const FName& oID, UInventory* inven)

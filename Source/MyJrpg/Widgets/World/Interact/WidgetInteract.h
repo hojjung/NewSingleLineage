@@ -54,6 +54,8 @@ protected:
 	
 	void ShowWidgetProp();
 	
+	void HideAllBtns();
+
 public:
 	void ShowInteract(IFocusable* focus);
 	UFUNCTION()

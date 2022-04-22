@@ -22,6 +22,7 @@ UCLASS()
 class MYJRPG_API UMyLib : public UBlueprintFunctionLibrary
 {
 	GENERATED_BODY()
+	
 public:
 	static UWorld* GetUWorld();
 	
@@ -30,6 +31,8 @@ public:
 	static UInventory* GetPlayerInven();
 
 	static UInventory* GetPlayerStorage();
+
+	static AMonsterPawn* GetPickPocketTarget();
 	
 	static AMyPlayerController* GetPlayerCon();
 

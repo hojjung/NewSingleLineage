@@ -14,5 +14,12 @@ UDialogueTable::UDialogueTable()
 
 UDialogue* UDialogueTable::GetDialogue(FName id)
 {
-	return GetDialogueTable->FindRow<FDialogueData>(id,"")->m_Dialogue;
+	FDialogueData* DataFound = GetDialogueTable->FindRow<FDialogueData>(id, "");
+
+	if(!DataFound)
+	{
+		return nullptr;
+	}
+	
+	return DataFound->m_Dialogue;
 }

@@ -15,6 +15,9 @@ class MYJRPG_API UMyMovement : public UFloatingPawnMovement
 {
 	GENERATED_BODY()
 
+public:
+	float m_fSpeedMultiple;
+	
 protected:
 	FVector m_ImpactVector;
 	

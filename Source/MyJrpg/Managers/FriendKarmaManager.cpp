@@ -40,6 +40,7 @@ bool UFriendKarmaManager::IsFoe(const ACombatUnitPawn* Other)
 {
 	return GetUnitKarma(Other) == EKarma::Hate;
 }
+
 EKarma UFriendKarmaManager::GetUnitKarma(const ACombatUnitPawn* Other)
 {
 	const FName& TeamID = Other->GetTeamID();
@@ -55,4 +56,22 @@ EKarma UFriendKarmaManager::GetUnitKarma(const ACombatUnitPawn* Other)
 		return EKarma::Hate;
 	}
 	return  EKarma::Neutral;
+}
+
+void UFriendKarmaManager::IncreaseKarma(const FName& id, int v)
+{
+	int& KarmaValue = m_MapKarma[id];
+
+	KarmaValue += v;
+
+	KarmaValue = FMath::Min(KarmaValue, FGlobalVariable::KARMA_MAX);
+}
+
+void UFriendKarmaManager::DecreaseKarma(const FName& id, int v)
+{
+	int& KarmaValue = m_MapKarma[id];
+
+	KarmaValue -= v;
+
+	KarmaValue = FMath::Max(KarmaValue, FGlobalVariable::KARMA_MIN);
 }

@@ -25,8 +25,10 @@ void UWidgetInteract::NativeOnInitialized()
 	m_BtnTalk->SetVisibility(ESlateVisibility::Collapsed);
 	m_BtnPickPocket->SetVisibility(ESlateVisibility::Collapsed);
 
-	m_Pl = UMyLib::GetPlayer();
 	m_AutoToggle=false;
+	
+	m_Pl = UMyLib::GetPlayer();
+	m_Pl->m_OnFocus.AddUObject(this, &UWidgetInteract::ShowInteract);
 }
 
 void UWidgetInteract::ShowWidgetMonster(const AMonsterPawn* mob)
@@ -69,11 +71,20 @@ void UWidgetInteract::ShowWidgetProp()
 	m_BtnControl->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
 }
 
+void UWidgetInteract::HideAllBtns()
+{
+	m_BtnPickPocket->SetVisibility(ESlateVisibility::Collapsed);
+	m_BtnTalk->SetVisibility(ESlateVisibility::Collapsed);
+	m_BtnSteal->SetVisibility(ESlateVisibility::Collapsed);
+	m_BtnObtain->SetVisibility(ESlateVisibility::Collapsed);
+	m_BtnControl->SetVisibility(ESlateVisibility::Collapsed);
+}
+
 void UWidgetInteract::ShowInteract(IFocusable* focus)
 {
 	if(!focus)
 	{
-
+		HideAllBtns();
 		return;
 	}
 	m_Focused.SetInterface(focus);
@@ -127,8 +138,9 @@ void UWidgetInteract::OnTalk()
 	AMonsterPawn* Mob = Cast<AMonsterPawn>(m_Focused.GetObject());
 	
 	const FName& TalkID = Mob->GetTalkID();
-	
-	UMyLib::GetCanvas()->StartDialogue(TalkID);
+
+	if (!TalkID.IsNone())
+		UMyLib::GetCanvas()->StartDialogue(TalkID);
 }
 
 void UWidgetInteract::OnAttack()
