@@ -1,9 +1,11 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "MyJrpg/MyJrpg.h"
 #include "UObject/NoExportTypes.h"
 #include "FriendKarmaManager.generated.h"
 
+class ACombatUnitPawn;
 /**
  * 
  */
@@ -21,4 +23,8 @@ public:
 	int GetKarma(const FName&& id);
 	
 	int GetKarma(const FName& id);
+
+	bool IsFoe(const ACombatUnitPawn* Other);
+
+	EKarma GetUnitKarma(const ACombatUnitPawn* Other);
 };

@@ -1,5 +1,4 @@
 #include "WidgetInteract.h"
-
 #include "MyJrpg/MyLib.h"
 #include "MyJrpg/Actors/Field/InteractActorBase.h"
 #include "MyJrpg/Actors/Field/ItemActor.h"
@@ -20,9 +19,54 @@ void UWidgetInteract::NativeOnInitialized()
 	m_BtnSneak->OnClicked.AddDynamic(this, &UWidgetInteract::OnSneak);
 	m_BtnAuto->OnClicked.AddDynamic(this, &UWidgetInteract::AutoToggle);
 
+	m_BtnObtain->SetVisibility(ESlateVisibility::Collapsed);
+	m_BtnSteal->SetVisibility(ESlateVisibility::Collapsed);
+	m_BtnControl->SetVisibility(ESlateVisibility::Collapsed);
+	m_BtnTalk->SetVisibility(ESlateVisibility::Collapsed);
+	m_BtnPickPocket->SetVisibility(ESlateVisibility::Collapsed);
+
 	m_Pl = UMyLib::GetPlayer();
-	
 	m_AutoToggle=false;
+}
+
+void UWidgetInteract::ShowWidgetMonster(const AMonsterPawn* mob)
+{
+	m_BtnObtain->SetVisibility(ESlateVisibility::Collapsed);
+	m_BtnSteal->SetVisibility(ESlateVisibility::Collapsed);
+	m_BtnControl->SetVisibility(ESlateVisibility::Collapsed);
+
+	if(mob->GetFocusedTarget() != m_Pl)
+	{
+		m_BtnPickPocket->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
+	}
+	else if(!UMyGameInstance::Get->m_TeamKarma->IsFoe(mob))
+	{
+		m_BtnTalk->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
+	}
+}
+
+void UWidgetInteract::ShowWidgetItem(const AItemActor* item)
+{
+	m_BtnControl->SetVisibility(ESlateVisibility::Collapsed);
+	m_BtnPickPocket->SetVisibility(ESlateVisibility::Collapsed);
+	m_BtnTalk->SetVisibility(ESlateVisibility::Collapsed);
+	
+	if(item->HasOwnerTeamID())
+	{
+		m_BtnSteal->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
+		return;
+	}
+	m_BtnObtain->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
+}
+
+void UWidgetInteract::ShowWidgetProp()
+{
+	m_BtnPickPocket->SetVisibility(ESlateVisibility::Collapsed);
+	m_BtnTalk->SetVisibility(ESlateVisibility::Collapsed);
+	m_BtnSteal->SetVisibility(ESlateVisibility::Collapsed);
+	m_BtnObtain->SetVisibility(ESlateVisibility::Collapsed);
+	
+	m_BtnControl->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
 }
 
 void UWidgetInteract::ShowInteract(IFocusable* focus)
@@ -38,6 +82,7 @@ void UWidgetInteract::ShowInteract(IFocusable* focus)
 	if(Monster)
 	{
 		m_Focused.SetObject(Monster);
+		ShowWidgetMonster(Monster);
 		return;
 	}
 	
@@ -45,6 +90,7 @@ void UWidgetInteract::ShowInteract(IFocusable* focus)
 	if(Item)
 	{
 		m_Focused.SetObject(Item);
+		ShowWidgetItem(Item);
 		return;
 	}
 	
@@ -52,6 +98,7 @@ void UWidgetInteract::ShowInteract(IFocusable* focus)
 	if(Prop)
 	{
 		m_Focused.SetObject(Prop);
+		ShowWidgetProp();
 		return;
 	}
 }

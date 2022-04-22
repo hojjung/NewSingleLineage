@@ -128,8 +128,6 @@ protected:
 	UWidgetCollecPanelParent* m_ItemCollecPanel;
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (BindWidget))
 	UWidgetPetPanel* m_PetPanel;
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (BindWidget))
-	UWidgetInteract* m_InteractPanel; 
 	//
 protected:
 	void HideHUD();
@@ -151,8 +149,6 @@ public:
 
 	UFUNCTION()
 	void ToggleMenu();
-	UFUNCTION()
-	void AutoToggle();
 	UFUNCTION()
 	void OpenSkin();
 	UFUNCTION()

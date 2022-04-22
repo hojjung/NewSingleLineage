@@ -39,7 +39,7 @@ public:
 	UPROPERTY(EditAnywhere, Category="NPCPalette")
 	TArray<FName> m_AryDatas;
 
-	void SetTextIcon(FText,UTexture2D*);
+	void SetTextIcon(FText tt,UTexture2D* ii, const TArray<FName>& aryDatas);
 	
 	UArrowComponent* GetArrowComponent() const;
 };

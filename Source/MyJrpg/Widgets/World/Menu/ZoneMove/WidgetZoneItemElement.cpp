@@ -12,7 +12,7 @@ void UWidgetZoneItemElement::SetZone(const FDropRewardItem& data)
 
 	check(m_ItemRow);
 
-	m_ElementBase->SetIcon(m_ItemRow->m_ItemIcon);
+	m_ElementBase->SetIcon(m_ItemRow->m_Icon);
 
 	m_ElementBase->SetGlowColor(m_ItemRow->m_ColorHandle);
 

@@ -16,3 +16,8 @@ void AItemActor::Obtain()
 {
 	
 }
+
+bool AItemActor::HasOwnerTeamID() const
+{
+	return !m_OwnerID.IsNone();
+}

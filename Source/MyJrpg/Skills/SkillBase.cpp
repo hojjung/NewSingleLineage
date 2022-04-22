@@ -125,7 +125,7 @@ bool USkillBase::IsTargetInRange()
 
 	float RangeSqr = m_SkillData->m_fRange * m_SkillData->m_fRange;
 
-	float LengthSqr = FVector::DistSquared2D(m_Player->GetActorLocation(),m_Player->GetFocusedTarget()->GetActorLocation());
+	float LengthSqr = FVector::DistSquared2D(m_Player->GetActorLocation(),m_Player->GetFocusedActorLocation());
 
 	return LengthSqr <= RangeSqr;
 }

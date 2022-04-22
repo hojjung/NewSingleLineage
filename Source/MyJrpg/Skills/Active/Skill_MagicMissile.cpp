@@ -20,7 +20,7 @@ void USkill_MagicMissile::ShootBullet()
 {
 	FVector OffSet(FMath::RandRange(-100,100),FMath::RandRange(-100,100),FMath::RandRange(-100,100));
 		
-	m_Pool->ShootBullet(TEXT("Trail_End_L"),OffSet,m_Player->GetFocusedTarget());
+	m_Pool->ShootBullet(TEXT("Trail_End_L"),OffSet,m_Player->GetFocusedTarget<ACombatUnitPawn>());
 }
 
 void USkill_MagicMissile::OnSkillTriggered()

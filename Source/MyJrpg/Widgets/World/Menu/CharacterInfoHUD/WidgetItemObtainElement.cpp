@@ -7,9 +7,9 @@ void UWidgetItemObtainElement::Show(const FString& str)
 
 void UWidgetItemObtainElement::ShowImageText(const FItemDataRow& item, int amount)
 {
-	m_ImgIcon->SetBrushFromSoftTexture(item.m_ItemIcon);
+	m_ImgIcon->SetBrushFromSoftTexture(item.m_Icon);
     
-	FString Str = FString::Printf(TEXT("%s x %d"),*item.m_TextShowingName.ToString(),amount);
+	FString Str = FString::Printf(TEXT("%s x %d"),*item.m_ShowingName.ToString(),amount);
     
     Show(Str);
 }

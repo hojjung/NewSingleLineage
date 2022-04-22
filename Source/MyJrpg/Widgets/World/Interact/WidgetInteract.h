@@ -9,6 +9,8 @@
 #include "MyJrpg/Pawns/MyPlayerPawn.h"
 #include "WidgetInteract.generated.h"
 
+class AItemActor;
+class AMonsterPawn;
 /**
  * 
  */
@@ -43,13 +45,17 @@ protected:
 
 	bool m_AutoToggle;
 
-public:
-	void ShowInteract(IFocusable* focus);
-
 protected:
 	virtual void NativeOnInitialized() override;
 	
+	void ShowWidgetMonster(const AMonsterPawn* mob);
+
+	void ShowWidgetItem(const AItemActor* item);
+	
+	void ShowWidgetProp();
+	
 public:
+	void ShowInteract(IFocusable* focus);
 	UFUNCTION()
 	void OnObtain();
 	UFUNCTION()

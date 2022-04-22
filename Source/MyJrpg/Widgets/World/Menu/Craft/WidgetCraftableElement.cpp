@@ -8,7 +8,7 @@ void UWidgetCraftableElement::SetCraftable(const FName& id)
 
 	m_ItemData = UItemData::GetItemTable->FindRow<FItemDataRow>(m_ItemID, "");
 	
-	m_ItemElement->SetIcon(m_ItemData->m_ItemIcon);
+	m_ItemElement->SetIcon(m_ItemData->m_Icon);
 
 	m_ItemElement->SetGlowColor(m_ItemData->m_ColorHandle);
 

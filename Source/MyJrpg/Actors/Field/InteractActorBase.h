@@ -6,6 +6,7 @@
 #include "Components/CapsuleComponent.h"
 #include "Components/WidgetComponent.h"
 #include "GameFramework/Actor.h"
+#include "MyJrpg/Interfaces/Focusable.h"
 #include "MyJrpg/Widgets/WidgetComponents/InteractWidget.h"
 #include "InteractActorBase.generated.h"
 
@@ -14,7 +15,7 @@
 //상점
 //퀘스트를 줄지도 모르는 NPC들
 UCLASS()
-class MYJRPG_API AInteractActorBase : public AActor
+class MYJRPG_API AInteractActorBase : public AActor, public IFocusable
 {
 	GENERATED_BODY()
 	

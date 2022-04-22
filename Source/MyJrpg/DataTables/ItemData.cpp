@@ -128,5 +128,5 @@ TSoftObjectPtr<UTexture2D> FCraftItemCost::GetItemIcon() const
 		return nullptr;
 	}
 		
-	return m_ItemDataRowHandle.GetRow<FItemDataRow>("")->m_ItemIcon;
+	return m_ItemDataRowHandle.GetRow<FItemDataRow>("")->m_Icon;
 }

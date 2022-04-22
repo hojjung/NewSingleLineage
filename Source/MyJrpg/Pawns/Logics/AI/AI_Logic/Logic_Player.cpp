@@ -73,7 +73,7 @@ void ULogic_Player::CheckSetState()
 {
 	AMyPlayerPawn* PlayerPawn = Cast<AMyPlayerPawn>(m_Owner);
 	
-	ACombatUnitPawn* NPCPawn = Cast<ACombatUnitPawn>( PlayerPawn->GetFocusedTarget());
+	ACombatUnitPawn* NPCPawn = PlayerPawn->GetFocusedTarget<ACombatUnitPawn>();
 
 	if(PlayerPawn->IsManualMoving())
 	{
@@ -97,13 +97,7 @@ void ULogic_Player::OnIdle()
 
 void ULogic_Player::OnChase()
 {
-	EPathFollowingRequestResult::Type Result = EPathFollowingRequestResult::Failed;
-
-	if(m_Owner->MoveToActor(m_Owner->GetFocusedTarget()) == EPathFollowingRequestResult::Failed)
-	{
-		PRINTF("Player Failed To Chase");
-		DrawDebugLine(GetWorld(),m_Owner->GetActorLocation(),m_Owner->GetFocusedActorLocation(),FColor::Blue);
-	}
+	m_Owner->ChaseTarget();
 }
 
 void ULogic_Player::OnCombat()

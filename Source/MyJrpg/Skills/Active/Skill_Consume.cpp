@@ -20,9 +20,9 @@ void USkill_Consume::OnSkillTriggered()
 		return;
 	}
 	
-	UMyGameInstance::Get->m_EffectManager->SpawnEffect(m_Player->GetFocusedTarget(),false,m_Particle);
+	UMyGameInstance::Get->m_EffectManager->SpawnEffect(m_Player->GetFocusedTarget<ACombatUnitPawn>(),false,m_Particle);
 	
-	m_Player->GetFocusedTarget()->TakeDmg(GetDamage(),m_Player);
+	m_Player->GetFocusedTarget<ACombatUnitPawn>()->TakeDmg(GetDamage(),m_Player);
 	
 	float HealHp = m_Player->GetStat().m_MaxHp * 0.15f;
 		

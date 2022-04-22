@@ -60,7 +60,7 @@ void UWidgetItemInfo::SetItemInfo(EItemInfo info,const FName& oID,UInventory* in
 
 	m_ItemIcon->UpdateElement(m_ItemKey);
 	
-	m_TextItemName->SetText(ItemData.m_TextShowingName);
+	m_TextItemName->SetText(ItemData.m_ShowingName);
 
 	if (Type == EItemType::Equip)
 	{

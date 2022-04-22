@@ -113,11 +113,11 @@ void UWidgetCraftPanel::OnSelectCraftItem(UWidgetCraftableElement* selectedEleme
 	m_GoldIcon->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
 	//
 	//
-	m_CurrentCraftItem->SetIcon(TargetItem.m_ItemIcon);
+	m_CurrentCraftItem->SetIcon(TargetItem.m_Icon);
 
 	m_CurrentCraftItem->SetGlowColor(TargetItem.m_ColorHandle);
 
-	m_TextCurrentItemName->SetText(TargetItem.m_TextShowingName);
+	m_TextCurrentItemName->SetText(TargetItem.m_ShowingName);
 
 	m_TextCurrentItemName->SetColorAndOpacity(TargetItem.m_ColorHandle.GetRow<FColorDataRow>("")->m_Color);
 }

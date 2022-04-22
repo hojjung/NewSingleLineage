@@ -7,7 +7,7 @@ void USkill_SilenceCut::OnSkillTriggered()
 {
 	Super::OnSkillTriggered();
 
-	ACombatUnitPawn* TargetMob = m_Player->GetFocusedTarget();
+	ACombatUnitPawn* TargetMob = m_Player->GetFocusedTarget<ACombatUnitPawn>();
 
 	if(!TargetMob)
 	{

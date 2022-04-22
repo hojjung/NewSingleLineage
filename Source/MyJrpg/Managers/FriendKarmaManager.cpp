@@ -1,5 +1,6 @@
 #include "FriendKarmaManager.h"
 #include "MyJrpg/DataTables/FriendTeamTable.h"
+#include "MyJrpg/Pawns/CombatUnitPawn.h"
 
 void UFriendKarmaManager::Init()
 {
@@ -33,4 +34,25 @@ int UFriendKarmaManager::GetKarma(const FName& id)
 		return 0;
 	}
 	return m_MapKarma[id];
+}
+
+bool UFriendKarmaManager::IsFoe(const ACombatUnitPawn* Other)
+{
+	return GetUnitKarma(Other) == EKarma::Hate;
+}
+EKarma UFriendKarmaManager::GetUnitKarma(const ACombatUnitPawn* Other)
+{
+	const FName& TeamID = Other->GetTeamID();
+
+	int Karma = GetKarma(TeamID);
+
+	if(Karma >= FGlobalVariable::KARMA_FRIEND)
+	{
+		return EKarma::Friendly;
+	}
+	else if(Karma <= FGlobalVariable::KARMA_FOE)
+	{
+		return EKarma::Hate;
+	}
+	return  EKarma::Neutral;
 }

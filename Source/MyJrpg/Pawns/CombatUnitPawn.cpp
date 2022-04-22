@@ -191,14 +191,10 @@ void ACombatUnitPawn::Tick(float DeltaSeconds)
 	}
 }
 
-void ACombatUnitPawn::SetFocusedTarget(ACombatUnitPawn* target)
+void ACombatUnitPawn::SetFocusedTarget(IFocusable* target)
 {
-	m_FocusedTarget = target;
-}
-
-ACombatUnitPawn* ACombatUnitPawn::GetFocusedTarget()
-{
-	return m_FocusedTarget.Get();
+	m_FocusedTarget.SetInterface(target);
+	m_FocusedTarget.SetObject(Cast<UObject>(target));
 }
 
 float ACombatUnitPawn::TryAttack()
@@ -244,12 +240,12 @@ float ACombatUnitPawn::GetAttackRange()
 
 FVector ACombatUnitPawn::GetFocusedActorLocation() const
 {
-	return m_FocusedTarget.Get()->GetActorLocation();
+	return GetFocusedTarget<AActor>()->GetActorLocation();
 }
 
 FRotator ACombatUnitPawn::GetFocusedActorRotation() const
 {
-	return m_FocusedTarget.Get()->GetActorRotation();
+	return GetFocusedTarget<AActor>()->GetActorRotation();
 }
 
 void ACombatUnitPawn::SetEnableFsm(bool useFsm)
@@ -343,6 +339,11 @@ const FName& ACombatUnitPawn::GetTeamID() const
 bool ACombatUnitPawn::IsSneak() const
 {
 	return false;
+}
+
+EPathFollowingRequestResult::Type ACombatUnitPawn::ChaseTarget()
+{
+	return MoveToActor(GetFocusedTarget<AActor>());
 }
 
 void ACombatUnitPawn::Dead()

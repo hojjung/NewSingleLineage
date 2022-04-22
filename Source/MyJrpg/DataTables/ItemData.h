@@ -1,5 +1,6 @@
 #pragma once
 
+#include "NPCPaletteDataAsset.h"
 #include "MyJrpg/MyJrpg.h"
 #include "MyJrpg/Actors/Equipments/AttachEquipmentBase.h"
 #include "MyJrpg/Items/ItemExecuteBase.h"
@@ -165,7 +166,7 @@ public:
 };
 
 USTRUCT(BlueprintType)
-struct FItemDataRow : public FTableRowBase
+struct FItemDataRow : public FEntityRow//FEntityRow
 {
 	GENERATED_USTRUCT_BODY()
 
@@ -177,10 +178,6 @@ public:
 	}
 
 public:
-	UPROPERTY(EditDefaultsOnly)
-	FText m_TextShowingName;
-	UPROPERTY(EditDefaultsOnly)
-	TSoftObjectPtr<UTexture2D> m_ItemIcon;
 	UPROPERTY(EditDefaultsOnly)
 	EEquipSlotType m_ItemType;
 	UPROPERTY(EditDefaultsOnly)

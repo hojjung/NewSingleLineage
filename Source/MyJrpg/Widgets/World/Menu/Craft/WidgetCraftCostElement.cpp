@@ -9,7 +9,7 @@ void UWidgetCraftCostElement::SetCraftCost(const FCraftItemCost& cost)
 	
 	const FItemDataRow* CraftData = m_CraftData->m_ItemDataRowHandle.GetRow<FItemDataRow>("");
 	
-	m_ItemElement->SetIcon(CraftData->m_ItemIcon);
+	m_ItemElement->SetIcon(CraftData->m_Icon);
 
 	m_ItemElement->SetGlowColor(CraftData->m_ColorHandle);
 

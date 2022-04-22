@@ -116,9 +116,7 @@ void ULogic_NPCDefault::OnIdle()
 
 void ULogic_NPCDefault::OnChase()
 {
-	EPathFollowingRequestResult::Type Result = EPathFollowingRequestResult::Failed;
-
-	Result = m_Owner->MoveToActor(m_Owner->GetFocusedTarget());
+	m_Owner->ChaseTarget();
 }
 
 void ULogic_NPCDefault::OnCombat()
@@ -158,7 +156,7 @@ void ULogic_NPCDefault::AlertEnemyToAllies()
 
 		//if(Mob->GetTeamID() == m_Owner->GetTeamID())
 		{
-			Mob->SetFocusedTarget(m_Owner->GetFocusedTarget());
+			Mob->SetFocusedTarget(m_Owner->GetFocusedTarget<IFocusable>());
 		}
 	}
 }

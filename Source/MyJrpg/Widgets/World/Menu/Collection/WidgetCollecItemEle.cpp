@@ -32,7 +32,7 @@ void UWidgetCollecItemEle::Init(const FName& collecID, int index, bool is_equip,
 
 	const FItemDataRow& ItemData = *item.GetRow<FItemDataRow>("");
 
-	m_IconEle->SetIcon(ItemData.m_ItemIcon);
+	m_IconEle->SetIcon(ItemData.m_Icon);
 
 	m_IconEle->SetGlowColor(ItemData.m_ColorHandle);
 

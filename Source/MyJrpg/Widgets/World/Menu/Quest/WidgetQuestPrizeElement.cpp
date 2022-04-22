@@ -62,7 +62,7 @@ void UWidgetQuestPrizeElement::UpdatePrize()
 	{
 		const FItemDataRow& ItemRow = *m_QuestReward.m_Item.GetRow<FItemDataRow>("");
 		
-		Icon = m_QuestReward.m_Item.GetRow<FItemDataRow>("")->m_ItemIcon;
+		Icon = m_QuestReward.m_Item.GetRow<FItemDataRow>("")->m_Icon;
 
 		if(UMyLib::GetItemType(ItemRow) == EItemType::Equip)
 		{

@@ -115,11 +115,11 @@ void AMonsterPawn::OnNotifyTrigger(const FName& name)
 		
 		if(m_Pool)
 		{
-			m_Pool->ShootBullet(TEXT("Trail_End_L"), GetFocusedTarget());
+			m_Pool->ShootBullet(TEXT("Trail_End_L"), GetFocusedTarget<ACombatUnitPawn>());
 		}
 		else
 		{
-			GetFocusedTarget()->TakeDmg(m_StatGroup.m_Dmg,this);	
+			GetFocusedTarget<ACombatUnitPawn>()->TakeDmg(m_StatGroup.m_Dmg,this);	
 		}
 	}
 	else

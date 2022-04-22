@@ -274,7 +274,7 @@ void UWidgetItemElement::UpdateElement(const FName& id)
 
 	m_ElementBase->SetHoldable(true);
 
-	m_ElementBase->SetIcon(ItemData.m_ItemIcon);
+	m_ElementBase->SetIcon(ItemData.m_Icon);
 
 	m_ElementBase->SetGlowColor(ItemData.m_ColorHandle);
 }

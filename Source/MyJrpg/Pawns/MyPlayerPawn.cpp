@@ -289,7 +289,7 @@ void AMyPlayerPawn::DealBaseMeleeAttack()
 
 void AMyPlayerPawn::ShootBaseRangeAttack()
 {
-	m_Pool->ShootBullet(TEXT("Trail_End_L"),GetFocusedTarget());
+	m_Pool->ShootBullet(TEXT("Trail_End_L"),GetFocusedTarget<ACombatUnitPawn>());
 }
 
 UAnimMontage* AMyPlayerPawn::GetBaseAttackMontage()

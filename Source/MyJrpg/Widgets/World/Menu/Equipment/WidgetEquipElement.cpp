@@ -89,7 +89,7 @@ void UWidgetEquipElement::UpdateElement(const FName& spec)
 		m_TextItemLevel->SetVisibility(ESlateVisibility::Collapsed);
 	}
 
-	m_ElementBase->SetIcon(ItemData.m_ItemIcon);
+	m_ElementBase->SetIcon(ItemData.m_Icon);
 
 	m_ElementBase->SetGlowColor(ItemData.m_ColorHandle);
 

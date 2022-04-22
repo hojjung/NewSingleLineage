@@ -6,12 +6,13 @@
 #include "BaseUnitPawn.h"
 #include "Logics/BulletPool.h"
 #include "MyJrpg/DataTables/UnitEntityData.h"
+#include "MyJrpg/Interfaces/Focusable.h"
 #include "CombatUnitPawn.generated.h"
 
 DECLARE_MULTICAST_DELEGATE_OneParam(FSkillTrigger,FName);
 
 UCLASS()
-class MYJRPG_API ACombatUnitPawn : public ABaseUnitPawn
+class MYJRPG_API ACombatUnitPawn : public ABaseUnitPawn,  public IFocusable
 {
 	GENERATED_BODY()
 public:
@@ -58,7 +59,7 @@ protected:
 
 	FTimerHandle m_SilenceTimer;
 	
-	TWeakObjectPtr<ACombatUnitPawn> m_FocusedTarget;//TScriptInterface<IInteractable>
+	TScriptInterface<IFocusable> m_FocusedTarget;//TScriptInterface<IInteractable>
 	
 	FSkillTrigger m_OnSkillTrigger;
 	
@@ -116,9 +117,7 @@ public:// get
 	
 	float GetHpPercent() const;
 
-	virtual void SetFocusedTarget(ACombatUnitPawn* target);
-    
-	virtual ACombatUnitPawn* GetFocusedTarget();
+	virtual void SetFocusedTarget(IFocusable* target);
 
 	FVector GetFocusedActorLocation() const;
 
@@ -135,7 +134,14 @@ public:// get
 	void TakeSilence(float duration);
 
 	void StopSilence();
-
+	
+public:
+	template<typename T = UObject>
+	T* GetFocusedTarget() const
+	{
+		return Cast<T>(m_FocusedTarget.GetObject());
+	}
+	
 public:
 	FSkillTrigger& GetSkillTriggerDelegate();
 
@@ -153,4 +159,6 @@ public:
 	const FName& GetTeamID() const;
 
 	virtual bool IsSneak() const;
+
+	EPathFollowingRequestResult::Type ChaseTarget();
 };

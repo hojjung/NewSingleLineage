@@ -14,5 +14,5 @@ void USkill_DrillAttack::OnSkillTriggered()//트리거를 여러개 놓기
 	{
 		return;
 	}
-	m_Player->GetFocusedTarget()->TakeDmg(GetDamage(),m_Player);
+	m_Player->GetFocusedTarget<ACombatUnitPawn>()->TakeDmg(GetDamage(),m_Player);
 }

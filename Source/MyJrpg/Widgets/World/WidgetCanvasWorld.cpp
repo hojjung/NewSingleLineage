@@ -42,8 +42,6 @@ void UWidgetCanvasWorld::NativeOnInitialized()
 	
 	m_BtnMenu->OnClicked.AddDynamic(this,&UWidgetCanvasWorld::ToggleMenu);
 
-	m_BtnToggleAuto->OnClicked.AddDynamic(this,&UWidgetCanvasWorld::AutoToggle);
-
 	m_BtnEquipInven->OnClicked.AddDynamic(this,&UWidgetCanvasWorld::OpenInventory);
 
 	m_BtnSkill->OnClicked.AddDynamic(this,&UWidgetCanvasWorld::OpenSkill);
@@ -103,16 +101,6 @@ void UWidgetCanvasWorld::ToggleMenu()
 		.Begin();
 	}
 
-}
-
-void UWidgetCanvasWorld::AutoToggle()
-{
-	static bool AutoToggle=false;
-
-	UMyLib::GetPlayer()->SetAutoCombat(true);
-	UMyGameInstance::Get->m_SkillAuto->SetUseAuto(AutoToggle);
-
-	AutoToggle=!AutoToggle;
 }
 
 void UWidgetCanvasWorld::OpenSkin()

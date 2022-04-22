@@ -26,20 +26,21 @@ void USensor_Player::UpdateAISensing()
 		
 		return;
 	}
-
-	if(m_PlayerOwner->GetFocusedTarget())
+	ACombatUnitPawn* TargetPawn =m_PlayerOwner->GetFocusedTarget<ACombatUnitPawn>();
+	
+	if(TargetPawn)
 	{
-		if(m_PlayerOwner->GetFocusedTarget()->IsAlive())
+		if(TargetPawn->IsAlive())
 		{
 			return;
 		}
 	}
 	
-	ACombatUnitPawn* Pawn = GetSensedPawn();
+	TargetPawn = GetSensedPawn();
 
-	if(Pawn)
+	if(TargetPawn)
 	{
-		m_PlayerOwner->SetFocusedTarget(Pawn);
+		m_PlayerOwner->SetFocusedTarget(TargetPawn);
 
 		return;
 	}
