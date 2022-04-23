@@ -3,6 +3,7 @@
 
 #include "CoreMinimal.h"
 #include "Blueprint/UserWidget.h"
+#include "Build/WidgetBuildPanel.h"
 #include "Components/WrapBox.h"
 #include "Hud/WidgetGameOver.h"
 #include "Hud/WidgetLevelUp.h"
@@ -76,6 +77,8 @@ protected:
 	UButton* m_BtnPet;
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (BindWidget))
 	UButton* m_BtnCollec;
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (BindWidget))
+	UButton* m_BtnBuild;
 	
 	//
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (BindWidget))
@@ -128,6 +131,8 @@ protected:
 	UWidgetCollecPanelParent* m_ItemCollecPanel;
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (BindWidget))
 	UWidgetPetPanel* m_PetPanel;
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (BindWidget))
+	UWidgetBuildPanel* m_BuildPanel;
 	//
 protected:
 	void HideHUD();
@@ -171,6 +176,8 @@ public:
 	void OpenZone();
 	UFUNCTION()
 	void OpenPet();
+	UFUNCTION()
+	void OpenBuild();
 
 	void OpenQuestPanel(bool isMain);
 

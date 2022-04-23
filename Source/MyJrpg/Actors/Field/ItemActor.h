@@ -19,8 +19,6 @@ public:
 protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 	UBillboardComponent* m_BillboardIcon;
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
-	UWidgetSpeechBubbleComp* m_SpeechBubbleComp;
 	
 	FName m_OwnerID;
 

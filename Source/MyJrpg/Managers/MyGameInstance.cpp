@@ -1,5 +1,7 @@
 #include "MyGameInstance.h"
 #include "MyGameInstance.h"
+
+#include "ConstructionManager.h"
 #include "EquipManager.h"
 #include "MyAssetManager.h"
 #include "RewardManager.h"
@@ -96,6 +98,8 @@ void UMyGameInstance::Init()
 
 	m_TeamKarma = NewObject<UFriendKarmaManager>(this);
 
+	m_BuildManager = NewObject<UConstructionManager>(this);
+
 	m_AryStorage.Reset();
 	m_AryStorage.Add(NewObject<UInventory>(this));
 	m_AryStorage.Add(NewObject<UInventory>(this));
@@ -106,7 +110,7 @@ void UMyGameInstance::Init()
 	m_AryStorage[2]->Init(FGlobalVariable::STORAGE_SIZE);
 	m_AryStorage[3]->Init(FGlobalVariable::STORAGE_SIZE);
 
-
+	m_BuildManager->Init();
 	m_ItemCollecManager->Init();
 	m_AvatarManager->Init();
 	m_PetManager->Init();

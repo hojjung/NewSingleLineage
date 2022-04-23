@@ -65,6 +65,10 @@ void UWidgetCanvasWorld::NativeOnInitialized()
 	m_BtnSkin->OnClicked.AddDynamic(this,&UWidgetCanvasWorld::OpenSkin);
 	
 	m_BtnPet->OnClicked.AddDynamic(this,&UWidgetCanvasWorld::OpenPet);
+
+	m_BtnBuild->OnClicked.AddDynamic(this,&UWidgetCanvasWorld::OpenBuild);
+
+	
 }
 
 void UWidgetCanvasWorld::ToggleMenu()
@@ -150,6 +154,11 @@ void UWidgetCanvasWorld::OpenZone()
 void UWidgetCanvasWorld::OpenPet()
 {
 	m_PetPanel->Open();
+}
+
+void UWidgetCanvasWorld::OpenBuild()
+{
+	m_BuildPanel->OpenPanel();
 }
 
 void UWidgetCanvasWorld::OpenQuestPanel(bool isMain)

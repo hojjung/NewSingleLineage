@@ -79,8 +79,14 @@ namespace FGlobalVariable
 	static const int KARMA_FOE = -50;
 
 	static const int MOB_INVEN = 10;
-};
 
+	static const int GRID_COUNT = 20;
+
+	static const float GRID_SIZE = 333.f;//??188
+};
+//(X=0.885000,Y=0.885000,Z=0.885000) =타일 스캐일
+//그리드 20칸
+//평원 크기 50
 #define PRINTFSCREEN(Format, ...) if (GEngine) GEngine->AddOnScreenDebugMessage(-1, 3.5, FColor::Green, *FString::Printf(TEXT(Format), ##__VA_ARGS__),true)
 #define PRINTF(Format, ...) UE_LOG(LogTemp, Warning, TEXT("%s"), *FString::Printf(TEXT(Format), ##__VA_ARGS__)) PRINTFSCREEN(Format, ##__VA_ARGS__)
 #define PRINT3DF(Location,Format,...) if (GEngine) DrawDebugString(GEngine->GetWorldFromContextObject(this,EGetWorldErrorMode::LogAndReturnNull), Location, *FString::Printf(TEXT(Format), ##__VA_ARGS__), nullptr,  FColor::Orange, 0, false);
@@ -176,3 +182,12 @@ template<typename T>
 	TSharedRef< TStrongObjectPtr<T> > SharedRefToStrongObjPtr = MakeShared< TStrongObjectPtr<T> >(obj);
 	return TSharedPtr<T>(SharedRefToStrongObjPtr, SharedRefToStrongObjPtr->Get());
 }
+
+
+UENUM()
+enum class EBuildType :uint8
+{
+	Foundation,
+	Wall,
+	Door
+};

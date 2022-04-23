@@ -28,7 +28,7 @@ protected:
 	UButton* m_BtnSpecialMap;
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (BindWidget))
 	UButton* m_BtnBossMap;
-	UPROPERTY(EditAnywhere)
+	UPROPERTY(EditDefaultsOnly)
 	TSubclassOf<UWidgetZoneSelectButton> m_ClassButton;
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (BindWidget))
 	UScrollBox* m_ScrollWorld;

@@ -25,6 +25,7 @@
 #include "Web/ChatManager.h"
 #include "MyGameInstance.generated.h"
 
+class UConstructionManager;
 class UEquipManager;
 class URewardManager;
 class UPetManager;
@@ -89,6 +90,8 @@ public:
 	UGameRuleBase* m_GameRule;
 	UPROPERTY()
 	UFriendKarmaManager* m_TeamKarma;
+	UPROPERTY()
+	UConstructionManager* m_BuildManager;
 	
 protected:
 	virtual void BeginDestroy() override;
