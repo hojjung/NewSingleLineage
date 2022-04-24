@@ -18,6 +18,7 @@ class AStaticMeshActor;
 class AInteractActorBase;
 class AStructureActor;
 struct FBuildDataRow;
+
 USTRUCT()
 struct FConEle
 {
@@ -33,6 +34,21 @@ public:
 	TArray<AStructureActor*> m_Walls;
 	UPROPERTY()
 	AInteractActorBase* m_Prop;
+};
+
+USTRUCT()
+struct FWallAry
+{
+	GENERATED_BODY()
+
+public:
+	FWallAry();
+
+	FWallAry(int count);
+
+public:
+	UPROPERTY()
+	TArray<AStructureActor*> m_Walls;
 };
 
 UCLASS()
@@ -68,18 +84,28 @@ private:
 
 	FConEle m_Grid[FGlobalVariable::GRID_COUNT][FGlobalVariable::GRID_COUNT];
 
+	UPROPERTY()
+	TArray<FWallAry> m_WallHorizontal; //[FGlobalVariable::GRID_COUNT + 1][FGlobalVariable::GRID_COUNT + 2];
+	UPROPERTY()
+	TArray<FWallAry> m_WallVertical; //[FGlobalVariable::GRID_COUNT + 2][FGlobalVariable::GRID_COUNT + 1];
+
+	EWallDir m_Dir;
 private:
 	FVector GetWorldPos(int x, int y);
 
 	void GetIndex(const FVector& inloc, int& outX, int& outY);
+
+	bool GetWallIndex(const FVector& inloc, int& outX, int& outY, bool &isHori);
 	
 	bool FindEmptyWallPlace(const FConEle& Ele, EWallDir& dir);
 
 	bool GetEmptyFoundationLoc(int x, int y, FVector& outEmptyLoc, FRotator& outEmptyRot);
 
-	bool GetEmptyWallLoc(int x, int y, FVector& outEmptyLoc, FRotator& outEmptyRot);
+	FVector GetWallWorldPos(bool isHori, int wall_x, int wall_y);
+
+	bool GetEmptyWallLoc(int x, int y, bool isHori, FVector& outEmptyLoc, FRotator& outEmptyRot);
 	
-	bool GetEmptyLoc(const FVector& inloc, FVector& outEmptyLoc, FRotator& outEmptyRot, EBuildType t);
+	bool GetEmptyLoc(const FVector& inloc, FVector& outEmptyLoc, FRotator& outEmptyRot, EBuildType t, EWallDir dir);
 
 	void CheckBuildable();
 
@@ -119,3 +145,4 @@ public:
 //이후 초록색 메테리얼, 지을수 없다면 빨간색 메테리얼
 //초록색일때 터치하면 프리뷰 액터가 정식액터가 되어 배정되고
 //프리뷰 액터는 널처리
+

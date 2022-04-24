@@ -13,8 +13,8 @@ ADoorWood01::ADoorWood01()
 	m_MeshDoor = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("m_MeshDoor"));
 	m_MeshDoor->SetupAttachment(GetStaticMeshComponent());
 	m_MeshDoor->SetStaticMesh(FoundMesh2.Object);
-	m_MeshDoor->SetRelativeLocation(FVector(176,-61,148));
-	//(X=176.000000,Y=-61.000000,Z=148.000000)
+	m_MeshDoor->SetRelativeLocation(FVector(0,-61,148));
+	//(X=0.000000,Y=-61.000000,Z=148.000000)
 }
 
 void ADoorWood01::BeginPlay()
