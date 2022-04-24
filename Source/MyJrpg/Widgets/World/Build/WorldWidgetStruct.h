@@ -3,17 +3,15 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "MyJrpg/Actors/Field/StructureActor.h"
-#include "FloorWood02.generated.h"
+#include "Blueprint/UserWidget.h"
+#include "WorldWidgetStruct.generated.h"
 
 /**
  * 
  */
 UCLASS()
-class MYJRPG_API AFloorWood02 : public AStructureActor
+class MYJRPG_API UWorldWidgetStruct : public UUserWidget
 {
 	GENERATED_BODY()
-
-public:
-	AFloorWood02();
+	
 };

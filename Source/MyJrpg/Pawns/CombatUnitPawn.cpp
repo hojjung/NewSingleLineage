@@ -124,15 +124,9 @@ void ACombatUnitPawn::TrySnapToGround()
 	FNavLocation Loc;
 	if(!UMyLib::GetNavSys()->ProjectPointToNavigation(ActorLoc,Loc))
 	{
-		if(UMyLib::GetNavSys()->GetRandomPointInNavigableRadius(ActorLoc,1000,Loc))
-		{
-			SetActorLocation(Loc);			
-		}
-		else
-		{
-			PRINTF("ACombatUnitPawn::Im Flying");
-		}
+		UMyLib::GetNavSys()->GetRandomPointInNavigableRadius(ActorLoc,1000,Loc);
 	}
+	SetActorFeetLocation(Loc.Location);
 }
 
 void ACombatUnitPawn::SetEntity(const FName& id, const FNpcUnitEntityRow& unitEntityRow)

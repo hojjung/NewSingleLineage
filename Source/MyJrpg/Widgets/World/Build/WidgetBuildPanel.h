@@ -18,17 +18,23 @@ class MYJRPG_API UWidgetBuildPanel : public UWidgetBasePanel
 	GENERATED_BODY()
 
 protected:
-	UPROPERTY(EditDefaultsOnly)
+	UPROPERTY(EditAnywhere)
 	TSubclassOf<UWidgetBuildElement> m_ClassBuildEle;
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (BindWidget))
 	UScrollBox* m_ScrollElements;
 	UPROPERTY()
 	UWidgetBuildElement* m_Focused;
+
+	FDelegateHandle m_Dele;
+
+	const FBuildDataRow* m_SelectedBuildData;
 	
 protected:
 	virtual void NativeOnInitialized() override;
 
 	void OnClickElement(UWidgetBuildElement* ele,const FBuildDataRow& data);
+
+	void OnTouchWorld(const FHitResult& hit);
 	
 public:
 	virtual void OpenPanel() override;

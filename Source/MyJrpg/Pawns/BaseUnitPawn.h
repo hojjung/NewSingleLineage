@@ -95,5 +95,7 @@ public:
 	virtual bool IsRange();
 
 	const FName& GetEntityID() const;
+
+	void SetActorFeetLocation(FVector loc);
 };
 

@@ -63,6 +63,8 @@ void AMyPlayerPawn::BeginPlay()
 	m_DissolveCam->SetActive(true);
 
 	UMyGameInstance::Get->m_AvatarManager->EquipSkin(*UMyGameInstance::Get->m_AvatarManager->GetCrntSkin());
+
+	TrySnapToGround();
 }
 
 void AMyPlayerPawn::SetPlayerEntity(const FPlayerUnitEntityRow& unitEntityRow)

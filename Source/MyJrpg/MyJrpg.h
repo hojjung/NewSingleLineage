@@ -82,7 +82,7 @@ namespace FGlobalVariable
 
 	static const int GRID_COUNT = 20;
 
-	static const float GRID_SIZE = 333.f;//??188
+	static const float GRID_SIZE = 333.3f;//??188
 };
 //(X=0.885000,Y=0.885000,Z=0.885000) =타일 스캐일
 //그리드 20칸

@@ -1,7 +1,9 @@
 #include "ConstructionManager.h"
 
+#include "Editor/GroupActor.h"
 #include "Engine/StaticMeshActor.h"
 #include "MyJrpg/MyLib.h"
+#include "MyJrpg/Actors/Field/Build/GridActor.h"
 #include "MyJrpg/DataTables/BuildData.h"
 
 FConEle::FConEle(): m_Foundation(nullptr), m_Prop(nullptr)
@@ -11,10 +13,11 @@ FConEle::FConEle(): m_Foundation(nullptr), m_Prop(nullptr)
 
 UConstructionManager::UConstructionManager()
 {
-	//Material'/Game/10_Construction/Materials/M_Enabled.M_Enabled'
-	//Material'/Game/10_Construction/Materials/M_Disabled.M_Disabled'
-	//StaticMesh'/Game/10_Construction/Meshes/GridPlane.GridPlane'
+	static ConstructorHelpers::FObjectFinder<UMaterialInterface> FoundMat01(TEXT("Material'/Game/10_Construction/Materials/M_Enabled.M_Enabled'"));
+	static ConstructorHelpers::FObjectFinder<UMaterialInterface> FoundMat02(TEXT("Material'/Game/10_Construction/Materials/M_Disabled.M_Disabled'"));
 	
+	m_MatGreen = FoundMat01.Object;
+	m_MatRed = FoundMat02.Object;
 }
 
 void UConstructionManager::Init()
@@ -27,13 +30,41 @@ void UConstructionManager::LoadConstruction()
 	FActorSpawnParameters Param;
 	Param.bNoFail = true;
 	Param.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
-	m_GridMesh = GetWorld()->SpawnActor<AStaticMeshActor>(AStaticMeshActor::StaticClass(), FVector::ZeroVector, FRotator::ZeroRotator, Param);
-	m_GridMesh->GetStaticMeshComponent()->SetMaterial();
+	m_GridMesh = GetWorld()->SpawnActor<AGridActor>(AGridActor::StaticClass(), FVector(0,0,20), FRotator::ZeroRotator, Param);
+	m_GridMesh->SetActorScale3D(FVector(50));
+	EndBuilding();
 }
 
-void UConstructionManager::RemoveConstruction()
+void UConstructionManager::StartBuilding()
 {
+	m_GridMesh->Show();
+}
+
+void UConstructionManager::EndBuilding()
+{
+	m_GridMesh->Hide();
 	
+	if(m_PreviewActor)
+	{
+		m_PreviewActor->Destroy();
+		m_PreviewActor = nullptr;
+	}
+}
+
+FVector UConstructionManager::GetWorldPos(int x, int y)
+{
+	return FVector((y * FGlobalVariable::GRID_SIZE) - 2500 + (FGlobalVariable::GRID_SIZE / 2.f), (x * FGlobalVariable::GRID_SIZE) - 2500 + (FGlobalVariable::GRID_SIZE / 2.f), 0);
+}
+
+void UConstructionManager::GetIndex(const FVector& inloc, int& outX, int& outY)
+{
+	int Y = (inloc.X + 2500.f) / FGlobalVariable::GRID_SIZE;
+
+	int X = (inloc.Y + 2500.f) / FGlobalVariable::GRID_SIZE;
+
+	outX = FMath::Clamp(X, 0,FGlobalVariable::GRID_COUNT);
+
+	outY = FMath::Clamp(Y, 0,FGlobalVariable::GRID_COUNT);
 }
 
 bool UConstructionManager::FindEmptyWallPlace(const FConEle& Ele, EWallDir& dir)
@@ -66,7 +97,7 @@ bool UConstructionManager::GetEmptyFoundationLoc(int x, int y, FVector& outEmpty
 				x++;
 				continue;
 			}
-			outEmptyLoc = FVector(x,y,100);
+			outEmptyLoc = GetWorldPos(x, y);
 			outEmptyRot = FRotator::ZeroRotator;
 			return true;
 		}
@@ -91,7 +122,7 @@ bool UConstructionManager::GetEmptyWallLoc(int x, int y, FVector& outEmptyLoc, F
 					IterWall++;
 					continue;
 				}
-				outEmptyLoc = FVector(x,y,100);
+				outEmptyLoc = GetWorldPos(x, y);
 				outEmptyRot = FRotator(0,IterWall * 90.f,0);
 				return true;
 			}
@@ -102,17 +133,13 @@ bool UConstructionManager::GetEmptyWallLoc(int x, int y, FVector& outEmptyLoc, F
 	return false;
 }
 
-bool UConstructionManager::GetEmptyLoc(FVector& outEmptyLoc, FRotator& outEmptyRot, EBuildType t)
+bool UConstructionManager::GetEmptyLoc(const FVector& inloc, FVector& outEmptyLoc, FRotator& outEmptyRot, EBuildType t)
 {
-	FVector Loc = UMyLib::GetPlayer()->GetActorLocation();
+	int X,Y;
+	
+	GetIndex(inloc ,X,Y);
 
-	int X = Loc.X /= FGlobalVariable::GRID_SIZE;
-
-	int Y = Loc.Y /= FGlobalVariable::GRID_SIZE;
-
-	X = FMath::Clamp(X, 0,FGlobalVariable::GRID_COUNT);
-
-	Y = FMath::Clamp(Y, 0,FGlobalVariable::GRID_COUNT);
+	PRINTF("CoordIndex: X:%d, Y:%d", X, Y);
 
 	switch (t)
 	{
@@ -135,30 +162,34 @@ void UConstructionManager::CheckBuildable()
 	m_PreviewActor->SetMat(m_MatRed);
 }
 
-void UConstructionManager::SpawnPreviewActor(const FBuildDataRow& dataRow)
+void UConstructionManager::SpawnPreviewActor(FVector loc, const FBuildDataRow& dataRow)
 {
 	FVector Loc;
 
 	FRotator Rot;
-	
-	if(!GetEmptyLoc(Loc, Rot, dataRow.m_BuildType))
+
+	if(!GetEmptyLoc(loc,Loc, Rot, dataRow.m_BuildType))
 	{
 		return;
 	}
 
-	if (!m_PreviewActor)
+	if (!m_PreviewActor || m_PreviewActor->GetClass() != dataRow.m_ClassActor)
 	{
+		if(m_PreviewActor)
+		{
+			m_PreviewActor->Destroy();
+			m_PreviewActor = nullptr;
+		}
 		FActorSpawnParameters Param;
 		Param.bNoFail = true;
 		Param.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
-		m_PreviewActor = GetWorld()->SpawnActor<AStructureActor>(dataRow.m_ClassActor, Loc, Rot, Param);
-	}
-	else
-	{
-		m_PreviewActor->SetActorLocation(Loc);
-		m_PreviewActor->SetActorRotation(Rot);
+		m_PreviewActor = GetWorld()->SpawnActor<AStructureActor>(dataRow.m_ClassActor, Param);
+		m_PreviewActor->SetActorEnableCollision(false);
+		m_PreviewActor->SetActorScale3D(FVector(0.885f));
 	}
 	m_PreviewActor->SetBuildData(dataRow);
+	m_PreviewActor->SetActorLocation(Loc);
+	m_PreviewActor->SetActorRotation(Rot);
 
 	CheckBuildable();
 }

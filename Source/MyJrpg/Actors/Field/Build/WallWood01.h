@@ -13,5 +13,7 @@ UCLASS()
 class MYJRPG_API AWallWood01 : public AStructureActor
 {
 	GENERATED_BODY()
-	
+
+public:
+	AWallWood01();
 };

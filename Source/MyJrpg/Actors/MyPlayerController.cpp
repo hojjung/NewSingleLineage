@@ -25,7 +25,9 @@ void AMyPlayerController::BeginPlay()
 
 	InitWidget();
 
-	APlayerController::SetVirtualJoystickVisibility(true);
+	SetVirtualJoystickVisibility(true);
+
+	m_Joystick = CurrentTouchInterface;
 }
 
 void AMyPlayerController::InitWidget()
@@ -83,15 +85,8 @@ bool AMyPlayerController::CheckInteract()
     {
     	return false;
     }
-    
-	AInteractActorBase* InteractActor = Cast<AInteractActorBase>(Hit.Actor);
 
-	if(!InteractActor)
-	{
-		return false;
-	}
-
-	InteractActor->OnInteract();
+	m_OnTouch.Broadcast(Hit);
 
 	return true;
 }
@@ -119,4 +114,16 @@ void AMyPlayerController::ExitGame()
 void AMyPlayerController::OnTouchPressed()
 {
 	CheckInteract();
+}
+
+void AMyPlayerController::EnableJoystick(bool b)
+{
+	if(b)
+	{
+		ActivateTouchInterface(m_Joystick);
+	}
+	else
+	{
+		ActivateTouchInterface(nullptr);
+	}
 }

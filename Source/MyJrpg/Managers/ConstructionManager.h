@@ -13,6 +13,7 @@
  * 
  */
 
+class AGridActor;
 class AStaticMeshActor;
 class AInteractActorBase;
 class AStructureActor;
@@ -47,30 +48,32 @@ public:
 
 	UConstructionManager();
 
-protected:
+private:
 	UPROPERTY()
 	UMaterialInterface* m_MatGreen;
 	UPROPERTY()
 	UMaterialInterface* m_MatRed;
 	UPROPERTY()
-	UMaterialInterface* m_MatGrid;
-	UPROPERTY()
 	AStructureActor* m_PreviewActor;
 	UPROPERTY()
-	AStaticMeshActor* m_GridMesh;
+	AGridActor* m_GridMesh;
 
 	TArray<FBuildDataRow*> m_AryBuildDatas;
 
 	FConEle m_Grid[FGlobalVariable::GRID_COUNT][FGlobalVariable::GRID_COUNT];
 
-protected:
+private:
+	FVector GetWorldPos(int x, int y);
+
+	void GetIndex(const FVector& inloc, int& outX, int& outY);
+	
 	bool FindEmptyWallPlace(const FConEle& Ele, EWallDir& dir);
 
 	bool GetEmptyFoundationLoc(int x, int y, FVector& outEmptyLoc, FRotator& outEmptyRot);
 
 	bool GetEmptyWallLoc(int x, int y, FVector& outEmptyLoc, FRotator& outEmptyRot);
 	
-	bool GetEmptyLoc(FVector& outEmptyLoc, FRotator& outEmptyRot, EBuildType t);
+	bool GetEmptyLoc(const FVector& inloc, FVector& outEmptyLoc, FRotator& outEmptyRot, EBuildType t);
 
 	void CheckBuildable();
 
@@ -79,18 +82,20 @@ protected:
 public:
 	void Init();
 	
-	void SpawnPreviewActor(const FBuildDataRow& dataRow);
-
+	void SpawnPreviewActor(FVector loc, const FBuildDataRow& dataRow);
+	
 	void ConfirmBuild();
 	
 	void LoadConstruction();
-
-	void RemoveConstruction();
 
 	FORCEINLINE const TArray<FBuildDataRow*>& GetAryBuildDatas() const
 	{
 		return 	m_AryBuildDatas;
 	}
+
+	void EndBuilding();
+	
+	void StartBuilding();
 };
 
 //건설 버튼을 누루면

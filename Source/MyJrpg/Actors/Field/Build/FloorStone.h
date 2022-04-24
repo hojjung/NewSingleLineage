@@ -13,5 +13,7 @@ UCLASS()
 class MYJRPG_API AFloorStone : public AStructureActor
 {
 	GENERATED_BODY()
-	
+
+public:
+	AFloorStone();
 };

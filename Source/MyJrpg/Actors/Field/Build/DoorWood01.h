@@ -13,5 +13,18 @@ UCLASS()
 class MYJRPG_API ADoorWood01 : public AStructureActor
 {
 	GENERATED_BODY()
-	
+
+public:
+	ADoorWood01();
+
+private:
+	UPROPERTY(VisibleAnywhere)
+	UStaticMeshComponent* m_MeshDoor;
+	UPROPERTY()
+	TArray<UMaterialInterface*> m_AryDoorMats;
+
+protected:
+	virtual void SetMat(UMaterialInterface* mat) override;
+
+	virtual void ConfirmBuild() override;
 };

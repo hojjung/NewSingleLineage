@@ -14,6 +14,8 @@ void UWidgetBuildPanel::NativeOnInitialized()
 
 		SelectButton->Init(*Data);
 		SelectButton->m_OnClick.BindUObject(this, &UWidgetBuildPanel::OnClickElement);
+
+		m_ScrollElements->AddChild(SelectButton);
 	}
 }
 
@@ -23,17 +25,49 @@ void UWidgetBuildPanel::OnClickElement(UWidgetBuildElement* ele, const FBuildDat
 		m_Focused->MyUnFocus();
 	m_Focused = ele;
 	m_Focused->MyFocus();
-	UMyGameInstance::Get->m_BuildManager->SpawnPreviewActor(data);
+
+	m_SelectedBuildData = &data;
+
+	FVector Loc = UMyLib::GetPlayer()->GetActorLocation();
+	
+	UMyGameInstance::Get->m_BuildManager->SpawnPreviewActor(Loc, *m_SelectedBuildData);
+}
+
+void UWidgetBuildPanel::OnTouchWorld(const FHitResult& hit)
+{
+	if(!m_SelectedBuildData)
+		return;
+	
+	UMyGameInstance::Get->m_BuildManager->SpawnPreviewActor(hit.Location, *m_SelectedBuildData);
 }
 
 void UWidgetBuildPanel::OpenPanel()
 {
 	Super::OpenPanel();
+
+	UMyLib::GetPlayerCon()->EnableJoystick(false);
+	
+	m_Dele = UMyLib::GetPlayerCon()->m_OnTouch.AddUObject(this, &UWidgetBuildPanel::OnTouchWorld);
+
+	UMyGameInstance::Get->m_BuildManager->StartBuilding();
 }
 
 void UWidgetBuildPanel::ClosePanel()
 {
 	Super::ClosePanel();
 
+	UMyLib::GetPlayerCon()->EnableJoystick(true);
+
+	UMyLib::GetPlayerCon()->m_OnTouch.Remove(m_Dele);
+
+	if(m_Focused)
+		m_Focused->MyUnFocus();
+
 	m_Focused = nullptr;
+
+	m_SelectedBuildData = nullptr;
+
+	UMyGameInstance::Get->m_BuildManager->EndBuilding();
+
+	
 }

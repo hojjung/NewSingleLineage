@@ -19,6 +19,11 @@ UCLASS()
 class MYJRPG_API AMyPlayerController : public APlayerController
 {
 	GENERATED_BODY()
+
+public:
+	DECLARE_MULTICAST_DELEGATE_OneParam(FOnTouchWorld,const FHitResult&);
+
+	FOnTouchWorld m_OnTouch;
 	
 public:
 	AMyPlayerController();
@@ -30,6 +35,8 @@ protected:
 	TArray<AActor*> m_AryIgnoreActors;
 	UPROPERTY()
 	int m_CompUseIndex;
+	UPROPERTY()
+	UTouchInterface* m_Joystick;
 	
 protected:
 	virtual void BeginPlay() override;
@@ -55,4 +62,6 @@ public:
 	void BackToSelectMenu();
 	UFUNCTION()
 	void OnTouchPressed();
+
+	void EnableJoystick(bool b);
 };

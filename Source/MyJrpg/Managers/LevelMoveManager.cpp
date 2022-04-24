@@ -1,6 +1,7 @@
 #include "LevelMoveManager.h"
 
 #include "BUITween.h"
+#include "ConstructionManager.h"
 #include "EquipManager.h"
 #include "MyAssetManager.h"
 #include "MyGameInstance.h"
@@ -15,7 +16,7 @@ void ULevelMoveManager::StartGame()
 {
 	m_bIsGameStart = true;
 	
-	OpenMyLevel(TEXT("Village"),0);
+	OpenMyLevel(TEXT("PlayerHome"),0);
 }
 
 void ULevelMoveManager::OpenMyLevel(const FZoneDataRow& zoneData, int index)
@@ -67,6 +68,11 @@ void ULevelMoveManager::OnOpenWorldLevelComplete()
 	m_OnLvelMoveComp.Broadcast(GetCrntZoneID());
 
 	m_OnLvelMoveCompText.Broadcast(tLevelName);
+
+	if(GetCrntZoneID() == TEXT("PlayerHome"))
+	{
+		UMyGameInstance::Get->m_BuildManager->LoadConstruction();
+	}
 }
 
 bool ULevelMoveManager::IsGameStart()

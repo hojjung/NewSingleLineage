@@ -283,6 +283,15 @@ const FName& ABaseUnitPawn::GetEntityID() const
 	return m_EntityID;
 }
 
+void ABaseUnitPawn::SetActorFeetLocation(FVector loc)
+{
+	FVector NewLoc = loc;
+
+	NewLoc.Z += GetCapsule()->Bounds.BoxExtent.Z;
+		
+	SetActorLocation(NewLoc);
+}
+
 EPathFollowingRequestResult::Type ABaseUnitPawn::MoveToLocation(FVector loc, float acceptRadius)
 {
 	if (m_PFComp && m_PFComp->GetStatus() != EPathFollowingStatus::Idle)

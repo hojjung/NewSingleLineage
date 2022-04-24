@@ -13,5 +13,7 @@ UCLASS()
 class MYJRPG_API ADoorWood02 : public ADoorWood01
 {
 	GENERATED_BODY()
-	
+
+public:
+	ADoorWood02();
 };

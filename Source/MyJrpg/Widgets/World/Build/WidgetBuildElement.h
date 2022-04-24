@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "Blueprint/UserWidget.h"
 #include "MyJrpg/DataTables/BuildData.h"
+#include "MyJrpg/Widgets/World/Menu/Craft/WidgetCraftCostElement.h"
 #include "WidgetBuildElement.generated.h"
 
 /**
@@ -21,6 +22,16 @@ public:
 	FOnClick m_OnClick;
 
 protected:
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (BindWidget))
+	UImage* m_ImgIcon;
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (BindWidget))
+	UImage* m_ImgFocus;
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (BindWidget))
+	UVerticalBox* m_VertCost;
+	UPROPERTY(EditAnywhere)
+	TSubclassOf<UWidgetCraftCostElement> m_ClassCostElement;
+	
+protected:
 	const FBuildDataRow* m_DataRow;
 
 public:
@@ -33,6 +44,7 @@ public:
 protected:
 	virtual FReply NativeOnTouchEnded(const FGeometry& InGeometry, const FPointerEvent& InGestureEvent) override;
 
-	virtual FReply NativeOnMouseButtonDown(const FGeometry& InGeometry, const FPointerEvent& InMouseEvent) override;
-	
+	virtual FReply NativeOnMouseButtonUp(const FGeometry& InGeometry, const FPointerEvent& InMouseEvent) override;
+
+	void CreateCostWidgets(const TArray<FCraftItemCost>& costData);
 };

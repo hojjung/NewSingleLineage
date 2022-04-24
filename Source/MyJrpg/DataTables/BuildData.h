@@ -40,4 +40,6 @@ public:
 	TArray<FCraftItemCost> m_AryCostItem;
 	UPROPERTY(EditDefaultsOnly,BlueprintReadOnly)
 	TSubclassOf<AStructureActor> m_ClassActor;
+	UPROPERTY(EditDefaultsOnly,BlueprintReadOnly)
+	TSoftObjectPtr<UTexture2D> m_Icon;
 };
