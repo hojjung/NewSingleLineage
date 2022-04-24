@@ -27,17 +27,21 @@ protected:
 
 	FDelegateHandle m_Dele;
 
-	const FBuildDataRow* m_SelectedBuildData;
-	
+	FDelegateHandle m_Dele2;
+
 protected:
 	virtual void NativeOnInitialized() override;
 
 	void OnClickElement(UWidgetBuildElement* ele,const FBuildDataRow& data);
 
 	void OnTouchWorld(const FHitResult& hit);
+
+	void OnCancel();
 	
 public:
 	virtual void OpenPanel() override;
 
 	virtual void ClosePanel() override;
 };
+
+

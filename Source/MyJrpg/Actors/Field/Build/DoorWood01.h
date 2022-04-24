@@ -24,6 +24,8 @@ private:
 	TArray<UMaterialInterface*> m_AryDoorMats;
 
 protected:
+	virtual void BeginPlay() override;
+	
 	virtual void SetMat(UMaterialInterface* mat) override;
 
 	virtual void ConfirmBuild() override;

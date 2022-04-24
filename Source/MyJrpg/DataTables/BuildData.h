@@ -6,10 +6,10 @@
 #include "ItemData.h"
 #include "Engine/DataTable.h"
 #include "MyJrpg/MyJrpg.h"
-#include "MyJrpg/Actors/Field/StructureActor.h"
 #include "UObject/NoExportTypes.h"
 #include "BuildData.generated.h"
 
+class AStructureActor;
 /**
  * 
  */
@@ -34,8 +34,6 @@ public:
 	FText m_ShowingName;
 	UPROPERTY(EditDefaultsOnly,BlueprintReadOnly)
 	EBuildType m_BuildType;
-	UPROPERTY(EditDefaultsOnly,BlueprintReadOnly)
-	bool m_bIsRotationEnable = false;
 	UPROPERTY(EditDefaultsOnly,BlueprintReadOnly)
 	TArray<FCraftItemCost> m_AryCostItem;
 	UPROPERTY(EditDefaultsOnly,BlueprintReadOnly)

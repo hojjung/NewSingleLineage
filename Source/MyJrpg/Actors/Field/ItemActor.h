@@ -8,6 +8,7 @@
 #include "MyJrpg/Widgets/World/Menu/QuickSlotsPanel/WidgetQuickSlot.h"
 #include "ItemActor.generated.h"
 
+class UBillboardComponent;
 UCLASS()
 class MYJRPG_API AItemActor : public AActor, public IFocusable
 {

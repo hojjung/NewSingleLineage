@@ -17,6 +17,13 @@ ADoorWood01::ADoorWood01()
 	//(X=176.000000,Y=-61.000000,Z=148.000000)
 }
 
+void ADoorWood01::BeginPlay()
+{
+	Super::BeginPlay();
+
+	m_AryDoorMats = m_MeshDoor->GetMaterials();
+}
+
 void ADoorWood01::SetMat(UMaterialInterface* mat)
 {
 	Super::SetMat(mat);

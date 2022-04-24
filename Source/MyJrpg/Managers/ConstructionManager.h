@@ -43,8 +43,14 @@ class MYJRPG_API UConstructionManager : public UObject
 public:
 	enum class EWallDir
 	{
-		N,S,W,E,Length
+		N,E,S,W,Length
 	};
+
+	DECLARE_MULTICAST_DELEGATE(FOnBuildDone);
+
+	FOnBuildDone m_OnConfirm;
+
+	FOnBuildDone m_OnCancel;
 
 	UConstructionManager();
 
@@ -79,12 +85,12 @@ private:
 
 	bool IsBuildable();
 
+	int GetPreviewRotDir();
+
 public:
 	void Init();
 	
-	void SpawnPreviewActor(FVector loc, const FBuildDataRow& dataRow);
-	
-	void ConfirmBuild();
+	void SpawnPreviewActor(FVector loc, const FBuildDataRow* dataRow = nullptr);
 	
 	void LoadConstruction();
 
@@ -96,6 +102,14 @@ public:
 	void EndBuilding();
 	
 	void StartBuilding();
+public:
+	void Cancel();
+	
+	void ConfirmBuild();
+	
+	void Rotate();
+
+	AStructureActor* GetPreview();
 };
 
 //건설 버튼을 누루면

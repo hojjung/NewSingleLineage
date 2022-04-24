@@ -1,8 +1,7 @@
 #include "ConstructionManager.h"
-
-#include "Editor/GroupActor.h"
 #include "Engine/StaticMeshActor.h"
 #include "MyJrpg/MyLib.h"
+#include "MyJrpg/Actors/Field/StructureActor.h"
 #include "MyJrpg/Actors/Field/Build/GridActor.h"
 #include "MyJrpg/DataTables/BuildData.h"
 
@@ -123,7 +122,7 @@ bool UConstructionManager::GetEmptyWallLoc(int x, int y, FVector& outEmptyLoc, F
 					continue;
 				}
 				outEmptyLoc = GetWorldPos(x, y);
-				outEmptyRot = FRotator(0,IterWall * 90.f,0);
+				outEmptyRot = FRotator(0, FMath::RoundToFloat(IterWall * 90),0);
 				return true;
 			}
 			x++;
@@ -157,23 +156,29 @@ void UConstructionManager::CheckBuildable()
 	if(IsBuildable())
 	{
 		m_PreviewActor->SetMat(m_MatGreen);
+		m_PreviewActor->ShowBuildWidget(true);
 		return;
 	}
 	m_PreviewActor->SetMat(m_MatRed);
+	m_PreviewActor->ShowBuildWidget(false);
 }
 
-void UConstructionManager::SpawnPreviewActor(FVector loc, const FBuildDataRow& dataRow)
+void UConstructionManager::SpawnPreviewActor(FVector loc, const FBuildDataRow* dataRow)
 {
+	if(!dataRow)
+	{
+		if(m_PreviewActor)
+			dataRow = &m_PreviewActor->GetBuildData();
+		else
+			return;
+	}
 	FVector Loc;
 
 	FRotator Rot;
 
-	if(!GetEmptyLoc(loc,Loc, Rot, dataRow.m_BuildType))
-	{
-		return;
-	}
+	GetEmptyLoc(loc,Loc, Rot, dataRow->m_BuildType);
 
-	if (!m_PreviewActor || m_PreviewActor->GetClass() != dataRow.m_ClassActor)
+	if (!m_PreviewActor || m_PreviewActor->GetClass() != dataRow->m_ClassActor)
 	{
 		if(m_PreviewActor)
 		{
@@ -183,24 +188,116 @@ void UConstructionManager::SpawnPreviewActor(FVector loc, const FBuildDataRow& d
 		FActorSpawnParameters Param;
 		Param.bNoFail = true;
 		Param.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
-		m_PreviewActor = GetWorld()->SpawnActor<AStructureActor>(dataRow.m_ClassActor, Param);
+		m_PreviewActor = GetWorld()->SpawnActor<AStructureActor>(dataRow->m_ClassActor, Param);
 		m_PreviewActor->SetActorEnableCollision(false);
 		m_PreviewActor->SetActorScale3D(FVector(0.885f));
 	}
-	m_PreviewActor->SetBuildData(dataRow);
+	m_PreviewActor->SetBuildData(*dataRow);
 	m_PreviewActor->SetActorLocation(Loc);
 	m_PreviewActor->SetActorRotation(Rot);
 
 	CheckBuildable();
 }
 
-void UConstructionManager::ConfirmBuild()
-{
-	m_PreviewActor->ConfirmBuild();
-	m_PreviewActor = nullptr;
-}
-
 bool UConstructionManager::IsBuildable()
 {
+	if(!m_PreviewActor)
+		return false;
+	int X,Y;
+	
+	GetIndex(m_PreviewActor->GetActorLocation(),X,Y);
+
+	FConEle& Ele = m_Grid[X][Y];
+
+	switch (m_PreviewActor->GetBuildData().m_BuildType)
+	{
+	case EBuildType::Foundation:
+		if(Ele.m_Foundation)
+			return false;
+			break;
+	case EBuildType::Wall:
+	case EBuildType::Door:
+		int Dir = GetPreviewRotDir();
+		if(Ele.m_Walls[Dir])
+			return false;
+	}
 	return true;
+}
+
+int UConstructionManager::GetPreviewRotDir()
+{
+	float Yaw = FMath::RoundToFloat(m_PreviewActor->GetActorRotation().GetDenormalized().Yaw);
+	
+	int Dir = Yaw / (90);
+
+	if(Dir >= (int)EWallDir::Length)
+		Dir = 0;
+	else if(Dir < 0)
+		Dir = (int)EWallDir::Length - 1;
+
+	return Dir;
+}
+
+void UConstructionManager::ConfirmBuild()
+{
+	int X,Y;
+
+	FVector Loc = m_PreviewActor->GetActorLocation(); 
+
+	GetIndex(Loc,X,Y);
+
+	FConEle& Ele = m_Grid[X][Y];
+
+	switch (m_PreviewActor->GetBuildData().m_BuildType)
+	{
+	case EBuildType::Foundation:
+		Ele.m_Foundation = m_PreviewActor; 
+		break;
+	case EBuildType::Wall:
+	case EBuildType::Door:
+		int Dir = GetPreviewRotDir();
+		Ele.m_Walls[Dir] = m_PreviewActor;
+		break;
+	}
+	
+	const FBuildDataRow& BuildRow = m_PreviewActor->GetBuildData();
+	
+	m_PreviewActor->ConfirmBuild();
+	m_PreviewActor = nullptr;
+
+	SpawnPreviewActor(Loc, &BuildRow);
+
+	m_OnConfirm.Broadcast();
+}
+
+void UConstructionManager::Rotate()
+{
+	float Yaw = FMath::RoundToFloat(m_PreviewActor->GetActorRotation().GetDenormalized().Yaw);
+
+	int Dir = Yaw / (90);
+
+	Dir++;
+	if(Dir >= (int)EWallDir::Length)
+		Dir = 0;
+	else if(Dir < 0)
+		Dir = (int)EWallDir::Length - 1;
+		
+
+	m_PreviewActor->SetActorRotation(FRotator(0,90 * Dir,0));
+	CheckBuildable();
+}
+
+AStructureActor* UConstructionManager::GetPreview()
+{
+	return m_PreviewActor;
+}
+
+void UConstructionManager::Cancel()
+{
+	if(m_PreviewActor)
+	{
+		m_PreviewActor->Destroy();
+		m_PreviewActor = nullptr;
+		m_OnCancel.Broadcast();
+	}
 }

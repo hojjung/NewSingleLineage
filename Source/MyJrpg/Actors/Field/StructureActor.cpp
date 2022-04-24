@@ -5,6 +5,10 @@ AStructureActor::AStructureActor()
 {
 	PrimaryActorTick.bCanEverTick = false;
 	SetMobility(EComponentMobility::Movable);
+	m_WidgetComp = CreateDefaultSubobject<UBuildWidgetCompo>(TEXT("m_WidgetComp"));
+	m_WidgetComp->SetupAttachment(RootComponent);
+	m_WidgetComp->SetRelativeLocation(FVector(0,0,300));
+	m_DataRow = nullptr;
 }
 
 void AStructureActor::BeginPlay()
@@ -16,7 +20,7 @@ void AStructureActor::BeginPlay()
 
 void AStructureActor::SetBuildData(const FBuildDataRow& data_row)
 {
-	
+	m_DataRow = &data_row;
 }
 
 void AStructureActor::SetMat(UMaterialInterface* mat)
@@ -41,5 +45,19 @@ void AStructureActor::ConfirmBuild()
 	}
 
 	SetActorEnableCollision(true);
+
+	m_WidgetComp->SetVisibility(false);
+}
+
+const FBuildDataRow& AStructureActor::GetBuildData()
+{
+	return *m_DataRow;
+}
+
+void AStructureActor::ShowBuildWidget(bool b)
+{
+	m_WidgetComp->ShowBuildWidget(b);
+	
+	m_WidgetComp->ShowRotation(m_DataRow->m_BuildType != EBuildType::Foundation);
 }
 

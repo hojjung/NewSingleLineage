@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "WorldWidgetStruct.h"
 #include "Components/WidgetComponent.h"
+#include "MyJrpg/DataTables/BuildData.h"
 #include "BuildWidgetCompo.generated.h"
 
 /**
@@ -26,4 +27,8 @@ protected:
 	
 public:
 	virtual void BeginPlay() override;
+	
+	void ShowRotation(bool b);
+	
+	void ShowBuildWidget(bool b);
 };

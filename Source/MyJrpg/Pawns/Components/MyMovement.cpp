@@ -5,6 +5,7 @@
 #include "GameFramework/Pawn.h"
 #include "Kismet/KismetMathLibrary.h"
 #include "MyJrpg/MyJrpg.h"
+#include "MyJrpg/MyLib.h"
 #include "MyJrpg/Pawns/BaseUnitPawn.h"
 #include "MyJrpg/Pawns/CombatUnitPawn.h"
 #include "Navigation/NavLinkProxy.h"
@@ -20,6 +21,17 @@ UMyMovement::UMyMovement(const FObjectInitializer& obj)
 	bPositionCorrected = false;
 	m_fSpeedMultiple = 1;
 	ResetMoveState();
+}
+
+void UMyMovement::SnapToNav()
+{
+	FVector ActorLoc = GetActorLocation();
+	FNavLocation Loc;
+	if(!UMyLib::GetNavSys()->ProjectPointToNavigation(ActorLoc,Loc))
+	{
+		UMyLib::GetNavSys()->GetRandomPointInNavigableRadius(ActorLoc,1000,Loc);
+	}
+	Cast<ACombatUnitPawn>(GetOwner())->SetActorFeetLocation(Loc.Location);
 }
 
 void UMyMovement::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
@@ -65,6 +77,8 @@ void UMyMovement::TickComponent(float DeltaTime, ELevelTick TickType, FActorComp
 			const FVector NewLocation = UpdatedComponent->GetComponentLocation();
 			Velocity = ((NewLocation - OldLocation) / DeltaTime);
 		}
+
+		SnapToNav();
 	}
 
 	m_ImpactVector = FVector::ZeroVector;

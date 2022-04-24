@@ -23,3 +23,13 @@ void UBuildWidgetCompo::BeginPlay()
 	SetWidgetClass(m_ClassWidget);
 	m_Widget = Cast<UWorldWidgetStruct>(GetUserWidgetObject()); 
 }
+
+void UBuildWidgetCompo::ShowRotation(bool b)
+{
+	m_Widget->ShowRotation(b);
+}
+
+void UBuildWidgetCompo::ShowBuildWidget(bool b)
+{
+	m_Widget->ShowBuildWidget(b);
+}

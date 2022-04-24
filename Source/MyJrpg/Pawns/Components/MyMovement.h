@@ -23,6 +23,7 @@ protected:
 	
 public:
 	UMyMovement(const FObjectInitializer& obj);
+	void SnapToNav();
 
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 
