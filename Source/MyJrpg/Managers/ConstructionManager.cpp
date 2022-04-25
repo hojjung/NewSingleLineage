@@ -1,13 +1,13 @@
 #include "ConstructionManager.h"
 #include "Engine/StaticMeshActor.h"
 #include "MyJrpg/MyLib.h"
-#include "MyJrpg/Actors/Field/StructureActor.h"
 #include "MyJrpg/Actors/Field/Build/GridActor.h"
+#include "MyJrpg/Actors/Field/Build/StructureActor.h"
 #include "MyJrpg/DataTables/BuildData.h"
 
 FConEle::FConEle(): m_Foundation(nullptr), m_Prop(nullptr)
 {
-	m_Walls.Init(nullptr, (int)UConstructionManager::EWallDir::Length);
+	
 }
 
 FWallAry::FWallAry()
@@ -27,6 +27,8 @@ UConstructionManager::UConstructionManager()
 	
 	m_MatGreen = FoundMat01.Object;
 	m_MatRed = FoundMat02.Object;
+
+	
 }
 
 void UConstructionManager::Init()
@@ -43,8 +45,8 @@ void UConstructionManager::LoadConstruction()
 	m_GridMesh->SetActorScale3D(FVector(50));
 	EndBuilding();
 	
-	m_WallHorizontal.Init(FWallAry(FGlobalVariable::GRID_COUNT + 1),FGlobalVariable::GRID_COUNT + 2);
-	m_WallVertical.Init(FWallAry(FGlobalVariable::GRID_COUNT + 2),FGlobalVariable::GRID_COUNT + 1);
+	m_WallHorizontal.Init(FWallAry(FGlobalVariable::GRID_COUNT + 1),FGlobalVariable::GRID_COUNT);//y x
+	m_WallVertical.Init(FWallAry(FGlobalVariable::GRID_COUNT),FGlobalVariable::GRID_COUNT + 1);
 }
 
 void UConstructionManager::StartBuilding()
@@ -81,7 +83,7 @@ void UConstructionManager::GetIndex(const FVector& inloc, int& outX, int& outY)
 
 bool UConstructionManager::GetWallIndex(const FVector& inloc, int& outX, int& outY, bool &isHori)
 {
-	float X = (inloc.Y + 2500.f) / FGlobalVariable::GRID_SIZE;
+	float X = (inloc.Y + 2500.f) / FGlobalVariable::GRID_SIZE;//14.5 최대, 15.5초과
 	
 	float Y = (inloc.X + 2500.f) / FGlobalVariable::GRID_SIZE;
 	
@@ -89,49 +91,63 @@ bool UConstructionManager::GetWallIndex(const FVector& inloc, int& outX, int& ou
 	
 	float PercentY = Y -  (int)Y;
 
-	if(PercentY <= 0.2f)
+	if(PercentY <= 0.2f)//s
 	{
+		isHori = true;
 		outX = X;
 		outY = Y;
-		isHori = true;
 		return true;
 	}
-	else if (PercentY >= 0.8f)
+	else if (PercentY >= 0.8f)//n
 	{
+		isHori = true;
 		outX = X;
 		outY = Y + 1;
-		isHori = true;
 		return true;
 	}
-	if(PercentX <= 0.5f)
-		outX = X;
-	else
-		outX = X + 1;
-	outY = Y;
 	isHori = false;
+	if(PercentX <= 0.5f)//w
+	{
+		outX = X;
+	}
+	else
+	{
+		outX = X + 1;
+	}//e
+	outY = Y;
 	return true;
 }
 
-bool UConstructionManager::FindEmptyWallPlace(const FConEle& Ele, EWallDir& dir)
+int UConstructionManager::GetWallMaxIndex(bool ishori, bool isXaxis)
 {
-	int Iter = 0;
-	bool FoundEmpty = false;
-	for(AStructureActor* Wall : Ele.m_Walls)
+	if(ishori)
 	{
-		if(!Wall)
+		if(isXaxis)
 		{
-			Iter++;
-			continue;
+			return m_WallHorizontal.Num();
 		}
-		FoundEmpty = true;
-		break;
+		else
+		{
+			return m_WallHorizontal[0].m_Walls.Num();
+		}
 	}
-	dir = (EWallDir)Iter;
-	return FoundEmpty;
+	else
+	{
+		if(isXaxis)
+		{
+			return m_WallVertical.Num();
+		}
+		else
+		{
+			return m_WallVertical[0].m_Walls.Num();
+		}
+	}
 }
 
 bool UConstructionManager::GetEmptyFoundationLoc(int x, int y, FVector& outEmptyLoc, FRotator& outEmptyRot)
 {
+	int initX = x;
+	int initY = y;
 	while (y < FGlobalVariable::GRID_COUNT)
 	{
 		while (x < FGlobalVariable::GRID_COUNT)
@@ -148,12 +164,15 @@ bool UConstructionManager::GetEmptyFoundationLoc(int x, int y, FVector& outEmpty
 		}
 		y++;
 	}
+	outEmptyLoc = GetWorldPos(initX,initY);
+	outEmptyRot = FRotator::ZeroRotator;
 	return false;
 }
 
 FVector UConstructionManager::GetWallWorldPos(bool isHori, int wall_x, int wall_y)
 {
 	FVector Loc;
+	
 	if(isHori)
 	{
 		Loc.X = (wall_y * FGlobalVariable::GRID_SIZE) - 2500;
@@ -170,46 +189,58 @@ FVector UConstructionManager::GetWallWorldPos(bool isHori, int wall_x, int wall_
 
 bool UConstructionManager::GetEmptyWallLoc(int x, int y, bool isHori, FVector& outEmptyLoc, FRotator& outEmptyRot)
 {
-	outEmptyLoc = GetWallWorldPos(isHori,x,y);
+	int initX = x;
+	
+	int initY = y;
+	
+	TArray<FWallAry>* AryWall;
+	
 	if(!isHori)
 	{
 		outEmptyRot = FRotator(0,90,0);
+		AryWall = &m_WallVertical;
+		while (x < AryWall->Num())
+		{
+			while (y < (*AryWall)[x].m_Walls.Num())
+			{
+				if((*AryWall)[x].m_Walls[y])
+				{
+					y++;
+					continue;
+				}
+				outEmptyLoc = GetWallWorldPos(isHori, x, y);
+				return true;
+			}
+			//y = 0;
+			x++;
+		}
 	}
 	else
 	{
 		outEmptyRot = FRotator::ZeroRotator;
+		AryWall = &m_WallHorizontal;
+		while (y < (*AryWall)[x].m_Walls.Num())
+		{
+			while (x < AryWall->Num())
+			{
+				if ((*AryWall)[x].m_Walls[y])
+				{
+					x++;
+					continue;
+				}
+				outEmptyLoc = GetWallWorldPos(isHori, x, y);
+				return true;
+			}
+			x = initX;
+			y++;
+		}
 	}
-	return true;
 	
-	// while (WallY < SelectedArry->Num())
-	// {
-	// 	while (WallX < (*SelectedArry)[WallY].m_Walls.Num())
-	// 	{
-	// 		if((*SelectedArry)[WallY].m_Walls[WallX])
-	// 		{
-	// 			WallX++;
-	// 			continue;
-	// 		}
-	// 		bool IsHori = true;
-	// 		if(SelectedArry != &m_WallHorizontal)
-	// 		{
-	// 			outEmptyRot = FRotator(0,90,0);
-	// 			IsHori = false;
-	// 		}
-	// 		else
-	// 		{
-	// 			outEmptyRot = FRotator::ZeroRotator;
-	// 		}
-	// 		outEmptyLoc = GetWallWorldPos(IsHori, WallX, WallY);
-	// 		return true;
-	// 	}
-	// 	WallX = 0;
-	// 	WallY++;
-	// }
-	//return false;
+	outEmptyLoc = GetWallWorldPos(isHori, initX, initY);
+	return false;
 }
 
-bool UConstructionManager::GetEmptyLoc(const FVector& inloc, FVector& outEmptyLoc, FRotator& outEmptyRot, EBuildType t, EWallDir dir)
+bool UConstructionManager::GetEmptyLoc(const FVector& inloc, FVector& outEmptyLoc, FRotator& outEmptyRot, EBuildType t)
 {
 	int X,Y;
 
@@ -217,8 +248,6 @@ bool UConstructionManager::GetEmptyLoc(const FVector& inloc, FVector& outEmptyLo
 	{
 	case EBuildType::Foundation:
 		{
-			
-	
 			GetIndex(inloc ,X,Y);		
 			return GetEmptyFoundationLoc(X,Y,outEmptyLoc, outEmptyRot);
 		}
@@ -248,7 +277,6 @@ void UConstructionManager::CheckBuildable()
 
 void UConstructionManager::SpawnPreviewActor(FVector loc, const FBuildDataRow* dataRow)
 {
-	
 	if(!dataRow)
 	{
 		if(m_PreviewActor)
@@ -256,11 +284,11 @@ void UConstructionManager::SpawnPreviewActor(FVector loc, const FBuildDataRow* d
 		else
 			return;
 	}
-	FVector Loc;
+	FVector NewLoc;
 
-	FRotator Rot;
+	FRotator NewRot;
 
-	GetEmptyLoc(loc,Loc, Rot, dataRow->m_BuildType, m_Dir);
+	bool Ret = GetEmptyLoc(loc,NewLoc, NewRot, dataRow->m_BuildType);
 
 	if (!m_PreviewActor || m_PreviewActor->GetClass() != dataRow->m_ClassActor)
 	{
@@ -277,8 +305,8 @@ void UConstructionManager::SpawnPreviewActor(FVector loc, const FBuildDataRow* d
 		m_PreviewActor->SetActorScale3D(FVector(0.885f));
 	}
 	m_PreviewActor->SetBuildData(*dataRow);
-	m_PreviewActor->SetActorLocation(Loc);
-	m_PreviewActor->SetActorRotation(Rot);
+	m_PreviewActor->SetActorLocation(NewLoc);
+	m_PreviewActor->SetActorRotation(NewRot);
 
 	CheckBuildable();
 }
@@ -289,58 +317,61 @@ bool UConstructionManager::IsBuildable()
 		return false;
 	int X,Y;
 	
-	GetIndex(m_PreviewActor->GetActorLocation(),X,Y);
-
-	FConEle& Ele = m_Grid[X][Y];
-
 	switch (m_PreviewActor->GetBuildData().m_BuildType)
 	{
 	case EBuildType::Foundation:
-		if(Ele.m_Foundation)
-			return false;
+		{
+			GetIndex(m_PreviewActor->GetActorLocation(), X, Y);
+			FConEle& Ele = m_Grid[X][Y];
+			if (Ele.m_Foundation)
+				return false;
+		}
 			break;
 	case EBuildType::Wall:
 	case EBuildType::Door:
-		//int Dir = GetPreviewRotDir();
-		//if(Ele.m_Walls[Dir])
-			return true;//false
+		{
+			bool IsHori;
+			GetWallIndex(m_PreviewActor->GetActorLocation(), X, Y, IsHori);
+			if (IsHori)
+			{
+				if (m_WallHorizontal[X].m_Walls[Y])
+					return false;
+			}
+			else
+			{
+				if (m_WallVertical[X].m_Walls[Y])
+					return false;
+			}
+		}
+		break;
 	}
 	return true;
-}
-
-int UConstructionManager::GetPreviewRotDir()
-{
-	float Yaw = FMath::RoundToFloat(m_PreviewActor->GetActorRotation().GetDenormalized().Yaw);
-	
-	int Dir = Yaw / (90);
-
-	if(Dir >= (int)EWallDir::Length)
-		Dir = 0;
-	else if(Dir < 0)
-		Dir = (int)EWallDir::Length - 1;
-
-	return Dir;
 }
 
 void UConstructionManager::ConfirmBuild()
 {
 	int X,Y;
-
 	FVector Loc = m_PreviewActor->GetActorLocation(); 
-
-	GetIndex(Loc,X,Y);
-
-	FConEle& Ele = m_Grid[X][Y];
 
 	switch (m_PreviewActor->GetBuildData().m_BuildType)
 	{
 	case EBuildType::Foundation:
-		Ele.m_Foundation = m_PreviewActor; 
+		{
+			GetIndex(Loc,X,Y);
+			FConEle& Ele = m_Grid[X][Y];
+			Ele.m_Foundation = m_PreviewActor; 
+		}
 		break;
 	case EBuildType::Wall:
 	case EBuildType::Door:
-		int Dir = GetPreviewRotDir();
-		Ele.m_Walls[Dir] = m_PreviewActor;
+		{
+			bool IsHori;
+			GetWallIndex(Loc,X,Y,IsHori);
+			if(IsHori)
+				m_WallHorizontal[X].m_Walls[Y] = m_PreviewActor;
+			else
+				m_WallVertical[X].m_Walls[Y] = m_PreviewActor;
+		}
 		break;
 	}
 	
@@ -356,15 +387,9 @@ void UConstructionManager::ConfirmBuild()
 
 void UConstructionManager::Rotate()
 {
-	int Dir = (int)m_Dir;
-
-	Dir++;
-	if(Dir >= (int)EWallDir::Length)
-		Dir = 0;
-	else if(Dir < 0)
-		Dir = (int)EWallDir::Length - 1;
-
-	m_Dir = (EWallDir)(Dir);
+	//float Yaw = FMath::RoundToFloat(m_PreviewActor->GetActorRotation().GetDenormalized().Yaw);
+	
+	m_PreviewActor->AddActorLocalRotation(FRotator(0,90,0));
 	
 	CheckBuildable();
 }

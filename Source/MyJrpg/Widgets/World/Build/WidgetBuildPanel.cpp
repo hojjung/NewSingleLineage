@@ -1,6 +1,7 @@
 #include "WidgetBuildPanel.h"
+
+#include "MyJrpg/Actors/Field/Build/StructureActor.h"
 #include "MyJrpg/Managers/ConstructionManager.h"
-#include "MyJrpg/Actors/Field/StructureActor.h"
 #include "MyJrpg/Managers/MyGameInstance.h"
 
 void UWidgetBuildPanel::NativeOnInitialized()

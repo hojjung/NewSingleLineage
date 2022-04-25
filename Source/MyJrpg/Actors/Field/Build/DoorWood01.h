@@ -3,7 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "MyJrpg/Actors/Field/StructureActor.h"
+#include "StructureActor.h"
 #include "DoorWood01.generated.h"
 
 /**

@@ -31,8 +31,6 @@ public:
 	UPROPERTY()
 	AStructureActor* m_Foundation;
 	UPROPERTY()
-	TArray<AStructureActor*> m_Walls;
-	UPROPERTY()
 	AInteractActorBase* m_Prop;
 };
 
@@ -57,11 +55,6 @@ class MYJRPG_API UConstructionManager : public UObject
 	GENERATED_BODY()
 
 public:
-	enum class EWallDir
-	{
-		N,E,S,W,Length
-	};
-
 	DECLARE_MULTICAST_DELEGATE(FOnBuildDone);
 
 	FOnBuildDone m_OnConfirm;
@@ -89,29 +82,26 @@ private:
 	UPROPERTY()
 	TArray<FWallAry> m_WallVertical; //[FGlobalVariable::GRID_COUNT + 2][FGlobalVariable::GRID_COUNT + 1];
 
-	EWallDir m_Dir;
 private:
 	FVector GetWorldPos(int x, int y);
 
 	void GetIndex(const FVector& inloc, int& outX, int& outY);
 
 	bool GetWallIndex(const FVector& inloc, int& outX, int& outY, bool &isHori);
-	
-	bool FindEmptyWallPlace(const FConEle& Ele, EWallDir& dir);
 
+	int GetWallMaxIndex(bool ishori, bool isXaxis);
+	
 	bool GetEmptyFoundationLoc(int x, int y, FVector& outEmptyLoc, FRotator& outEmptyRot);
 
 	FVector GetWallWorldPos(bool isHori, int wall_x, int wall_y);
 
 	bool GetEmptyWallLoc(int x, int y, bool isHori, FVector& outEmptyLoc, FRotator& outEmptyRot);
 	
-	bool GetEmptyLoc(const FVector& inloc, FVector& outEmptyLoc, FRotator& outEmptyRot, EBuildType t, EWallDir dir);
+	bool GetEmptyLoc(const FVector& inloc, FVector& outEmptyLoc, FRotator& outEmptyRot, EBuildType t);
 
 	void CheckBuildable();
 
 	bool IsBuildable();
-
-	int GetPreviewRotDir();
 
 public:
 	void Init();

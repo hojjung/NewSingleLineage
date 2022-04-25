@@ -58,6 +58,6 @@ void AStructureActor::ShowBuildWidget(bool b)
 {
 	m_WidgetComp->ShowBuildWidget(b);
 	
-	m_WidgetComp->ShowRotation(m_DataRow->m_BuildType != EBuildType::Foundation);
+	m_WidgetComp->ShowRotation(m_DataRow->m_BuildType == EBuildType::Furniture);
 }
 

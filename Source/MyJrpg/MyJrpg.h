@@ -80,7 +80,7 @@ namespace FGlobalVariable
 
 	static const int MOB_INVEN = 10;
 
-	static const int GRID_COUNT = 20;
+	static const int GRID_COUNT = 15;
 
 	static const float GRID_SIZE = 333.3f;//??188
 };
@@ -189,5 +189,6 @@ enum class EBuildType :uint8
 {
 	Foundation,
 	Wall,
-	Door
+	Door,
+	Furniture
 };
