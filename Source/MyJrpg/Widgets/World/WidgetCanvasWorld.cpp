@@ -158,6 +158,7 @@ void UWidgetCanvasWorld::OpenPet()
 
 void UWidgetCanvasWorld::OpenBuild()
 {
+	ShowMainHUD(false);
 	m_BuildPanel->OpenPanel();
 }
 
@@ -296,4 +297,16 @@ void UWidgetCanvasWorld::StartPickPocket(AMonsterPawn* mob)
 {
 	m_PickpocketPanel->SetTargetPawn(mob);
 	m_PickpocketPanel->OpenPanel();
+}
+
+void UWidgetCanvasWorld::ShowMainHUD(bool b)
+{
+	if(b)
+	{
+		m_MainHUD->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
+	}
+	else
+	{
+		m_MainHUD->SetVisibility(ESlateVisibility::Collapsed);
+	}
 }

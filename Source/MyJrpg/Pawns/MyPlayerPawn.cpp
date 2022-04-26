@@ -1,4 +1,5 @@
 #include "MyPlayerPawn.h"
+
 #include "Components/SceneCaptureComponent2D.h"
 #include "Engine/TextureRenderTarget2D.h"
 #include "Logics/PlAttchActorManage.h"
@@ -63,8 +64,6 @@ void AMyPlayerPawn::BeginPlay()
 	m_DissolveCam->SetActive(true);
 
 	UMyGameInstance::Get->m_AvatarManager->EquipSkin(*UMyGameInstance::Get->m_AvatarManager->GetCrntSkin());
-
-	TrySnapToGround();
 }
 
 void AMyPlayerPawn::SetPlayerEntity(const FPlayerUnitEntityRow& unitEntityRow)
@@ -168,9 +167,19 @@ void AMyPlayerPawn::Tick(float DeltaTime)
 
 		FVector Loc = GetCapsule()->GetComponentLocation();
 
-		FVector Delta = (m_DeltaX+m_DeltaY).GetUnsafeNormal() * 100.0f;
+		FVector Delta = (m_DeltaX + m_DeltaY) * 100.0f;
 
-		MoveToLocation(Loc+Delta,0);
+		FVector Dest = Loc+Delta;
+		
+		FHitResult Hit;
+	
+		if(UKismetSystemLibrary::LineTraceSingle(GetWorld(), Loc, Loc + Delta,ETraceTypeQuery::TraceTypeQuery3,
+			false,m_AryIgnores, EDrawDebugTrace::None,Hit,true))
+		{
+			Dest = Hit.Location;
+		}
+
+		MoveToLocation(Dest,0);
 
 		m_DeltaX = FVector::ZeroVector;
 		

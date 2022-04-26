@@ -3,6 +3,8 @@
 
 #include "BuildWidgetCompo.h"
 
+#include "MyJrpg/Actors/Field/Build/StructureActor.h"
+
 UBuildWidgetCompo::UBuildWidgetCompo()
 {
 	static ConstructorHelpers::FClassFinder<UUserWidget> FoundW(
@@ -21,7 +23,8 @@ void UBuildWidgetCompo::BeginPlay()
 {
 	Super::BeginPlay();
 	SetWidgetClass(m_ClassWidget);
-	m_Widget = Cast<UWorldWidgetStruct>(GetUserWidgetObject()); 
+	m_Widget = Cast<UWorldWidgetStruct>(GetUserWidgetObject());
+	m_Widget->SetOwnerActor(GetOwner<AStructureActor>());
 }
 
 void UBuildWidgetCompo::ShowRotation(bool b)
@@ -32,4 +35,9 @@ void UBuildWidgetCompo::ShowRotation(bool b)
 void UBuildWidgetCompo::ShowBuildWidget(bool b)
 {
 	m_Widget->ShowBuildWidget(b);
+}
+
+void UBuildWidgetCompo::ShowSelect(bool b)
+{
+	m_Widget->ShowSelect(b);
 }

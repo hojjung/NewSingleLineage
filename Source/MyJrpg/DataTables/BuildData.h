@@ -6,6 +6,7 @@
 #include "ItemData.h"
 #include "Engine/DataTable.h"
 #include "MyJrpg/MyJrpg.h"
+#include "MyJrpg/Interfaces/Buildable.h"
 #include "UObject/NoExportTypes.h"
 #include "BuildData.generated.h"
 
@@ -36,8 +37,10 @@ public:
 	EBuildType m_BuildType;
 	UPROPERTY(EditDefaultsOnly,BlueprintReadOnly)
 	TArray<FCraftItemCost> m_AryCostItem;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, meta = (MustImplement = "Buildable") )
+	TSubclassOf<AActor> m_ClassActor;
 	UPROPERTY(EditDefaultsOnly,BlueprintReadOnly)
-	TSubclassOf<AStructureActor> m_ClassActor;
+	FName m_NextUpgradeActorID;
 	UPROPERTY(EditDefaultsOnly,BlueprintReadOnly)
 	TSoftObjectPtr<UTexture2D> m_Icon;
 };

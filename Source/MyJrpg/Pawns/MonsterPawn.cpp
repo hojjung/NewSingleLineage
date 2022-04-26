@@ -205,8 +205,6 @@ void AMonsterPawn::Revive()
 	float AnimLength = m_EntityAsset->m_SpawnAnim->GetPlayLength() - 0.4f;
 	//
 	GetWorldTimerManager().SetTimer(m_DeathAnimTimer, this, &AMonsterPawn::OnReviveAnimEnd, AnimLength, false);
-
-	TrySnapToGround();
 }
 
 void AMonsterPawn::OnReviveAnimEnd()

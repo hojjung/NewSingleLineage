@@ -58,7 +58,7 @@ protected:
 	FFloatCurve m_CurveDeathAnim;
 
 	FTimerHandle m_SilenceTimer;
-	
+	UPROPERTY()
 	TScriptInterface<IFocusable> m_FocusedTarget;//TScriptInterface<IInteractable>
 	
 	FSkillTrigger m_OnSkillTrigger;
@@ -92,7 +92,6 @@ protected:
 	virtual UAnimMontage* GetBaseAttackMontage();
 
 	virtual void ShowPopupText(float nbr, ETextType t);
-	void TrySnapToGround();
 
 public:
 	virtual void SetEntity(const FName& id, const FNpcUnitEntityRow& unitEntityRow) override;

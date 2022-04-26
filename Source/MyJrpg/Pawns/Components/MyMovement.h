@@ -37,6 +37,8 @@ protected:
 	FRotator ComputeOrientToMovementRotation(const FRotator& CurrentRotation) const;
 
 	virtual void HandleImpact(const FHitResult& Hit, float TimeSlice=0.f, const FVector& MoveDelta = FVector::ZeroVector) override;
+
+	virtual void BeginPlay() override;
 };
 
 

@@ -25,6 +25,8 @@ AStorage::AStorage()
 
 	m_MeshComp->SetStaticMesh(FoundW.Object);
 	m_ClassInteractWidget = FoundW2.Class;
+
+	m_Capsule->SetMobility(EComponentMobility::Movable);
 }//StaticMesh'/Game/08_EnvironmentMesh/BeffioMedievalKingdom/Models/Props/Props_1/SM_Chest.SM_Chest'
 //WidgetBlueprint'/Game/Blueprints/Widgets/World/Component/Village/WB_StorageInfo.WB_StorageInfo'
 void AStorage::OnInteract()
@@ -32,5 +34,35 @@ void AStorage::OnInteract()
 	Super::OnInteract();
 
 	UMyLib::GetCanvas()->OpenStorage();
+}
+
+const FBuildDataRow& AStorage::GetBuildData() const
+{
+	return *m_Data;
+}
+
+void AStorage::SetBuildData(const FBuildDataRow& data)
+{
+	m_Data = &data;
+}
+
+void AStorage::SetMat(UMaterialInterface* mat)
+{
+	
+}
+
+void AStorage::ShowBuildWidget(bool b)
+{
+	
+}
+
+void AStorage::ConfirmBuild()
+{
+	
+}
+
+void AStorage::ShowSelect(bool cond)
+{
+	
 }
 

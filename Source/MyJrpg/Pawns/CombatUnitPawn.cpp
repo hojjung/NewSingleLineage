@@ -118,17 +118,6 @@ void ACombatUnitPawn::ShowPopupText(float nbr, ETextType t)
 	UMyLib::GetPlayerCon()->ShowInGameWorldText(nbr,this,t);
 }
 
-void ACombatUnitPawn::TrySnapToGround()
-{
-	FVector ActorLoc = GetActorLocation();
-	FNavLocation Loc;
-	if(!UMyLib::GetNavSys()->ProjectPointToNavigation(ActorLoc,Loc))
-	{
-		UMyLib::GetNavSys()->GetRandomPointInNavigableRadius(ActorLoc,1000,Loc);
-	}
-	SetActorFeetLocation(Loc.Location);
-}
-
 void ACombatUnitPawn::SetEntity(const FName& id, const FNpcUnitEntityRow& unitEntityRow)
 {
 	Super::SetEntity(id, unitEntityRow);

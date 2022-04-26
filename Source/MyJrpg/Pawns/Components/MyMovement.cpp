@@ -78,7 +78,7 @@ void UMyMovement::TickComponent(float DeltaTime, ELevelTick TickType, FActorComp
 			Velocity = ((NewLocation - OldLocation) / DeltaTime);
 		}
 
-		SnapToNav();
+		//SnapToNav();
 	}
 
 	m_ImpactVector = FVector::ZeroVector;
@@ -149,5 +149,11 @@ void UMyMovement::HandleImpact(const FHitResult& Hit, float TimeSlice, const FVe
 	{
 		NotifyBumpedPawn(OtherPawn);
 	}
+}
+
+void UMyMovement::BeginPlay()
+{
+	Super::BeginPlay();
+	SnapToNav();
 }
 

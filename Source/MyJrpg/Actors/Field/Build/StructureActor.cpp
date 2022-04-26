@@ -18,6 +18,11 @@ void AStructureActor::BeginPlay()
 	m_AryMats = GetStaticMeshComponent()->GetMaterials();
 }
 
+bool AStructureActor::HasNextUpgrade()
+{
+	return !m_DataRow->m_NextUpgradeActorID.IsNone();
+}
+
 void AStructureActor::SetBuildData(const FBuildDataRow& data_row)
 {
 	m_DataRow = &data_row;
@@ -49,7 +54,7 @@ void AStructureActor::ConfirmBuild()
 	m_WidgetComp->SetVisibility(false);
 }
 
-const FBuildDataRow& AStructureActor::GetBuildData()
+const FBuildDataRow& AStructureActor::GetBuildData() const
 {
 	return *m_DataRow;
 }
@@ -61,3 +66,14 @@ void AStructureActor::ShowBuildWidget(bool b)
 	m_WidgetComp->ShowRotation(m_DataRow->m_BuildType == EBuildType::Furniture);
 }
 
+void AStructureActor::ShowSelect(bool b)
+{
+	m_WidgetComp->ShowSelect(b);
+	
+	m_WidgetComp->SetVisibility(b);
+}
+
+bool AStructureActor::TryUpgrade()
+{
+	return true;
+}

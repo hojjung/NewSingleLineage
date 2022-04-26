@@ -22,6 +22,12 @@ protected:
 	TSubclassOf<UWidgetBuildElement> m_ClassBuildEle;
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (BindWidget))
 	UScrollBox* m_ScrollElements;
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (BindWidget))
+	UScrollBox* m_ScrollFurnitureElements;
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (BindWidget))
+	UButton* m_BtnStruct;
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (BindWidget))
+	UButton* m_BtnFurniture;
 	UPROPERTY()
 	UWidgetBuildElement* m_Focused;
 
@@ -42,6 +48,12 @@ public:
 	virtual void OpenPanel() override;
 
 	virtual void ClosePanel() override;
+
+public:
+	UFUNCTION()
+	void OnClickStruct();
+	UFUNCTION()
+	void OnClickFurniture();
 };
 
 

@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "MyJrpg/MyJrpg.h"
+#include "MyJrpg/Interfaces/Buildable.h"
 #include "UObject/NoExportTypes.h"
 #include "ConstructionManager.generated.h"
 
@@ -29,9 +30,9 @@ public:
 
 public:
 	UPROPERTY()
-	AStructureActor* m_Foundation;
+	TScriptInterface<IBuildable> m_Foundation;
 	UPROPERTY()
-	AInteractActorBase* m_Prop;
+	TScriptInterface<IBuildable> m_Prop;
 };
 
 USTRUCT()
@@ -46,7 +47,7 @@ public:
 
 public:
 	UPROPERTY()
-	TArray<AStructureActor*> m_Walls;
+	TArray<TScriptInterface<IBuildable>> m_Walls;
 };
 
 UCLASS()
@@ -69,9 +70,11 @@ private:
 	UPROPERTY()
 	UMaterialInterface* m_MatRed;
 	UPROPERTY()
-	AStructureActor* m_PreviewActor;
-	UPROPERTY()
 	AGridActor* m_GridMesh;
+	UPROPERTY()
+	TScriptInterface<IBuildable> m_PreviewActor;
+	UPROPERTY()
+	TScriptInterface<IBuildable>  m_FocusActor;
 
 	TArray<FBuildDataRow*> m_AryBuildDatas;
 
@@ -103,6 +106,8 @@ private:
 
 	bool IsBuildable();
 
+	IBuildable* SpawnStructure(const FBuildDataRow& data);
+
 public:
 	void Init();
 	
@@ -115,9 +120,10 @@ public:
 		return 	m_AryBuildDatas;
 	}
 
+	void StartBuilding();
+	
 	void EndBuilding();
 	
-	void StartBuilding();
 public:
 	void Cancel();
 	
@@ -125,7 +131,17 @@ public:
 	
 	void Rotate();
 
-	AStructureActor* GetPreview();
+	IBuildable* GetPreview();
+	
+	void SelectStruct(IBuildable* sActor);
+
+	void CancelSelect();
+	
+	void Erase(IBuildable* buildActor);
+	
+	void Upgrade(IBuildable* buildActor);
+
+	void GetStructureHolder(IBuildable* want, TScriptInterface<IBuildable> *& holder, bool &isHori);
 };
 
 //건설 버튼을 누루면

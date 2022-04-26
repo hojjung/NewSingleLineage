@@ -20,13 +20,29 @@ public:
 private:
 	UPROPERTY(VisibleAnywhere)
 	UStaticMeshComponent* m_MeshDoor;
+	UPROPERTY(VisibleAnywhere)
+	USphereComponent* m_DoorTrigger;
 	UPROPERTY()
 	TArray<UMaterialInterface*> m_AryDoorMats;
 
+	bool m_bIsDoorOpen;
+
+	float m_fRot;
 protected:
 	virtual void BeginPlay() override;
 	
 	virtual void SetMat(UMaterialInterface* mat) override;
 
 	virtual void ConfirmBuild() override;
+	
+	virtual void TickActor(float DeltaTime, ELevelTick TickType, FActorTickFunction& ThisTickFunction) override;
+
+public:
+	UFUNCTION()
+	void OnTriggerStart(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep,const FHitResult & SweepResult);
+	UFUNCTION()
+	void OnTriggerEnd(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex);
 };
+
+
+

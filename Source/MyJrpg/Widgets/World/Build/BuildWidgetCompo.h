@@ -31,4 +31,6 @@ public:
 	void ShowRotation(bool b);
 	
 	void ShowBuildWidget(bool b);
+	
+	void ShowSelect(bool b);
 };

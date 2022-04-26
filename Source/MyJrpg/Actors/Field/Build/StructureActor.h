@@ -4,11 +4,12 @@
 #include "Engine/StaticMeshActor.h"
 #include "GameFramework/Actor.h"
 #include "MyJrpg/Widgets/World/Build/BuildWidgetCompo.h"
+#include "MyJrpg/Interfaces/Buildable.h"
 #include "StructureActor.generated.h"
 
 struct FBuildDataRow;
 UCLASS()
-class MYJRPG_API AStructureActor : public AStaticMeshActor
+class MYJRPG_API AStructureActor : public AStaticMeshActor , public IBuildable
 {
 	GENERATED_BODY()
 	
@@ -25,14 +26,22 @@ protected:
 protected:
 	virtual void BeginPlay() override;
 
-public:	
-	virtual void SetBuildData(const FBuildDataRow& data_row);
 	
-	virtual void SetMat(UMaterialInterface* mat);
+public:	
+	bool HasNextUpgrade();
+	
+	virtual void SetBuildData(const FBuildDataRow& data_row) override;
+	
+	virtual void SetMat(UMaterialInterface* mat) override;
 
 	virtual void ConfirmBuild();
 
-	const FBuildDataRow& GetBuildData();
+	virtual const FBuildDataRow& GetBuildData() const override;
 
-	void ShowBuildWidget(bool b);
+	virtual void ShowBuildWidget(bool b) override;
+	
+	void ShowSelect(bool b);
+
+	virtual bool TryUpgrade();
+	
 };

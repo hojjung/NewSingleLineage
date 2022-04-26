@@ -43,7 +43,10 @@ UCLASS()
 class MYJRPG_API UWidgetCanvasWorld : public UUserWidget
 {
 	GENERATED_BODY()
-	
+
+protected:
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (BindWidget))
+	UCanvasPanel* m_MainHUD;
 protected:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (BindWidget))
 	UAlertInfoWindow* m_AlertInfoWindow;
@@ -198,4 +201,6 @@ public:
 	void StartDialogue(FName str, AActor* speaker = nullptr);
 	
 	void StartPickPocket(AMonsterPawn* mob);
+
+	void ShowMainHUD(bool b);
 };
