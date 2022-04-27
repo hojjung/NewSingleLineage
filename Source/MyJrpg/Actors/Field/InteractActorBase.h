@@ -25,13 +25,6 @@ public:
 protected:
 	UPROPERTY(VisibleAnywhere,BlueprintReadWrite,Category=Character)
 	UCapsuleComponent* m_Capsule;
-	UPROPERTY(EditAnywhere,BlueprintReadWrite)
-	TSubclassOf<UInteractWidget> m_ClassInteractWidget;
-	UPROPERTY(VisibleAnywhere,BlueprintReadWrite)
-	UWidgetComponent* m_InteractComp;
-
-protected:
-	virtual void BeginPlay() override;
 
 public:
 	UFUNCTION()

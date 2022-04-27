@@ -26,21 +26,20 @@ protected:
 protected:
 	virtual void BeginPlay() override;
 
-	
-public:	
-	bool HasNextUpgrade();
+public:
+	virtual bool HasNextUpgrade() override;
 	
 	virtual void SetBuildData(const FBuildDataRow& data_row) override;
 	
 	virtual void SetMat(UMaterialInterface* mat) override;
 
-	virtual void ConfirmBuild();
+	virtual void ConfirmBuild() override;
 
 	virtual const FBuildDataRow& GetBuildData() const override;
 
 	virtual void ShowBuildWidget(bool b) override;
-	
-	void ShowSelect(bool b);
+
+	virtual void ShowSelect(bool b) override;
 
 	virtual bool TryUpgrade();
 	

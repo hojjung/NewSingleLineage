@@ -6,6 +6,7 @@
 #include "Blueprint/UserWidget.h"
 #include "Components/Button.h"
 #include "Components/Overlay.h"
+#include "MyJrpg/Interfaces/Buildable.h"
 #include "WorldWidgetStruct.generated.h"
 
 class AStructureActor;
@@ -28,7 +29,7 @@ protected:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (BindWidget))
 	UButton* m_BtnUpgrade;
 	UPROPERTY()
-	AStructureActor* m_Owner;
+	TScriptInterface<IBuildable> m_Owner;
 protected:
 	virtual void NativeOnInitialized() override;
 
@@ -45,7 +46,7 @@ public:
 
 	void ShowSelect(bool b);
 
-	void SetOwnerActor(AStructureActor* actor);
+	void SetOwnerActor(AActor* actor);
 	
 public:
 	UFUNCTION()

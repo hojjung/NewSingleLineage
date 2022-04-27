@@ -46,7 +46,7 @@ void UWidgetBuildPanel::OnClickElement(UWidgetBuildElement* ele, const FBuildDat
 
 void UWidgetBuildPanel::OnTouchWorld(const FHitResult& hit)
 {
-	AStructureActor* SActor = Cast<AStructureActor>(hit.Actor.Get());
+	IBuildable* SActor = Cast<IBuildable>(hit.Actor.Get());
 	
 	if(SActor && !m_Focused)
 	{

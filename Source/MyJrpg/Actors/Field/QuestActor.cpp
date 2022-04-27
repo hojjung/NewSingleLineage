@@ -8,11 +8,6 @@
 // Sets default values
 AQuestActor::AQuestActor()
 {
-	static ConstructorHelpers::FClassFinder<UUserWidget>
-	FoundW2(TEXT("WidgetBlueprint'/Game/Blueprints/Widgets/World/Component/Village/WB_QuestInfo.WB_QuestInfo_C'"));
-
-	m_ClassInteractWidget = FoundW2.Class;
-
 	static ConstructorHelpers::FObjectFinder<USkeletalMesh>
 		FoundW(TEXT("SkeletalMesh'/Game/06_CharacterMesh/ModularNPC/SK_ma_head_02_SK2.SK_ma_head_02_SK2'"));
 	m_MeshComp->SetSkeletalMesh(FoundW.Object);

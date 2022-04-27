@@ -32,7 +32,9 @@ protected:
 	AItemActor* SpawnItemActor(const FNPCSpawnData& spawn_data);
 	
 public:
-	ACombatUnitPawn* GetNearNpc(FVector callerLoc, float range = 0, TSet<ACombatUnitPawn*>* ignore = nullptr);
+	ACombatUnitPawn* GetNearNpc(FVector callerLoc, float range = 0, const TSet<ACombatUnitPawn*>* ignore = nullptr);
+
+	void GetNearNpcs(const ABaseUnitPawn* caller, TArray<ACombatUnitPawn*>& outAry, float range = 0, const TSet<ACombatUnitPawn*>* ignore = nullptr);
 	
 	void SetSpawnActors(const UNPCPaletteDataAsset* npcAssets);
 	

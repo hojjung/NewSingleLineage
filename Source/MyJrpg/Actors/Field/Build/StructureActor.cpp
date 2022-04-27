@@ -26,6 +26,7 @@ bool AStructureActor::HasNextUpgrade()
 void AStructureActor::SetBuildData(const FBuildDataRow& data_row)
 {
 	m_DataRow = &data_row;
+	m_WidgetComp->Init();
 }
 
 void AStructureActor::SetMat(UMaterialInterface* mat)
@@ -62,15 +63,11 @@ const FBuildDataRow& AStructureActor::GetBuildData() const
 void AStructureActor::ShowBuildWidget(bool b)
 {
 	m_WidgetComp->ShowBuildWidget(b);
-	
-	m_WidgetComp->ShowRotation(m_DataRow->m_BuildType == EBuildType::Furniture);
 }
 
 void AStructureActor::ShowSelect(bool b)
 {
 	m_WidgetComp->ShowSelect(b);
-	
-	m_WidgetComp->SetVisibility(b);
 }
 
 bool AStructureActor::TryUpgrade()

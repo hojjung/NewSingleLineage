@@ -19,25 +19,24 @@ UBuildWidgetCompo::UBuildWidgetCompo()
 	SetManuallyRedraw(true);
 }
 
-void UBuildWidgetCompo::BeginPlay()
+void UBuildWidgetCompo::Init()
 {
-	Super::BeginPlay();
 	SetWidgetClass(m_ClassWidget);
+	AActor* Owner = GetOwner();
 	m_Widget = Cast<UWorldWidgetStruct>(GetUserWidgetObject());
-	m_Widget->SetOwnerActor(GetOwner<AStructureActor>());
-}
-
-void UBuildWidgetCompo::ShowRotation(bool b)
-{
-	m_Widget->ShowRotation(b);
+	m_Widget->SetOwnerActor(Owner);
+	m_Type = Cast<IBuildable>(Owner)->GetBuildData().m_BuildType;
 }
 
 void UBuildWidgetCompo::ShowBuildWidget(bool b)
 {
 	m_Widget->ShowBuildWidget(b);
+	m_Widget->ShowRotation(b && m_Type == EBuildType::Furniture);
 }
 
 void UBuildWidgetCompo::ShowSelect(bool b)
 {
+	SetVisibility(b);
 	m_Widget->ShowSelect(b);
+	m_Widget->ShowRotation(b && m_Type == EBuildType::Furniture);
 }

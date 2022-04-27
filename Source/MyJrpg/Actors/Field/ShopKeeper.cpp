@@ -7,11 +7,6 @@
 
 AShopKeeper::AShopKeeper()
 {
-	static ConstructorHelpers::FClassFinder<UUserWidget>
-	FoundW2(TEXT("WidgetBlueprint'/Game/Blueprints/Widgets/World/Component/Village/WB_ShopInfo.WB_ShopInfo_C'"));
-
-	m_ClassInteractWidget = FoundW2.Class;
-	
 	static ConstructorHelpers::FObjectFinder<USkeletalMesh>
 		FoundW(TEXT("SkeletalMesh'/Game/06_CharacterMesh/ModularNPC/SK_fe_head_01_SK.SK_fe_head_01_SK'"));
 	

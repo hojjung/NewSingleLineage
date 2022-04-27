@@ -4,3 +4,7 @@
 #include "Buildable.h"
 
 // Add default functionality here for any IBuildable functions that are not pure virtual.
+bool IBuildable::HasNextUpgrade()
+{
+	return false;
+}

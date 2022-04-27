@@ -32,7 +32,7 @@ public:
 	UPROPERTY()
 	TScriptInterface<IBuildable> m_Foundation;
 	UPROPERTY()
-	TScriptInterface<IBuildable> m_Prop;
+	TScriptInterface<IBuildable> m_Furniture;
 };
 
 USTRUCT()
@@ -95,6 +95,8 @@ private:
 	int GetWallMaxIndex(bool ishori, bool isXaxis);
 	
 	bool GetEmptyFoundationLoc(int x, int y, FVector& outEmptyLoc, FRotator& outEmptyRot);
+
+	bool GetEmptyFurnitureLoc(int x, int y, FVector& outEmptyLoc, FRotator& outEmptyRot);
 
 	FVector GetWallWorldPos(bool isHori, int wall_x, int wall_y);
 

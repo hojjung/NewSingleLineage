@@ -73,7 +73,7 @@ ASummonUnitPawn* USpawnManager::SummonUnit(FName unit_id, FVector loc, float lif
 	return NpcActor;
 }
 
-ACombatUnitPawn* USpawnManager::GetNearNpc(FVector callerLoc, float range, TSet<ACombatUnitPawn*>* ignore)
+ACombatUnitPawn* USpawnManager::GetNearNpc(FVector callerLoc, float range, const TSet<ACombatUnitPawn*>* ignore)
 {
 	float MAX_Dist = MAX_flt;
 
@@ -127,6 +127,52 @@ ACombatUnitPawn* USpawnManager::GetNearNpc(FVector callerLoc, float range, TSet<
 	}
 
 	return NearPawn;
+}
+
+void USpawnManager::GetNearNpcs(const ABaseUnitPawn* caller, TArray<ACombatUnitPawn*>& outAry, float range,
+                                const TSet<ACombatUnitPawn*>* ignore)
+{
+	FVector Loc = caller->GetActorLocation();
+
+	range = range * range;
+
+	FNavLocation StartPoint;
+
+	UNavigationSystemV1* NavSys = UMyLib::GetNavSys();
+
+	NavSys->ProjectPointToNavigation(Loc, StartPoint);
+
+	for (ACombatUnitPawn* Pawn : m_AryNpcActors)
+	{
+		if (!Pawn || !Pawn->IsAlive() || Pawn->IsHidden() || (ignore && (*ignore).Contains(Pawn)))
+		{
+			continue;
+		}
+
+		float Length = MAX_flt;
+
+		FNavLocation EndPoint;
+
+		NavSys->ProjectPointToNavigation(Pawn->GetActorLocation(), EndPoint);
+
+		if (!caller->LineOfSightTo(Pawn))
+		{
+			UMyLib::GetNavSys()->GetPathLength(GetWorld(), StartPoint, EndPoint, Length);
+
+			Length = Length * Length;
+		}
+		else
+		{
+			Length = FVector::DistSquared2D(StartPoint, EndPoint);
+		}
+
+		if (range > 0 && range < Length)
+		{
+			continue;
+		}
+
+		outAry.Add(Pawn);
+	}
 }
 
 AMonsterPawn* USpawnManager::SpawnNpcActor(const FNPCSpawnData& SpawnData)

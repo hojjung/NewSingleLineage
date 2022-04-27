@@ -6,6 +6,7 @@
 #include "InteractActorBase.h"
 #include "GameFramework/Actor.h"
 #include "MyJrpg/Interfaces/Buildable.h"
+#include "MyJrpg/Widgets/World/Build/BuildWidgetCompo.h"
 #include "Storage.generated.h"
 
 UCLASS()
@@ -19,17 +20,21 @@ public:
 
 protected:
 	UPROPERTY(VisibleAnywhere)
+	UBuildWidgetCompo* m_WidgetComp;
+	UPROPERTY(VisibleAnywhere)
 	UStaticMeshComponent* m_MeshComp;
-
+	UPROPERTY()
+	TArray<UMaterialInterface*> m_AryMats;
 	const FBuildDataRow* m_Data;
 protected:
 	virtual void OnInteract() override;
 
+	virtual void BeginPlay() override;
 public:
 	virtual const FBuildDataRow& GetBuildData() const override;
 	virtual void SetBuildData(const FBuildDataRow& data)override;
 	virtual void SetMat(UMaterialInterface* mat)override;
 	virtual void ShowBuildWidget(bool b)override;
 	virtual void ConfirmBuild()override;
-	virtual void ShowSelect(bool cond)override;
+	virtual void ShowSelect(bool b)override;
 };

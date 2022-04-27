@@ -29,4 +29,5 @@ public:
 	virtual void ShowBuildWidget(bool b) = 0 ;
 	virtual void ConfirmBuild() = 0;
 	virtual void ShowSelect(bool cond) = 0;
+	virtual bool HasNextUpgrade();
 };

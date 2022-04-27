@@ -5,7 +5,7 @@
 #include "MyJrpg/Actors/Field/Build/StructureActor.h"
 #include "MyJrpg/DataTables/BuildData.h"
 
-FConEle::FConEle(): m_Foundation(nullptr), m_Prop(nullptr)
+FConEle::FConEle(): m_Foundation(nullptr), m_Furniture(nullptr)
 {
 	
 }
@@ -166,6 +166,31 @@ bool UConstructionManager::GetEmptyFoundationLoc(int x, int y, FVector& outEmpty
 	return false;
 }
 
+bool UConstructionManager::GetEmptyFurnitureLoc(int x, int y, FVector& outEmptyLoc, FRotator& outEmptyRot)
+{
+	int initX = x;
+	int initY = y;
+	while (y < FGlobalVariable::GRID_COUNT)
+	{
+		while (x < FGlobalVariable::GRID_COUNT)
+		{
+			const FConEle& Ele = m_Grid[x][y];
+			if(Ele.m_Furniture)
+			{
+				x++;
+				continue;
+			}
+			outEmptyLoc = GetWorldPos(x, y);
+			outEmptyRot = FRotator::ZeroRotator;
+			return true;
+		}
+		y++;
+	}
+	outEmptyLoc = GetWorldPos(initX,initY);
+	outEmptyRot = FRotator::ZeroRotator;
+	return false;
+}
+
 FVector UConstructionManager::GetWallWorldPos(bool isHori, int wall_x, int wall_y)
 {
 	FVector Loc;
@@ -249,6 +274,12 @@ bool UConstructionManager::GetEmptyLoc(const FVector& inloc, FVector& outEmptyLo
 			PRINTF("Floor Index:%d:%d",X,Y);
 			return GetEmptyFoundationLoc(X,Y,outEmptyLoc, outEmptyRot);
 		}
+	case EBuildType::Furniture:
+		{
+			GetIndex(inloc ,X,Y);
+			PRINTF("Floor Index:%d:%d",X,Y);
+			return GetEmptyFurnitureLoc(X,Y,outEmptyLoc, outEmptyRot);
+		}
 	case EBuildType::Wall:
 	case EBuildType::Door:
 		{
@@ -286,7 +317,7 @@ void UConstructionManager::SpawnPreviewActor(FVector loc, const FBuildDataRow* d
 
 	FRotator NewRot;
 
-	bool Ret = GetEmptyLoc(loc,NewLoc, NewRot, dataRow->m_BuildType);
+	GetEmptyLoc(loc,NewLoc, NewRot, dataRow->m_BuildType);
 
 	AActor* SelectedActor = Cast<AActor>(m_PreviewActor.GetObject());
 
@@ -347,6 +378,14 @@ bool UConstructionManager::IsBuildable()
 			}
 		}
 		break;
+	case EBuildType::Furniture:
+		{
+			GetIndex( Cast<AActor>(m_PreviewActor.GetObject())->GetActorLocation(), X, Y);
+			FConEle& Ele = m_Grid[X][Y];
+			if (!Ele.m_Foundation || Ele.m_Furniture)
+				return false;
+		}
+		break;
 	}
 	return true;
 }
@@ -376,6 +415,13 @@ void UConstructionManager::ConfirmBuild()
 			Ele.m_Foundation = m_PreviewActor; 
 		}
 		break;
+	case EBuildType::Furniture:
+		{
+			GetIndex(Loc,X,Y);
+			FConEle& Ele = m_Grid[X][Y];
+			Ele.m_Furniture = m_PreviewActor; 
+		}
+		break;
 	case EBuildType::Wall:
 	case EBuildType::Door:
 		{
@@ -402,9 +448,14 @@ void UConstructionManager::ConfirmBuild()
 void UConstructionManager::Rotate()
 {
 	//float Yaw = FMath::RoundToFloat(m_PreviewActor->GetActorRotation().GetDenormalized().Yaw);
-	Cast<AActor>(m_PreviewActor.GetObject())->AddActorLocalRotation(FRotator(0,90,0));
-	
-	CheckBuildable();
+	if(m_PreviewActor)
+	{
+		Cast<AActor>(m_PreviewActor.GetObject())->AddActorLocalRotation(FRotator(0,90,0));
+	}
+	else if(m_FocusActor)
+	{
+		Cast<AActor>(m_FocusActor.GetObject())->AddActorLocalRotation(FRotator(0,90,0));	
+	}
 }
 
 IBuildable* UConstructionManager::GetPreview()
@@ -476,6 +527,11 @@ void UConstructionManager::GetStructureHolder(IBuildable* want, TScriptInterface
 		holder = &m_Grid[X][Y].m_Foundation;
 		isHori = false;
 		return;
+	case EBuildType::Furniture:
+		GetIndex(Loc,X,Y);
+		holder = &m_Grid[X][Y].m_Furniture;
+		isHori = false;
+		return;
 	case EBuildType::Wall:
 	case EBuildType::Door:
 		{
@@ -486,8 +542,6 @@ void UConstructionManager::GetStructureHolder(IBuildable* want, TScriptInterface
 				holder =  &m_WallVertical[X].m_Walls[Y];
 		}
 		return;
-	case EBuildType::Furniture:
-		break;
 	}
 }
 

@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "MyMovement.h"
+#include "MyJrpg/Pawns/CombatUnitPawn.h"
 #include "UObject/NoExportTypes.h"
 #include "MyFlockSteering.generated.h"
 
@@ -18,15 +19,14 @@ class MYJRPG_API UMyFlockSteering : public UMyMovement
 
 protected:
 	UPROPERTY()
-	TArray<AActor*> m_AryIgnoreActors;
-	
-	TArray<TEnumAsByte< EObjectTypeQuery>> m_AryTargetingObjectType;
-	
+	ACombatUnitPawn* m_OwnerCombatPawn;
+	UPROPERTY()
+	TSet<ACombatUnitPawn*> m_SetIgnoreSelf;
+	UPROPERTY()
+	TArray<ACombatUnitPawn*> m_NearMobs;
 protected:
 	virtual void BeginPlay() override;
 	
-	bool GetNeighborPawns(TArray<AActor*>& aryOut);
-
 	FVector GetFlockDir();
 
 	virtual void ApplyControlInputToVelocity(float DeltaTime) override;

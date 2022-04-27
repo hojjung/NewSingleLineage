@@ -3,11 +3,6 @@
 
 ABlackSmith::ABlackSmith()
 {
-	static ConstructorHelpers::FClassFinder<UUserWidget>
-	FoundW2(TEXT("WidgetBlueprint'/Game/Blueprints/Widgets/World/Component/Village/WB_BlackSmithInfo.WB_BlackSmithInfo_C'"));
-
-	m_ClassInteractWidget = FoundW2.Class;
-
 	static ConstructorHelpers::FObjectFinder<USkeletalMesh>
 		FoundW(TEXT("SkeletalMesh'/Game/06_CharacterMesh/ModularNPC/SK_ma_head_02_SK.SK_ma_head_02_SK'"));
 	m_MeshComp->SetSkeletalMesh(FoundW.Object);

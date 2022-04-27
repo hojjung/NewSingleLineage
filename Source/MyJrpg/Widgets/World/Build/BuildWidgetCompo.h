@@ -24,12 +24,12 @@ protected:
 	TSubclassOf<UWorldWidgetStruct> m_ClassWidget;
 	UPROPERTY()
 	UWorldWidgetStruct* m_Widget;
+
+	EBuildType m_Type;
 	
 public:
-	virtual void BeginPlay() override;
-	
-	void ShowRotation(bool b);
-	
+	void Init();
+
 	void ShowBuildWidget(bool b);
 	
 	void ShowSelect(bool b);

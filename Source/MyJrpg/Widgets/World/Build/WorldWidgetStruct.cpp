@@ -20,7 +20,7 @@ void UWorldWidgetStruct::NativeOnInitialized()
 	m_BtnErase->OnClicked.AddDynamic(this, &UWorldWidgetStruct::OnErase);
 
 	m_BtnUpgrade->OnClicked.AddDynamic(this, &UWorldWidgetStruct::OnUpgrade);
-
+	
 	ShowSelect(false);
 }
 
@@ -36,7 +36,7 @@ void UWorldWidgetStruct::DeselectErase()
 
 void UWorldWidgetStruct::ConfirmErase()
 {
-	UMyGameInstance::Get->m_BuildManager->Erase(m_Owner);
+	UMyGameInstance::Get->m_BuildManager->Erase(Cast<IBuildable>(m_Owner.GetObject()));
 }
 
 void UWorldWidgetStruct::ShowRotation(bool b)
@@ -49,10 +49,15 @@ void UWorldWidgetStruct::ShowRotation(bool b)
 
 void UWorldWidgetStruct::ShowBuildWidget(bool b)
 {
+	m_BtnCancel->SetVisibility(ESlateVisibility::Visible);
 	if(b)
+	{
 		m_BtnConfirm->SetVisibility(ESlateVisibility::Visible);
+	}
 	else
+	{
 		m_BtnConfirm->SetVisibility(ESlateVisibility::Collapsed);
+	}
 }
 
 void UWorldWidgetStruct::OnCancel()
@@ -84,7 +89,7 @@ void UWorldWidgetStruct::OnErase()
 
 void UWorldWidgetStruct::OnUpgrade()
 {
-	UMyGameInstance::Get->m_BuildManager->Upgrade(m_Owner);
+	UMyGameInstance::Get->m_BuildManager->Upgrade( Cast<IBuildable>(m_Owner.GetObject()));
 }
 
 void UWorldWidgetStruct::ShowSelect(bool b)
@@ -93,23 +98,22 @@ void UWorldWidgetStruct::ShowSelect(bool b)
 	if(b)
 	{
 		m_BtnErase->SetVisibility(ESlateVisibility::Visible);
-		
-		m_BtnCancel->SetVisibility(ESlateVisibility::Collapsed);
-		
-		if(m_Owner->HasNextUpgrade())
+		bool Result = Cast<IBuildable>(m_Owner.GetObject())->HasNextUpgrade();//지맘대로네
+		if(Result)
 			m_BtnUpgrade->SetVisibility(ESlateVisibility::Visible);
 	}
 	else
 	{
 		m_BtnUpgrade->SetVisibility(ESlateVisibility::Collapsed);
 		m_BtnErase->SetVisibility(ESlateVisibility::Collapsed);
-		m_BtnCancel->SetVisibility(ESlateVisibility::Visible);
 	}
 	ShowBuildWidget(!b);
 	ShowRotation(!b);
+	m_BtnCancel->SetVisibility(ESlateVisibility::Collapsed);
 }
 
-void UWorldWidgetStruct::SetOwnerActor(AStructureActor* actor)
+void UWorldWidgetStruct::SetOwnerActor(AActor* actor)
 {
-	m_Owner = actor;
+	m_Owner.SetObject(actor);
+	m_Owner.SetInterface(actor);
 }

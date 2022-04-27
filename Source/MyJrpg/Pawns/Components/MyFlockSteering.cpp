@@ -7,48 +7,35 @@
 void UMyFlockSteering::BeginPlay()
 {
 	Super::BeginPlay();
-	m_AryTargetingObjectType.Reset();
-	m_AryTargetingObjectType.Add(EObjectTypeQuery::ObjectTypeQuery3);
-
-	m_AryIgnoreActors.Reset();
-	m_AryIgnoreActors.Add(GetOwner());
-}
-
-bool UMyFlockSteering::GetNeighborPawns(TArray<AActor*>& aryOut)
-{
-	if(!UMyLib::SphereOverlapActors(GetOwner(),GetOwner()->GetActorRotation(),GetOwner()->GetActorLocation(),500,
-		m_AryTargetingObjectType,AMonsterPawn::StaticClass(),m_AryIgnoreActors,aryOut))
-	{
-		return false;
-	}
-	return true;
+	m_OwnerCombatPawn = GetOwner<ACombatUnitPawn>();
+	m_SetIgnoreSelf.Reset();
+	m_SetIgnoreSelf.Add(m_OwnerCombatPawn);
+	m_NearMobs.Reserve(20);
 }
 
 FVector UMyFlockSteering::GetFlockDir()
 {
+	m_NearMobs.Reset();
+	
 	FVector TargetLoc = GetOwner()->GetActorLocation();
 
-	TArray<AActor*> Mobs;
-
-	GetNeighborPawns(Mobs);
+	UMyGameInstance::Get->m_SpawnManager->GetNearNpcs(m_OwnerCombatPawn,m_NearMobs,500,&m_SetIgnoreSelf);
 	
 	FVector Sum = FVector(0);
 
 	int Count = 0;
 
-	for (AActor* OtherActor : Mobs)
+	for (ACombatUnitPawn* OtherActor : m_NearMobs)
 	{
-		AMonsterPawn* Other = Cast<AMonsterPawn>(OtherActor);
-		
-		if(!Other->IsAlive() || Other == GetOwner())
+		if(!OtherActor->IsAlive())
 		{
 			continue;
 		}
-		FVector OtherLoc = Other->GetActorLocation();
+		FVector OtherLoc = OtherActor->GetActorLocation();
 		
 		float Dist = FVector::DistSquared2D(TargetLoc, OtherLoc);
 
-		if ((Dist > 0) && (Dist < 90000))
+		if ((Dist > 0) && (Dist < 250000))
 		{
 			FVector Diff = TargetLoc - OtherLoc;
 			
