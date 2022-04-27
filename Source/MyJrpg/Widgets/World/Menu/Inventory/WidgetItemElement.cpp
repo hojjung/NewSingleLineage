@@ -215,10 +215,10 @@ void UWidgetItemElement::UseItem()
 	switch (m_PanelType)
 	{
 	case EPanelType::StorageDeposit:
-		MoveItem(UMyLib::GetPlayerStorage(),UMyLib::GetPlayerInven(),ItemSpec, IsEquipItem);
+		MoveItem(UMyLib::GetFocusedStroage(),UMyLib::GetPlayerInven(),ItemSpec, IsEquipItem);
 		return;
 	case EPanelType::StorageWithdraw:
-		MoveItem(UMyLib::GetPlayerInven(),UMyLib::GetPlayerStorage(),ItemSpec, IsEquipItem);
+		MoveItem(UMyLib::GetPlayerInven(),UMyLib::GetFocusedStroage(),ItemSpec, IsEquipItem);
 		return;
 	case EPanelType::PickPocketPl:
 		MoveItem(UMyLib::GetPickPocketTarget()->GetInven(), UMyLib::GetPlayerInven(), ItemSpec, IsEquipItem);

@@ -33,14 +33,15 @@ void AStorage::OnInteract()
 {
 	Super::OnInteract();
 
-	UMyLib::GetCanvas()->OpenStorage();
+	UMyLib::GetCanvas()->OpenStorage(m_Inven);
 }
 
 void AStorage::BeginPlay()
 {
 	Super::BeginPlay();
 	m_AryMats = m_MeshComp->GetMaterials();
-	
+	m_Inven = NewObject<UInventory>(this);
+	m_Inven->Init(20);
 }
 
 const FBuildDataRow& AStorage::GetBuildData() const

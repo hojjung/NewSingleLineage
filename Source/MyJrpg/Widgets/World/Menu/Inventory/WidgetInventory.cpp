@@ -56,8 +56,6 @@ void UWidgetInventory::CreateGridElements(EPanelType panelType)
 {
 	check(m_ClassWidgetItemEle);
 	
-	m_AryItemEles.Reset();
-	
 	for (int i = 0; i < m_CurrentInven->GetInvenSize(); i++)
 	{
 		UWidgetItemElement* ItemEle = CreateWidget<UWidgetItemElement>(this, m_ClassWidgetItemEle);

@@ -86,7 +86,12 @@ int UCraftManager::GetCraftAvailableCountWithMaterial()
 	{
 		int InvenAmount = UMyLib::GetPlayerInven()->GetItemStack(Cost.m_ItemDataRowHandle.RowName);
 
-		int StorageAmount = UMyLib::GetPlayerStorage()->GetItemStack(Cost.m_ItemDataRowHandle.RowName);
+		int StorageAmount = 0;
+
+		for(UInventory* Inven : UMyLib::GetPlayerStorage())
+		{
+			StorageAmount += Inven->GetItemStack(Cost.m_ItemDataRowHandle.RowName);
+		}
 
 		int HasAmount = InvenAmount + StorageAmount; 
 		

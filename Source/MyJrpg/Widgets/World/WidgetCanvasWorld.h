@@ -174,14 +174,14 @@ public:
 	UFUNCTION()
 	void OpenShop(const FName& traderID);
 	UFUNCTION()
-	void OpenStorage();
-	UFUNCTION()
 	void OpenZone();
 	UFUNCTION()
 	void OpenPet();
 	UFUNCTION()
 	void OpenBuild();
 
+	void OpenStorage(UInventory* storage);
+	
 	void OpenQuestPanel(bool isMain);
 
 	UWidgetStackCalculator* OpenCalculator(int cnt = 0);
@@ -203,4 +203,6 @@ public:
 	void StartPickPocket(AMonsterPawn* mob);
 
 	void ShowMainHUD(bool b);
+
+	UWidgetStorage* GetStorageMenu();
 };

@@ -22,7 +22,7 @@ protected:
 	UPROPERTY()
 	TArray<AMonsterPawn*> m_AryNpcActors;
 	UPROPERTY()
-	TArray<AItemActor*> m_AryItemActors;
+	TArray<TScriptInterface<IFocusable>> m_AryFocusActors;
 	UPROPERTY()
 	TArray<ASummonUnitPawn*> m_AryAllyActors;
 
@@ -33,6 +33,8 @@ protected:
 	
 public:
 	ACombatUnitPawn* GetNearNpc(FVector callerLoc, float range = 0, const TSet<ACombatUnitPawn*>* ignore = nullptr);
+
+	IFocusable* GetNearProp(FVector callerLoc, float range = 0);
 
 	void GetNearNpcs(const ABaseUnitPawn* caller, TArray<ACombatUnitPawn*>& outAry, float range = 0, const TSet<ACombatUnitPawn*>* ignore = nullptr);
 	
@@ -46,4 +48,8 @@ public:
 	{
 		return m_AryNpcActors;
 	}
+
+	void AddFocusActor(UObject* want);
+
+	void RemoveFocusActor(UObject* want);
 };

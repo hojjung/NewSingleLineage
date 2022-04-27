@@ -34,8 +34,3 @@ float AInteractActorBase::GetRadius() const
 {
 	return m_Capsule->GetScaledCapsuleRadius();
 }
-
-void AInteractActorBase::Control()
-{
-	
-}

@@ -19,6 +19,9 @@ class MYJRPG_API UWidgetInteract : public UUserWidget
 {
 	GENERATED_BODY()
 
+public:
+	static bool AutoToggle;
+
 protected:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (BindWidget))
 	UButton* m_BtnObtain;//Main 1
@@ -43,7 +46,7 @@ protected:
 	
 	TScriptInterface<IFocusable> m_Focused;
 
-	bool m_AutoToggle;
+	bool m_bHasFocus;	
 
 protected:
 	virtual void NativeOnInitialized() override;
@@ -56,6 +59,8 @@ protected:
 	
 	void HideAllBtns();
 
+	bool IsInRange(IFocusable* focus);
+	
 public:
 	void ShowInteract(IFocusable* focus);
 	UFUNCTION()
@@ -73,5 +78,5 @@ public:
 	UFUNCTION()
 	void OnSneak();
 	UFUNCTION()
-	void AutoToggle();
+	void OnAutoToggle();
 };

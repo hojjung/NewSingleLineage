@@ -19,7 +19,7 @@ void USpawnManager::SetSpawnActors(const UNPCPaletteDataAsset* npcAssets)
 	
 	m_AryNpcActors.Reset();
 
-	m_AryItemActors.Reset();
+	m_AryFocusActors.Reset();
 
 	for (const FNPCSpawnData& SpawnDataEle : npcAssets->m_ArySpawnDatas)
 	{
@@ -73,6 +73,22 @@ ASummonUnitPawn* USpawnManager::SummonUnit(FName unit_id, FVector loc, float lif
 	return NpcActor;
 }
 
+void USpawnManager::AddFocusActor(UObject* want)
+{
+	TScriptInterface<IFocusable> Focus;
+	Focus.SetInterface(want);
+	Focus.SetObject(want);
+	m_AryFocusActors.Add(Focus);
+}
+
+void USpawnManager::RemoveFocusActor(UObject* want)
+{
+	TScriptInterface<IFocusable> Focus;
+	Focus.SetInterface(want);
+	Focus.SetObject(want);
+	m_AryFocusActors.Remove(Focus);
+}
+
 ACombatUnitPawn* USpawnManager::GetNearNpc(FVector callerLoc, float range, const TSet<ACombatUnitPawn*>* ignore)
 {
 	float MAX_Dist = MAX_flt;
@@ -104,7 +120,7 @@ ACombatUnitPawn* USpawnManager::GetNearNpc(FVector callerLoc, float range, const
 
 		if (!PlayerPawn->LineOfSightTo(Pawn))
 		{
-			UMyLib::GetNavSys()->GetPathLength(GetWorld(), StartPoint, EndPoint, Length);
+			NavSys->GetPathLength(GetWorld(), StartPoint, EndPoint, Length);
 
 			Length = Length * Length;
 		}
@@ -125,7 +141,6 @@ ACombatUnitPawn* USpawnManager::GetNearNpc(FVector callerLoc, float range, const
 			MAX_Dist = Length;
 		}
 	}
-
 	return NearPawn;
 }
 
@@ -157,7 +172,7 @@ void USpawnManager::GetNearNpcs(const ABaseUnitPawn* caller, TArray<ACombatUnitP
 
 		if (!caller->LineOfSightTo(Pawn))
 		{
-			UMyLib::GetNavSys()->GetPathLength(GetWorld(), StartPoint, EndPoint, Length);
+			NavSys->GetPathLength(GetWorld(), StartPoint, EndPoint, Length);
 
 			Length = Length * Length;
 		}
@@ -225,7 +240,65 @@ AItemActor* USpawnManager::SpawnItemActor(const FNPCSpawnData& spawn_data)
 		NpcActor->Init(spawn_data.m_IDEntity,1);
 	}
 
-	m_AryItemActors.Add(NpcActor);
+	AddFocusActor(NpcActor);
 
 	return NpcActor;
+}
+
+IFocusable* USpawnManager::GetNearProp(FVector callerLoc, float range)
+{
+	float MAX_Dist = MAX_flt;
+
+	range = range * range;
+
+	IFocusable* NearPawn = nullptr;
+
+	AMyPlayerPawn* PlayerPawn = UMyLib::GetPlayer();
+
+	FNavLocation StartPoint;
+
+	UNavigationSystemV1* NavSys = UMyLib::GetNavSys();
+
+	NavSys->ProjectPointToNavigation(callerLoc, StartPoint);
+
+	for (TScriptInterface<IFocusable>& Focus : m_AryFocusActors)
+	{
+		if (!Focus)
+		{
+			continue;
+		}
+
+		AActor* FocusActor = Cast<AActor>(Focus.GetObject());
+
+		float Length = MAX_flt;
+
+		FNavLocation EndPoint;
+
+		NavSys->ProjectPointToNavigation(FocusActor->GetActorLocation(), EndPoint);
+
+		if (!PlayerPawn->LineOfSightTo(FocusActor))
+		{
+			NavSys->GetPathLength(GetWorld(), StartPoint, EndPoint, Length);
+
+			Length = Length * Length;
+		}
+		else
+		{
+			Length = FVector::DistSquared2D(StartPoint, EndPoint);
+		}
+
+		if (range > 0 && range < Length)
+		{
+			continue;
+		}
+
+		if (MAX_Dist > Length)
+		{
+			NearPawn = Cast<IFocusable>(Focus.GetObject());
+
+			MAX_Dist = Length;
+		}
+	}
+
+	return NearPawn;
 }

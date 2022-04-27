@@ -100,16 +100,6 @@ void UMyGameInstance::Init()
 
 	m_BuildManager = NewObject<UConstructionManager>(this);
 
-	m_AryStorage.Reset();
-	m_AryStorage.Add(NewObject<UInventory>(this));
-	m_AryStorage.Add(NewObject<UInventory>(this));
-	m_AryStorage.Add(NewObject<UInventory>(this));
-	m_AryStorage.Add(NewObject<UInventory>(this));
-	m_AryStorage[0]->Init(FGlobalVariable::STORAGE_SIZE);
-	m_AryStorage[1]->Init(FGlobalVariable::STORAGE_SIZE);
-	m_AryStorage[2]->Init(FGlobalVariable::STORAGE_SIZE);
-	m_AryStorage[3]->Init(FGlobalVariable::STORAGE_SIZE);
-
 	m_BuildManager->Init();
 	m_ItemCollecManager->Init();
 	m_AvatarManager->Init();
@@ -127,12 +117,9 @@ void UMyGameInstance::Init()
 	m_TeamKarma->Init();
 	//
 	IterateItemTableToRegister();
-	FirstTimeItemSetup();
-}
 
-void UMyGameInstance::FirstTimeItemSetup()
-{
-	m_AryStorage[0]->AddItem(TEXT("misc_gold24k"),1);	
+	m_Inven->AddItem(TEXT("misc_gold24k"), 3);
+	m_AryStorage.Reset();
 }
 
 void UMyGameInstance::LoadComplete(const float LoadTime, const FString& MapName)
@@ -168,12 +155,17 @@ void UMyGameInstance::Tick(float deltaTime)
 	m_PotionManager->Tick(deltaTime);
 }
 
-UInventory* UMyGameInstance::GetStorage()
+void UMyGameInstance::AddStorage(UInventory* inven)
 {
-	return m_AryStorage[m_nStorageIndex];
+	m_AryStorage.Add(inven);
 }
 
-void UMyGameInstance::SelectStorage(int index)
+void UMyGameInstance::RemoveStorage(UInventory* inven)
 {
-	m_nStorageIndex = index;
+	m_AryStorage.Remove(inven);
+}
+
+TArray<UInventory*>& UMyGameInstance::GetStorages()
+{
+	return m_AryStorage;
 }

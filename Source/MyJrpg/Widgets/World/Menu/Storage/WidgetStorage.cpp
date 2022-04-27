@@ -7,89 +7,54 @@ void UWidgetStorage::NativeOnInitialized()
 {
 	Super::NativeOnInitialized();
 
-	m_nCrntIndex = 0;
-
 	m_InvenPanel->Init(UMyLib::GetPlayerInven(),EPanelType::StorageDeposit);
 	
 	m_FilterBtns->RegisterFilter(m_StoragePanel);
 	
 	m_FilterBtns->RegisterFilter(m_InvenPanel);
-
-	m_BtnLeft->OnClicked.AddDynamic(this, &UWidgetStorage::OnClickLeft);
-	
-	m_BtnRight->OnClicked.AddDynamic(this, &UWidgetStorage::OnClickRight);
 }
 
-void UWidgetStorage::OpenPanel()
+void UWidgetStorage::SetTargetInven(UInventory* storage)
 {
-	Super::OpenPanel();
-	AddInvenDelegate();
+	m_TargetInven = storage;
+	
+	m_StoragePanel->Init(m_TargetInven,EPanelType::StorageWithdraw);
+	
+	m_StoragePanel->OpenPanel();
 	m_InvenPanel->OpenPanel();
+
+	UpdateText();
+	OpenPanel();
+
+	m_Handle = m_TargetInven->m_OnInvenChanged.AddUObject(this,&UWidgetStorage::UpdateText);
 }
 
 void UWidgetStorage::ClosePanel()
 {
 	Super::ClosePanel();
-
-	RemoveInvenDelegate();
+	m_StoragePanel->ClosePanel();
 	m_InvenPanel->ClosePanel();
+
+	m_TargetInven->m_OnInvenChanged.Remove(m_Handle);
+	m_TargetInven = nullptr;
 }
 
 void UWidgetStorage::UpdateText()
 {
-	UInventory* CrntStorage = UMyLib::GetPlayerStorage();
+	UInventory* CrntStorage = m_StoragePanel->GetInven();
 	
 	int CurrentCount = CrntStorage->GetUsingSlotCount();
 	
 	int MaxCount = CrntStorage->GetInvenSize();
 
-	int Index = UMyGameInstance::Get->GetCrntStorageIndex() + 1;
-	
 	FText StorageText = NSLOCTEXT("UWidgetStorage","StorageText","창고");
 	
-	FString StorageStr = FString::Printf(TEXT("%s(%d) %d/%d"),*StorageText.ToString(),Index,CurrentCount,MaxCount);
+	FString StorageStr = FString::Printf(TEXT("%s %d/%d"),*StorageText.ToString(),CurrentCount,MaxCount);
 	//
 	m_TxtStorageInvenCount->SetText(FText::FromString(StorageStr));
 }
 
-void UWidgetStorage::AddInvenDelegate()
+UInventory* UWidgetStorage::GetTargetInven()
 {
-	UMyGameInstance::Get->SelectStorage(m_nCrntIndex);
-
-	m_EachInvenHandle = UMyLib::GetPlayerStorage()->m_OnInvenChanged.AddUObject(this,&UWidgetStorage::UpdateText);
-
-	m_StoragePanel->Init(UMyLib::GetPlayerStorage(),EPanelType::StorageWithdraw);
-	m_StoragePanel->OpenPanel();
-	
-	UpdateText();
-}
-
-void UWidgetStorage::RemoveInvenDelegate()
-{
-	m_StoragePanel->ClosePanel();
-	UMyLib::GetPlayerStorage()->m_OnInvenChanged.Remove(m_EachInvenHandle);
-}
-
-
-
-void UWidgetStorage::OnClickLeft()
-{
-	RemoveInvenDelegate();
-	
-	m_nCrntIndex--;
-
-	m_nCrntIndex = FMath::Max(m_nCrntIndex,0);
-
-	AddInvenDelegate();
-}
-
-void UWidgetStorage::OnClickRight()
-{
-	RemoveInvenDelegate();
-	
-	m_nCrntIndex++;
-	
-	m_nCrntIndex = FMath::Min(m_nCrntIndex,3);
-
-	AddInvenDelegate();
+	return m_TargetInven;
 }

@@ -30,8 +30,6 @@ public:
 
 	static UInventory* GetPlayerInven();
 
-	static UInventory* GetPlayerStorage();
-
 	static AMonsterPawn* GetPickPocketTarget();
 	
 	static AMyPlayerController* GetPlayerCon();
@@ -117,4 +115,8 @@ public:
 	static int GetRequireCollecLevel(const FName& collecID, int index);
 
 	static bool IsCollecItemEquip(const FName& collecID, int index);
+	
+	static TArray<UInventory*>& GetPlayerStorage();
+
+	static UInventory* GetFocusedStroage();
 };

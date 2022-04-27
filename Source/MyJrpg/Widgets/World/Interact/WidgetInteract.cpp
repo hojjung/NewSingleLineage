@@ -6,9 +6,13 @@
 #include "MyJrpg/Pawns/MonsterPawn.h"
 #include "MyJrpg/Pawns/MyPlayerPawn.h"
 
+bool UWidgetInteract::AutoToggle = false;
+
 void UWidgetInteract::NativeOnInitialized()
 {
 	Super::NativeOnInitialized();
+
+	m_bHasFocus = false;
 
 	m_BtnObtain->OnClicked.AddDynamic(this, &UWidgetInteract::OnObtain);
 	m_BtnSteal->OnClicked.AddDynamic(this, &UWidgetInteract::OnSteal);
@@ -17,7 +21,7 @@ void UWidgetInteract::NativeOnInitialized()
 	m_BtnAttack->OnClicked.AddDynamic(this, &UWidgetInteract::OnAttack);
 	m_BtnPickPocket->OnClicked.AddDynamic(this, &UWidgetInteract::OnPickPocket);
 	m_BtnSneak->OnClicked.AddDynamic(this, &UWidgetInteract::OnSneak);
-	m_BtnAuto->OnClicked.AddDynamic(this, &UWidgetInteract::AutoToggle);
+	m_BtnAuto->OnClicked.AddDynamic(this, &UWidgetInteract::OnAutoToggle);
 
 	m_BtnObtain->SetVisibility(ESlateVisibility::Collapsed);
 	m_BtnSteal->SetVisibility(ESlateVisibility::Collapsed);
@@ -25,8 +29,6 @@ void UWidgetInteract::NativeOnInitialized()
 	m_BtnTalk->SetVisibility(ESlateVisibility::Collapsed);
 	m_BtnPickPocket->SetVisibility(ESlateVisibility::Collapsed);
 
-	m_AutoToggle=false;
-	
 	m_Pl = UMyLib::GetPlayer();
 	m_Pl->m_OnFocus.AddUObject(this, &UWidgetInteract::ShowInteract);
 }
@@ -80,13 +82,33 @@ void UWidgetInteract::HideAllBtns()
 	m_BtnControl->SetVisibility(ESlateVisibility::Collapsed);
 }
 
-void UWidgetInteract::ShowInteract(IFocusable* focus)
+bool UWidgetInteract::IsInRange(IFocusable* focus)
 {
 	if(!focus)
+		return false;
+	
+	AActor* FocusActor = Cast<AActor>(focus);
+
+	FVector PlayerLoc = UMyLib::GetPlayer()->GetActorLocation();
+
+	FVector FocusLoc = FocusActor->GetActorLocation();
+
+	return FVector::DistSquared2D(PlayerLoc, FocusLoc) <= 90000;
+}
+
+void UWidgetInteract::ShowInteract(IFocusable* focus)
+{
+	if(!IsInRange(focus))
 	{
-		HideAllBtns();
+		if(m_bHasFocus)
+		{
+			HideAllBtns();
+		}
+		m_bHasFocus = false;
 		return;
 	}
+	m_bHasFocus = true;
+	
 	m_Focused.SetInterface(focus);
 	
 	AMonsterPawn* Monster = Cast<AMonsterPawn>(focus);
@@ -130,7 +152,7 @@ void UWidgetInteract::OnControl()
 {
 	AInteractActorBase* Prop = Cast<AInteractActorBase>(m_Focused.GetObject());
 	
-	Prop->Control();
+	Prop->OnInteract();
 }
 
 void UWidgetInteract::OnTalk()
@@ -164,9 +186,9 @@ void UWidgetInteract::OnSneak()
 	m_Pl->SetSneak();
 }
 
-void UWidgetInteract::AutoToggle()
+void UWidgetInteract::OnAutoToggle()
 {
-	m_AutoToggle=!m_AutoToggle;
-	UMyLib::GetPlayer()->SetAutoCombat(m_AutoToggle);
-	UMyGameInstance::Get->m_SkillAuto->SetUseAuto(m_AutoToggle);
+	UWidgetInteract::AutoToggle=!UWidgetInteract::AutoToggle;
+	UMyLib::GetPlayer()->SetAutoCombat(AutoToggle);
+	UMyGameInstance::Get->m_SkillAuto->SetUseAuto(AutoToggle);
 }

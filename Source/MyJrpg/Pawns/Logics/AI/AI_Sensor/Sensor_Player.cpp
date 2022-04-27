@@ -14,42 +14,33 @@ void USensor_Player::Init(ACombatUnitPawn* owner)
 	m_PlayerOwner = Cast<AMyPlayerPawn>(owner);
 	m_AryIgnores.Reset();
 	m_AryIgnores.Add(m_PlayerOwner);
-
 	m_Capsule = Cast<UCapsuleComponent>( m_PlayerOwner->GetComponentByClass(UCapsuleComponent::StaticClass()));
 }
 
 void USensor_Player::UpdateAISensing()
 {
-	if (m_PlayerOwner->IsInputMoving())
-	{
-		m_PlayerOwner->SetFocusedTarget(nullptr);
-		
-		return;
-	}
-	ACombatUnitPawn* TargetPawn =m_PlayerOwner->GetFocusedTarget<ACombatUnitPawn>();
+	ACombatUnitPawn* TargetPawn = m_PlayerOwner->GetFocusedTarget<ACombatUnitPawn>();
+
+	FVector Loc = m_PlayerOwner->GetActorLocation();
 	
-	if(TargetPawn)
+	if(TargetPawn && TargetPawn->IsAlive())
+		return ;
+
+	IFocusable* Target = UMyGameInstance::Get->m_SpawnManager->GetNearNpc(Loc);
+	
+	if(Target)
 	{
-		if(TargetPawn->IsAlive())
-		{
-			return;
-		}
+		m_PlayerOwner->SetFocusedTarget(Target);
+		return ;
 	}
 	
-	TargetPawn = GetSensedPawn();
+	Target = UMyGameInstance::Get->m_SpawnManager->GetNearProp(Loc);
 
-	if(TargetPawn)
+	if(Target)
 	{
-		m_PlayerOwner->SetFocusedTarget(TargetPawn);
-
-		return;
+		m_PlayerOwner->SetFocusedTarget(Target);
+		return ;
 	}
-
+	
 	m_PlayerOwner->SetFocusedTarget(nullptr);
 }
-
-ACombatUnitPawn* USensor_Player::GetSensedPawn()
-{
-	return UMyGameInstance::Get->m_SpawnManager->GetNearNpc(m_PlayerOwner->GetActorLocation());
-}
-

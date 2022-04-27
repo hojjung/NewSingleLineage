@@ -1,6 +1,7 @@
 #include "MyLib.h"
 #include "Managers/MyGameInstance.h"
 #include "Pawns/MyPlayerPawn.h"
+#include "Widgets/World/Menu/Storage/WidgetStorage.h"
 
 UWorld* UMyLib::GetUWorld()
 {
@@ -17,11 +18,6 @@ AMyPlayerPawn* UMyLib::GetPlayer()
 UInventory* UMyLib::GetPlayerInven()
 {
 	return UMyGameInstance::Get->m_Inven;
-}
-
-UInventory* UMyLib::GetPlayerStorage()
-{
-	return UMyGameInstance::Get->GetStorage();
 }
 
 AMonsterPawn* UMyLib::GetPickPocketTarget()
@@ -386,7 +382,7 @@ UInventory* UMyLib::FindEquipItem(const FName& id)
 		return UMyGameInstance::Get->m_Inven;
 	}
 	
-	for(auto Storage : UMyGameInstance::Get->m_AryStorage)
+	for(UInventory* Storage : UMyGameInstance::Get->GetStorages())
 	{
 		if(Storage->FindEquipItem(id))
 		{
@@ -405,7 +401,7 @@ UInventory* UMyLib::FindEquipItem(const FName& id,const FName** gidItem)
 		return UMyGameInstance::Get->m_Inven;
 	}
 	
-	for(auto Storage : UMyGameInstance::Get->m_AryStorage)
+	for(UInventory* Storage : UMyGameInstance::Get->GetStorages())
 	{
 		*gidItem = Storage->FindEquipItem(id);
 		
@@ -426,7 +422,7 @@ UInventory* UMyLib::FindEquipItem(const FName& id, int lv,const FName** gidItem)
 	 	return UMyGameInstance::Get->m_Inven;
 	 }
 	
-	for(auto Storage : UMyGameInstance::Get->m_AryStorage)
+	for(UInventory* Storage : UMyGameInstance::Get->GetStorages())
 	{
 		*gidItem = Storage->FindEquipItem(id, lv);
 		
@@ -445,7 +441,7 @@ UInventory* UMyLib::FindEquipItem(const FName& id, int lv)
 		return UMyGameInstance::Get->m_Inven;
 	}
 	
-	for(auto Storage : UMyGameInstance::Get->m_AryStorage)
+	for(UInventory* Storage : UMyGameInstance::Get->GetStorages())
 	{
 		if(Storage->FindEquipItem(id, lv))
 		{
@@ -462,7 +458,7 @@ UInventory* UMyLib::FindMiscItem(const FName& id)
 		return UMyGameInstance::Get->m_Inven;
 	}
 	
-	for(auto Storage : UMyGameInstance::Get->m_AryStorage)
+	for(auto Storage : UMyGameInstance::Get->GetStorages())
 	{
 		if(Storage->FindMisItem(id))
 		{
@@ -476,7 +472,7 @@ bool UMyLib::FindMiscItem(const FName& id, int count)
 {
 	int InvenStack = UMyGameInstance::Get->m_Inven->GetItemStack(id);
 	
-	for(auto Storage : UMyGameInstance::Get->m_AryStorage)
+	for(UInventory* Storage : UMyGameInstance::Get->GetStorages())
 	{
 		InvenStack += Storage->GetItemStack(id);
 	}
@@ -488,7 +484,7 @@ int UMyLib::GetMiscTotalCount(const FName& id)
 {
 	int InvenStack = UMyGameInstance::Get->m_Inven->GetItemStack(id);
 	
-	for(auto Storage : UMyGameInstance::Get->m_AryStorage)
+	for(UInventory* Storage : UMyGameInstance::Get->GetStorages())
 	{
 		InvenStack += Storage->GetItemStack(id);
 	}
@@ -500,7 +496,7 @@ int UMyLib::GetEquipTotalCount(const FName& oID, int level)
 {
 	int EquipCount = UMyGameInstance::Get->m_Inven->GetEquipItemCount(oID,level);
 	
-	for(auto Storage : UMyGameInstance::Get->m_AryStorage)
+	for(auto Storage : UMyGameInstance::Get->GetStorages())
 	{
 		EquipCount += Storage->GetEquipItemCount(oID,level);
 	}
@@ -525,7 +521,7 @@ void UMyLib::RemoveMiscItem(const FName& id, int count)
 		}
 		count -= InvenStack;
 	}
-	for(auto Storage : UMyGameInstance::Get->m_AryStorage)
+	for(UInventory* Storage : UMyGameInstance::Get->GetStorages())
 	{
 		InvenStack = Storage->GetItemStack(id);
 
@@ -555,4 +551,14 @@ bool UMyLib::IsCollecItemEquip(const FName& collecID, int index)
 	const FName ItemKey = UItemCollectionTable::GetItemCollecTable->FindRow<FItemCollecRow>(collecID,"")->m_AryItems[index].m_Item.RowName;
 
 	return UMyLib::IsEquip(ItemKey);
+}
+
+TArray<UInventory*>& UMyLib::GetPlayerStorage()
+{
+	return UMyGameInstance::Get->GetStorages();
+}
+
+UInventory* UMyLib::GetFocusedStroage()
+{
+	return UMyLib::GetCanvas()->GetStorageMenu()->GetTargetInven();
 }

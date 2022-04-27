@@ -141,8 +141,9 @@ void UWidgetCanvasWorld::OpenShop(const FName& traderID)
 	m_ShopPanel->SetShopPanel(traderID);
 }
 
-void UWidgetCanvasWorld::OpenStorage()
+void UWidgetCanvasWorld::OpenStorage(UInventory* storage)
 {
+	m_StoragePanel->SetTargetInven(storage);
 	m_StoragePanel->OpenPanel();
 }
 
@@ -309,4 +310,9 @@ void UWidgetCanvasWorld::ShowMainHUD(bool b)
 	{
 		m_MainHUD->SetVisibility(ESlateVisibility::Collapsed);
 	}
+}
+
+UWidgetStorage* UWidgetCanvasWorld::GetStorageMenu()
+{
+	return m_StoragePanel;
 }

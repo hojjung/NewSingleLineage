@@ -17,6 +17,8 @@ class MYJRPG_API USensor_Player : public USensor_LogicBase
 {
 	GENERATED_BODY()
 
+public:
+	USensor_Player();
 protected:
 	UPROPERTY()
 	AMyPlayerPawn* m_PlayerOwner;
@@ -24,12 +26,10 @@ protected:
 	UCapsuleComponent* m_Capsule;
 	UPROPERTY()
 	TArray<AActor*> m_AryIgnores;
+
 public:
-	USensor_Player();
-	
 	virtual void Init(ACombatUnitPawn* owner) override;
 	
+protected:
 	virtual void UpdateAISensing() override;
-
-	ACombatUnitPawn* GetSensedPawn();
 };

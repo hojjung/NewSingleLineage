@@ -31,6 +31,4 @@ public:
 	virtual void OnInteract();
 
 	float GetRadius() const;
-	
-	virtual void Control();
 };

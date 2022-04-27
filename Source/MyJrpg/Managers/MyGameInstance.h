@@ -39,6 +39,10 @@ class MYJRPG_API UMyGameInstance : public UGameInstance
 public:
 	static UMyGameInstance* Get;
 
+protected:
+	UPROPERTY()
+	TArray<UInventory*> m_AryStorage;
+	
 public:
 	UPROPERTY()
 	ULevelMoveManager* m_LevelMoveManager;
@@ -50,10 +54,7 @@ public:
 	URewardManager* m_RewardManager;
 	UPROPERTY()
 	UInventory* m_Inven;
-	UPROPERTY()
-	TArray<UInventory*> m_AryStorage;
-	UPROPERTY()
-	int m_nStorageIndex;
+	
 	UPROPERTY()
 	UEquipManager* m_EquipManager;
 	UPROPERTY()
@@ -98,10 +99,7 @@ protected:
 	
 	void IterateItemTableToRegister();
 	
-	void FirstTimeItemSetup();
-
 public:
-	
 	virtual void Init() override;
 
 	virtual void LoadComplete(const float LoadTime, const FString& MapName) override;
@@ -112,12 +110,9 @@ public:
 
 	void Tick(float deltaTime);
 
-	UInventory* GetStorage();
+	void AddStorage(UInventory* inven);
 
-	void SelectStorage(int index);
+	void RemoveStorage(UInventory* inven);
 
-	FORCEINLINE int GetCrntStorageIndex() const
-	{
-		return m_nStorageIndex;
-	}
+	TArray<UInventory*>& GetStorages();
 };

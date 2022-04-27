@@ -1,4 +1,6 @@
 #include "ConstructionManager.h"
+
+#include "MyGameInstance.h"
 #include "Engine/StaticMeshActor.h"
 #include "MyJrpg/MyLib.h"
 #include "MyJrpg/Actors/Field/Build/GridActor.h"
@@ -398,6 +400,7 @@ IBuildable* UConstructionManager::SpawnStructure(const FBuildDataRow& data)
 	IBuildable* StructActor = GetWorld()->SpawnActor<IBuildable>(data.m_ClassActor, Param);
 	Cast<AActor>(StructActor)->SetActorScale3D(FVector(0.885f));
 	StructActor->SetBuildData(data);
+
 	return StructActor;
 }
 
@@ -438,6 +441,12 @@ void UConstructionManager::ConfirmBuild()
 	const FBuildDataRow& BuildRow = m_PreviewActor->GetBuildData();
 	
 	m_PreviewActor->ConfirmBuild();
+
+	if(Cast<IFocusable>(m_PreviewActor.GetObject()))
+	{
+		UMyGameInstance::Get->m_SpawnManager->AddFocusActor(m_PreviewActor.GetObject());
+	}
+	
 	m_PreviewActor = nullptr;
 
 	SpawnPreviewActor(Loc, &BuildRow);
@@ -485,6 +494,10 @@ void UConstructionManager::Erase(IBuildable* buildActor)
 	bool isHori;
 	GetStructureHolder(buildActor,Holder,isHori);
 
+	if(Cast<IFocusable>((*Holder).GetObject()))
+	{
+		UMyGameInstance::Get->m_SpawnManager->RemoveFocusActor((*Holder).GetObject());
+	}
 	Cast<AActor>((*Holder).GetObject())->Destroy();
 	(*Holder) = nullptr;
 }

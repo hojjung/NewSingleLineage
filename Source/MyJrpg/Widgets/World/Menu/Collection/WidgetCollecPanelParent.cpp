@@ -79,7 +79,7 @@ void UWidgetCollecPanelParent::Open()
 
 	m_AryUpdateElements[0] = UMyGameInstance::Get->m_Inven->m_OnInvenChanged.AddUObject(this, &UWidgetCollecPanelParent::UpdateElements);
 	int Iter = 1;
-	for(UInventory* Storage : UMyGameInstance::Get->m_AryStorage)
+	for(UInventory* Storage : UMyGameInstance::Get->GetStorages())
 	{
 		m_AryUpdateElements[Iter] = Storage->m_OnInvenChanged.AddUObject(this, &UWidgetCollecPanelParent::UpdateElements);
 
@@ -97,7 +97,7 @@ void UWidgetCollecPanelParent::OnClose()
 
 	UMyGameInstance::Get->m_Inven->m_OnInvenChanged.Remove(m_AryUpdateElements[0]);
 	int Iter = 1;
-	for(UInventory* Storage : UMyGameInstance::Get->m_AryStorage)
+	for(UInventory* Storage : UMyGameInstance::Get->GetStorages())
 	{
 		Storage->m_OnInvenChanged.Remove(m_AryUpdateElements[Iter]);
 

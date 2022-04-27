@@ -24,6 +24,8 @@ protected:
 	UPROPERTY(VisibleAnywhere)
 	UStaticMeshComponent* m_MeshComp;
 	UPROPERTY()
+	UInventory* m_Inven;
+	UPROPERTY()
 	TArray<UMaterialInterface*> m_AryMats;
 	const FBuildDataRow* m_Data;
 protected:
