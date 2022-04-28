@@ -114,3 +114,17 @@ void UPlAttchActorManage::SpawnEquipActor(int indexSlot, TSubclassOf<AAttachEqui
 
 	SpawnActor->AttachToComponent(m_PlOwner->GetSkMesh(),FAttachmentTransformRules(EAttachmentRule::SnapToTarget,false),SocketName);
 }
+
+void UPlAttchActorManage::ShowWeapon()
+{
+	int WeapIndex = (int)(EEquipSlotType::Weapon) - 1;
+	if(m_AryEqupActors[WeapIndex])
+		m_AryEqupActors[WeapIndex]->SetActive(true);
+}
+
+void UPlAttchActorManage::HideWeapon()
+{
+	int WeapIndex = (int)(EEquipSlotType::Weapon) - 1;
+	if(m_AryEqupActors[WeapIndex])
+		m_AryEqupActors[WeapIndex]->SetActive(false);
+}

@@ -91,12 +91,12 @@ void ADoorWood01::TickActor(float DeltaTime, ELevelTick TickType, FActorTickFunc
 
 	if(m_bIsDoorOpen)
 	{
-		m_fRot -= 200.f * DeltaTime;
+		m_fRot -= 400.f * DeltaTime;
 		m_fRot = FMath::Max(m_fRot, -125.f);
 	}
 	else
 	{
-		m_fRot += 200.f * DeltaTime;
+		m_fRot += 400.f * DeltaTime;
 		m_fRot = FMath::Min(m_fRot, 0.f);
 	}
 	m_MeshDoor->SetRelativeRotation(FRotator(0,m_fRot,0));

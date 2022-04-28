@@ -41,6 +41,11 @@ protected:
 	void UpdateEquipActor();
 
 	void SpawnEquipActor(int indexSlot, TSubclassOf<AAttachEquipmentBase> classEquipActor);
+
+public:
+	void ShowWeapon();
+
+	void HideWeapon();
 };
 
 

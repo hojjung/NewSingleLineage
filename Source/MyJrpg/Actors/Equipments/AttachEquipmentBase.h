@@ -20,5 +20,7 @@ protected:
 	
 public:	
 	FName GetSocketName();
+
+	void SetActive(bool b);
 };
 

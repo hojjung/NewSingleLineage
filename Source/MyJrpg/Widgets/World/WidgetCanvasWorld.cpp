@@ -56,6 +56,8 @@ void UWidgetCanvasWorld::NativeOnInitialized()
 
 	m_Calculator->SetVisibility(ESlateVisibility::Collapsed);
 
+	UMyGameInstance::Get->m_LevelMoveManager->m_OnLvelMoveComp.AddUObject(this, &UWidgetCanvasWorld::OnZoneMove);
+	
 	UMyGameInstance::Get->m_LevelMoveManager->m_OnLvelMoveCompText.AddUObject(this, &UWidgetCanvasWorld::ShowZone);
 
 	UMyGameInstance::Get->m_PlayerStatManager->m_OnLevelChanged.AddUObject(this, &UWidgetCanvasWorld::ShowLevelUpWindow);
@@ -66,8 +68,6 @@ void UWidgetCanvasWorld::NativeOnInitialized()
 	
 	m_BtnPet->OnClicked.AddDynamic(this,&UWidgetCanvasWorld::OpenPet);
 
-	m_BtnBuild->OnClicked.AddDynamic(this,&UWidgetCanvasWorld::OpenBuild);
-
 	
 }
 
@@ -77,8 +77,8 @@ void UWidgetCanvasWorld::ToggleMenu()
 	
 	if(m_WrapboxMenu->IsVisible())
 	{
-		
-		//Close
+		if(m_bIsBuildable)
+			m_BtnBuild->SetVisibility(ESlateVisibility::Visible);
 		m_WrapboxMenu->SetVisibility(ESlateVisibility::HitTestInvisible);
 		UBUITween::Create(m_WrapboxMenu,0.1f)
 		.FromOpacity(1)
@@ -87,12 +87,14 @@ void UWidgetCanvasWorld::ToggleMenu()
 			{
 				Owner->SetVisibility(ESlateVisibility::Collapsed);
 				m_BtnMenu->SetVisibility(ESlateVisibility::Visible);
-				
+			
 			}))
 		.Begin();
 	}
 	else
 	{
+		if(m_bIsBuildable)
+			m_BtnBuild->SetVisibility(ESlateVisibility::Collapsed);
 		m_WrapboxMenu->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
 		UBUITween::Create(m_WrapboxMenu,0.1f)
 		.FromOpacity(0)
@@ -100,6 +102,7 @@ void UWidgetCanvasWorld::ToggleMenu()
 		.OnComplete( FBUITweenSignature::CreateLambda([&]( UWidget* Owner )
 			{
 				m_BtnMenu->SetVisibility(ESlateVisibility::Visible);
+			
 			}))
 		.Begin();
 	}
@@ -315,4 +318,22 @@ void UWidgetCanvasWorld::ShowMainHUD(bool b)
 UWidgetStorage* UWidgetCanvasWorld::GetStorageMenu()
 {
 	return m_StoragePanel;
+}
+
+void UWidgetCanvasWorld::OnZoneMove(const FName& zoneID)
+{
+	if(zoneID == TEXT("PlayerHome"))
+	{
+		m_BtnBuild->OnClicked.AddDynamic(this,&UWidgetCanvasWorld::OpenBuild);
+
+		m_BtnBuild->SetVisibility(ESlateVisibility::Visible);
+
+		m_bIsBuildable = true;
+	}
+	else
+	{
+		m_BtnBuild->SetVisibility(ESlateVisibility::Collapsed);
+
+		m_bIsBuildable = false;
+	}
 }

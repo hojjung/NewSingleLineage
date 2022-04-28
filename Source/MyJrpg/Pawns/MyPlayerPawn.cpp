@@ -322,10 +322,12 @@ void AMyPlayerPawn::SetSneak()
 	if(m_bIsSneaking)
 	{
 		m_Movement->m_fSpeedMultiple = 0.65f;
+		m_AttchActorMng->HideWeapon();
 	}
 	else
 	{
 		m_Movement->m_fSpeedMultiple = 1.f;
+		m_AttchActorMng->ShowWeapon();
 	}
 }
 

@@ -137,6 +137,7 @@ protected:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (BindWidget))
 	UWidgetBuildPanel* m_BuildPanel;
 	//
+	bool m_bIsBuildable;
 protected:
 	void HideHUD();
 
@@ -149,6 +150,8 @@ protected:
 	virtual void NativeOnInitialized() override;
 	
 	virtual void OnAnimationFinishedPlaying(UUMGSequencePlayer& Player) override;
+
+	void OnZoneMove(const FName& zoneID);
 	
 public:
 	UWidgetEquipInvenPanel* GetEquipInvenMenu();
@@ -206,3 +209,4 @@ public:
 
 	UWidgetStorage* GetStorageMenu();
 };
+

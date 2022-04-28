@@ -86,8 +86,6 @@ public:
 
 	void ClearStopMoveDelegate();
 public:
-	void SetActive(bool isActive);
-
 	float GetRadius() const;
 	
 	void StopMove();

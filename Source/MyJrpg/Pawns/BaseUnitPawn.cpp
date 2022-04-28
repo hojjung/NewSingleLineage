@@ -461,19 +461,6 @@ void ABaseUnitPawn::ClearStopMoveDelegate()
 	GetWorldTimerManager().ClearTimer(m_MoveStopTimer);
 }
 
-void ABaseUnitPawn::SetActive(bool isActive)
-{
-	SetHidden(!isActive);
-
-	SetActorTickEnabled(isActive);
-	
-	for(auto Comp : GetComponents())
-	{
-		Comp->Activate(isActive);
-		Comp->SetComponentTickEnabled(isActive);
-	}
-}
-
 FText ABaseUnitPawn::GetPawnName() const
 {
 	return m_PawnName;
