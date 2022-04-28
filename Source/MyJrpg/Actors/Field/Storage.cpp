@@ -90,3 +90,8 @@ void AStorage::ShowSelect(bool b)
 {
 	m_WidgetComp->ShowSelect(b);
 }
+
+bool AStorage::IsEraseable()
+{
+	return m_Inven->GetUsingSlotCount() <= 0;
+}

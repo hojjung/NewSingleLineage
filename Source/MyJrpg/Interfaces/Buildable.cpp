@@ -8,3 +8,8 @@ bool IBuildable::HasNextUpgrade()
 {
 	return false;
 }
+
+bool IBuildable::IsEraseable()
+{
+	return true;
+}

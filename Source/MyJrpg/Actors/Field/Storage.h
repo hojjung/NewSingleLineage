@@ -39,4 +39,5 @@ public:
 	virtual void ShowBuildWidget(bool b)override;
 	virtual void ConfirmBuild()override;
 	virtual void ShowSelect(bool b)override;
+	virtual bool IsEraseable() override;
 };

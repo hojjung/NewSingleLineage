@@ -283,7 +283,6 @@ bool UConstructionManager::GetEmptyLoc(const FVector& inloc, FVector& outEmptyLo
 			return GetEmptyFurnitureLoc(X,Y,outEmptyLoc, outEmptyRot);
 		}
 	case EBuildType::Wall:
-	case EBuildType::Door:
 		{
 			bool IsHori = true;
 			GetWallIndex(inloc,X,Y,IsHori);
@@ -360,7 +359,6 @@ bool UConstructionManager::IsBuildable()
 		}
 			break;
 	case EBuildType::Wall:
-	case EBuildType::Door:
 		{
 			bool IsHori;
 			GetWallIndex(Cast<AActor>(m_PreviewActor.GetObject())->GetActorLocation(), X, Y, IsHori);
@@ -404,6 +402,59 @@ IBuildable* UConstructionManager::SpawnStructure(const FBuildDataRow& data)
 	return StructActor;
 }
 
+bool UConstructionManager::IsEraseable()
+{
+	switch (m_FocusActor->GetBuildData().m_BuildType)
+	{
+	case EBuildType::Foundation:
+		{
+			int X,Y;
+			FVector Loc = Cast<AActor>(m_FocusActor.GetObject())->GetActorLocation();		
+			GetIndex(Loc,X,Y);
+			return !m_Grid[X][Y].m_Furniture.GetObject();
+		}
+	case EBuildType::Furniture:
+		return Cast<IBuildable>(m_FocusActor.GetObject())->IsEraseable();
+	}
+	return true;
+}
+
+void UConstructionManager::OnErase(const FVector& Loc)
+{
+	int X,Y;
+	
+	GetIndex(Loc,X,Y);
+	
+	if(0 > Y - 1 || !m_Grid[X][Y - 1].m_Foundation)
+	{
+		TScriptInterface<IBuildable>& Holder = m_WallHorizontal[X].m_Walls[Y];
+		TryEraseActor(Holder);
+	}
+	if(FGlobalVariable::GRID_COUNT <= Y + 1 || !m_Grid[X][Y + 1].m_Foundation)//없다면 인데 최대 인덱스를 초과해서 똥값확인중,인덱스 초과시 어떻게?없는것으로 처줘야함
+	{
+		TScriptInterface<IBuildable>& Holder = m_WallHorizontal[X].m_Walls[Y + 1];//n
+		TryEraseActor(Holder);
+	}
+	if(0 > X - 1 || !m_Grid[X - 1][Y].m_Foundation)
+	{
+		TScriptInterface<IBuildable>& Holder = m_WallVertical[X].m_Walls[Y];//w
+		TryEraseActor(Holder);
+	}
+	if(FGlobalVariable::GRID_COUNT <= X + 1 && !m_Grid[X + 1][Y].m_Foundation)//FGlobalVariable::GRID_COUNT > X + 1 
+	{
+		TScriptInterface<IBuildable>& Holder = m_WallVertical[X + 1].m_Walls[Y];//e
+		TryEraseActor(Holder);
+	}
+}
+
+void UConstructionManager::TryEraseActor(TScriptInterface<IBuildable>& holder)
+{
+	if(!holder.GetObject())
+		return;
+	Cast<AActor>(holder.GetObject())->Destroy();
+	holder = nullptr;
+}
+
 void UConstructionManager::ConfirmBuild()
 {
 	int X,Y;
@@ -426,7 +477,6 @@ void UConstructionManager::ConfirmBuild()
 		}
 		break;
 	case EBuildType::Wall:
-	case EBuildType::Door:
 		{
 			bool IsHori;
 			GetWallIndex(Loc,X,Y,IsHori);
@@ -490,6 +540,10 @@ void UConstructionManager::CancelSelect()
 
 void UConstructionManager::Erase(IBuildable* buildActor)
 {
+	if(!IsEraseable())
+	{
+		return;
+	}
 	TScriptInterface<IBuildable> * Holder;
 	bool isHori;
 	GetStructureHolder(buildActor,Holder,isHori);
@@ -498,8 +552,12 @@ void UConstructionManager::Erase(IBuildable* buildActor)
 	{
 		UMyGameInstance::Get->m_SpawnManager->RemoveFocusActor((*Holder).GetObject());
 	}
-	Cast<AActor>((*Holder).GetObject())->Destroy();
-	(*Holder) = nullptr;
+	if(buildActor->GetBuildData().m_BuildType == EBuildType::Foundation)
+	{
+		FVector Loc = Cast<AActor>((*Holder).GetObject())->GetActorLocation(); 
+		OnErase(Loc);
+	}
+	TryEraseActor(*Holder);
 }
 
 void UConstructionManager::Upgrade(IBuildable* buildActor)
@@ -509,18 +567,14 @@ void UConstructionManager::Upgrade(IBuildable* buildActor)
 	GetStructureHolder(buildActor,Holder,isHori);
 	AStructureActor* Structure = Cast<AStructureActor>((*Holder).GetObject()); 
 	if(!Structure->TryUpgrade())
-	{
 		return;
-	}
 	FVector Loc = Structure->GetActorLocation();
 	FName NextID = Structure->GetBuildData().m_NextUpgradeActorID;
 	const FBuildDataRow* NextBuild = UBuildData::GetBuildTable->FindRow<FBuildDataRow>(NextID,""); 
 	AStructureActor* NewUpgradeActor = Cast<AStructureActor>(SpawnStructure(*NextBuild));
 	NewUpgradeActor->SetActorLocation(Loc);
 	if(!isHori)
-	{
 		NewUpgradeActor->SetActorRotation(FRotator(0,90,0));
-	}
 	NewUpgradeActor->ShowSelect(true);
 	Structure->Destroy();
 	(*Holder) = NewUpgradeActor;
@@ -546,7 +600,6 @@ void UConstructionManager::GetStructureHolder(IBuildable* want, TScriptInterface
 		isHori = false;
 		return;
 	case EBuildType::Wall:
-	case EBuildType::Door:
 		{
 			GetWallIndex(Loc,X,Y,isHori);
 			if(isHori)

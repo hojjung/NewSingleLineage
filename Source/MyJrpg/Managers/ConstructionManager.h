@@ -110,6 +110,12 @@ private:
 
 	IBuildable* SpawnStructure(const FBuildDataRow& data);
 
+	bool IsEraseable();
+
+	void OnErase(const FVector& Loc);
+
+	void TryEraseActor(TScriptInterface<IBuildable>& holder);
+
 public:
 	void Init();
 	
@@ -126,7 +132,6 @@ public:
 	
 	void EndBuilding();
 	
-public:
 	void Cancel();
 	
 	void ConfirmBuild();
@@ -144,13 +149,5 @@ public:
 	void Upgrade(IBuildable* buildActor);
 
 	void GetStructureHolder(IBuildable* want, TScriptInterface<IBuildable> *& holder, bool &isHori);
+	
 };
-
-//건설 버튼을 누루면
-//건설 할 수있는 모든 구조물이 보인다.
-//구조물 아이콘을 터치하면 플레이어 발근처에서
-//비어있는 해당 구조물 칸에 포지션 스타트
-//이후 초록색 메테리얼, 지을수 없다면 빨간색 메테리얼
-//초록색일때 터치하면 프리뷰 액터가 정식액터가 되어 배정되고
-//프리뷰 액터는 널처리
-
