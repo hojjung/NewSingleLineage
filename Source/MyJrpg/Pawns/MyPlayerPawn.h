@@ -72,6 +72,8 @@ protected:
 
 	bool m_bIsSneaking;
 
+	bool m_bIsInteracting;
+
 private:
 	void DealBaseMeleeAttack();
 
@@ -157,6 +159,10 @@ public:
 	virtual bool IsSneak() const override;
 
 	void SetSneak();
+
+	void SetInteracting(bool b);
+
+	bool GetInteracting() const;
 };
 
 

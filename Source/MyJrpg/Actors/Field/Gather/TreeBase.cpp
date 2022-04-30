@@ -8,8 +8,7 @@
 
 ATreeBase::ATreeBase()
 {
-	m_Capsule->InitCapsuleSize(100, 100);
-	m_Capsule->SetRelativeLocation(FVector(100,0,0));
+	m_Capsule->InitCapsuleSize(100, 130);
 	m_Capsule->SetRelativeRotation(FRotator(0,180,0));
 
 	static ConstructorHelpers::FObjectFinder<UStaticMesh>
@@ -19,7 +18,7 @@ ATreeBase::ATreeBase()
 	FoundTrunk(TEXT("StaticMesh'/Game/08_EnvironmentMesh/MyGather/Tree09Btm.Tree09Btm'"));
 
 	static ConstructorHelpers::FObjectFinder<UAnimMontage>
-	FoundAnim(TEXT("AnimMontage'/Game/09_SharedAnimations/Player/Axe_Swing_Down_Anim_Montage.Axe_Swing_Down_Anim_Montage'"));
+	FoundAnim(TEXT("AnimMontage'/Game/09_SharedAnimations/Player/Gather_Axe.Gather_Axe'"));
 
 	static ConstructorHelpers::FObjectFinder<USoundBase>
 	FoundSound(TEXT("SoundWave'/Game/Sound/Tree_Falling_4.Tree_Falling_4'"));
@@ -52,6 +51,16 @@ ATreeBase::ATreeBase()
 	m_Sound = FoundSound.Object;
 
 	PrimaryActorTick.bCanEverTick = true;
+
+	m_ShadowMeshComp = CreateDefaultSubobject<UStaticMeshComponent>("StShadow");
+	static ConstructorHelpers::FObjectFinder<UStaticMesh> FoundSt(
+			TEXT("StaticMesh'/Game/03_VisualEffect/FX/Effects/FX_Meshes/SM_CharM_Shadow.SM_CharM_Shadow'"));
+	m_ShadowMeshComp->SetStaticMesh(FoundSt.Object);
+	m_ShadowMeshComp->SetupAttachment(RootComponent);
+	m_ShadowMeshComp->SetRelativeLocation(FVector(0,0,5.f));
+	m_ShadowMeshComp->SetRelativeScale3D(FVector(10));
+	m_ShadowMeshComp->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+	m_ShadowMeshComp->SetCanEverAffectNavigation(false);
 }
 
 void ATreeBase::BeginPlay()
@@ -63,15 +72,19 @@ void ATreeBase::BeginPlay()
 
 void ATreeBase::OnInteract()
 {
-	Super::OnInteract();
+	if(m_Player->GetInteracting())
+	{
+		return;
+	}
 
 	m_Player->PlayAnimMontage(m_Motion);
 	m_Player->HomingRotateToTarget(0);
+	m_Player->SetInteracting(true);
 }
 
 void ATreeBase::OnHarvestMotionDone()
 {
-	
+	m_Player->SetInteracting(false);
 }
 
 void ATreeBase::OnTakeChopping()
@@ -134,7 +147,8 @@ void ATreeBase::Tick(float DeltaSeconds)
 		{
 			SetActorTickEnabled(false);
 			
-			m_MeshTree->SetHiddenInGame(true);
+			m_MeshTree->DestroyComponent();
+			m_MeshTree = nullptr;
 		}
 	}
 }

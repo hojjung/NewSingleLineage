@@ -27,6 +27,7 @@ ACombatUnitPawn::ACombatUnitPawn(const FObjectInitializer& objInit):Super(objIni
 	m_BulletTarget->SetupAttachment(RootComponent);
 
 	m_bCanUseSkill = true;
+
 }
 
 void ACombatUnitPawn::CreateSetDeathCurve(float fullLength)

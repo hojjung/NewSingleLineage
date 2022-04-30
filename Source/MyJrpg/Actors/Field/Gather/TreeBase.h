@@ -28,6 +28,8 @@ public:
 	ATreeBase();
 
 protected:
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+	UStaticMeshComponent* m_ShadowMeshComp;
 	UPROPERTY(VisibleAnywhere)
 	UStaticMeshComponent* m_MeshTree;
 	UPROPERTY(VisibleAnywhere)

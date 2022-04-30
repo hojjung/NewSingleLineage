@@ -23,6 +23,13 @@ UMyMovement::UMyMovement(const FObjectInitializer& obj)
 	ResetMoveState();
 }
 
+void UMyMovement::BeginPlay()
+{
+	Super::BeginPlay();
+	m_Owner = GetOwner<ACombatUnitPawn>();
+	SnapToNav();
+}
+
 void UMyMovement::SnapToNav()
 {
 	FVector ActorLoc = GetActorLocation();
@@ -31,7 +38,7 @@ void UMyMovement::SnapToNav()
 	{
 		UMyLib::GetNavSys()->GetRandomPointInNavigableRadius(ActorLoc,1000,Loc);
 	}
-	Cast<ACombatUnitPawn>(GetOwner())->SetActorFeetLocation(Loc.Location);
+	m_Owner->SetActorFeetLocation(Loc.Location);
 }
 
 void UMyMovement::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
@@ -68,7 +75,7 @@ void UMyMovement::TickComponent(float DeltaTime, ELevelTick TickType, FActorComp
 		if (Hit.IsValidBlockingHit())
 		{
 			HandleImpact(Hit, DeltaTime, Delta);
-
+			
 			SlideAlongSurface(Delta, 1.f - Hit.Time, Hit.Normal, Hit, true);
 		}
 
@@ -151,9 +158,22 @@ void UMyMovement::HandleImpact(const FHitResult& Hit, float TimeSlice, const FVe
 	}
 }
 
-void UMyMovement::BeginPlay()
+
+
+bool UMyMovement::CanStepUp(const FHitResult& Hit) const
 {
-	Super::BeginPlay();
-	SnapToNav();
+	if (!Hit.IsValidBlockingHit())
+		return false;
+	const UPrimitiveComponent* HitComponent = Hit.Component.Get();
+	if (!HitComponent)
+		return true;
+	if (!HitComponent->CanCharacterStepUp(m_Owner))
+		return false;
+	const AActor* HitActor = Hit.GetActor();
+	if (!HitActor)
+		return true;
+	if (!HitActor->CanBeBaseForCharacter(m_Owner))
+		return false;
+	return true;
 }
 

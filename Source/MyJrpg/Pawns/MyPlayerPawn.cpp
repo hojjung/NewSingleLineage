@@ -51,6 +51,8 @@ AMyPlayerPawn::AMyPlayerPawn(const FObjectInitializer& objInit):Super(objInit)
 	m_bOnceMoveLock = false;
 	//
 	m_ShadowMeshComp->SetRelativeScale3D(FVector(4));
+
+	m_bIsInteracting = false;
 }
 
 void AMyPlayerPawn::BeginPlay()
@@ -165,6 +167,8 @@ void AMyPlayerPawn::Tick(float DeltaTime)
 		
 		m_Movement->SetActive(true);
 
+		SetInteracting(false);
+
 		FVector Loc = GetCapsule()->GetComponentLocation();
 
 		FVector Delta = (m_DeltaX + m_DeltaY) * 100.0f;
@@ -238,6 +242,10 @@ void AMyPlayerPawn::ShowPopupText(float nbr, ETextType t)
 
 void AMyPlayerPawn::SetFocusedTarget(IFocusable* target)
 {
+	if(m_bIsInteracting)
+	{
+		return;
+	}
 	Super::SetFocusedTarget(target);
 
 	m_OnFocus.Broadcast(target);
@@ -329,6 +337,16 @@ void AMyPlayerPawn::SetSneak()
 		m_Movement->m_fSpeedMultiple = 1.f;
 		m_AttchActorMng->ShowWeapon();
 	}
+}
+
+void AMyPlayerPawn::SetInteracting(bool b)
+{
+	m_bIsInteracting = b;
+}
+
+bool AMyPlayerPawn::GetInteracting() const
+{
+	return m_bIsInteracting;
 }
 
 void AMyPlayerPawn::OnNotifyTrigger(const FName& name)
