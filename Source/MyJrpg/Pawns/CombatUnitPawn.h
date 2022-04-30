@@ -98,7 +98,8 @@ public:
 
 	virtual void Tick(float DeltaSeconds) override;
 	
-	void HomingRotateToTarget();
+	void HomingRotateToTarget(float speedTime = 5.5f);
+	
 public://took dmg	
 	virtual bool TakeDmg(float amount,ACombatUnitPawn* attacker);
 	

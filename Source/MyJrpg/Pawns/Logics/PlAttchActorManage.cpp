@@ -10,6 +10,8 @@ UPlAttchActorManage::UPlAttchActorManage()
 	static ConstructorHelpers::FClassFinder<AAttachEquipmentBase>
 	FoundEquip(TEXT("Blueprint'/Game/Blueprints/EquipActor/BP_DefaultSword.BP_DefaultSword_C'"));
 	m_ClassEquip = FoundEquip.Class;
+	//StaticMesh'/Game/09_SharedAnimations/Farming_And_Mining/Meshes/Axe_Tool_SM.Axe_Tool_SM'
+	//StaticMesh'/Game/09_SharedAnimations/Farming_And_Mining/Meshes/Pickaxe_SM.Pickaxe_SM'
 }
 
 void UPlAttchActorManage::Init(AMyPlayerPawn* my_player_pawn)

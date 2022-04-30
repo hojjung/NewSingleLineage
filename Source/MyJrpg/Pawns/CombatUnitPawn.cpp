@@ -60,7 +60,7 @@ bool ACombatUnitPawn::TryHit(const FStatGroup& other)
 	return RandAccu >= RandAvoid;
 }
 
-void ACombatUnitPawn::HomingRotateToTarget()
+void ACombatUnitPawn::HomingRotateToTarget(float speedTime)
 {
 	if (!GetFocusedTarget())
 	{
@@ -71,7 +71,7 @@ void ACombatUnitPawn::HomingRotateToTarget()
 
 	NewRot.Yaw = UKismetMathLibrary::RInterpTo(
 		NewRot, UKismetMathLibrary::FindLookAtRotation(GetActorLocation(), Cast<AActor>(GetFocusedTarget())->GetActorLocation()),
-		GetWorld()->GetDeltaSeconds(), 5.5f).Yaw;
+		GetWorld()->GetDeltaSeconds(), speedTime).Yaw;
 
 	SetActorRotation(NewRot);
 }
