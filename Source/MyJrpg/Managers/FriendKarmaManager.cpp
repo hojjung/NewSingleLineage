@@ -45,7 +45,12 @@ EKarma UFriendKarmaManager::GetUnitKarma(const ACombatUnitPawn* Other)
 {
 	const FName& TeamID = Other->GetTeamID();
 
-	int Karma = GetKarma(TeamID);
+	return GetUnitKarma(TeamID);
+}
+
+EKarma UFriendKarmaManager::GetUnitKarma(const FName& id)
+{
+	int Karma = GetKarma(id);
 
 	if(Karma >= FGlobalVariable::KARMA_FRIEND)
 	{

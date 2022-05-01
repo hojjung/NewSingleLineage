@@ -28,6 +28,8 @@ public:
 
 	EKarma GetUnitKarma(const ACombatUnitPawn* Other);
 
+	EKarma GetUnitKarma(const FName& id);
+
 	void IncreaseKarma(const FName& id, int v);
 
 	void DecreaseKarma(const FName& id, int v);

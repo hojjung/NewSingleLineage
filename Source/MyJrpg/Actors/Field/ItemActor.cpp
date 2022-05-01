@@ -35,7 +35,34 @@ void AItemActor::Obtain()//주변에서 누가 보고있으면
 {
 	if(HasOwnerTeamID())
 	{
-		//해당 팀ID를 가진 사람이 보고있으면
+		switch (UMyGameInstance::Get->m_TeamKarma->GetUnitKarma(m_OwnerID))
+		{
+		case EKarma::Friendly:
+			break;
+		case EKarma::Neutral:
+		case EKarma::Hate:
+			UMyGameInstance::Get->m_TeamKarma->DecreaseKarma(m_OwnerID, 30);
+			break;
+		}
+	}
+
+	bool Result = false;
+	
+	if(UMyLib::IsEquip(m_ItemID))
+	{
+		FName GId = UMyLib::GenerateEquipItemHashKey(m_ItemID,this);
+		
+		Result = UMyGameInstance::Get->m_Inven->AddEquipItem(GId,m_nCountLevel);
+	}
+	else
+	{
+		Result = UMyGameInstance::Get->m_Inven->AddItem(m_ItemID,m_nCountLevel);
+	}
+	
+	if(Result)
+	{
+		UMyGameInstance::Get->m_SpawnManager->RemoveFocusActor(this);
+		Destroy();
 	}
 }
 

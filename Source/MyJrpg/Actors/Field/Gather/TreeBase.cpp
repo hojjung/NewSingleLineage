@@ -12,7 +12,7 @@ ATreeBase::ATreeBase()
 {
 	PrimaryActorTick.bCanEverTick = true;
 	
-	m_Capsule->InitCapsuleSize(34.0f, 50.0f);
+	m_Capsule->InitCapsuleSize(50, 50.0f);
 
 	m_MeshTree = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("m_MeshTree"));
 	m_MeshTree->CanCharacterStepUpOn = ECB_No;
