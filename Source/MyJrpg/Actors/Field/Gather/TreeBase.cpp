@@ -47,7 +47,8 @@ ATreeBase::ATreeBase()
 
 	m_nTreeHp = 3;
 }
-
+//(X=0.000005,Y=20.000000,Z=-10.000000) btm
+//
 void ATreeBase::SetEntity(const FGatherDataRow& data, AMyPlayerPawn* pl)
 {
 	m_Player = pl;
@@ -59,11 +60,25 @@ void ATreeBase::SetEntity(const FGatherDataRow& data, AMyPlayerPawn* pl)
 	m_MeshTrunk->SetStaticMesh(m_GatherAsset->m_BtmMesh);
 
 	StartDeathEffectMaterial(data.m_fDisappearDelay);
+
+	m_MeshTree->SetRelativeScale3D(FVector(data.m_fTopMeshScale));
+	
+	m_MeshTrunk->SetRelativeScale3D(FVector(data.m_fBtmMeshScale));
+
+	m_MeshTree->SetRelativeLocation(data.m_TopMeshOffset);
+	
+	m_MeshTrunk->SetRelativeLocation(data.m_BtmMeshOffset);
+
+	m_bUsePhysics = data.m_bUsePhysics;
 }
 
 void ATreeBase::OnInteract()
 {
 	if(m_Player->GetInteracting())
+	{
+		return;
+	}
+	if(m_nTreeHp<=0)
 	{
 		return;
 	}
@@ -85,15 +100,16 @@ void ATreeBase::OnTakeChopping()
 	if(m_nTreeHp<=0)
 	{
 		OnGatherDone();
-		UMyGameInstance::Get->m_SpawnManager->RemoveFocusActor(this);
-		UGameplayStatics::PlaySoundAtLocation(GetWorld(),m_GatherAsset->m_SoundGatherEnd,GetActorLocation());
 	}
 }
 
 void ATreeBase::OnGatherDone()
 {
+	UMyGameInstance::Get->m_SpawnManager->RemoveFocusActor(this);
+	UGameplayStatics::PlaySoundAtLocation(GetWorld(),m_GatherAsset->m_SoundGatherEnd,GetActorLocation());
 	m_MeshTree->SetCollisionEnabled(ECollisionEnabled::PhysicsOnly);
-	m_MeshTree->SetSimulatePhysics(true);
+	if(m_bUsePhysics)
+		m_MeshTree->SetSimulatePhysics(true);
 }
 
 void ATreeBase::CreateSetDeathCurve(float fullLength)

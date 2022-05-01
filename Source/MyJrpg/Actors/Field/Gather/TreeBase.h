@@ -43,6 +43,8 @@ protected:
 
 	TSoftObjectPtr<UGatherAsset> m_GatherAsset;
 
+	bool m_bUsePhysics;
+
 private:
 	FFloatCurve m_CurveDeathAnim;
 
