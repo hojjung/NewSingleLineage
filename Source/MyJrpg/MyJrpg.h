@@ -191,3 +191,4 @@ enum class EBuildType :uint8
 	Wall,
 	Furniture
 };
+

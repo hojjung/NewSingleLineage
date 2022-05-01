@@ -7,6 +7,8 @@
 #include "MyJrpg/Pawns/MyPlayerPawn.h"
 #include "TreeBase.generated.h"
 
+class UGatherAsset;
+struct FGatherDataRow;
 /**
  *	StaticMesh'/Game/08_EnvironmentMesh/ARPGEnvironment/Meshes/Natures/SM_Aspen_Tree_01.SM_Aspen_Tree_01'
  * StaticMesh'/Game/08_EnvironmentMesh/InfinityBladeGrassLands/Environments/Plains/Env_Plains_Flora/StaticMesh/SM_Plains_Tree_Stump01.SM_Plains_Tree_Stump01'
@@ -34,14 +36,12 @@ protected:
 	UStaticMeshComponent* m_MeshTree;
 	UPROPERTY(VisibleAnywhere)
 	UStaticMeshComponent* m_MeshTrunk;
-	UPROPERTY(VisibleAnywhere)
-	UAnimMontage* m_Motion;
 	UPROPERTY()
 	AMyPlayerPawn* m_Player;
-	UPROPERTY()
-	USoundBase* m_Sound;
 
 	int m_nTreeHp;
+
+	TSoftObjectPtr<UGatherAsset> m_GatherAsset;
 
 private:
 	FFloatCurve m_CurveDeathAnim;
@@ -58,13 +58,13 @@ private:
 	void SetDeathEffectMaterial(float deltaTime);
 	
 protected:
-	virtual void BeginPlay() override;
-
 	virtual void OnInteract() override;
 
 	virtual void Tick(float DeltaSeconds) override;
 
 public:
+	void SetEntity(const FGatherDataRow& data, AMyPlayerPawn* pl);
+	
 	virtual void OnTakeChopping();
 
 	virtual void OnHarvestMotionDone();

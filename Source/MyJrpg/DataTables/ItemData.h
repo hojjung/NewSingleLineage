@@ -2,12 +2,26 @@
 
 #include "NPCPaletteDataAsset.h"
 #include "MyJrpg/MyJrpg.h"
-#include "MyJrpg/Actors/Equipments/AttachEquipmentBase.h"
-#include "MyJrpg/Items/ItemExecuteBase.h"
-#include "MyJrpg/Items/Options/OptionBase.h"
+#include "Engine/DataTable.h"
 #include "UObject/NoExportTypes.h"
 #include "ItemData.generated.h"
 
+
+class UItemExecuteBase;
+class UOptionBase;
+class AItemActor;
+class AAttachEquipmentBase;
+UCLASS()
+class MYJRPG_API UItemData : public UObject
+{
+	GENERATED_BODY()
+public:
+	UItemData();
+
+	static UDataTable* GetItemTable;
+
+	static UDataTable* GetColorTable;
+};
 
 
 USTRUCT(BlueprintType)
@@ -78,18 +92,6 @@ public:
 
 	FStatGroup& operator-=(const FStatGroup& stat_group);
 };
-UCLASS()
-class MYJRPG_API UItemData : public UObject
-{
-	GENERATED_BODY()
-public:
-	UItemData();
-
-	static UDataTable* GetItemTable;
-
-	static UDataTable* GetColorTable;
-};
-
 
 USTRUCT(BlueprintType)
 struct FColorDataRow : public FTableRowBase
@@ -171,13 +173,11 @@ struct FItemDataRow : public FEntityRow//FEntityRow
 	GENERATED_USTRUCT_BODY()
 
 public:
-	FItemDataRow()
-	{
-		m_EquipStats = FStatGroup(0);
-		m_EnchantStats = FStatGroup(0);
-	}
+	FItemDataRow();
 
 public:
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+	TSubclassOf<AItemActor> m_ClassActor;
 	UPROPERTY(EditDefaultsOnly)
 	EEquipSlotType m_ItemType;
 	UPROPERTY(EditDefaultsOnly)

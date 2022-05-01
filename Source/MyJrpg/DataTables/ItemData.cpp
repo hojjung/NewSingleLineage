@@ -4,6 +4,7 @@
 #include "ItemData.h"
 
 #include "MyJrpg/MyLib.h"
+#include "MyJrpg/Actors/Field/ItemActor.h"
 #include "UObject/ConstructorHelpers.h"
 
 UDataTable* UItemData::GetItemTable = nullptr;
@@ -129,4 +130,11 @@ TSoftObjectPtr<UTexture2D> FCraftItemCost::GetItemIcon() const
 	}
 		
 	return m_ItemDataRowHandle.GetRow<FItemDataRow>("")->m_Icon;
+}
+
+FItemDataRow::FItemDataRow()
+{
+	m_EquipStats = FStatGroup(0);
+	m_EnchantStats = FStatGroup(0);
+	m_ClassActor = AItemActor::StaticClass();
 }

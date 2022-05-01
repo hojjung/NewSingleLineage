@@ -3,12 +3,11 @@
 #include "ItemData.h"
 #include "NPCPaletteDataAsset.h"
 #include "MyJrpg/MyJrpg.h"
-#include "Engine/DataAsset.h"
-#include "Engine/DataTable.h"
 #include "UObject/NoExportTypes.h"
 #include "UnitEntityData.generated.h"
 
 
+class AMonsterPawn;
 class UAI_LogicBase;
 class USensor_LogicBase;
 UCLASS()
@@ -109,7 +108,13 @@ USTRUCT(BlueprintType)
 struct FNpcUnitEntityRow : public FUnitEntityRow
 {
 	GENERATED_BODY()
+
+public:
+	FNpcUnitEntityRow();
+	
 public://스텟과 보상
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+	TSubclassOf<AMonsterPawn> m_ClassActor;
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (UIMin = "100"))
 	float m_fAtkRange = 200.f;
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)

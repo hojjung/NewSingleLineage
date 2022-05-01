@@ -1,5 +1,6 @@
 #include "UnitEntityData.h"
 
+#include "MyJrpg/Pawns/MonsterPawn.h"
 #include "UObject/ConstructorHelpers.h"
 
 UDataTable* UUnitEntityData::GetPlayerUnitTable = nullptr;
@@ -12,5 +13,10 @@ UUnitEntityData::UUnitEntityData()
 	//
 	GetPlayerUnitTable = FoundTable01.Object;
 	GetNpcUnitTable = FoundTable03.Object;
+}
+
+FNpcUnitEntityRow::FNpcUnitEntityRow()
+{
+	m_ClassActor = AMonsterPawn::StaticClass();
 }
 

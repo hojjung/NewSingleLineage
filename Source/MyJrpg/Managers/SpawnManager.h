@@ -10,6 +10,7 @@
 #include "UObject/NoExportTypes.h"
 #include "SpawnManager.generated.h"
 
+class ATreeBase;
 class AMonsterPawn;
 class ACombatUnitPawn;
 
@@ -30,6 +31,8 @@ protected:
 	AMonsterPawn* SpawnNpcActor(const FNPCSpawnData& SpawnData);
 	
 	AItemActor* SpawnItemActor(const FNPCSpawnData& spawn_data);
+
+	ATreeBase* SpawnGatherActor(const FNPCSpawnData& spawn_data);
 	
 public:
 	ACombatUnitPawn* GetNearNpc(FVector callerLoc, float range = 0, const TSet<ACombatUnitPawn*>* ignore = nullptr);

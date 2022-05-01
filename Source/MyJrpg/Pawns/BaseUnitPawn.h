@@ -28,8 +28,8 @@ protected:
 	UPathFollowingComponent* m_PFComp;//UCrowdFollowingComponent
 	UPROPERTY(VisibleAnywhere,BlueprintReadWrite,Category="Movement")
 	UMyMovement* m_Movement;
-	UPROPERTY()
-	const UUnitEntityAsset* m_EntityAsset;
+	
+	TSoftObjectPtr<UUnitEntityAsset> m_EntityAsset;
 
 	FTimerHandle m_MoveStopTimer;
 	

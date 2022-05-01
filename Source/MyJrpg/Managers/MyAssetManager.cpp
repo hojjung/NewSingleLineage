@@ -28,6 +28,17 @@ const UUnitEntityAsset* UMyAssetManager::LoadUnitAsset(TSoftObjectPtr<UUnitEntit
 
 	return LoadedAsset; 
 }//
+const UGatherAsset* UMyAssetManager::LoadGatherAsset(TSoftObjectPtr<UGatherAsset> asset)
+{
+	TSharedPtr<FStreamableHandle> Handle;
+	
+	UGatherAsset* LoadedAsset = GetStreamableManager().LoadSynchronous<UGatherAsset>(asset.ToSoftObjectPath(),true, &Handle);
+	
+	m_SetGather.Add(Handle);
+
+	return LoadedAsset;
+}
+
 TSharedPtr<FStreamableHandle> UMyAssetManager::LoadAnimMontage(TSoftObjectPtr<UAnimMontage> assetSoftPath)
 {
 	TSharedPtr<FStreamableHandle> Handle;
@@ -48,8 +59,14 @@ void UMyAssetManager::ClearUnits()
 	{
 		Handle->ReleaseHandle();
 	}
+	for(auto Handle : m_SetGather)
+	{
+		Handle->ReleaseHandle();
+	}
 
 	m_SetUnits.Reset();
+
+	m_SetGather.Reset();
 	
 	UKismetSystemLibrary::CollectGarbage();
 }

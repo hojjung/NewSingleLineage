@@ -31,6 +31,10 @@ void USpawnManager::SetSpawnActors(const UNPCPaletteDataAsset* npcAssets)
 		{
 			SpawnItemActor(SpawnDataEle);
 		}
+		else if(SpawnDataEle.m_EntityParentTable->RowStruct->IsChildOf(FGatherDataRow::StaticStruct()))
+		{
+			SpawnGatherActor(SpawnDataEle);
+		}
 	}
 }
 
@@ -198,11 +202,12 @@ AMonsterPawn* USpawnManager::SpawnNpcActor(const FNPCSpawnData& SpawnData)
 
 	Param.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
 
-	AMonsterPawn* NpcActor = UMyLib::GetUWorld()->SpawnActor<AMonsterPawn>(
-		AMonsterPawn::StaticClass(), SpawnData.m_SpawnPosition, SpawnData.m_SpawnRotation, Param);
-
 	const FNpcUnitEntityRow* EntityRow = SpawnData.m_EntityParentTable->FindRow<FNpcUnitEntityRow>(
 		SpawnData.m_IDEntity, "");
+	
+	AMonsterPawn* NpcActor = UMyLib::GetUWorld()->SpawnActor<AMonsterPawn>(
+		EntityRow->m_ClassActor, SpawnData.m_SpawnPosition, SpawnData.m_SpawnRotation, Param);
+
 
 	if (EntityRow)
 	{
@@ -229,15 +234,40 @@ AItemActor* USpawnManager::SpawnItemActor(const FNPCSpawnData& spawn_data)
 
 	Param.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
 
-	AItemActor* NpcActor = UMyLib::GetUWorld()->SpawnActor<AItemActor>(
-		AItemActor::StaticClass(), spawn_data.m_SpawnPosition, spawn_data.m_SpawnRotation, Param);
-
 	const FItemDataRow* EntityRow = spawn_data.m_EntityParentTable->FindRow<FItemDataRow>(
 		spawn_data.m_IDEntity, "");
+	
+	AItemActor* NpcActor = UMyLib::GetUWorld()->SpawnActor<AItemActor>(
+		EntityRow->m_ClassActor, spawn_data.m_SpawnPosition, spawn_data.m_SpawnRotation + FRotator(0,FMath::RandRange(-180,180),0), Param);
+
 
 	if (EntityRow)
 	{
 		NpcActor->Init(spawn_data.m_IDEntity,1);
+	}
+
+	AddFocusActor(NpcActor);
+
+	return NpcActor;
+}
+
+ATreeBase* USpawnManager::SpawnGatherActor(const FNPCSpawnData& spawn_data)
+{
+	FActorSpawnParameters Param;
+
+	Param.bNoFail = true;
+
+	Param.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
+
+	const FGatherDataRow* EntityRow = spawn_data.m_EntityParentTable->FindRow<FGatherDataRow>(
+		spawn_data.m_IDEntity, "");
+	
+	ATreeBase* NpcActor = UMyLib::GetUWorld()->SpawnActor<ATreeBase>(
+		EntityRow->m_ClassActor, spawn_data.m_SpawnPosition + EntityRow->m_Offset, spawn_data.m_SpawnRotation, Param);
+
+	if (EntityRow)
+	{
+		NpcActor->SetEntity(*EntityRow,UMyLib::GetPlayer());
 	}
 
 	AddFocusActor(NpcActor);
