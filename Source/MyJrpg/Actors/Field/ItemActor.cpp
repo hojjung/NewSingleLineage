@@ -42,3 +42,8 @@ bool AItemActor::HasOwnerTeamID() const
 {
 	return !m_OwnerID.IsNone();
 }
+
+float AItemActor::GetBoundHalfHeight()
+{
+	return 44;
+}

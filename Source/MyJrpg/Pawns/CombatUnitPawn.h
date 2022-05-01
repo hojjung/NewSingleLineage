@@ -161,4 +161,6 @@ public:
 	virtual bool IsSneak() const;
 
 	EPathFollowingRequestResult::Type ChaseTarget();
+
+	virtual float GetBoundHalfHeight() override;
 };

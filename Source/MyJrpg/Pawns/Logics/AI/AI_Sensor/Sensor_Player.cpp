@@ -19,13 +19,8 @@ void USensor_Player::Init(ACombatUnitPawn* owner)
 
 void USensor_Player::UpdateAISensing()
 {
-	ACombatUnitPawn* TargetPawn = m_PlayerOwner->GetFocusedTarget<ACombatUnitPawn>();
-
 	FVector Loc = m_PlayerOwner->GetActorLocation();
 	
-	if(TargetPawn && TargetPawn->IsAlive())
-		return ;
-
 	IFocusable* Target = UMyGameInstance::Get->m_SpawnManager->GetNearNpc(Loc);
 	
 	if(Target)

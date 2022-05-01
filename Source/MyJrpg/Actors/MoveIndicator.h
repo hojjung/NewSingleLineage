@@ -11,10 +11,10 @@ class MYJRPG_API AMoveIndicator : public AActor
 {
 	GENERATED_BODY()
 	
-	public:	
+public:	
 	AMoveIndicator();
 	
 	UPROPERTY(VisibleAnywhere)
-	UDecalComponent* m_Decal;
+	UStaticMeshComponent* m_Decal;
 
 };

@@ -33,5 +33,7 @@ public:
 	void Obtain();
 
 	bool HasOwnerTeamID() const;
+
+	virtual float GetBoundHalfHeight() override;
 };
 

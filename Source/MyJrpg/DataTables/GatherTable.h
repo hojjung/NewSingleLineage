@@ -62,11 +62,5 @@ public:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
 	float m_fBtmMeshScale = 1.f;
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
-	FVector m_Offset;
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
-	FVector m_TopMeshOffset;
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
-	FVector m_BtmMeshOffset;
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
 	bool m_bUsePhysics = true;
 };

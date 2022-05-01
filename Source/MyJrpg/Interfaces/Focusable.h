@@ -29,4 +29,6 @@ class MYJRPG_API IFocusable
 {
 	GENERATED_BODY()
 
+public:
+	virtual float GetBoundHalfHeight() = 0;
 };

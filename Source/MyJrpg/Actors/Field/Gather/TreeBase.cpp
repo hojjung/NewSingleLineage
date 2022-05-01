@@ -12,8 +12,7 @@ ATreeBase::ATreeBase()
 {
 	PrimaryActorTick.bCanEverTick = true;
 	
-	m_Capsule->InitCapsuleSize(100, 110);
-	m_Capsule->SetRelativeRotation(FRotator(0,180,0));
+	//m_Capsule->InitCapsuleSize(100, 110);
 
 	m_MeshTree = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("m_MeshTree"));
 	m_MeshTree->CanCharacterStepUpOn = ECB_No;
@@ -25,6 +24,7 @@ ATreeBase::ATreeBase()
 	m_MeshTree->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 	m_MeshTree->SetCollisionProfileName(TEXT("PhysicsActor"));
 	m_MeshTree->CastShadow = false;
+	
 
 	m_MeshTrunk = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("m_MeshTrunk"));
 	m_MeshTrunk->CanCharacterStepUpOn = ECB_No;
@@ -35,15 +35,16 @@ ATreeBase::ATreeBase()
 	m_MeshTrunk->SetMobility(EComponentMobility::Movable);
 	m_MeshTrunk->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 	m_MeshTrunk->CastShadow = false;
+	
 
 	m_ShadowMeshComp = CreateDefaultSubobject<UStaticMeshComponent>("StShadow");
 	static ConstructorHelpers::FObjectFinder<UStaticMesh> FoundSt(TEXT("StaticMesh'/Game/03_VisualEffect/FX/Effects/FX_Meshes/SM_CharM_Shadow.SM_CharM_Shadow'"));
 	m_ShadowMeshComp->SetStaticMesh(FoundSt.Object);
 	m_ShadowMeshComp->SetupAttachment(RootComponent);
-	m_ShadowMeshComp->SetRelativeLocation(FVector(0,0,-15.f));
 	m_ShadowMeshComp->SetRelativeScale3D(FVector(10));
 	m_ShadowMeshComp->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 	m_ShadowMeshComp->SetCanEverAffectNavigation(false);
+	
 
 	m_nTreeHp = 3;
 }
@@ -52,6 +53,11 @@ ATreeBase::ATreeBase()
 void ATreeBase::SetEntity(const FGatherDataRow& data, AMyPlayerPawn* pl)
 {
 	m_Player = pl;
+
+	float H = GetBoundHalfHeight() * -1.f;
+	m_MeshTree->SetRelativeLocation(FVector(0,0,H));
+	m_MeshTrunk->SetRelativeLocation(FVector(0,0,H));
+	m_ShadowMeshComp->SetRelativeLocation(FVector(0,0,H));
 	
 	m_GatherAsset = UMyAssetManager::Get()->LoadGatherAsset(data.m_GatherAsset);
 
@@ -64,10 +70,6 @@ void ATreeBase::SetEntity(const FGatherDataRow& data, AMyPlayerPawn* pl)
 	m_MeshTree->SetRelativeScale3D(FVector(data.m_fTopMeshScale));
 	
 	m_MeshTrunk->SetRelativeScale3D(FVector(data.m_fBtmMeshScale));
-
-	m_MeshTree->SetRelativeLocation(data.m_TopMeshOffset);
-	
-	m_MeshTrunk->SetRelativeLocation(data.m_BtmMeshOffset);
 
 	m_bUsePhysics = data.m_bUsePhysics;
 }
@@ -114,7 +116,7 @@ void ATreeBase::OnGatherDone()
 
 void ATreeBase::CreateSetDeathCurve(float fullLength)
 {
-	m_CurveDeathAnim =FFloatCurve(); 
+	m_CurveDeathAnim = FFloatCurve(); 
 	m_CurveDeathAnim.UpdateOrAddKey(1, 0);
 	m_CurveDeathAnim.UpdateOrAddKey(0, fullLength);
 }

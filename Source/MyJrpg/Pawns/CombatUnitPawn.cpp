@@ -330,6 +330,11 @@ EPathFollowingRequestResult::Type ACombatUnitPawn::ChaseTarget()
 	return MoveToActor(GetFocusedTarget<AActor>());
 }
 
+float ACombatUnitPawn::GetBoundHalfHeight()
+{
+	return GetCapsule()->GetScaledCapsuleHalfHeight();
+}
+
 void ACombatUnitPawn::Dead()
 {
 	if(m_Pool)

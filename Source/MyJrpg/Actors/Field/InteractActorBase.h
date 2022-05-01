@@ -30,5 +30,5 @@ public:
 	UFUNCTION()
 	virtual void OnInteract();
 
-	float GetRadius() const;
+	virtual float GetBoundHalfHeight() override;
 };

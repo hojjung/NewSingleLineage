@@ -13,6 +13,7 @@
 #include "MyPlayerController.generated.h"
 
 
+class IFocusable;
 class ABaseUnitPawn;
 class AMyAllyPawn;
 UCLASS()
@@ -37,11 +38,11 @@ protected:
 	int m_CompUseIndex;
 	UPROPERTY()
 	UTouchInterface* m_Joystick;
+	UPROPERTY()
+	AMoveIndicator* m_FocusActor;
 	
 protected:
 	virtual void BeginPlay() override;
-
-	void InitWidget();
 
 	void CreateIGWC(int count);
 
@@ -52,6 +53,8 @@ protected:
 	void ExitGame();
 
 	bool CheckInteract();
+
+	void OnFocus(IFocusable* focus);
 	
 public:
 	void ShowInGameWorldText(float number,ABaseUnitPawn* interactActor,ETextType dmgPopup); //target

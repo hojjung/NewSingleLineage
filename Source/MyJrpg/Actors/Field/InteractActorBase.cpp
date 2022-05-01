@@ -30,7 +30,7 @@ void AInteractActorBase::OnInteract()
 	
 }
 
-float AInteractActorBase::GetRadius() const
+float AInteractActorBase::GetBoundHalfHeight()
 {
-	return m_Capsule->GetScaledCapsuleRadius();
+	return m_Capsule->GetScaledCapsuleHalfHeight();
 }
