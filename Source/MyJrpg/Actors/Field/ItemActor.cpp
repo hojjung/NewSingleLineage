@@ -15,6 +15,7 @@ AItemActor::AItemActor()
 	m_BillboardIcon = CreateDefaultSubobject<UBillboardComponent>(TEXT("m_BillboardIcon"));
 	m_BillboardIcon->SetHiddenInGame(false);
 	m_BillboardIcon->SetupAttachment(RootComponent);//-70
+	m_BillboardIcon->SetRelativeScale3D(FVector(2));
 }
 
 void AItemActor::Init(FName itemID, int countOrLevel)
@@ -45,5 +46,5 @@ bool AItemActor::HasOwnerTeamID() const
 
 float AItemActor::GetBoundHalfHeight()
 {
-	return 44;
+	return 88.f;
 }

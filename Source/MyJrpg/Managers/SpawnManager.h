@@ -39,6 +39,8 @@ public:
 
 	IFocusable* GetNearProp(FVector callerLoc, float range = 0);
 
+	IFocusable* GetNearTarget(FVector callerLoc, float range = 0);
+
 	void GetNearNpcs(const ABaseUnitPawn* caller, TArray<ACombatUnitPawn*>& outAry, float range = 0, const TSet<ACombatUnitPawn*>* ignore = nullptr);
 	
 	void SetSpawnActors(const UNPCPaletteDataAsset* npcAssets);

@@ -12,7 +12,7 @@ ATreeBase::ATreeBase()
 {
 	PrimaryActorTick.bCanEverTick = true;
 	
-	//m_Capsule->InitCapsuleSize(100, 110);
+	m_Capsule->InitCapsuleSize(34.0f, 50.0f);
 
 	m_MeshTree = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("m_MeshTree"));
 	m_MeshTree->CanCharacterStepUpOn = ECB_No;
@@ -24,6 +24,7 @@ ATreeBase::ATreeBase()
 	m_MeshTree->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 	m_MeshTree->SetCollisionProfileName(TEXT("PhysicsActor"));
 	m_MeshTree->CastShadow = false;
+	m_MeshTree->bSelfShadowOnly = false;
 	
 
 	m_MeshTrunk = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("m_MeshTrunk"));
@@ -35,6 +36,7 @@ ATreeBase::ATreeBase()
 	m_MeshTrunk->SetMobility(EComponentMobility::Movable);
 	m_MeshTrunk->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 	m_MeshTrunk->CastShadow = false;
+	m_MeshTrunk->bSelfShadowOnly = false;
 	
 
 	m_ShadowMeshComp = CreateDefaultSubobject<UStaticMeshComponent>("StShadow");

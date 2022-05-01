@@ -332,3 +332,29 @@ IFocusable* USpawnManager::GetNearProp(FVector callerLoc, float range)
 
 	return NearPawn;
 }
+
+IFocusable* USpawnManager::GetNearTarget(FVector callerLoc, float range)
+{
+	ACombatUnitPawn* Pawn = GetNearNpc(callerLoc, range);
+	
+	IFocusable* Prop = GetNearProp(callerLoc, range);
+	AActor* FocusActor = Cast<AActor>(Prop);
+
+	if(Pawn && FocusActor)
+	{
+		FVector Loc1 = Pawn->GetActorLocation();
+		
+		FVector Loc2 = FocusActor->GetActorLocation();
+		
+		if(FVector::DistSquared2D(Loc1, callerLoc) <= FVector::DistSquared2D(Loc2, callerLoc))
+		{
+			return 	Pawn;
+		}
+		return Prop;
+	}
+	else if (Pawn)
+	{
+		return Pawn;		
+	}
+	return Prop;
+}
