@@ -26,11 +26,11 @@ UConstructionManager::UConstructionManager()
 {
 	static ConstructorHelpers::FObjectFinder<UMaterialInterface> FoundMat01(TEXT("Material'/Game/10_Construction/Materials/M_Enabled.M_Enabled'"));
 	static ConstructorHelpers::FObjectFinder<UMaterialInterface> FoundMat02(TEXT("Material'/Game/10_Construction/Materials/M_Disabled.M_Disabled'"));
+	static ConstructorHelpers::FObjectFinder<UMaterialInterface> FoundMat03(TEXT("Material'/Game/10_Construction/Materials/M_Hide.M_Hide'"));
 	
 	m_MatGreen = FoundMat01.Object;
 	m_MatRed = FoundMat02.Object;
-
-	
+	m_MatCyan = FoundMat03.Object;
 }
 
 void UConstructionManager::Init()
@@ -346,22 +346,27 @@ bool UConstructionManager::IsBuildable()
 {
 	if(!m_PreviewActor)
 		return false;
+	
 	int X,Y;
+
+	FVector Loc = Cast<AActor>(m_PreviewActor.GetObject())->GetActorLocation();
 	
 	switch (m_PreviewActor->GetBuildData().m_BuildType)
 	{
 	case EBuildType::Foundation:
 		{
-			GetIndex( Cast<AActor>(m_PreviewActor.GetObject())->GetActorLocation(), X, Y);
+			GetIndex(Loc , X, Y);
 			FConEle& Ele = m_Grid[X][Y];
 			if (Ele.m_Foundation)
+				return false;
+			if(!TraceBuildable(Loc,FVector(170.f,170.f,10),FRotator::ZeroRotator, 50))
 				return false;
 		}
 			break;
 	case EBuildType::Wall:
 		{
 			bool IsHori;
-			GetWallIndex(Cast<AActor>(m_PreviewActor.GetObject())->GetActorLocation(), X, Y, IsHori);
+			GetWallIndex(Loc, X, Y, IsHori);
 			if (IsHori)
 			{
 				if (!m_Grid[X][Y - 1].m_Foundation && !m_Grid[X][Y].m_Foundation)
@@ -376,18 +381,123 @@ bool UConstructionManager::IsBuildable()
 				if (m_WallVertical[X].m_Walls[Y])
 					return false;
 			}
+			if(!TraceBuildable(Loc,FVector(120,30,10),IsHori ? FRotator(0,90,0) : FRotator::ZeroRotator, 75))
+				return false;
 		}
 		break;
 	case EBuildType::Furniture:
 		{
-			GetIndex( Cast<AActor>(m_PreviewActor.GetObject())->GetActorLocation(), X, Y);
+			GetIndex( Loc, X, Y);
 			FConEle& Ele = m_Grid[X][Y];
 			if (!Ele.m_Foundation || Ele.m_Furniture)
+				return false;
+			if(!TraceBuildable(Loc,FVector(120,120,10),FRotator::ZeroRotator, 100))
 				return false;
 		}
 		break;
 	}
+
+	return true; 
+}
+
+bool UConstructionManager::TraceBuildable(const FVector& Loc, const FVector&& extent, const FRotator& rot, float height)
+{
+	TArray<TEnumAsByte<EObjectTypeQuery> > ObjectTypes;
+	ObjectTypes.Add(EObjectTypeQuery::ObjectTypeQuery1);
+	//ObjectTypes.Add(EObjectTypeQuery::ObjectTypeQuery2);
+	ObjectTypes.Add(EObjectTypeQuery::ObjectTypeQuery3);
+
+	TArray<AActor*> AryIgnore;
+
+	FHitResult Hit;
+
+	FVector Dest = Loc + FVector(0,0,height);
+	
+	if(UKismetSystemLibrary::BoxTraceSingleForObjects(this,Dest,Dest,extent,
+		rot,ObjectTypes,false,AryIgnore,EDrawDebugTrace::Persistent,Hit,false))
+	{
+		return false;
+	}
+	
 	return true;
+}
+
+void UConstructionManager::SetFurnitureHide()
+{
+	int Iter = 0;
+	int IterY = 0;
+
+	while (Iter < FGlobalVariable::GRID_COUNT)
+	{
+		while (IterY < FGlobalVariable::GRID_COUNT)
+		{
+			FConEle& Grid = m_Grid[Iter][IterY]; 
+			if(Grid.m_Furniture)
+			{
+				Grid.m_Furniture->SetMat(m_MatCyan);
+				Grid.m_Furniture->SetColl(false);
+			}
+			if(Grid.m_Foundation)
+			{
+				Grid.m_Foundation->SetMat(nullptr);
+				Grid.m_Foundation->SetColl(true);
+			}
+			TScriptInterface<IBuildable> HoriWall = m_WallHorizontal[Iter].m_Walls[IterY]; 
+			if(HoriWall)
+			{
+				HoriWall->SetMat(nullptr);
+				HoriWall->SetColl(true);
+			}
+			TScriptInterface<IBuildable> VertWall = m_WallVertical[Iter].m_Walls[IterY];
+			if(VertWall)
+			{
+				VertWall->SetMat(nullptr);
+				VertWall->SetColl(true);
+			}
+			IterY++;
+		}
+		IterY = 0;
+		Iter++;
+	}
+}
+
+void UConstructionManager::SetWallStructureHide()
+{
+	int Iter = 0;
+	int IterY = 0;
+
+	while (Iter < FGlobalVariable::GRID_COUNT)
+	{
+		while (IterY < FGlobalVariable::GRID_COUNT)
+		{
+			FConEle& Grid = m_Grid[Iter][IterY];
+			if (Grid.m_Furniture)
+			{
+				Grid.m_Furniture->SetMat(nullptr);
+				Grid.m_Furniture->SetColl(true);
+			}
+			if (Grid.m_Foundation)
+			{
+				Grid.m_Foundation->SetMat(m_MatCyan);
+				Grid.m_Foundation->SetColl(false);
+			}
+			TScriptInterface<IBuildable> HoriWall = m_WallHorizontal[Iter].m_Walls[IterY];
+			if (HoriWall)
+			{
+				HoriWall->SetMat(m_MatCyan);
+				HoriWall->SetColl(false);
+			}
+			TScriptInterface<IBuildable> VertWall = m_WallVertical[Iter].m_Walls[IterY];
+			if (VertWall)
+			{
+				VertWall->SetMat(m_MatCyan);
+				VertWall->SetColl(false);
+			}
+			IterY++;
+		}
+		IterY = 0;
+		Iter++;
+	}
 }
 
 IBuildable* UConstructionManager::SpawnStructure(const FBuildDataRow& data)

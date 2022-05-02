@@ -26,6 +26,7 @@ public:
 	virtual const FBuildDataRow& GetBuildData() const = 0 ;
 	virtual void SetBuildData(const FBuildDataRow& data) = 0 ;
 	virtual void SetMat(UMaterialInterface* mat) = 0 ;
+	virtual void SetColl(bool b) = 0 ;
 	virtual void ShowBuildWidget(bool b) = 0 ;
 	virtual void ConfirmBuild() = 0;
 	virtual void ShowSelect(bool cond) = 0;

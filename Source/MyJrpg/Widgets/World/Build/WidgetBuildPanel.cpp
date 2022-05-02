@@ -93,12 +93,20 @@ void UWidgetBuildPanel::OnClickStruct()
 {
 	m_ScrollElements->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
 	m_ScrollFurnitureElements->SetVisibility(ESlateVisibility::Collapsed);
+
+	UMyGameInstance::Get->m_BuildManager->Cancel();
+	UMyGameInstance::Get->m_BuildManager->CancelSelect();
+	UMyGameInstance::Get->m_BuildManager->SetFurnitureHide();
 }
 
 void UWidgetBuildPanel::OnClickFurniture()
 {
 	m_ScrollElements->SetVisibility(ESlateVisibility::Collapsed);
 	m_ScrollFurnitureElements->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
+
+	UMyGameInstance::Get->m_BuildManager->Cancel();
+	UMyGameInstance::Get->m_BuildManager->CancelSelect();
+	UMyGameInstance::Get->m_BuildManager->SetWallStructureHide();
 }
 
 void UWidgetBuildPanel::OnCancel()

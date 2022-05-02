@@ -10,7 +10,7 @@
 
 ATreeBase::ATreeBase()
 {
-	PrimaryActorTick.bCanEverTick = true;
+	PrimaryActorTick.bCanEverTick = true; 
 	
 	m_Capsule->InitCapsuleSize(50, 50.0f);
 
@@ -46,7 +46,7 @@ ATreeBase::ATreeBase()
 	m_ShadowMeshComp->SetRelativeScale3D(FVector(10));
 	m_ShadowMeshComp->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 	m_ShadowMeshComp->SetCanEverAffectNavigation(false);
-	
+	m_ShadowMeshComp->SetRelativeLocation(FVector(0,0,-88));
 
 	m_nTreeHp = 3;
 }

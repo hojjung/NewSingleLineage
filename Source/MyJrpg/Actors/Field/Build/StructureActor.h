@@ -42,5 +42,6 @@ public:
 	virtual void ShowSelect(bool b) override;
 
 	virtual bool TryUpgrade();
-	
+
+	virtual void SetColl(bool b) override;
 };

@@ -17,14 +17,14 @@ void STextText::Construct(const FArguments& InArgs)
 		[
 			SNew(SHorizontalBox)
 			+ SHorizontalBox::Slot()
-			  .VAlign(VAlign_Center)
+			  .VAlign(VAlign_Fill)
 			  .HAlign(HAlign_Left)
 			  .FillWidth(1)
 			[
 				SAssignNew(m_LeftTextSlate, STextBlock)
 			]
 			+ SHorizontalBox::Slot()
-			  .VAlign(VAlign_Center)
+			  .VAlign(VAlign_Fill)
 			  .HAlign(HAlign_Right)
 			  .FillWidth(1)
 			[

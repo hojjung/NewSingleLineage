@@ -117,7 +117,12 @@ FText UCollectionManager::GetCollecProgressText(FName collectionID)
 
 float UCollectionManager::GetTotalProgress()
 {
-	return (float)GetCompleteCount() / (float)GetTotalCount();	
+	int Total = GetTotalCount(); 
+	if(Total <= 0)
+	{
+		return 0.f;
+	}
+	return (float)GetCompleteCount() / (float)Total;	
 }
 
 bool UCollectionManager::CheckCanAdd(FName collectionID, int indexItem, UInventory* invenFrom)

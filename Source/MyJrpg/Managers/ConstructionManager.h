@@ -70,6 +70,8 @@ private:
 	UPROPERTY()
 	UMaterialInterface* m_MatRed;
 	UPROPERTY()
+	UMaterialInterface* m_MatCyan;
+	UPROPERTY()
 	AGridActor* m_GridMesh;
 	UPROPERTY()
 	TScriptInterface<IBuildable> m_PreviewActor;
@@ -116,8 +118,14 @@ private:
 
 	void TryEraseActor(TScriptInterface<IBuildable>& holder);
 
+	bool TraceBuildable(const FVector& Loc, const FVector&& extent, const FRotator& rot, float height);
+
 public:
 	void Init();
+	
+	void SetFurnitureHide();
+	
+	void SetWallStructureHide();
 	
 	void SpawnPreviewActor(FVector loc, const FBuildDataRow* dataRow = nullptr);
 	
@@ -151,3 +159,5 @@ public:
 	void GetStructureHolder(IBuildable* want, TScriptInterface<IBuildable> *& holder, bool &isHori);
 	
 };
+
+

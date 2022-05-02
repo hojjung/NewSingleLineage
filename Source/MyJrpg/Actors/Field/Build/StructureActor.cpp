@@ -33,22 +33,27 @@ void AStructureActor::SetMat(UMaterialInterface* mat)
 {
 	int Iter = 0;
 
-	while (Iter < GetStaticMeshComponent()->GetMaterials().Num())
+	if (mat)
 	{
-		GetStaticMeshComponent()->SetMaterial(Iter,mat);
-		Iter++;
+		while (Iter < GetStaticMeshComponent()->GetMaterials().Num())
+		{
+			GetStaticMeshComponent()->SetMaterial(Iter, mat);
+			Iter++;
+		}
+	}
+	else
+	{
+		while (Iter < GetStaticMeshComponent()->GetMaterials().Num())
+		{
+			GetStaticMeshComponent()->SetMaterial(Iter,m_AryMats[Iter]);
+			Iter++;
+		}	
 	}
 }
 
 void AStructureActor::ConfirmBuild()
 {
-	int Iter = 0;
-
-	while (Iter < GetStaticMeshComponent()->GetMaterials().Num())
-	{
-		GetStaticMeshComponent()->SetMaterial(Iter,m_AryMats[Iter]);
-		Iter++;
-	}
+	SetMat(nullptr);
 
 	SetActorEnableCollision(true);
 
@@ -73,4 +78,16 @@ void AStructureActor::ShowSelect(bool b)
 bool AStructureActor::TryUpgrade()
 {
 	return true;
+}
+
+void AStructureActor::SetColl(bool b)
+{
+	if(b)
+	{
+		GetStaticMeshComponent()->SetCollisionEnabled(ECollisionEnabled::QueryOnly);
+	}
+	else
+	{
+		GetStaticMeshComponent()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+	}
 }

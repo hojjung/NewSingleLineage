@@ -59,10 +59,21 @@ void AStorage::SetMat(UMaterialInterface* mat)
 {
 	int Iter = 0;
 
-	while (Iter < m_MeshComp->GetMaterials().Num())
+	if (mat)
 	{
-		m_MeshComp->SetMaterial(Iter,mat);
-		Iter++;
+		while (Iter < m_MeshComp->GetMaterials().Num())
+		{
+			m_MeshComp->SetMaterial(Iter, mat);
+			Iter++;
+		}
+	}
+	else
+	{
+		while (Iter < m_MeshComp->GetMaterials().Num())
+		{
+			m_MeshComp->SetMaterial(Iter,m_AryMats[Iter]);
+			Iter++;
+		}	
 	}
 }
 
@@ -73,13 +84,7 @@ void AStorage::ShowBuildWidget(bool b)
 
 void AStorage::ConfirmBuild()
 {
-	int Iter = 0;
-
-	while (Iter < m_MeshComp->GetMaterials().Num())
-	{
-		m_MeshComp->SetMaterial(Iter,m_AryMats[Iter]);
-		Iter++;
-	}
+	SetMat(nullptr);
 
 	SetActorEnableCollision(true);
 
@@ -94,4 +99,16 @@ void AStorage::ShowSelect(bool b)
 bool AStorage::IsEraseable()
 {
 	return m_Inven->GetUsingSlotCount() <= 0;
+}
+
+void AStorage::SetColl(bool b)
+{
+	if(b)
+	{
+		m_Capsule->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
+	}
+	else
+	{
+		m_Capsule->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+	}
 }
