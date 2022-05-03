@@ -60,6 +60,8 @@ protected:
 	void CreateItems(const FZone& zone_data);
 
 	void CreateZoneElement(const TArray<FDropRewardItem>& AryItems);
+
+	virtual void NativeOnInitialized() override;
 	
 public:
 	void Init(const FZoneDataRow& zone_data);

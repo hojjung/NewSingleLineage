@@ -122,8 +122,6 @@ void ACombatUnitPawn::ShowPopupText(float nbr, ETextType t)
 void ACombatUnitPawn::SetEntity(const FName& id, const FNpcUnitEntityRow& unitEntityRow)
 {
 	Super::SetEntity(id, unitEntityRow);
-
-	StartDeathEffectMaterial(m_EntityAsset->m_DeathMontage->GetPlayLength());
 	
 	if(unitEntityRow.m_ClassAI_Logic)
 	{
@@ -243,6 +241,8 @@ void ACombatUnitPawn::PlayDeathAnim()
 {
 	if(m_EntityAsset->m_DeathMontage)
 	{
+		StartDeathEffectMaterial(m_EntityAsset->m_DeathMontage->GetPlayLength());
+		
 		PlayAnimMontage(m_EntityAsset->m_DeathMontage);
 
 		float AnimLength = m_EntityAsset->m_DeathMontage->GetPlayLength() - 0.4f;

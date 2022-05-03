@@ -11,9 +11,6 @@ AInitPlayerController::AInitPlayerController()
 	bShowMouseCursor=true;
 
 	CheatClass = UMyCheatManager::StaticClass();
-
-
-
 }
 
 void AInitPlayerController::SetupInputComponent()

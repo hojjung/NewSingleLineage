@@ -126,11 +126,10 @@ void UMyGameInstance::LoadComplete(const float LoadTime, const FString& MapName)
 {
 	if(MapName!=TEXT("InitLevel"))
 	{
-		if(m_LevelMoveManager->IsGameStart())
+		//if(m_LevelMoveManager->IsGameStart())
 		{
-			m_SkillAuto->Init();
 			m_LevelMoveManager->OnOpenWorldLevelComplete();
-
+			m_SkillAuto->Init();
 		}
 	}
 }

@@ -2,19 +2,22 @@
 #include "MyJrpg/Managers/MyGameInstance.h"
 #include "MyJrpg/Managers/RewardManager.h"
 
-void UWidgetZoneSelectButton::Init(const FZoneDataRow& zone_data)
-{
-	m_ZoneData = &zone_data;
 
-	m_nIndex = 0;
-	
-	m_BtnEnterZone->IsFocusable = false;
+void UWidgetZoneSelectButton::NativeOnInitialized()
+{
+	Super::NativeOnInitialized();
 
 	m_BtnEnterZone->OnClicked.AddDynamic(this,&UWidgetZoneSelectButton::MoveToZone);
 
 	m_BtnLeftIndex->OnClicked.AddDynamic(this,&UWidgetZoneSelectButton::OnLeftClick);
 
 	m_BtnRightIndex->OnClicked.AddDynamic(this,&UWidgetZoneSelectButton::OnRightClick);
+}
+void UWidgetZoneSelectButton::Init(const FZoneDataRow& zone_data)
+{
+	m_ZoneData = &zone_data;
+
+	m_nIndex = 0;
 
 	SetZone();
 
@@ -77,6 +80,7 @@ void UWidgetZoneSelectButton::CreateMonsters(const FZone& zone_data)
 
 void UWidgetZoneSelectButton::CreateZoneElement(const TArray<FDropRewardItem>& AryItems)
 {
+	
 	for(const FDropRewardItem& Data : AryItems)
 	{
 		if(m_SetRewardItems.Contains(Data.m_Item.RowName))
@@ -93,6 +97,8 @@ void UWidgetZoneSelectButton::CreateZoneElement(const TArray<FDropRewardItem>& A
 		m_AryZoneElements.Add(SelectButton);
 	}
 }
+
+
 
 void UWidgetZoneSelectButton::CreateItems(const FZone& zone_data)
 {

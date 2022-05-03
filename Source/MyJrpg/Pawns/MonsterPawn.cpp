@@ -203,8 +203,8 @@ void AMonsterPawn::Revive()
 	PlayAnimMontage(m_EntityAsset->m_SpawnAnim);
 	//
 	float AnimLength = m_EntityAsset->m_SpawnAnim->GetPlayLength() - 0.4f;
-	//
-	GetWorldTimerManager().SetTimer(m_DeathAnimTimer, this, &AMonsterPawn::OnReviveAnimEnd, AnimLength, false);
+	//22 05 03 :게임 디자인적으로 내구도가 존재하는데 몹이 리젠되면 손해 
+	//GetWorldTimerManager().SetTimer(m_DeathAnimTimer, this, &AMonsterPawn::OnReviveAnimEnd, AnimLength, false);
 }
 
 void AMonsterPawn::OnReviveAnimEnd()
