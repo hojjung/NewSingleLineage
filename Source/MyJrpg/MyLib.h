@@ -90,10 +90,6 @@ public:
 
 	static void SetBtnTint(UButton* btn, FLinearColor colrWant);
 
-	static FName GenerateEquipItemHashKey(const FName& id, const void *ptr);
-
-	static FName GetEquipIDFromHashID(const FName& hash_id);
-
 	static UInventory* FindEquipItem(const FName& id);
 
 	static UInventory* FindEquipItem(const FName& id,const FName** gidItem);

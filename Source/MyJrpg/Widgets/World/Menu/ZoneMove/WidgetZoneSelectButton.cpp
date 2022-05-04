@@ -2,56 +2,39 @@
 #include "MyJrpg/Managers/MyGameInstance.h"
 #include "MyJrpg/Managers/RewardManager.h"
 
-
 void UWidgetZoneSelectButton::NativeOnInitialized()
 {
 	Super::NativeOnInitialized();
 
 	m_BtnEnterZone->OnClicked.AddDynamic(this,&UWidgetZoneSelectButton::MoveToZone);
 
-	m_BtnLeftIndex->OnClicked.AddDynamic(this,&UWidgetZoneSelectButton::OnLeftClick);
-
-	m_BtnRightIndex->OnClicked.AddDynamic(this,&UWidgetZoneSelectButton::OnRightClick);
+	m_BtnClose->OnClicked.AddDynamic(this,&UWidgetZoneSelectButton::OnClose);
 }
+
 void UWidgetZoneSelectButton::Init(const FZoneDataRow& zone_data)
 {
 	m_ZoneData = &zone_data;
 
-	m_nIndex = 0;
-
 	SetZone();
-
-	if (m_ZoneData->m_AryZones.Num()<=1)
-	{
-		m_BtnLeftIndex->SetVisibility(ESlateVisibility::Collapsed);
-		m_BtnRightIndex->SetVisibility(ESlateVisibility::Collapsed);
-	}
 }
 
-void UWidgetZoneSelectButton::UpdateText()
+void UWidgetZoneSelectButton::OnClose()
 {
-	if (m_ZoneData->m_AryZones.Num() > 1)
-	{
-		FString Str = FString::Printf(TEXT("%s %d층"),*m_ZoneData->m_ShowingName.ToString(),m_nIndex + 1);
-		
-		FText tLevelName = FText::FromString(Str);
-		
-		m_TextMapName->SetText(tLevelName);
-	}
+	SetVisibility(ESlateVisibility::Collapsed);	
 }
 
-void UWidgetZoneSelectButton::CreateMonsters(const FZone& zone_data)
+void UWidgetZoneSelectButton::CreateMonsters()
 {
 	m_HoriMonsterParents->ClearChildren();
 
 	m_SetMonsters.Reset();
 	
-	if(!zone_data.m_SpawnDataNpc)
+	if(!m_ZoneData->m_SpawnDataNpc)
 	{
 		return;
 	}
 	
-	for(const FNPCSpawnData& Data : zone_data.m_SpawnDataNpc->m_ArySpawnDatas)
+	for(const FNPCSpawnData& Data : m_ZoneData->m_SpawnDataNpc->m_ArySpawnDatas)
 	{
 		if(Data.m_EntityParentTable->RowStruct->IsChildOf(FNpcUnitEntityRow::StaticStruct()))
 		{
@@ -98,9 +81,7 @@ void UWidgetZoneSelectButton::CreateZoneElement(const TArray<FDropRewardItem>& A
 	}
 }
 
-
-
-void UWidgetZoneSelectButton::CreateItems(const FZone& zone_data)
+void UWidgetZoneSelectButton::CreateItems()
 {
 	m_HoriItemParents->ClearChildren();
 
@@ -108,7 +89,7 @@ void UWidgetZoneSelectButton::CreateItems(const FZone& zone_data)
 
 	m_SetRewardItems.Reset();
 	
-	const TArray<FDropRewardItem>* AryDropItems = UMyGameInstance::Get->m_RewardManager->GetDropItems(zone_data.m_ZoneUniqueID);
+	const TArray<FDropRewardItem>* AryDropItems = UMyGameInstance::Get->m_RewardManager->GetDropItems(m_ZoneData->m_RowKey);
 
 	if(AryDropItems && AryDropItems->Num() > 0)
 	{
@@ -134,32 +115,12 @@ void UWidgetZoneSelectButton::SetZone()
 
 	m_TextMapDesc->SetText(m_ZoneData->m_Desc);
 
-	CreateMonsters(m_ZoneData->m_AryZones[m_nIndex]);
+	CreateMonsters();
 	
-	CreateItems(m_ZoneData->m_AryZones[m_nIndex]);
-
-	UpdateText();
+	CreateItems();
 }
 
 void UWidgetZoneSelectButton::MoveToZone()
 {
-	UMyGameInstance::Get->m_LevelMoveManager->OpenMyLevel(*m_ZoneData,m_nIndex);
-}
-
-void UWidgetZoneSelectButton::OnLeftClick()
-{
-	m_nIndex--;
-
-	m_nIndex = FMath::Max(m_nIndex,0);
-
-	SetZone();
-}
-
-void UWidgetZoneSelectButton::OnRightClick()
-{
-	m_nIndex++;
-	
-	m_nIndex = FMath::Min(m_nIndex,m_ZoneData->m_AryZones.Num() - 1);
-
-	SetZone();
+	UMyGameInstance::Get->m_LevelMoveManager->OpenMyLevel(*m_ZoneData);
 }

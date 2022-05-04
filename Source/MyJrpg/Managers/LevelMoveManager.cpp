@@ -16,25 +16,23 @@ void ULevelMoveManager::StartGame()
 {
 	m_bIsGameStart = true;
 	
-	OpenMyLevel(TEXT("PlayerHome"),0);
+	OpenMyLevel(TEXT("PlayerHome"));
 }
 
-void ULevelMoveManager::OpenMyLevel(const FZoneDataRow& zoneData, int index)
+void ULevelMoveManager::OpenMyLevel(const FZoneDataRow& zoneData)
 {
 	m_ZoneData = &zoneData;
 
-	m_nStageIndex = index;
-
-	UGameplayStatics::OpenLevel(this,m_ZoneData->m_AryZones[m_nStageIndex].m_MapName);
+	UGameplayStatics::OpenLevel(this,m_ZoneData->m_MapName);
 }
 
-void ULevelMoveManager::OpenMyLevel(FName zoneData, int index)
+void ULevelMoveManager::OpenMyLevel(FName zoneData)
 {
 	UMyGameInstance::Get->m_GameRule = nullptr;
 	
 	const FZoneDataRow* DataRow = UZoneData::GetZoneTable->FindRow<FZoneDataRow>(zoneData, "");
 	
-	OpenMyLevel(*DataRow,index);
+	OpenMyLevel(*DataRow);
 }
 
 void ULevelMoveManager::OnOpenWorldLevelComplete()
@@ -48,22 +46,11 @@ void ULevelMoveManager::OnOpenWorldLevelComplete()
 		UMyGameInstance::Get->m_GameRule = NewObject<UGameRuleBase>(this, m_ZoneData->m_ClassGameRule);
 
 	}
-	UMyGameInstance::Get->m_SpawnManager->SetSpawnActors(m_ZoneData->m_AryZones[m_nStageIndex].m_SpawnDataNpc);
+	UMyGameInstance::Get->m_SpawnManager->SetSpawnActors(m_ZoneData->m_SpawnDataNpc);
 
 	UMyGameInstance::Get->m_EquipManager->UpdateEquip();
 
-	FText tLevelName;
-
-	if (m_ZoneData->m_AryZones.Num() > 1)
-	{
-		FString Str = FString::Printf(TEXT("%s %d층"),*m_ZoneData->m_ShowingName.ToString(),m_nStageIndex + 1);
-
-		tLevelName = FText::FromString(Str);
-	}
-	else
-	{
-		tLevelName = m_ZoneData->m_ShowingName;
-	}
+	FText tLevelName = m_ZoneData->m_ShowingName;
 	
 	m_OnLvelMoveComp.Broadcast(GetCrntZoneID());
 
@@ -87,5 +74,5 @@ const FZoneDataRow* ULevelMoveManager::GetZoneDataCurrent() const
 
 const FName& ULevelMoveManager::GetCrntZoneID() const
 {
-	return m_ZoneData->m_AryZones[m_nStageIndex].m_ZoneUniqueID;
+	return m_ZoneData->m_RowKey;
 }

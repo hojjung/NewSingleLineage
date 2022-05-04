@@ -6,249 +6,155 @@ void UInventory::Init(int size)
 {
 	m_nInvenMaxSize = size;
 	
-	m_AryTotalItems.Reserve(m_nInvenMaxSize);
+	m_AryTotalItems.Init(FItemSpec(), m_nInvenMaxSize);
 }
 
-bool UInventory::IsCountAvailable(int addMore)
+bool UInventory::GetEmptyIndex(int& out) const
 {
-	return m_AryTotalItems.Num() + addMore< m_nInvenMaxSize;
+	int Iter = 0;
+	
+	for(const auto& ItemMap : m_AryTotalItems)
+	{
+		if(ItemMap.m_ID == NAME_None)
+		{
+			out = Iter;
+			return true;
+		}
+		Iter++;
+	}
+	out = INDEX_NONE;
+	return false;
 }
 
-int UInventory::GetInvenSize()
+void UInventory::UpdateInventory()
+{
+	m_OnInvenChanged.Broadcast();
+}
+
+int UInventory::GetInvenSize() const
 {
 	return m_nInvenMaxSize;
 }
 
-int UInventory::GetAvailalbeStackCount(FName id)
+bool UInventory::AddItem(FName itemID, int lvCnt)//스택을 채우냐,칸수를 늘리냐,장비템의 경우 언제나 칸수이다. 스텍템의 경우,20개담을때, 100개들어오면 5칸 생겨야함
 {
-	bool HasItem = m_MapMiscItems.Contains(id);
+	const FItemDataRow& ItemData = UMyLib::GetItemData(itemID);
+	
+	bool IsEquip = UMyLib::IsEquip(ItemData);
+	
+	int AddStack = IsEquip ? 1 : lvCnt;
 
-	if (!HasItem)
+	int MaxStack = UMyLib::GetItemData(itemID).m_nMaxStack;
+
+	int Iter = 0;
+
+	for (auto& ItemMap : m_AryTotalItems)
 	{
-		return FGlobalVariable::INVEN_MAXSTACK;
-	}
-
-	return FGlobalVariable::INVEN_MAXSTACK - m_MapMiscItems[id];
-}
-
-int UInventory::GetRemainSlotCount()
-{
-	return m_nInvenMaxSize - m_AryTotalItems.Num();
-}
-
-bool UInventory::AddItem(FName id, int amount)
-{
-	bool HasItem = m_MapMiscItems.Contains(id);
-
-	if (!HasItem)
-	{
-		if(!IsCountAvailable())
+		if (ItemMap.m_ID == itemID || ItemMap.m_ID.IsNone())
 		{
-			return false;	
+			if (AddItemStack(Iter, AddStack, itemID, MaxStack))
+			{
+				UpdateInventory();
+				return true;
+			}
 		}
-		amount = FMath::Min(amount,FGlobalVariable::INVEN_MAXSTACK);
-		
-		m_AryTotalItems.Add(id);
-		
-		m_MapMiscItems.Add(id,amount);
+		Iter++;
 	}
-	else
+
+	UpdateInventory();
+	return false;
+}
+
+bool UInventory::AddItemStack(int index, int& lvCnt, FName id, int maxStack)// = FItemSpec(id,0,0);
+{
+	if(m_AryTotalItems[index].m_ID.IsNone())
 	{
-		int& CrntAmount = m_MapMiscItems[id];
-		
-		CrntAmount += amount;
-		
-		CrntAmount = FMath::Min(CrntAmount,FGlobalVariable::INVEN_MAXSTACK);
+		m_AryTotalItems[index] = FItemSpec(id,0,0);
 	}
 	
-	m_OnInvenChanged.Broadcast();
+	int& ItemSpecFound = m_AryTotalItems[index].m_nLvStack;
 
-	m_OnNewItemAdded.Broadcast(id);
-
-	m_OnItemObtain.Broadcast(UMyLib::GetItemData(id), amount);
-
-	return true;
-}
-
-bool UInventory::AddEquipItem(FName gid, int lv)
-{
-	if(!IsCountAvailable())
+	int AvailableCnt = maxStack - ItemSpecFound;
+	
+	if(AvailableCnt<=0)
 	{
 		return false;
 	}
-	FName Oid = UMyLib::GetEquipIDFromHashID(gid);
-
-	m_AryTotalItems.Add(gid);
-
-	if(m_MapEquipItemIdGroup.Contains(Oid))
+	
+	if (AvailableCnt >= lvCnt)//10, 5
 	{
-		m_MapEquipItemIdGroup[Oid].Add(gid,lv);
-	}
-	else
+		ItemSpecFound += lvCnt;
+		lvCnt = 0;
+		return true;
+	}//3,5
+	
+	ItemSpecFound += AvailableCnt;
+
+	lvCnt -= AvailableCnt;
+	
+	return false;
+}
+
+bool UInventory::RemoveItemStack(int index, int& stackCnt)
+{
+	int& CrntStack = m_AryTotalItems[index].m_nLvStack;
+
+	if(CrntStack < stackCnt)// 3 5
 	{
-		m_MapEquipItemIdGroup.Emplace(Oid,TEquipLevelPair()).Add(gid,lv);
-	}
+		stackCnt -= CrntStack;
+		ClearItem(index);
+		return false;
+	}//5 3
 
-	m_OnInvenChanged.Broadcast();
-
-	m_OnItemObtain.Broadcast(UMyLib::GetItemData(gid), 1);
-
+	CrntStack -= stackCnt;
+	
 	return true;
 }
 
-void UInventory::RemoveItem(FName id, int amount)
+void UInventory::ClearItem(int index)
 {
-	int& Amount = m_MapMiscItems[id];
+	m_AryTotalItems[index].m_ID = NAME_None;
+	m_AryTotalItems[index].m_nLvStack = 0;
+	m_AryTotalItems[index].m_nDurability = 0;
+}
 
-	if (amount == -1 || Amount <= amount)
+bool UInventory::RemoveItem(FName itemID, int lvCnt)
+{
+	const FItemDataRow& ItemData = UMyLib::GetItemData(itemID);
+	
+	bool IsEquip = UMyLib::IsEquip(ItemData);
+	
+	int Iter = 0;
+	
+	if (IsEquip)
 	{
-		m_MapMiscItems.Remove(id);
-		
-		m_AryTotalItems.Remove(id);
-
-		m_OnNewItemRemoved.Broadcast(id);
+		for (auto& ItemMap : m_AryTotalItems)
+		{
+			if (ItemMap.m_ID == itemID && ItemMap.m_nLvStack == lvCnt)//장비템의경우,닉네임과 레벨이 일치할때제거
+			{
+				ClearItem(Iter);
+				UpdateInventory();
+				return true;
+			}
+			Iter++;
+		}
 	}
 	else
 	{
-		Amount -= amount;
-	}
-	
-	m_OnInvenChanged.Broadcast();
-}
-
-void UInventory::RemoveEquipItem(FName gid)
-{
-	FName Oid = UMyLib::GetEquipIDFromHashID(gid);
-
-	TMap<FName, int>& EquipIDMap = m_MapEquipItemIdGroup[Oid];
-
-	EquipIDMap.Remove(gid);
-
-	if (EquipIDMap.Num() <= 0)
-	{
-		m_MapEquipItemIdGroup.Remove(Oid);
-
-		m_OnNewItemRemoved.Broadcast(Oid);
-	}
-	
-	m_AryTotalItems.Remove(gid);
-
-	m_OnInvenChanged.Broadcast();
-}
-
-bool UInventory::IsEquipItem(FName hasID)
-{
-	return !m_MapMiscItems.Contains(hasID);
-}
-
-int UInventory::GetItemStack(FName ID)
-{
-	if(!m_MapMiscItems.Contains(ID))
-	{
-		return 0;
-	}
-	return m_MapMiscItems[ID];
-}
-
-int UInventory::GetItemLevel(FName gID)
-{
-	FName Oid = UMyLib::GetEquipIDFromHashID(gID);
-
-	return m_MapEquipItemIdGroup[Oid][gID];
-}
-
-void UInventory::AddItemLevel(FName gID, int addlv)
-{
-	FName Oid = UMyLib::GetEquipIDFromHashID(gID);
-	
-	m_MapEquipItemIdGroup[Oid][gID]+=addlv;	
-}
-
-void UInventory::SubItemLevel(FName gID, int sublv)
-{
-	FName Oid = UMyLib::GetEquipIDFromHashID(gID);
-	
-	m_MapEquipItemIdGroup[Oid][gID]-=sublv;
-}
-
-const TArray<FName>& UInventory::GetAryTotalItemIDs() const
-{
-	return m_AryTotalItems;
-}
-
-FName UInventory::GetItemID(int index)
-{
-	if (index < 0 || m_AryTotalItems.Num() <= index)
-	{
-		return NAME_None;
-	}
-	
-	return  m_AryTotalItems[index];
-}
-
-bool UInventory::FindMisItem(const FName& name, int amount)
-{
-	if(!m_MapMiscItems.Contains(name))
-	{
-		return false;
-	}
-
-	return m_MapMiscItems[name] >= amount;
-}
-
-int UInventory::GetUsingSlotCount()
-{
-	return m_AryTotalItems.Num();
-}
-
-const FName* UInventory::FindEquipItem(const FName& Oid, int lv)
-{
-	FName Id = UMyLib::GetEquipIDFromHashID(Oid);
-	
-	if (!m_MapEquipItemIdGroup.Contains(Id))
-	{
-		return nullptr;
-	}
-
-	return m_MapEquipItemIdGroup[Id].FindKey(lv);
-}
-
-const FName* UInventory::FindEquipItem(const FName& Oid)
-{
-	FName Id = UMyLib::GetEquipIDFromHashID(Oid);
-	
-	if (!m_MapEquipItemIdGroup.Contains(Id))
-	{
-		return nullptr;
-	}
-
-	for(const TTuple<FName, int>& Pair :  m_MapEquipItemIdGroup[Id])
-	{
-		if(Pair.Value >= 0)
+		for (auto& ItemMap : m_AryTotalItems)
 		{
-			return &Pair.Key;
+			if (ItemMap.m_ID == itemID)
+			{
+				if (RemoveItemStack(Iter, lvCnt))
+				{
+					UpdateInventory();
+					return true;
+				}
+			}
+			Iter++;
 		}
 	}
-	return nullptr;
-}
 
-int UInventory::GetEquipItemCount(const FName& Oid, int lv)
-{
-	int Sum = 0;
-	
-	FName Id = UMyLib::GetEquipIDFromHashID(Oid);
-	
-	if (!m_MapEquipItemIdGroup.Contains(Id))
-	{
-		return Sum;
-	}
-
-	for(const TTuple<FName, int>& Pair :  m_MapEquipItemIdGroup[Id])
-	{
-		if(Pair.Value == lv)
-		{
-			Sum++;
-		}
-	}
-	return Sum;
+	UpdateInventory();
+	return false;
 }

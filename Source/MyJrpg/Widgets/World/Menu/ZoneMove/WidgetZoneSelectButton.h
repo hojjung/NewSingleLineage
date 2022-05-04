@@ -27,6 +27,8 @@ protected:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
 	TSubclassOf<UWidgetZoneItemElement> m_ClassItem;
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (BindWidget))
+	UButton* m_BtnClose;
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (BindWidget))
 	UButton* m_BtnEnterZone;
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (BindWidget))
 	UTextBlock* m_TextMapName;
@@ -36,10 +38,6 @@ protected:
 	UHorizontalBox* m_HoriMonsterParents;
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (BindWidget))
 	UHorizontalBox* m_HoriItemParents;
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (BindWidget))
-	UButton* m_BtnLeftIndex;
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (BindWidget))
-	UButton* m_BtnRightIndex;
 
 	const FZoneDataRow* m_ZoneData;
 
@@ -48,16 +46,12 @@ protected:
 	TSet<FName> m_SetRewardItems;
 	
 	UPROPERTY()
-	int m_nIndex;
-	UPROPERTY()
 	TArray<UWidgetZoneItemElement*> m_AryZoneElements;
 	
 protected:
-	void UpdateText();
-	
-	void CreateMonsters(const FZone& zone_data);
+	void CreateMonsters();
 
-	void CreateItems(const FZone& zone_data);
+	void CreateItems();
 
 	void CreateZoneElement(const TArray<FDropRewardItem>& AryItems);
 
@@ -67,12 +61,9 @@ public:
 	void Init(const FZoneDataRow& zone_data);
 	
 	void SetZone();
-
+	UFUNCTION()
+	void OnClose();
 	UFUNCTION()
 	void MoveToZone();
-	UFUNCTION()
-	void OnLeftClick();
-	UFUNCTION()
-	void OnRightClick();
 };
  

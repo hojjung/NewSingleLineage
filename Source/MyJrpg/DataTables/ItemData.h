@@ -196,6 +196,8 @@ public:
 	TArray<TSubclassOf<UOptionBase>> m_Options;
 	UPROPERTY(EditAnywhere, meta=(EditCondition = "m_ItemType != EEquipSlotType::Weapon", EditConditionHides))
 	TSubclassOf<UItemExecuteBase> m_ClassExeItem;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+	int m_nMaxStack = 2;
 	UPROPERTY(EditDefaultsOnly,BlueprintReadOnly)
 	int m_nCraftCost=1;
 	UPROPERTY(EditDefaultsOnly,BlueprintReadOnly)

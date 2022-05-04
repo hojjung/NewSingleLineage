@@ -11,7 +11,7 @@ void UWidgetGameOver::NativeOnInitialized()
 
 void UWidgetGameOver::OnReturnVillage()
 {
-	UMyGameInstance::Get->m_LevelMoveManager->OpenMyLevel(TEXT("Village"),0);
+	UMyGameInstance::Get->m_LevelMoveManager->OpenMyLevel(TEXT("Village"));
 }
 
 void UWidgetGameOver::SetKiller(const ACombatUnitPawn* killer)

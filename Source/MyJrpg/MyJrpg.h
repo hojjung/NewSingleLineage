@@ -60,8 +60,6 @@ namespace FGlobalVariable
 
 	static const float HERO_DEFAULT_SPEED = 460.f;
 
-	static const int INVEN_MAXSTACK = 9999;//9999
-	
 	static const int INVEN_SIZE = 32;//42
 
 	static const int STORAGE_SIZE = 24;

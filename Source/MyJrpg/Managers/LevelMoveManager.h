@@ -31,14 +31,12 @@ protected:
 
 	bool m_bIsGameStart = false;
 
-	int m_nStageIndex;
-
 public:
 	void StartGame();
 
-	void OpenMyLevel(const FZoneDataRow& zoneData, int index);
+	void OpenMyLevel(const FZoneDataRow& zoneData);
 
-	void OpenMyLevel(FName zoneData, int index);
+	void OpenMyLevel(FName zoneData);
 
 	void OnOpenWorldLevelComplete();
 	

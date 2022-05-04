@@ -27,20 +27,6 @@ public:
 	static UDataTable* GetZoneTable;
 };
 
-USTRUCT(BlueprintType)
-struct FZone
-{
-	GENERATED_BODY()
-
-public:
-	UPROPERTY(EditDefaultsOnly,BlueprintReadOnly)
-	FName m_ZoneUniqueID;
-	UPROPERTY(EditDefaultsOnly,BlueprintReadOnly)
-	FName m_MapName;
-	UPROPERTY(EditDefaultsOnly,BlueprintReadOnly)
-	UNPCPaletteDataAsset* m_SpawnDataNpc;
-};
-
 USTRUCT(BlueprintType)//Key is ZoneName,OpenLevel
 struct FZoneDataRow : public FTableRowBase
 {
@@ -51,6 +37,8 @@ public:
 
 public:
 	UPROPERTY(EditDefaultsOnly,BlueprintReadOnly)
+	FName m_RowKey = TEXT("Should Same Row Key");
+	UPROPERTY(EditDefaultsOnly,BlueprintReadOnly)
 	EMapType m_MapType;
 	UPROPERTY(EditDefaultsOnly,BlueprintReadOnly)
 	TSubclassOf<UGameRuleBase> m_ClassGameRule;
@@ -59,7 +47,7 @@ public:
 	UPROPERTY(EditDefaultsOnly,BlueprintReadOnly,meta = (MultiLine="true"))
 	FText m_Desc;
 	UPROPERTY(EditDefaultsOnly,BlueprintReadOnly)
-	TArray<FZone> m_AryZones;
-	//즉 상호작용하되 안움직이는게 존재하는것
-	//그럼 상호작용 기능을 어떻게 분리할것인가
+	FName m_MapName;
+	UPROPERTY(EditDefaultsOnly,BlueprintReadOnly)
+	UNPCPaletteDataAsset* m_SpawnDataNpc;
 };

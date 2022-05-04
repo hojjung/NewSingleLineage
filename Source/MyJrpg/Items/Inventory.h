@@ -12,7 +12,31 @@
 /**
  * 
  */
+USTRUCT()
+struct FItemSpec
+{
+	GENERATED_BODY()
 
+public:
+	FItemSpec(): m_nLvStack(0), m_nDurability(0)
+	{
+		m_ID = NAME_None;
+	}
+	
+	FItemSpec(FName id, int lvStack, int dur)
+	{
+		m_ID = id;
+		m_nLvStack = lvStack;
+		m_nDurability = dur;
+	}
+
+public:
+	FName m_ID;
+
+	int m_nLvStack;
+
+	int m_nDurability;
+};
 
 UCLASS()
 class MYJRPG_API UInventory : public UObject
@@ -21,70 +45,35 @@ class MYJRPG_API UInventory : public UObject
 public:
 	DECLARE_MULTICAST_DELEGATE(FOnInvenChanged);
 
-	DECLARE_MULTICAST_DELEGATE_OneParam(FOnItemChanged,const FName&);
-
-	DECLARE_MULTICAST_DELEGATE_TwoParams(FOnItemObtained,const FItemDataRow&, int);
-
-	FOnItemObtained m_OnItemObtain;
-
 	FOnInvenChanged m_OnInvenChanged;
-
-	FOnItemChanged m_OnNewItemAdded;
-
-	FOnItemChanged m_OnNewItemRemoved;
-
+	
 protected://
-	typedef TMap<FName, int> TEquipLevelPair;
-	
-	TArray<FName> m_AryTotalItems;//전체 아이템의 칸 순서
-	
-	TMap<FName, int> m_MapMiscItems;//기타 아이템과 개수
-
-	TMap<FName, TEquipLevelPair> m_MapEquipItemIdGroup;//롱소드 : 롱소드01=1, 롱소드02=4
-
 	int m_nInvenMaxSize;
-
-public:
-	bool IsCountAvailable(int addMore = 0);
-
-	int GetInvenSize();
 	
+	TArray<FItemSpec> m_AryTotalItems;
+
+protected:
+	bool GetEmptyIndex(int& out) const;
+
+	bool AddItemStack(int index, int& lvCnt, FName id, int maxStack);
+
+	bool RemoveItemStack(int index, int& stackCnt);
+
+	void ClearItem(int index);
+	
+public:
 	void Init(int size);
 	
-	int GetAvailalbeStackCount(FName id);
-
-	int GetRemainSlotCount();
-
-	bool AddItem(FName id,int amount = 1);
-
-	bool AddEquipItem(FName gid, int lv = 0);
-
-	void RemoveItem(FName id,int amount);//amount = - 1 remove whole
-
-	void RemoveEquipItem(FName gid);
-
-	bool IsEquipItem(FName hasID);
-
-	int GetItemStack(FName ID);
-
-	int GetItemLevel(FName gID);
-
-	void AddItemLevel(FName gID, int addlv);
-
-	void SubItemLevel(FName gID, int sublv);
-
-	const TArray<FName>& GetAryTotalItemIDs() const;
-
-	FName GetItemID(int index);
+	int GetInvenSize() const;
 	
-	bool FindMisItem(const FName& name, int amount =1);
+	void UpdateInventory();
 	
-	int GetUsingSlotCount();
-	
-	const FName* FindEquipItem(const FName& Oid, int lv);
+	bool AddItem(FName itemID, int lvCnt);
 
-	const FName* FindEquipItem(const FName& Oid);
+	bool RemoveItem(FName itemID, int lvCnt);
 
-	int GetEquipItemCount(const FName& Oid, int lv);
+	FORCEINLINE const TArray<FItemSpec>& GetItems() const
+	{
+		return m_AryTotalItems;
+	}
 };
-

@@ -75,9 +75,9 @@ void UWidgetInventory::UpdateInventory()
 	int ItemIndex = 0;
 	int Index = 0;
 	
-	for (const FName& Item : m_CurrentInven->GetAryTotalItemIDs())
+	for (const auto& Item : m_CurrentInven->GetItems())
 	{
-		if(!IsSameType(Item))
+		if(!IsFilterType(Item.m_ID))
 		{
 			ItemIndex++;
 			continue;
@@ -93,7 +93,7 @@ void UWidgetInventory::UpdateInventory()
 	}
 }
 
-bool UWidgetInventory::IsSameType(const FName& item)
+bool UWidgetInventory::IsFilterType(const FName& item)
 {
 	if(m_FilterCategoryItem == EItemType::None)
 	{

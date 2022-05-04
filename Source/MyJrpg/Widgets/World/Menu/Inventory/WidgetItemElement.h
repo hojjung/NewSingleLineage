@@ -77,7 +77,7 @@ public:
 
 	void SetIndex(int index);
 	
-	FName GetItemID() const;
+	const FName& GetItemID() const;
 
 	void UpdateElement(const FName& id);
 	

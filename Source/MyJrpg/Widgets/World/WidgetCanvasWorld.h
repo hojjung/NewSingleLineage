@@ -23,7 +23,6 @@
 
 class UWidgetSkinPanel;
 struct FZoneDataRow;
-struct FZone;
 class UWidgetStackCalculator;
 class UWidgetShopPanel;
 class UWidgetZoneSelectPanel;

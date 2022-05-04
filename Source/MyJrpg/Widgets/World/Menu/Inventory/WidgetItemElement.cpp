@@ -102,36 +102,36 @@ void UWidgetItemElement::SetIndex(int index)
 	UpdateElement();
 }
 
-FName UWidgetItemElement::GetItemID() const
+const FName& UWidgetItemElement::GetItemID() const
 {
-	return m_Inven->GetItemID(m_nIndex);
+	return m_Inven->GetItems()[m_nIndex].m_ID;
 }
 
 void UWidgetItemElement::MoveItem(UInventory* addHere,UInventory* removeHere,const FName& ItemSpec, bool IsEquipItem)
 {
-	if(IsEquipItem)
-	{
-		int Level = m_Inven->GetItemLevel(ItemSpec);
-		
-		if(UMyLib::GetEquip()->IsItemEquipped(ItemSpec))
-		{
-			UMyGameInstance::Get->m_EquipManager->Unequip(UMyLib::GetItemData(ItemSpec).m_ItemType);
-		}
-		
-		if(addHere->AddEquipItem(ItemSpec, Level))
-		{
-			removeHere->RemoveEquipItem(ItemSpec);
-		}
-	}
-	else
-	{
-		int Amount = removeHere->GetItemStack(ItemSpec);
-		
-		if(addHere->AddItem(ItemSpec,Amount))
-		{
-			removeHere->RemoveItem(ItemSpec,Amount);
-		}
-	}
+	// if(IsEquipItem)
+	// {
+	// 	int Level = m_Inven->GetItemLevel(ItemSpec);
+	// 	
+	// 	if(UMyLib::GetEquip()->IsItemEquipped(ItemSpec))
+	// 	{
+	// 		UMyGameInstance::Get->m_EquipManager->Unequip(UMyLib::GetItemData(ItemSpec).m_ItemType);
+	// 	}
+	// 	
+	// 	if(addHere->AddEquipItem(ItemSpec, Level))
+	// 	{
+	// 		removeHere->RemoveEquipItem(ItemSpec);
+	// 	}
+	// }
+	// else
+	// {
+	// 	int Amount = removeHere->GetItemStack(ItemSpec);
+	// 	
+	// 	if(addHere->AddItem(ItemSpec,Amount))
+	// 	{
+	// 		removeHere->RemoveItem(ItemSpec,Amount);
+	// 	}
+	// }
 }
 
 void UWidgetItemElement::TryPickPocketItem(UInventory* addHere, AMonsterPawn* target, const FName& ItemSpec, bool IsEquipItem)
@@ -156,33 +156,32 @@ void UWidgetItemElement::TryPickPocketItem(UInventory* addHere, AMonsterPawn* ta
 	Panel->ClosePanel();
 }
 
-
 void UWidgetItemElement::SellItem()
 {
-	const FName ID = m_Inven->GetItemID(m_nIndex);
-
-	bool IsEquip =  UMyLib::GetItemType(ID) == EItemType::Equip;
-
-	if(IsEquip || m_Inven->GetItemStack(ID) == 1)
-	{
-		m_nAmount = 1;
-		
-		m_nMaxAmount = 1;
-		
-		UMyGameInstance::Get->m_ShopManager->SellItem(ID,m_nAmount);
-
-		return;
-	}
-	
-	m_nAmount=0;
-
-	m_nMaxAmount = m_Inven->GetItemStack(ID);
-
-	UWidgetStackCalculator* Calculator = UMyLib::GetCanvas()->OpenCalculator(0);
-
-	Calculator->m_OnNumberAccept.AddUObject(this,&UWidgetItemElement::OnSellConfirm);
-
-	Calculator->m_OnGetMax.BindUObject(this,&UWidgetItemElement::GetMaxAmount);
+	// const FName ID = m_Inven->GetItemID(m_nIndex);
+	//
+	// bool IsEquip =  UMyLib::GetItemType(ID) == EItemType::Equip;
+	//
+	// if(IsEquip || m_Inven->GetItemStack(ID) == 1)
+	// {
+	// 	m_nAmount = 1;
+	// 	
+	// 	m_nMaxAmount = 1;
+	// 	
+	// 	UMyGameInstance::Get->m_ShopManager->SellItem(ID,m_nAmount);
+	//
+	// 	return;
+	// }
+	//
+	// m_nAmount=0;
+	//
+	// m_nMaxAmount = m_Inven->GetItemStack(ID);
+	//
+	// UWidgetStackCalculator* Calculator = UMyLib::GetCanvas()->OpenCalculator(0);
+	//
+	// Calculator->m_OnNumberAccept.AddUObject(this,&UWidgetItemElement::OnSellConfirm);
+	//
+	// Calculator->m_OnGetMax.BindUObject(this,&UWidgetItemElement::GetMaxAmount);
 }
 
 void UWidgetItemElement::OnSellConfirm(int amount)
@@ -194,7 +193,7 @@ void UWidgetItemElement::OnSellConfirm(int amount)
 		return;
 	}
 	
-	UMyGameInstance::Get->m_ShopManager->SellItem(m_Inven->GetItemID(m_nIndex),m_nAmount);
+	UMyGameInstance::Get->m_ShopManager->SellItem(GetItemID(),m_nAmount);
 	
 	m_nAmount=0;	
 }
@@ -206,7 +205,7 @@ int UWidgetItemElement::GetMaxAmount()
 
 void UWidgetItemElement::UseItem()
 {
-	FName ItemSpec = m_Inven->GetItemID(m_nIndex);
+	const FName& ItemSpec = GetItemID();
 
 	EItemType ItemType = UMyLib::GetItemType(ItemSpec);
 
@@ -277,10 +276,10 @@ void UWidgetItemElement::UpdateElement(const FName& id)
 {
 	const FItemDataRow& ItemData = UMyLib::GetItemData(id);
 
+	int Level = m_Inven.Get() ? m_Inven->GetItems()[m_nIndex].m_nLvStack : 0;
+
 	if(UMyLib::GetItemType(ItemData) == EItemType::Equip)
 	{
-		int Level = m_Inven.Get() ? m_Inven->GetItemLevel(id) : 0;
-
 		if(Level > 0)
 		{
 			m_TextStackAmount->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
@@ -302,12 +301,10 @@ void UWidgetItemElement::UpdateElement(const FName& id)
 	}
 	else
 	{
-		int StackCount = m_Inven.Get() ? m_Inven->GetItemStack(id) : 0;
-
-		if (StackCount > 0)
+		if (Level > 0)
 		{
 			m_TextStackAmount->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
-			m_TextStackAmount->SetText(FText::AsNumber(StackCount));	
+			m_TextStackAmount->SetText(FText::AsNumber(Level));	
 		}
 		else
 		{
@@ -342,7 +339,9 @@ void UWidgetItemElement::OnClicked()
 	if(m_TextFocus->IsVisible())
 	{
 		UseItem();
+		
 		SetMyUnFocus();
+		
 		return;
 	}
 

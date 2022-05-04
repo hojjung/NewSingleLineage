@@ -49,7 +49,7 @@ protected:
 
 	void UpdateInventory();
 
-	bool IsSameType(const FName& item);
+	bool IsFilterType(const FName& item);
 	
 	void OnFocused(UWidgetItemElement* ele);
 	
