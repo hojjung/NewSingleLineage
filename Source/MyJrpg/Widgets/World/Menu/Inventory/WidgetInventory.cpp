@@ -135,6 +135,12 @@ void UWidgetInventory::UnFocusCurrent()
 
 void UWidgetInventory::OnFocused(UWidgetBaseElement* ele)
 {
+	if(m_CurrentFocused.Get() && m_CurrentFocused.Get() == ele)
+	{
+		m_OnFocusConfirm.Broadcast(m_CurrentFocused.Get() ,m_CurrentInven.Get(), m_CurrentFocused->GetIndex());	
+		UnFocusCurrent();
+		return;
+	}
 	UnFocusCurrent();
 	
 	m_CurrentFocused = ele;

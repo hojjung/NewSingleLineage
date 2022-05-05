@@ -25,7 +25,7 @@ void UItemDDO::SetDDO(UWidgetBaseElement* ele)
 
 const FItemSpec& UItemDDO::GetItem()
 {
-	return m_FromInven->GetItem(m_nIndex);
+	return m_FromInven->GetItemConstRef(m_nIndex);
 }
 
 void UItemDDO::BeginDestroy()

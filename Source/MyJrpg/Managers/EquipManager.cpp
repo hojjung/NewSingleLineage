@@ -7,23 +7,27 @@
 void UEquipManager::Init()
 {
 	m_AryEqupSlots.Init(nullptr,(int)EEquipSlotType::Length-1);
+
+	m_Inven = UMyGameInstance::Get->m_Inven;
 }
 
-bool UEquipManager::Equip(EEquipSlotType slotWant,const FName& itemWant)
+void UEquipManager::Equip(EEquipSlotType slotWant, int invenIndex)
 {
 	Unequip(slotWant);
 	
-	int Index = (int)slotWant - 1;
+	FItemSpec& Item = m_Inven->GetItemRef(invenIndex);
 	
-	//m_AryEqupSlots[Index] = itemWant;
+	int SlotIndex = (int)slotWant - 1;
 	
+	m_AryEqupSlots[SlotIndex] = &Item;
+
+	m_AryEqupSlots[SlotIndex]->m_bIsEquipped = true;
+
 	//EquipOption(m_AryEqupSlots[Index]);
 	
 	SetIsRangeStance();
 	
 	m_OnEquipChanged.Broadcast();
-
-	return true;
 }
 
 void UEquipManager::EquipOption(const FName& itemWant)
@@ -39,21 +43,23 @@ void UEquipManager::UnequipOption(const FName& itemWant)
 void UEquipManager::Unequip(EEquipSlotType slotWant)
 {
 	PRINTF("Unequip01");
-	int Index = (int)slotWant - 1;
+	int SlotIndex = (int)slotWant - 1;
+
+	FItemSpec* Temp = m_AryEqupSlots[SlotIndex];
 	
-	// const FName& Temp = m_AryEqupSlots[Index];
-	//
-	// if(Temp.IsNone())
-	// {
-	// 	return;
-	// }
-	//
-	// UnequipOption(Temp);
-	//
-	// m_AryEqupSlots[Index] = NAME_None;
-	//
-	// SetIsRangeStance();
-	// m_OnEquipChanged.Broadcast();
+	if(!Temp)
+	{
+		return;
+	}
+	Temp->m_bIsEquipped = false;
+	
+	//UnequipOption(Temp);
+	
+	m_AryEqupSlots[SlotIndex] = nullptr;
+	
+	SetIsRangeStance();
+	
+	m_OnEquipChanged.Broadcast();
 }
 
 void UEquipManager::Unequip(const FName& itemWant)
@@ -61,6 +67,13 @@ void UEquipManager::Unequip(const FName& itemWant)
 	// int Index = m_AryEqupSlots.Find(itemWant) + 1;
 	// EEquipSlotType SlotT = (EEquipSlotType)Index;
 	// Unequip(SlotT);
+}
+
+bool UEquipManager::IsItemEquipped(EEquipSlotType t, const FItemSpec& itemWant)
+{
+	int Index = (int) t - 1;
+
+	return m_AryEqupSlots[Index] == &itemWant;
 }
 
 bool UEquipManager::IsItemEquipped(const FItemSpec& itemWant)

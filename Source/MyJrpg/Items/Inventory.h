@@ -22,6 +22,7 @@ public:
 	FItemSpec(): m_nLvStack(0), m_nDurability(0)
 	{
 		m_ID = NAME_None;
+		m_bIsEquipped=false;
 	}
 	
 	FItemSpec(FName id, int lvStack, int dur = 0)
@@ -29,6 +30,7 @@ public:
 		m_ID = id;
 		m_nLvStack = lvStack;
 		m_nDurability = dur;
+		m_bIsEquipped=false;
 	}
 
 public:
@@ -37,6 +39,8 @@ public:
 	int m_nLvStack;
 
 	int m_nDurability;
+
+	bool m_bIsEquipped;
 };
 
 UCLASS()
@@ -75,10 +79,16 @@ public:
 		return m_AryTotalItems;
 	}
 	
-	FORCEINLINE const FItemSpec& GetItem(int index) const
+	FORCEINLINE const FItemSpec& GetItemConstRef(int index) const
 	{
 		return m_AryTotalItems[index];
 	}
+
+	FORCEINLINE FItemSpec& GetItemRef(int index)
+	{
+		return m_AryTotalItems[index];
+	}
+	
 	void Init(int size);
 	
 	int GetInvenSize() const;

@@ -26,6 +26,8 @@ public:
 
 	FOnFocus m_OnFocus;
 
+	FOnFocus m_OnFocusConfirm;
+
 protected:
 	UPROPERTY(EditDefaultsOnly)
 	TSubclassOf<UWidgetBaseElement> m_ClassWidgetItemEle;

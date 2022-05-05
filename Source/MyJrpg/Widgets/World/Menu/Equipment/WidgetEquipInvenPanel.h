@@ -38,6 +38,8 @@ protected:
 
 	void OnPlInvenFocused(UWidgetBaseElement* ele, UInventory* inven, int index);
 
+	void OnPlInvenFocuseConfirm(UWidgetBaseElement* ele, UInventory* inven, int index);
+
 public:
 	UWidgetInventory* GetInvenPanel();
 

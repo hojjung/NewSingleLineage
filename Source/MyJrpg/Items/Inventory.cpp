@@ -227,7 +227,7 @@ bool UInventory::FindItem(FName itemID)
 
 bool UInventory::MoveItem(int myIndex, UInventory* targetInvenToAdd)
 {
-	FItemSpec Item = GetItem(myIndex);
+	FItemSpec Item = GetItemConstRef(myIndex);
 	
 	if(Item.m_ID.IsNone())
 	{
@@ -246,9 +246,9 @@ bool UInventory::MoveItem(int myIndex, UInventory* targetInvenToAdd)
 
 void UInventory::OnDropItem(int myIndex, UInventory* other, int other_index)
 {
-	FItemSpec OtherItem = other->GetItem(other_index);
+	FItemSpec OtherItem = other->GetItemConstRef(other_index);
 
-	FItemSpec MyItem = GetItem(myIndex);
+	FItemSpec MyItem = GetItemConstRef(myIndex);
 
 	if (MyItem.m_ID.IsNone()) //빈슬롯이면 그냥 진행
 	{
