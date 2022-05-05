@@ -16,13 +16,6 @@ void UWidgetEquipElement::NativeOnInitialized()
 
 	m_Slot = EEquipSlotType::None;
 
-	m_ElementBase->m_OnHold.AddUObject(this,&UWidgetEquipElement::OnHoldingComplete);
-
-	m_ElementBase->m_OnClick.AddUObject(this,&UWidgetEquipElement::SetMyFocus);
-
-	m_TextFocus->SetVisibility(ESlateVisibility::Collapsed);
-
-	m_TextItemLevel->SetVisibility(ESlateVisibility::Collapsed);
 }
 
 //빈상태로 클릭했을때 필터링
@@ -72,26 +65,18 @@ void UWidgetEquipElement::UpdateElement(const FName& spec)
 {
 	const FItemDataRow& ItemData = UMyLib::GetItemData(spec);
 
-	m_OverlayEquip->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
-
 	int Level = 0;//UMyLib::GetPlayerInven()->GetItemLevel(spec);;
 
 	if(Level>0)
 	{
-		m_TextItemLevel->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
-		
 		FString LevelStr = FString::Printf(TEXT("+ %d"),Level);
-
-		m_TextItemLevel->SetText(FText::FromString(LevelStr));
 	}
 	else
 	{
-		m_TextItemLevel->SetVisibility(ESlateVisibility::Collapsed);
+		
 	}
 
-	m_ElementBase->SetIcon(ItemData.m_Icon);
-
-	m_ElementBase->SetGlowColor(ItemData.m_ColorHandle);
+	//m_ElementBase->SetItem(ItemData);
 
 	m_ElementBase->SetHoldable(true);
 }
@@ -99,10 +84,6 @@ void UWidgetEquipElement::UpdateElement(const FName& spec)
 void UWidgetEquipElement::Clear()
 {
 	m_ElementBase->Clear();
-
-	m_TextItemLevel->SetVisibility(ESlateVisibility::Collapsed);
-
-	m_OverlayEquip->SetVisibility(ESlateVisibility::Collapsed);
 
 	m_ImgEquipIcon->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
 
@@ -121,23 +102,11 @@ void UWidgetEquipElement::SetMyFocus()
 		return; //필터링
 	}
 
-	if (m_TextFocus->IsVisible())
-	{
-		UnEquipItem(); //장착해제
-		SetMyUnFocus();
-		return;
-	}
-
-	m_TextFocus->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
-
-	m_TextFocus->SetText(GetFocusText());
-
 	m_ElementBase->SetMyFocus();
 }
 
 void UWidgetEquipElement::SetMyUnFocus()
 {
-	m_TextFocus->SetVisibility(ESlateVisibility::Collapsed);
 	
 	m_ElementBase->SetMyUnFocus();
 }

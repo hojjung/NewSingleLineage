@@ -132,8 +132,7 @@ enum class EPanelType
 {
 	None,
 	Inven,
-	StorageDeposit,
-	StorageWithdraw,
+	Storage,
 	ShopBuy,
 	ShopSell,
 	Enchant,

@@ -78,7 +78,9 @@ UEnchantManager::UEnchantManager()
 
 void UEnchantManager::EnchantSuccess(bool isSpecial)
 {
-	UMyLib::GetPlayerInven()->AddItemLevel(m_CrntTarget,1);
+	int StLv = UMyLib::GetPlayerInven()->GetStLv(m_CrntTarget);
+
+	UMyLib::GetPlayerInven()->SetStLv(m_CrntTarget, StLv + 1);
 
 	UMyGameInstance::Get->m_CurrencyManager->SubGold(GetEnchantCost());
 }

@@ -13,9 +13,8 @@ void UUWidgetShopItemElement::NativeOnInitialized()
 
 	m_ItemID = NAME_None;
 
-	m_ElementBase->m_OnHold.AddUObject(this,&UUWidgetShopItemElement::OnHoldingComplete);
+	//m_ElementBase->m_OnHold.AddUObject(this,&UUWidgetShopItemElement::OnHoldingComplete);
 
-	m_ElementBase->m_OnClick.AddUObject(this,&UUWidgetShopItemElement::OnClicked);
 
 	m_TextFocus->SetVisibility(ESlateVisibility::Collapsed);
 }
@@ -140,9 +139,7 @@ void UUWidgetShopItemElement::UpdateElement(const FName& tradeData)
 
 	m_ElementBase->SetHoldable(true);
 
-	m_ElementBase->SetIcon(ItemData.m_Icon);
-
-	m_ElementBase->SetGlowColor(ItemData.m_ColorHandle);
+	//m_ElementBase->SetItem(m_ItemID);
 }
 
 void UUWidgetShopItemElement::Clear()

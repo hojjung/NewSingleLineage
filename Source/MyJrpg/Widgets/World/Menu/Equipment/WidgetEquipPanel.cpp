@@ -66,5 +66,5 @@ void UWidgetEquipPanel::UpdateSlots()
 
 void UWidgetEquipPanel::RequestFilterItems()
 {
-	UMyLib::GetCanvas()->GetEquipInvenMenu()->GetInvenPanel()->OnFilterEquips();
+	
 }

@@ -24,9 +24,9 @@ class MYJRPG_API UWidgetEnchantBase : public UUserWidget
 
 protected:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (BindWidget))
-	UWidgetItemElement* m_TargetItem;
+	UWidgetBaseElement* m_TargetItem;
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (BindWidget))
-	UWidgetItemElement* m_TargetMaterial;
+	UWidgetBaseElement* m_TargetMaterial;
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (BindWidget))
 	UButton* m_BtnClose;
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (BindWidget))

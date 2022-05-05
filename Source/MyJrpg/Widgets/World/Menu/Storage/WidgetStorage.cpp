@@ -7,7 +7,7 @@ void UWidgetStorage::NativeOnInitialized()
 {
 	Super::NativeOnInitialized();
 
-	m_InvenPanel->Init(UMyLib::GetPlayerInven(),EPanelType::StorageDeposit);
+	m_InvenPanel->Init(UMyLib::GetPlayerInven());
 	
 	m_FilterBtns->RegisterFilter(m_StoragePanel);
 	
@@ -17,8 +17,10 @@ void UWidgetStorage::NativeOnInitialized()
 void UWidgetStorage::SetTargetInven(UInventory* storage)
 {
 	m_TargetInven = storage;
+
+	//m_InvenPanel->Init(UMyLib::GetPlayerInven(),EPanelType::Storage,storage);
 	
-	m_StoragePanel->Init(m_TargetInven,EPanelType::StorageWithdraw);
+	//m_StoragePanel->Init(m_TargetInven,EPanelType::StorageWithdraw);
 	
 	m_StoragePanel->OpenPanel();
 	

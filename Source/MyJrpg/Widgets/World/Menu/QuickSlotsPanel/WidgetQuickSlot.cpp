@@ -50,7 +50,7 @@ void UWidgetQuickSlot::UpdateSkillSlot()
 	
 	m_ItemElement->SetIsEnabled(true);
 
-	m_ItemElement->SetIcon(GetSkillData()->m_SkillIcon);
+	//m_ItemElement->SetIcon(GetSkillData()->m_SkillIcon);
 }
 
 const FSkillDataRow* UWidgetQuickSlot::GetSkillData()

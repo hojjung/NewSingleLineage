@@ -118,7 +118,7 @@ void UMyGameInstance::Init()
 	//
 	IterateItemTableToRegister();
 
-	m_Inven->AddItem(FItemSpec(TEXT("misc_gold24k"), 3));
+	m_Inven->AddItem(FItemSpec(TEXT("misc_leather01"), 3));
 	m_Inven->AddItem(FItemSpec(TEXT("TorsoAdv"), 0));
 	m_Inven->AddItem(FItemSpec(TEXT("TorsoAdv"), 2));
 	m_AryStorage.Reset();

@@ -8,9 +8,8 @@ void UWidgetPetElement::Init(const FPetRow& pl)
 	m_PetManager = UMyGameInstance::Get->m_PetManager;
 	m_Ele->SetFocusable(true);
 	m_Ele->SetHoldable(false);
-	m_Ele->SetGlowColor(m_Pet->m_Color);
-	m_Ele->SetIcon(m_Pet->m_Icon);
-	m_Ele->m_OnClick.AddUObject(this,&UWidgetPetElement::OnClicked);
+	//m_Ele->SetGlowColor(m_Pet->m_Color);
+	//m_Ele->SetIcon(m_Pet->m_Icon);
 
 	UpdateEle();
 }

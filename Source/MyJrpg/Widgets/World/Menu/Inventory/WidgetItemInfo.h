@@ -4,9 +4,10 @@
 
 #include "CoreMinimal.h"
 
-#include "WidgetItemElement.h"
 #include "Blueprint/UserWidget.h"
 #include "Components/ScrollBox.h"
+#include "MyJrpg/Items/Inventory.h"
+#include "MyJrpg/Widgets/World/CommonElements/WidgetBaseElement.h"
 #include "MyJrpg/Widgets/World/Menu/Collection/WidgetCollecStatChild.h"
 #include "MyJrpg/Widgets/World/Menu/StackSelector/WidgetStackCalculator.h"
 #include "WidgetItemInfo.generated.h"
@@ -26,7 +27,7 @@ class MYJRPG_API UWidgetItemInfo : public UUserWidget
 	
 protected:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (BindWidget))
-	UWidgetItemElement* m_ItemIcon;
+	UWidgetBaseElement* m_ItemIcon;
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (BindWidget))
 	UTextBlock* m_TextItemName;
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (BindWidget))

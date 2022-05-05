@@ -6,7 +6,7 @@
 
 void UEquipManager::Init()
 {
-	//m_AryEqupSlots.Init(NAME_None,(int)EEquipSlotType::Length-1);
+	m_AryEqupSlots.Init(nullptr,(int)EEquipSlotType::Length-1);
 }
 
 bool UEquipManager::Equip(EEquipSlotType slotWant,const FName& itemWant)

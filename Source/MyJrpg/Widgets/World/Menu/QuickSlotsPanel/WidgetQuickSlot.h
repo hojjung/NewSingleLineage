@@ -9,7 +9,7 @@
 #include "MyJrpg/MyJrpg.h"
 #include "MyJrpg/DataTables/SkillData.h"
 #include "MyJrpg/Items/ItemExecuteBase.h"
-#include "MyJrpg/Widgets/World/Menu/Inventory/WidgetItemElement.h"
+#include "MyJrpg/Widgets/World/CommonElements/WidgetBaseElement.h"
 
 #include "WidgetQuickSlot.generated.h"
 

@@ -29,8 +29,6 @@ protected:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (BindWidget))
 	UWidgetEquipPanel* m_EquipPanel;
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (BindWidget))
-	UWidgetFilterBtns* m_FilterBtns;
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (BindWidget))
 	UWidgetInventory* m_InvenPanel;
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (BindWidget))
 	UWidgetStatPanel* m_StatPanel;
@@ -38,7 +36,7 @@ protected:
 protected:
 	virtual void NativeOnInitialized() override;
 
-	void UpdateText();
+	void OnPlInvenFocused(UWidgetBaseElement* ele, UInventory* inven, int index);
 
 public:
 	UWidgetInventory* GetInvenPanel();

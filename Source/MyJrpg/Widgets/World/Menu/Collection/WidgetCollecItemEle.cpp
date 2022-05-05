@@ -4,46 +4,46 @@
 
 void UWidgetCollecItemEle::Init(const FName& collecID, int index, bool is_equip, const FItemDataHandle& item, int lv)
 {
-	m_Checkbox->SetVisibility(ESlateVisibility::Collapsed);
-
-	m_ImgLock->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
-
-	m_IconEle->SetHoldable(true);
-
-	m_IconEle->m_OnHold.AddUObject(this,&UWidgetCollecItemEle::OnHoldComplete);
-
-	m_IconEle->m_OnClick.AddUObject(this,&UWidgetCollecItemEle::OnClicked);
-
-	m_bIsEquip = is_equip;
-
-	m_bRegisterable = false;
-
-	m_CollecID = collecID;
-
-	m_ItemID = item.RowName;
-
-	m_nIndex = index;
-
-	m_nEnchantLv = lv;
-
-	FString Str = FString::Printf(TEXT("+%d"),m_nEnchantLv);
-
-	m_TextEnchantLevel->SetText(FText::FromString(Str));
-
-	const FItemDataRow& ItemData = *item.GetRow<FItemDataRow>("");
-
-	m_IconEle->SetIcon(ItemData.m_Icon);
-
-	m_IconEle->SetGlowColor(ItemData.m_ColorHandle);
-
-	if(m_bIsEquip && lv > 0)
-	{
-		m_TextEnchantLevel->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
-	}
-	else
-	{
-		m_TextEnchantLevel->SetVisibility(ESlateVisibility::Collapsed);
-	}
+	// m_Checkbox->SetVisibility(ESlateVisibility::Collapsed);
+	//
+	// m_ImgLock->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
+	//
+	// m_IconEle->SetHoldable(true);
+	//
+	// m_IconEle->m_OnHold.AddUObject(this,&UWidgetCollecItemEle::OnHoldComplete);
+	//
+	// m_IconEle->m_OnClick.AddUObject(this,&UWidgetCollecItemEle::OnClicked);
+	//
+	// m_bIsEquip = is_equip;
+	//
+	// m_bRegisterable = false;
+	//
+	// m_CollecID = collecID;
+	//
+	// m_ItemID = item.RowName;
+	//
+	// m_nIndex = index;
+	//
+	// m_nEnchantLv = lv;
+	//
+	// FString Str = FString::Printf(TEXT("+%d"),m_nEnchantLv);
+	//
+	// m_TextEnchantLevel->SetText(FText::FromString(Str));
+	//
+	// const FItemDataRow& ItemData = *item.GetRow<FItemDataRow>("");
+	//
+	// m_IconEle->SetIcon(ItemData.m_Icon);
+	//
+	// m_IconEle->SetGlowColor(ItemData.m_ColorHandle);
+	//
+	// if(m_bIsEquip && lv > 0)
+	// {
+	// 	m_TextEnchantLevel->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
+	// }
+	// else
+	// {
+	// 	m_TextEnchantLevel->SetVisibility(ESlateVisibility::Collapsed);
+	// }
 }
 
 void UWidgetCollecItemEle::OnHoldComplete()

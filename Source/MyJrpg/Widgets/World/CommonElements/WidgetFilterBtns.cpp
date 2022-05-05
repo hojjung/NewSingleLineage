@@ -44,10 +44,7 @@ void UWidgetFilterBtns::OnBtnPressed(UButton* btn, EItemType t)
 
 void UWidgetFilterBtns::RegisterFilter(UWidgetInventory* inven)
 {
-	m_BtnClearFilter->OnClicked.AddDynamic(inven, &UWidgetInventory::ClearFilter);
-	m_BtnFilterMisc->OnClicked.AddDynamic(inven, &UWidgetInventory::OnFilterMisc);
-	m_BtnFilterConsume->OnClicked.AddDynamic(inven, &UWidgetInventory::OnFilterConsumable);
-	m_BtnFilterEquip->OnClicked.AddDynamic(inven, &UWidgetInventory::OnFilterEquips);
+	
 }
 
 void UWidgetFilterBtns::RegisterFilter(UWidgetShopPanel* shop)

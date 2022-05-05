@@ -4,7 +4,7 @@ FReply UWidgetSkillElement::NativeOnTouchStarted(const FGeometry& InGeometry, co
 {
 	Super::NativeOnTouchStarted(InGeometry, InGestureEvent);
 
-	m_SkillEle->NativeOnTouchStarted(InGeometry, InGestureEvent);
+	//m_SkillEle->NativeOnTouchStarted(InGeometry, InGestureEvent);
 
 	return FReply::Handled();
 }
@@ -13,7 +13,7 @@ FReply UWidgetSkillElement::NativeOnMouseButtonDown(const FGeometry& InGeometry,
 {
 	Super::NativeOnMouseButtonDown(InGeometry, InMouseEvent);
 
-	m_SkillEle->NativeOnMouseButtonDown(InGeometry, InMouseEvent);
+	//m_SkillEle->NativeOnMouseButtonDown(InGeometry, InMouseEvent);
 
 	return FReply::Handled();
 }
@@ -22,7 +22,7 @@ FReply UWidgetSkillElement::NativeOnTouchMoved(const FGeometry& InGeometry, cons
 {
 	Super::NativeOnTouchMoved(InGeometry, InGestureEvent);
 
-	m_SkillEle->NativeOnTouchMoved(InGeometry, InGestureEvent);
+	//m_SkillEle->NativeOnTouchMoved(InGeometry, InGestureEvent);
 
 	return FReply::Handled();
 }
@@ -31,7 +31,7 @@ FReply UWidgetSkillElement::NativeOnTouchEnded(const FGeometry& InGeometry, cons
 {
 	Super::NativeOnTouchEnded(InGeometry, InGestureEvent);
 
-	m_SkillEle->NativeOnTouchEnded(InGeometry, InGestureEvent);
+	//m_SkillEle->NativeOnTouchEnded(InGeometry, InGestureEvent);
 
 	return FReply::Handled();
 }
@@ -40,7 +40,7 @@ void UWidgetSkillElement::NativeOnMouseLeave(const FPointerEvent& InMouseEvent)
 {
 	Super::NativeOnMouseLeave(InMouseEvent);
 	
-	m_SkillEle->NativeOnMouseLeave(InMouseEvent);
+	//m_SkillEle->NativeOnMouseLeave(InMouseEvent);
 }
 
 void UWidgetSkillElement::NativeOnInitialized()
@@ -53,7 +53,7 @@ void UWidgetSkillElement::NativeOnInitialized()
 
 	m_SkillEle->SetFocusable(true);
 
-	m_SkillEle->m_OnClick.AddUObject(this,&UWidgetSkillElement::OnFocus);
+	//m_SkillEle->m_OnClick.AddUObject(this,&UWidgetSkillElement::OnFocus);
 	
 	m_TextFocus->SetVisibility(ESlateVisibility::Collapsed);
 }
@@ -84,7 +84,7 @@ void UWidgetSkillElement::SetSkill(FName id, bool isUnlock)
 	
 	auto* SkillData =  USkillData::GetSkillTable->FindRow<FSkillDataRow>(m_SkillID,"");
 	
-	m_SkillEle->SetIcon(SkillData->m_SkillIcon);
+	//m_SkillEle->SetIcon(SkillData->m_SkillIcon);
 
 	if(SkillData->m_bIsPassive)
 	{

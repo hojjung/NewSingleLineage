@@ -11,7 +11,6 @@ void UWidgetPickpocketPanel::NativeOnInitialized()
 
 	m_nCrntIndex = 0;
 
-	m_InvenPanel->Init(UMyLib::GetPlayerInven(),EPanelType::PickPocketPl);
 	
 	m_FilterBtns->RegisterFilter(m_OtherPanel);
 	
@@ -55,7 +54,6 @@ void UWidgetPickpocketPanel::AddInvenDelegate()
 {
 	m_EachInvenHandle = m_TargetPawn->GetInven()->m_OnInvenChanged.AddUObject(this,&UWidgetPickpocketPanel::UpdateText);
 
-	m_OtherPanel->Init(m_TargetPawn->GetInven(),EPanelType::PickPocketTarget);
 	m_OtherPanel->OpenPanel();
 	
 	UpdateText();

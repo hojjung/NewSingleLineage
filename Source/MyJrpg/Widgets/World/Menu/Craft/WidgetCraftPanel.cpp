@@ -22,11 +22,11 @@ void UWidgetCraftPanel::NativeOnInitialized()//Texture2D'/Game/Sprites/UI/HarmoB
 	
 	m_GoldIcon->SetVisibility(ESlateVisibility::Collapsed);
 
-	m_GoldIcon->SetIcon(m_CoinIcon);
+	//m_GoldIcon->SetIcon(m_CoinIcon);
 
-	m_GoldIcon->SetHoldable(false);
+	//m_GoldIcon->SetHoldable(false);
 
-	m_GoldIcon->SetFocusable(false);
+	//m_GoldIcon->SetFocusable(false);
 	//모든 제작품목 가져옴
 	CreateAllCraftWidget(UMyGameInstance::Get->m_CraftManager->GetCraftItems());
 
@@ -113,9 +113,9 @@ void UWidgetCraftPanel::OnSelectCraftItem(UWidgetCraftableElement* selectedEleme
 	m_GoldIcon->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
 	//
 	//
-	m_CurrentCraftItem->SetIcon(TargetItem.m_Icon);
+	//m_CurrentCraftItem->SetIcon(TargetItem.m_Icon);
 
-	m_CurrentCraftItem->SetGlowColor(TargetItem.m_ColorHandle);
+	//m_CurrentCraftItem->SetGlowColor(TargetItem.m_ColorHandle);
 
 	m_TextCurrentItemName->SetText(TargetItem.m_ShowingName);
 

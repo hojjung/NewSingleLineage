@@ -10,7 +10,6 @@ void UWidgetShopPanel::NativeOnInitialized()
 
 	m_bNoFilter = true;
 
-	m_InvenPanel->Init(UMyLib::GetPlayerInven(),EPanelType::ShopSell);
 	
 	m_FilterBtns->RegisterFilter(m_InvenPanel);
 	m_FilterBtns->RegisterFilter(this);

@@ -5,7 +5,7 @@
 #include "CoreMinimal.h"
 #include "Blueprint/UserWidget.h"
 #include "MyJrpg/DataTables/ItemData.h"
-#include "MyJrpg/Widgets/World/Menu/Inventory/WidgetItemElement.h"
+#include "MyJrpg/Widgets/World/CommonElements/WidgetBaseElement.h"
 #include "WidgetCraftableElement.generated.h"
 
 /**

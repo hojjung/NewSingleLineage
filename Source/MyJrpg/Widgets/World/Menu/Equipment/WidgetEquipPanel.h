@@ -3,7 +3,6 @@
 #include "CoreMinimal.h"
 #include "WidgetEquipElement.h"
 #include "Blueprint/UserWidget.h"
-#include "MyJrpg/Widgets/World/Menu/Inventory/WidgetItemElement.h"
 #include "WidgetEquipPanel.generated.h"
 
 UCLASS()

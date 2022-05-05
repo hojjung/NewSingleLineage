@@ -79,6 +79,11 @@ bool UInventory::AddItem(FItemSpec addItem)
 	return false;
 }
 
+void UInventory::AddItem(int index, FItemSpec addItem)
+{
+	m_AryTotalItems[index] = addItem;
+}
+
 void UInventory::AddMapItem(FName id, int cnt)
 {
 	int* Count = m_MapItems.Find(id);
@@ -135,7 +140,6 @@ bool UInventory::RemoveItemStack(int index, int& stackCnt)
 {
 	int& CrntStack = m_AryTotalItems[index].m_nLvStack;
 
-	
 	if(CrntStack < stackCnt)// 3 5
 	{
 		stackCnt -= CrntStack;
@@ -216,12 +220,87 @@ int UInventory::GetUsingSlotCount() const
 	return UsingSlotCnt;
 }
 
-void UInventory::AddItemLevel(int index, int i)
-{
-	m_AryTotalItems[index].m_nLvStack += i;
-}
-
 bool UInventory::FindItem(FName itemID)
 {
 	return m_MapItems.Contains(itemID);
+}
+
+bool UInventory::MoveItem(int myIndex, UInventory* targetInvenToAdd)
+{
+	FItemSpec Item = GetItem(myIndex);
+	
+	if(Item.m_ID.IsNone())
+	{
+		return false;
+	}
+
+	if(!targetInvenToAdd-AddItem(Item))
+	{
+		return false;
+	}
+
+	RemoveItem(myIndex);
+	
+	return true;
+}
+
+void UInventory::OnDropItem(int myIndex, UInventory* other, int other_index)
+{
+	FItemSpec OtherItem = other->GetItem(other_index);
+
+	FItemSpec MyItem = GetItem(myIndex);
+
+	if (MyItem.m_ID.IsNone()) //빈슬롯이면 그냥 진행
+	{
+		AddItem(myIndex, OtherItem);
+		other->RemoveItem(other_index);
+		UpdateInventory();
+		other->UpdateInventory();
+		return;
+	}
+
+	const FItemDataRow& MyItemData = UMyLib::GetItemData(MyItem.m_ID);
+
+	if (!UMyLib::IsEquip(MyItemData) && MyItem.m_ID == OtherItem.m_ID)
+	{
+		int AvailableStack = MyItemData.m_nMaxStack - MyItem.m_nLvStack; //10,3,7,3
+
+		int NewAddStack = OtherItem.m_nLvStack; //7, 3개만 넣어주고 3개 빼기
+
+		if (AvailableStack >= NewAddStack)
+		{
+			int MyStack = MyItem.m_nLvStack + NewAddStack; //타겟에게 가능한 개수 추가, 드래그 삭제
+			
+			SetStLv(myIndex, MyStack);
+
+			other->RemoveItem(other_index);
+		}
+		else
+		{
+			int MyStack = MyItem.m_nLvStack + AvailableStack; //타겟에게 최대 개수 추가, 드래그에게 차감
+
+			int OtherStack = NewAddStack - AvailableStack;
+			
+			SetStLv(myIndex, MyStack);
+
+			other->SetStLv(other_index, OtherStack);
+		}
+	}
+	else
+	{
+		AddItem(myIndex, OtherItem);
+		other->AddItem(other_index, MyItem);
+	}
+	UpdateInventory();
+	other->UpdateInventory();
+}
+
+void UInventory::SetStLv(int index, int stLv)
+{
+	m_AryTotalItems[index].m_nLvStack = stLv;
+}
+
+int UInventory::GetStLv(int index)
+{
+	return m_AryTotalItems[index].m_nLvStack;
 }

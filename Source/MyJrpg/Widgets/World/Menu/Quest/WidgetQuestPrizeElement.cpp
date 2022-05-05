@@ -14,7 +14,7 @@ void UWidgetQuestPrizeElement::NativeOnInitialized()
 
 	m_QuestBaseEle->SetHoldable(true);
 
-	m_QuestBaseEle->m_OnHold.AddUObject(this,&UWidgetQuestPrizeElement::OnHoldComplete);
+	//m_QuestBaseEle->m_OnHold.AddUObject(this,&UWidgetQuestPrizeElement::OnHoldComplete);
 }
 
 void UWidgetQuestPrizeElement::OnHoldComplete()
@@ -76,5 +76,5 @@ void UWidgetQuestPrizeElement::UpdatePrize()
 		}
 	}
 
-	m_QuestBaseEle->SetIcon(Icon);
+	//m_QuestBaseEle->SetIcon(Icon);
 }

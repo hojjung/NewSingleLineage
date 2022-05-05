@@ -8,13 +8,9 @@ void UWidgetCraftableElement::SetCraftable(const FName& id)
 
 	m_ItemData = UItemData::GetItemTable->FindRow<FItemDataRow>(m_ItemID, "");
 	
-	m_ItemElement->SetIcon(m_ItemData->m_Icon);
+	//m_ItemElement->SetItem(*m_ItemData);
 
-	m_ItemElement->SetGlowColor(m_ItemData->m_ColorHandle);
-
-	m_ItemElement->m_OnClick.AddUObject(this,&UWidgetCraftableElement::OnClicked);
-
-	m_ItemElement->m_OnHold.AddUObject(this,&UWidgetCraftableElement::OnHoldComplete);
+	//m_ItemElement->m_OnHold.AddUObject(this,&UWidgetCraftableElement::OnHoldComplete);
 
 	m_ItemElement->SetHoldable(true);
 

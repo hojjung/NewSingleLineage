@@ -7,6 +7,8 @@
 #include "Components/Image.h"
 #include "Components/Overlay.h"
 #include "Components/ProgressBar.h"
+#include "Components/TextBlock.h"
+#include "MyJrpg/Items/Inventory.h"
 #include "WidgetBaseElement.generated.h"
 
 struct FColorDataHandle;
@@ -17,11 +19,15 @@ class MYJRPG_API UWidgetBaseElement : public UUserWidget
 	GENERATED_BODY()
 
  public:
- 	DECLARE_MULTICAST_DELEGATE(FOnClicked);
+	DECLARE_MULTICAST_DELEGATE_OneParam(FOnFocus, UWidgetBaseElement*);
+	
+	FOnFocus m_OnHold;
 
- 	FOnClicked m_OnClick;
+	FOnFocus m_OnFocus;
 
-	FOnClicked m_OnHold;
+	FOnFocus m_OnDrag;
+
+	FOnFocus m_OnDrop;
 
  protected:
  	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (BindWidget))
@@ -34,62 +40,74 @@ class MYJRPG_API UWidgetBaseElement : public UUserWidget
  	UProgressBar* m_HoldingBar;
 	UPROPERTY(EditDefaultsOnly)
 	UTexture2D* m_DefaultGlow;
-	UPROPERTY()
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (BindWidget))
+	UOverlay* m_OverlayEquip;
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (BindWidget))
+	UTextBlock* m_TextFocus;
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (BindWidget))
+	UTextBlock* m_TextStackAmount;//Level
+	
  	float m_fTimer;
-	UPROPERTY()
+	
  	bool m_bHolding;
-	UPROPERTY()
+	
 	bool m_bIsHoldable;
-	UPROPERTY()
+	
 	bool m_bIsFocusable;
+
+	bool m_bIsDragable;
+
+	int m_nIndex;
 
  protected:
  	virtual void NativeOnInitialized() override;
  	
  	virtual void NativeTick(const FGeometry& MyGeometry, float InDeltaTime) override;
 	
-	void OnHoldingComplete();
-	
  	void EndHolding();
 	
- public:
 	UDragDropOperation* CreateDDO();
 
-	UImage* GetImgIcon();
-	
 	virtual FReply NativeOnTouchStarted(const FGeometry& InGeometry, const FPointerEvent& InGestureEvent) override;
 
-	virtual FReply NativeOnMouseButtonDown(const FGeometry& InGeometry, const FPointerEvent& InMouseEvent) override;
-	
 	virtual FReply NativeOnTouchMoved(const FGeometry& InGeometry, const FPointerEvent& InGestureEvent) override;
 
 	virtual FReply NativeOnTouchEnded(const FGeometry& InGeometry, const FPointerEvent& InGestureEvent) override;
 
 	virtual void NativeOnMouseLeave(const FPointerEvent& InMouseEvent) override;
 
-	
 	virtual void NativeOnDragDetected(const FGeometry& InGeometry, const FPointerEvent& InMouseEvent, UDragDropOperation*& OutOperation) override;
 
 	virtual bool NativeOnDrop(const FGeometry& InGeometry, const FDragDropEvent& InDragDropEvent, UDragDropOperation* InOperation) override;
 
 public:
+	UWidget* GetImgIcon();
+	
+ 	void Clear();
+	
  	void SetIcon(TSoftObjectPtr<UTexture2D> t);
 
 	void SetGlowColor(const FColorDataHandle& color);
 
-	bool IsFocused();
-	
- 	void Clear();
-
 	void SetHoldable(bool isActive);
 
 	void SetFocusable(bool isActive);
+
+	void SetDragable(bool isActive);
 	
 	bool IsMyFocused() const;
-
-	void OnClick();
 
 	void SetMyFocus();
 
 	void SetMyUnFocus();
+	
+	void SetTextStackLv(FString t);
+
+	void HideTextStackLv();
+
+	void SetIndex(int index);
+
+	int GetIndex();
+	
+	void SetTextFocus(FText t);
 };

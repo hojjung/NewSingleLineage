@@ -7,17 +7,11 @@ void UWidgetEnchantBase::NativeOnInitialized()
 {
 	Super::NativeOnInitialized();
 
-	m_Inven->Init(UMyLib::GetPlayerInven(), EPanelType::Enchant);
-
 	m_BtnClose->OnClicked.AddDynamic(this, &UWidgetEnchantBase::OnClose);
 
 	m_BtnEnchant->OnClicked.AddDynamic(this, &UWidgetEnchantBase::DoEnchant);
 
 	UMyGameInstance::Get->m_EnchantManager->m_OnEnchantChanged.AddUObject(this,&UWidgetEnchantBase::Update);
-
-	m_TargetItem->Init(EPanelType::None,UMyLib::GetPlayerInven());
-
-	m_TargetMaterial->Init(EPanelType::None,UMyLib::GetPlayerInven());
 }
 
 void UWidgetEnchantBase::Open()
@@ -57,7 +51,7 @@ void UWidgetEnchantBase::UpdateIcons(const FName& target, const FName& mat, int 
 {
 	if (!target.IsNone())
 	{
-		m_TargetItem->UpdateElement(target);
+		//m_TargetItem->UpdateElement(target);
 	}
 	else
 	{
@@ -66,7 +60,7 @@ void UWidgetEnchantBase::UpdateIcons(const FName& target, const FName& mat, int 
 
 	if (!mat.IsNone())
 	{
-		m_TargetMaterial->UpdateElement(mat);
+		//m_TargetMaterial->UpdateElement(mat);
 	}
 	else
 	{

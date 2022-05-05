@@ -1,5 +1,6 @@
 #include "WidgetBaseElement.h"
 #include "MyJrpg/MyJrpg.h"
+#include "MyJrpg/MyLib.h"
 #include "MyJrpg/DataTables/ItemData.h"
 #include "MyJrpg/Widgets/World/Menu/Inventory/ItemDDO.h"
 
@@ -10,38 +11,21 @@ void UWidgetBaseElement::NativeOnInitialized()
 	m_bIsHoldable = true;
 
 	m_bIsFocusable = true;
+
+	m_bIsDragable = true;
+
+	m_nIndex = INDEX_NONE;
 	
 	Clear();
 
 	SetMyUnFocus();
 }
 
-void UWidgetBaseElement::Clear()
-{
-	m_ImgGlow->SetBrushFromTexture(m_DefaultGlow);
-	
-	m_ImgItemIcon->SetVisibility(ESlateVisibility::Collapsed);
-
-	m_HoldingBar->SetVisibility(ESlateVisibility::Collapsed);
-}
-
-void UWidgetBaseElement::SetHoldable(bool isActive)
-{
-	m_bIsHoldable = isActive;
-}
-
-FReply UWidgetBaseElement::NativeOnMouseButtonDown(const FGeometry& InGeometry, const FPointerEvent& InMouseEvent)
-{
-	Super::NativeOnMouseButtonDown(InGeometry, InMouseEvent);
-
-	return FReply::Handled();
-}
-//
 FReply UWidgetBaseElement::NativeOnTouchStarted(const FGeometry& InGeometry, const FPointerEvent& InGestureEvent)
 {
 	Super::NativeOnTouchStarted(InGeometry, InGestureEvent);
 
-	if(!m_bIsHoldable)
+	if(!m_bIsHoldable || !m_bIsDragable)
 	{
 		return FReply::Handled();
 	}
@@ -49,7 +33,7 @@ FReply UWidgetBaseElement::NativeOnTouchStarted(const FGeometry& InGeometry, con
 	m_bHolding = true;
 
 	m_fTimer = 0;
-
+	
 	return UWidgetBlueprintLibrary::DetectDragIfPressed(InGestureEvent,this,EKeys::LeftMouseButton).NativeReply;
 }
 
@@ -73,7 +57,9 @@ FReply UWidgetBaseElement::NativeOnTouchEnded(const FGeometry& InGeometry, const
 	
 	if(m_bIsFocusable && m_fTimer < 0.7f)
 	{
-		OnClick();
+		SetMyFocus();
+		
+		m_OnFocus.Broadcast(this);
 	}
 
 	return FReply::Handled();
@@ -91,15 +77,30 @@ void UWidgetBaseElement::NativeOnDragDetected(const FGeometry& InGeometry, const
 {
 	Super::NativeOnDragDetected(InGeometry, InMouseEvent, OutOperation);
 	OutOperation = CreateDDO();
+	m_OnDrag.Broadcast(this);
 }
-
+UDragDropOperation* UWidgetBaseElement::CreateDDO()
+{
+	UItemDDO* DDO = Cast<UItemDDO>(UWidgetBlueprintLibrary::CreateDragDropOperation(UItemDDO::StaticClass()));
+	DDO->SetDDO(this);
+	return DDO;
+}
 bool UWidgetBaseElement::NativeOnDrop(const FGeometry& InGeometry, const FDragDropEvent& InDragDropEvent,
 	UDragDropOperation* InOperation)
 {
+	bool Result = Super::NativeOnDrop(InGeometry, InDragDropEvent, InOperation);
+	
 	if(UItemDDO::GetDDOInst!=InOperation)
 	{
 		return false;
 	}
+
+	if(UItemDDO::GetDDOInst->DefaultDragVisual == GetImgIcon())
+	{
+		return false;
+	}
+	
+	m_OnDrop.Broadcast(this);
 
 	return true;
 }
@@ -122,7 +123,7 @@ void UWidgetBaseElement::NativeTick(const FGeometry& MyGeometry, float InDeltaTi
 
 	if (m_fTimer >= 0.7f)
 	{
-		OnHoldingComplete();
+		m_OnHold.Broadcast(this);
 
 		EndHolding();
 	}
@@ -130,6 +131,22 @@ void UWidgetBaseElement::NativeTick(const FGeometry& MyGeometry, float InDeltaTi
 	m_HoldingBar->SetPercent(m_fTimer / 0.7f);
 }
 
+void UWidgetBaseElement::Clear()
+{
+	EndHolding();
+	
+	m_ImgGlow->SetBrushFromTexture(m_DefaultGlow);
+	
+	m_ImgItemIcon->SetVisibility(ESlateVisibility::Collapsed);
+
+	HideTextStackLv();
+}
+
+void UWidgetBaseElement::SetHoldable(bool isActive)
+{
+	m_bIsHoldable = isActive;
+}
+//
 void UWidgetBaseElement::EndHolding()
 {
 	m_bHolding = false;
@@ -137,16 +154,9 @@ void UWidgetBaseElement::EndHolding()
 	m_HoldingBar->SetVisibility(ESlateVisibility::Collapsed);
 }
 
-UDragDropOperation* UWidgetBaseElement::CreateDDO()
+UWidget* UWidgetBaseElement::GetImgIcon()
 {
-	auto* DDO = Cast<UItemDDO>(UWidgetBlueprintLibrary::CreateDragDropOperation(UItemDDO::StaticClass()));
-	DDO->SetDDO(this);
-	return DDO;
-}
-
-UImage* UWidgetBaseElement::GetImgIcon()
-{
-	return m_ImgItemIcon;
+	return m_ImgItemIcon->GetParent();
 }
 
 void UWidgetBaseElement::SetIcon(TSoftObjectPtr<UTexture2D> t)
@@ -163,16 +173,6 @@ void UWidgetBaseElement::SetGlowColor(const FColorDataHandle& color)
 	m_ImgGlow->SetBrushFromTexture(ColorDataRow->m_GlowTexture);
 }
 
-bool UWidgetBaseElement::IsFocused()
-{
-	return m_OverlayFocus->IsVisible(); 
-}
-
-void UWidgetBaseElement::OnClick()
-{
-	m_OnClick.Broadcast();
-}
-
 void UWidgetBaseElement::SetMyFocus()
 {
 	m_OverlayFocus->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
@@ -183,9 +183,31 @@ void UWidgetBaseElement::SetMyUnFocus()
 	m_OverlayFocus->SetVisibility(ESlateVisibility::Collapsed);
 }
 
-void UWidgetBaseElement::OnHoldingComplete()
+void UWidgetBaseElement::SetTextStackLv(FString t)
 {
-	m_OnHold.Broadcast();
+	m_TextStackAmount->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
+
+	m_TextStackAmount->SetText(FText::FromString(t));
+}
+
+void UWidgetBaseElement::HideTextStackLv()
+{
+	m_TextStackAmount->SetVisibility(ESlateVisibility::Collapsed);
+}
+
+void UWidgetBaseElement::SetIndex(int index)
+{
+	m_nIndex = index;
+}
+
+int UWidgetBaseElement::GetIndex()
+{
+	return m_nIndex;
+}
+
+void UWidgetBaseElement::SetTextFocus(FText t)
+{
+	m_TextFocus->SetText(t);
 }
 
 void UWidgetBaseElement::SetFocusable(bool isActive)
@@ -193,8 +215,12 @@ void UWidgetBaseElement::SetFocusable(bool isActive)
 	m_bIsFocusable = isActive;
 }
 
+void UWidgetBaseElement::SetDragable(bool isActive)
+{
+	m_bIsDragable = isActive;
+}
+
 bool UWidgetBaseElement::IsMyFocused() const
 {
 	return m_OverlayFocus->IsVisible();
 }
-

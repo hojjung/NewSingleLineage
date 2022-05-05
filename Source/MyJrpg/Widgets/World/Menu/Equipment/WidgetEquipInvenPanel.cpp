@@ -5,30 +5,38 @@
 
 #include "MyJrpg/MyLib.h"
 #include "MyJrpg/Items/Inventory.h"
+#include "MyJrpg/Managers/EquipManager.h"
 #include "MyJrpg/Widgets/World/Menu/Inventory/WidgetInventory.h"
 
 void UWidgetEquipInvenPanel::NativeOnInitialized()
 {
 	Super::NativeOnInitialized();
 
-	UMyLib::GetPlayerInven()->m_OnInvenChanged.AddUObject(this,&UWidgetEquipInvenPanel::UpdateText);
-
 	m_InvenPanel->Init(UMyLib::GetPlayerInven());
-	
-	m_FilterBtns->RegisterFilter(m_InvenPanel);
 
-	UpdateText();
+	m_InvenPanel->m_OnFocus.AddUObject(this, &UWidgetEquipInvenPanel::OnPlInvenFocused);
 }
 
-void UWidgetEquipInvenPanel::UpdateText()
+void UWidgetEquipInvenPanel::OnPlInvenFocused(UWidgetBaseElement* ele, UInventory* inven, int index)
 {
-	int CurrentCount = 0;//UMyLib::GetPlayerInven()->GetEmptyIndex();
+	const FItemSpec& Item = inven->GetItem(index);
 
-	int MaxCount = UMyLib::GetPlayerInven()->GetInvenSize();
-
-	FString StrP = FString::Printf(TEXT("%d/%d"),CurrentCount,MaxCount);
-
-	m_TxtInvenCount->SetText(FText::FromString(StrP));
+	switch (UMyLib::GetItemType(Item.m_ID))
+	{
+	case EItemType::None:
+	case EItemType::misc:
+		ele->SetMyUnFocus();
+		break;
+	case EItemType::Consume:
+		ele->SetTextFocus(NSLOCTEXT("UWidgetEquipInvenPanel","FocusUse","사용?"));
+		break;
+	case EItemType::Equip:
+		if(UMyLib::GetEquip()->IsItemEquipped(Item))
+			ele->SetTextFocus(NSLOCTEXT("UWidgetEquipInvenPanel","FocusUnequip","해제?"));
+		else
+			ele->SetTextFocus(NSLOCTEXT("UWidgetEquipInvenPanel","FocusEquip","장착?"));
+		break;
+	}
 }
 
 void UWidgetEquipInvenPanel::ClosePanel()

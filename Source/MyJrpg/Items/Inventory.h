@@ -7,6 +7,7 @@
 #include "MyJrpg/DataTables/ItemData.h"
 #include "MyJrpg/DataTables/QuestData.h"
 #include "MyJrpg/Managers/EnchantManager.h"
+#include "MyJrpg/Widgets/World/Menu/Inventory/ItemDDO.h"
 #include "Inventory.generated.h"
 
 /**
@@ -85,6 +86,8 @@ public:
 	void UpdateInventory();
 
 	bool AddItem(FItemSpec addItem);
+
+	void AddItem(int index, FItemSpec addItem);
 	
 	bool RemoveItem(FName itemID, int lvCnt);
 
@@ -92,9 +95,14 @@ public:
 
 	int GetUsingSlotCount() const;
 	
-	void AddItemLevel(int index, int i);
-	
 	bool FindItem(FName itemID);
 
+	bool MoveItem(int myIndex, UInventory* targetInvenToAdd);
+	
+	void OnDropItem(int myIndex, UInventory* other, int other_index);
+
+	void SetStLv(int index, int stLv);
+
+	int GetStLv(int index);
 };
 

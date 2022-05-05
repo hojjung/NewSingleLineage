@@ -1,5 +1,6 @@
 #include "WidgetInventory.h"
 
+#include "ItemDDO.h"
 #include "Components/WrapBoxSlot.h"
 #include "MyJrpg/MyJrpg.h"
 #include "MyJrpg/MyLib.h"
@@ -21,17 +22,15 @@ FReply UWidgetInventory::NativeOnMouseButtonDown(const FGeometry& InGeometry, co
 	return FReply::Handled();
 }
 
-void UWidgetInventory::Init(UInventory* inven,EPanelType panelType)
+void UWidgetInventory::Init(UInventory* inven)
 {
 	check(m_ClassWidgetItemEle);
-
-	m_AryItemEles.Reset();
 
 	m_InvenBox->ClearChildren();
 	
 	m_CurrentInven = inven;
 
-	CreateGridElements(panelType);
+	CreateGridElements();
 }
 
 void UWidgetInventory::OpenPanel()
@@ -52,57 +51,76 @@ void UWidgetInventory::ClosePanel()
 	UnFocusCurrent();
 }
 
-void UWidgetInventory::CreateGridElements(EPanelType panelType)
+void UWidgetInventory::CreateGridElements()
 {
 	check(m_ClassWidgetItemEle);
+
+	m_AryItemEles.Reset();
 	
 	for (int i = 0; i < m_CurrentInven->GetInvenSize(); i++)
 	{
-		UWidgetItemElement* ItemEle = CreateWidget<UWidgetItemElement>(this, m_ClassWidgetItemEle);
-
-		ItemEle->Init(panelType, GetInven());
+		UWidgetBaseElement* ItemEle = CreateWidget<UWidgetBaseElement>(this, m_ClassWidgetItemEle);
 
 		m_AryItemEles.Add(ItemEle);
-		
+
+		m_AryItemEles[i]->SetIndex(i);
+
 		m_InvenBox->AddChildToWrapBox(m_AryItemEles[i])->SetPadding(FMargin(2));
 
 		m_AryItemEles[i]->m_OnFocus.AddUObject(this,&UWidgetInventory::OnFocused);
+
+		m_AryItemEles[i]->m_OnDrag.AddUObject(this,&UWidgetInventory::OnDrag);
+
+		m_AryItemEles[i]->m_OnDrop.AddUObject(this,&UWidgetInventory::OnDrop);
 	}
 }
 
 void UWidgetInventory::UpdateInventory()
 {
-	int ItemIndex = 0;
 	int Index = 0;
-	
-	for (const auto& Item : m_CurrentInven->GetAryItems())
+
+	for (const FItemSpec& Item : m_CurrentInven->GetAryItems())
 	{
-		if(!IsFilterType(Item.m_ID))
+		if(Item.m_ID.IsNone())
 		{
-			ItemIndex++;
+			m_AryItemEles[Index]->Clear();
+			Index++;
 			continue;
 		}
-		m_AryItemEles[Index]->SetIndex(ItemIndex);
+		SetItem(m_AryItemEles[Index], Item);
 		Index++;
-		ItemIndex++;
-	}
-
-	for(; Index<m_AryItemEles.Num();Index++)
-	{
-		m_AryItemEles[Index]->Clear();
 	}
 }
 
-bool UWidgetInventory::IsFilterType(const FName& item)
+void UWidgetInventory::SetItem(UWidgetBaseElement* target, const FItemSpec& itemSpec)
 {
-	if(m_FilterCategoryItem == EItemType::None)
+	const FItemDataRow& Data = UMyLib::GetItemData(itemSpec.m_ID);
+
+	target->SetIcon(Data.m_Icon);
+	
+	target->SetGlowColor(Data.m_ColorHandle);
+
+	bool IsEquip = UMyLib::IsEquip(Data);
+
+	if(IsEquip)
 	{
-		return true;
+		if(itemSpec.m_nLvStack > 0)
+		{
+			FString Str = FString::Printf(TEXT("+%d"), itemSpec.m_nLvStack);
+			
+			target->SetTextStackLv(Str);
+		}
+		else
+		{
+			target->HideTextStackLv();
+		}
 	}
-	
-	EItemType Type = UMyLib::GetItemType(item);
-	
-	return Type == m_FilterCategoryItem;
+	else
+	{
+		FString Str = FString::Printf(TEXT("%d"), itemSpec.m_nLvStack);
+			
+		target->SetTextStackLv(Str);
+	}
 }
 
 void UWidgetInventory::UnFocusCurrent()
@@ -115,47 +133,34 @@ void UWidgetInventory::UnFocusCurrent()
 	}
 }
 
-void UWidgetInventory::OnFocused(UWidgetItemElement* ele)
+void UWidgetInventory::OnFocused(UWidgetBaseElement* ele)
 {
 	UnFocusCurrent();
 	
 	m_CurrentFocused = ele;
+
+	m_OnFocus.Broadcast(m_CurrentFocused.Get() ,m_CurrentInven.Get(), m_CurrentFocused->GetIndex());
+}
+
+void UWidgetInventory::OnDrag(UWidgetBaseElement* ele)
+{
+	UnFocusCurrent();
+
+	UItemDDO::GetDDOInst->m_FromInven = m_CurrentInven;
+
+	UItemDDO::GetDDOInst->m_nIndex = ele->GetIndex();
+}
+
+void UWidgetInventory::OnDrop(UWidgetBaseElement* ele)
+{
+	UnFocusCurrent();
+
+	int Index =  ele->GetIndex();
+	
+	m_CurrentInven->OnDropItem(Index, UItemDDO::GetDDOInst->m_FromInven.Get(),UItemDDO::GetDDOInst->m_nIndex);
 }
 
 UInventory* UWidgetInventory::GetInven() const
 {
 	return m_CurrentInven.Get();
-}
-
-void UWidgetInventory::SetItemFilter(EItemType typeWant)
-{
-	UnFocusCurrent();
-	
-	m_FilterCategoryItem = typeWant;
-
-	UpdateInventory();
-}
-
-void UWidgetInventory::ClearFilter()
-{
-	UnFocusCurrent();
-	
-	m_FilterCategoryItem = EItemType::None;
-
-	UpdateInventory();
-}
-
-void UWidgetInventory::OnFilterMisc()
-{
-	SetItemFilter(EItemType::None);
-}
-
-void UWidgetInventory::OnFilterConsumable()
-{
-	SetItemFilter(EItemType::Consume);
-}
-
-void UWidgetInventory::OnFilterEquips()
-{
-	SetItemFilter(EItemType::Equip);
 }

@@ -12,15 +12,15 @@ void UWidgetZoneItemElement::SetZone(const FDropRewardItem& data)
 
 	check(m_ItemRow);
 
-	m_ElementBase->SetIcon(m_ItemRow->m_Icon);
+	//m_ElementBase->SetIcon(m_ItemRow->m_Icon);
 
-	m_ElementBase->SetGlowColor(m_ItemRow->m_ColorHandle);
+	//m_ElementBase->SetGlowColor(m_ItemRow->m_ColorHandle);
 
 	m_ElementBase->SetHoldable(true);
 	
 	m_ElementBase->SetFocusable(false);
 
-	m_ElementBase->m_OnHold.AddUObject(this,&UWidgetZoneItemElement::OnHoldComplete);
+	//m_ElementBase->m_OnHold.AddUObject(this,&UWidgetZoneItemElement::OnHoldComplete);
 }
 
 int UWidgetZoneItemElement::GetSortValue() const

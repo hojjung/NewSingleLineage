@@ -15,8 +15,6 @@ void UWidgetItemInfo::NativeOnInitialized()
 
 	m_ItemIcon->SetVisibility(ESlateVisibility::HitTestInvisible);
 
-	m_ItemIcon->SetMyInteractable(false);
-
 	m_ItemIcon->Clear();
 	
 	m_BtnClose->OnClicked.AddDynamic(this,&UWidgetItemInfo::OnClose);
@@ -52,14 +50,10 @@ void UWidgetItemInfo::SetItemInfo(EItemInfo info,const FName& oID,UInventory* in
 	
 	m_ItemKey = oID;
 
-	m_ItemIcon->Init(EPanelType::Inven,m_Inven.Get());
-
 	const FItemDataRow& ItemData = UMyLib::GetItemData(m_ItemKey);
 
 	EItemType Type = UMyLib::GetItemType(ItemData);
 
-	m_ItemIcon->UpdateElement(m_ItemKey);
-	
 	m_TextItemName->SetText(ItemData.m_ShowingName);
 
 	if (Type == EItemType::Equip)

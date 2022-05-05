@@ -6,6 +6,8 @@
 #include "Blueprint/DragDropOperation.h"
 #include "ItemDDO.generated.h"
 
+struct FItemSpec;
+class UInventory;
 class UWidgetBaseElement;
 class UWidgetItemElement;
 /**
@@ -18,13 +20,28 @@ class MYJRPG_API UItemDDO : public UDragDropOperation
 	
 public:
 	static UItemDDO* GetDDOInst;
-	
+
+	TWeakObjectPtr<UInventory> m_FromInven;
+
+	int m_nIndex;
 public:
 	void SetDDO(UWidgetBaseElement* ele);
 
+	const FItemSpec& GetItem();
 public:
+	virtual void BeginDestroy() override;
+	
 	UFUNCTION()
 	void OnDragCancel(UDragDropOperation* meSelf);
 	UFUNCTION()
-	void OnDrop(UDragDropOperation* meSelf);
+	void OnMyDrop(UDragDropOperation* meSelf);
+	
+	void RemoveItemFromInven();
+	
+	void AddItemToSlot(const FItemSpec& item_spec);
+
+protected:
+	void Clear();
 };
+
+

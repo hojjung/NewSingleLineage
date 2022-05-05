@@ -7,9 +7,8 @@ void UWidgetSkinElement::Init(const FPlayerUnitEntityRow& pl)
 	m_AvatarManager = UMyGameInstance::Get->m_AvatarManager;
 	m_Ele->SetFocusable(true);
 	m_Ele->SetHoldable(false);
-	m_Ele->SetGlowColor(m_Skin->m_Color);
-	m_Ele->SetIcon(m_Skin->m_Icon);
-	m_Ele->m_OnClick.AddUObject(this,&UWidgetSkinElement::OnClicked);
+	//m_Ele->SetGlowColor(m_Skin->m_Color);
+	//m_Ele->SetIcon(m_Skin->m_Icon);
 
 	UpdateEle();
 }
