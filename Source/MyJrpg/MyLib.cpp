@@ -1,4 +1,6 @@
 #include "MyLib.h"
+
+#include "Items/ItemExecuteBase.h"
 #include "Managers/MyGameInstance.h"
 #include "Pawns/MyPlayerPawn.h"
 #include "Widgets/World/Menu/Storage/WidgetStorage.h"
@@ -117,9 +119,7 @@ int UMyLib::GetRectVertIndexPer(const FSlateRect& rect, int maxDivide, const FVe
 
 const FItemDataRow& UMyLib::GetItemData(const FName& specID)
 {
-	FName ID = UMyLib::GetEquipIDFromHashID(specID);
-	
-	const FItemDataRow* FoundItemRow = UItemData::GetItemTable->FindRow<FItemDataRow>(ID,"");
+	const FItemDataRow* FoundItemRow = UItemData::GetItemTable->FindRow<FItemDataRow>(specID,"");
 
 	return *FoundItemRow;
 }
@@ -131,16 +131,17 @@ const TSubclassOf<AAttachEquipmentBase>& UMyLib::GetAttachItemClass(const FName&
 
 FStatGroup UMyLib::GetItemStatData(const FName& specID)
 {
-	int Level = UMyLib::GetPlayerInven()->GetItemLevel(specID);
-
-	const FItemDataRow& ItemData = GetItemData(specID);
-
-	if(Level == 0)
-	{
-		return ItemData.m_EquipStats;
-	}
-
-	return ItemData.m_EquipStats + (ItemData.m_EnchantStats * Level);
+	// int Level = UMyLib::GetPlayerInven()->GetItemLevel(specID);
+	//
+	// const FItemDataRow& ItemData = GetItemData(specID);
+	//
+	// if(Level == 0)
+	// {
+	// 	return ItemData.m_EquipStats;
+	// }
+	//
+	// return ItemData.m_EquipStats + (ItemData.m_EnchantStats * Level);
+	return FStatGroup(); 
 }
 
 const FSkillDataRow& UMyLib::GetSkillData(const FName& specID)
@@ -194,9 +195,7 @@ UEquipManager* UMyLib::GetEquip()
 
 EEquipSlotType UMyLib::GetEquipItemSlot(const FName& id)
 {
-	FName ID = UMyLib::GetEquipIDFromHashID(id);
-
-	return UMyLib::GetItemData(ID).m_ItemType;
+	return UMyLib::GetItemData(id).m_ItemType;
 }
 
 UParticleEffectManager* UMyLib::GetEffectM()
@@ -336,209 +335,173 @@ void UMyLib::SetBtnTint(UButton* btn, FLinearColor colrWant)
 	btn->WidgetStyle.Hovered.TintColor = colrWant;
 }
 
-FName UMyLib::GenerateEquipItemHashKey(const FName& id, const void *ptr)
-{
-	FString Result;
-
-	Result.Append(id.ToString());
-
-	Result.Append(TEXT(":"));
-	
-	uint32 PtrD = PointerHash(ptr);
-	
-	uint32 Rand = FMath::RandRange(0,99999);
-	
-	PtrD = (PtrD / Rand) + Rand;
-	
-	PtrD %= 100000;
-	
-	FString NewHash = FString::Printf(TEXT("%u"),PtrD);
-
-	Result.Append(NewHash);
-
-	return FName(Result);
-}
-
-FName UMyLib::GetEquipIDFromHashID(const FName& hash_id)
-{
-	FString TempStr = hash_id.ToString();
-	
-	FString L;
-	
-	FString R;
-	
-	if(TempStr.Split(TEXT(":"),&L,&R))
-	{
-		return FName(L);	
-	}
-	
-	return hash_id;
-}
-
 UInventory* UMyLib::FindEquipItem(const FName& id)
 {
-	if(UMyGameInstance::Get->m_Inven->FindEquipItem(id))
-	{
-		return UMyGameInstance::Get->m_Inven;
-	}
-	
-	for(UInventory* Storage : UMyGameInstance::Get->GetStorages())
-	{
-		if(Storage->FindEquipItem(id))
-		{
-			return Storage;
-		}
-	}
+	// if(UMyGameInstance::Get->m_Inven->FindEquipItem(id))
+	// {
+	// 	return UMyGameInstance::Get->m_Inven;
+	// }
+	//
+	// for(UInventory* Storage : UMyGameInstance::Get->GetStorages())
+	// {
+	// 	if(Storage->FindEquipItem(id))
+	// 	{
+	// 		return Storage;
+	// 	}
+	// }
 	return nullptr;
 }
 
 UInventory* UMyLib::FindEquipItem(const FName& id,const FName** gidItem)
 {
-	*gidItem = UMyGameInstance::Get->m_Inven->FindEquipItem(id);
-	
-	if(*gidItem)
-	{
-		return UMyGameInstance::Get->m_Inven;
-	}
-	
-	for(UInventory* Storage : UMyGameInstance::Get->GetStorages())
-	{
-		*gidItem = Storage->FindEquipItem(id);
-		
-		if(*gidItem)
-		{
-			return Storage;
-		}
-	}
+	// *gidItem = UMyGameInstance::Get->m_Inven->FindEquipItem(id);
+	//
+	// if(*gidItem)
+	// {
+	// 	return UMyGameInstance::Get->m_Inven;
+	// }
+	//
+	// for(UInventory* Storage : UMyGameInstance::Get->GetStorages())
+	// {
+	// 	*gidItem = Storage->FindEquipItem(id);
+	// 	
+	// 	if(*gidItem)
+	// 	{
+	// 		return Storage;
+	// 	}
+	// }
 	return nullptr;
 }
 
 UInventory* UMyLib::FindEquipItem(const FName& id, int lv,const FName** gidItem)
 {
-	*gidItem = UMyGameInstance::Get->m_Inven->FindEquipItem(id, lv);
-	
-	 if(*gidItem)
-	 {
-	 	return UMyGameInstance::Get->m_Inven;
-	 }
-	
-	for(UInventory* Storage : UMyGameInstance::Get->GetStorages())
-	{
-		*gidItem = Storage->FindEquipItem(id, lv);
-		
-		if(*gidItem)
-		{
-			return Storage;
-		}
-	}
+	// *gidItem = UMyGameInstance::Get->m_Inven->FindEquipItem(id, lv);
+	//
+	//  if(*gidItem)
+	//  {
+	//  	return UMyGameInstance::Get->m_Inven;
+	//  }
+	//
+	// for(UInventory* Storage : UMyGameInstance::Get->GetStorages())
+	// {
+	// 	*gidItem = Storage->FindEquipItem(id, lv);
+	// 	
+	// 	if(*gidItem)
+	// 	{
+	// 		return Storage;
+	// 	}
+	// }
 	return nullptr;
 }
 
 UInventory* UMyLib::FindEquipItem(const FName& id, int lv)
 {
-	if(UMyGameInstance::Get->m_Inven->FindEquipItem(id, lv))
-	{
-		return UMyGameInstance::Get->m_Inven;
-	}
-	
-	for(UInventory* Storage : UMyGameInstance::Get->GetStorages())
-	{
-		if(Storage->FindEquipItem(id, lv))
-		{
-			return Storage;
-		}
-	}
+	// if(UMyGameInstance::Get->m_Inven->FindEquipItem(id, lv))
+	// {
+	// 	return UMyGameInstance::Get->m_Inven;
+	// }
+	//
+	// for(UInventory* Storage : UMyGameInstance::Get->GetStorages())
+	// {
+	// 	if(Storage->FindEquipItem(id, lv))
+	// 	{
+	// 		return Storage;
+	// 	}
+	// }
 	return nullptr;
 }
 
 UInventory* UMyLib::FindMiscItem(const FName& id)
 {
-	if(UMyGameInstance::Get->m_Inven->FindMisItem(id))
-	{
-		return UMyGameInstance::Get->m_Inven;
-	}
-	
-	for(auto Storage : UMyGameInstance::Get->GetStorages())
-	{
-		if(Storage->FindMisItem(id))
-		{
-			return Storage;
-		}
-	}
+	// if(UMyGameInstance::Get->m_Inven->FindMisItem(id))
+	// {
+	// 	return UMyGameInstance::Get->m_Inven;
+	// }
+	//
+	// for(auto Storage : UMyGameInstance::Get->GetStorages())
+	// {
+	// 	if(Storage->FindMisItem(id))
+	// 	{
+	// 		return Storage;
+	// 	}
+	// }
 	return nullptr;
 }
 
 bool UMyLib::FindMiscItem(const FName& id, int count)
 {
-	int InvenStack = UMyGameInstance::Get->m_Inven->GetItemStack(id);
-	
-	for(UInventory* Storage : UMyGameInstance::Get->GetStorages())
-	{
-		InvenStack += Storage->GetItemStack(id);
-	}
-	
-	return InvenStack >= count;
+	// int InvenStack = UMyGameInstance::Get->m_Inven->GetItemStack(id);
+	//
+	// for(UInventory* Storage : UMyGameInstance::Get->GetStorages())
+	// {
+	// 	InvenStack += Storage->GetItemStack(id);
+	// }
+	//
+	// return InvenStack >= count;
+	return false;
 }
 
 int UMyLib::GetMiscTotalCount(const FName& id)
 {
-	int InvenStack = UMyGameInstance::Get->m_Inven->GetItemStack(id);
-	
-	for(UInventory* Storage : UMyGameInstance::Get->GetStorages())
-	{
-		InvenStack += Storage->GetItemStack(id);
-	}
-	
-	return InvenStack;
+	// int InvenStack = UMyGameInstance::Get->m_Inven->GetItemStack(id);
+	//
+	// for(UInventory* Storage : UMyGameInstance::Get->GetStorages())
+	// {
+	// 	InvenStack += Storage->GetItemStack(id);
+	// }
+	//
+	// return InvenStack;
+	return 0;
 }
 
 int UMyLib::GetEquipTotalCount(const FName& oID, int level)
 {
-	int EquipCount = UMyGameInstance::Get->m_Inven->GetEquipItemCount(oID,level);
-	
-	for(auto Storage : UMyGameInstance::Get->GetStorages())
-	{
-		EquipCount += Storage->GetEquipItemCount(oID,level);
-	}
-	
-	return EquipCount;
+	// int EquipCount = UMyGameInstance::Get->m_Inven->GetEquipItemCount(oID,level);
+	//
+	// for(auto Storage : UMyGameInstance::Get->GetStorages())
+	// {
+	// 	EquipCount += Storage->GetEquipItemCount(oID,level);
+	// }
+	//
+	// return EquipCount;
+	return 0;
 }
 
 void UMyLib::RemoveMiscItem(const FName& id, int count)
 {
-	int InvenStack = UMyGameInstance::Get->m_Inven->GetItemStack(id);
-
-	if(InvenStack >= count)
-	{
-		UMyGameInstance::Get->m_Inven->RemoveItem(id, count);
-		return;
-	}
-	else
-	{
-		if(InvenStack > 0)
-		{
-			UMyGameInstance::Get->m_Inven->RemoveItem(id, InvenStack);
-		}
-		count -= InvenStack;
-	}
-	for(UInventory* Storage : UMyGameInstance::Get->GetStorages())
-	{
-		InvenStack = Storage->GetItemStack(id);
-
-		if(InvenStack >= count)
-		{
-			Storage->RemoveItem(id, count);
-			return;
-		}
-		else
-		{
-			if(InvenStack > 0)
-			{
-				Storage->RemoveItem(id, InvenStack);
-			}
-			count -= InvenStack;
-		}
-	}
+	// int InvenStack = UMyGameInstance::Get->m_Inven->GetItemStack(id);
+	//
+	// if(InvenStack >= count)
+	// {
+	// 	UMyGameInstance::Get->m_Inven->RemoveItem(id, count);
+	// 	return;
+	// }
+	// else
+	// {
+	// 	if(InvenStack > 0)
+	// 	{
+	// 		UMyGameInstance::Get->m_Inven->RemoveItem(id, InvenStack);
+	// 	}
+	// 	count -= InvenStack;
+	// }
+	// for(UInventory* Storage : UMyGameInstance::Get->GetStorages())
+	// {
+	// 	InvenStack = Storage->GetItemStack(id);
+	//
+	// 	if(InvenStack >= count)
+	// 	{
+	// 		Storage->RemoveItem(id, count);
+	// 		return;
+	// 	}
+	// 	else
+	// 	{
+	// 		if(InvenStack > 0)
+	// 		{
+	// 			Storage->RemoveItem(id, InvenStack);
+	// 		}
+	// 		count -= InvenStack;
+	// 	}
+	// }
 }
 
 int UMyLib::GetRequireCollecLevel(const FName& collecID, int index)

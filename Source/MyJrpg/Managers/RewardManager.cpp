@@ -32,14 +32,14 @@ void URewardManager::ReceiveQuestReward(const FQuestReward& qReward)
 
 		if (type == EItemType::Equip)
 		{
-			FName HashID = UMyLib::GenerateEquipItemHashKey(qReward.m_Item.RowName,this);
+			//FName HashID = UMyLib::GenerateEquipItemHashKey(qReward.m_Item.RowName,this);
 			
-			UMyGameInstance::Get->m_Inven->AddEquipItem(HashID);
+			//UMyGameInstance::Get->m_Inven->AddItem(HashID);
 
 			return;
 		}
 		
-		UMyGameInstance::Get->m_Inven->AddItem(qReward.m_Item.RowName,qReward.m_nAmount);
+		//UMyGameInstance::Get->m_Inven->AddItem(qReward.m_Item.RowName,qReward.m_nAmount);
 	}
 }
 
@@ -61,16 +61,16 @@ void URewardManager::RequestMonsterReward()
 			
 				EItemType type = UMyLib::GetItemType(DropItem.m_Item.RowName);
 
-				if (type == EItemType::Equip)
-				{
-					FName HashID = UMyLib::GenerateEquipItemHashKey(DropItem.m_Item.RowName,this);
-			
-					UMyGameInstance::Get->m_Inven->AddEquipItem(HashID);
-
-					continue;;
-				}
-		
-				UMyGameInstance::Get->m_Inven->AddItem(DropItem.m_Item.RowName,Amount);
+				// if (type == EItemType::Equip)
+				// {
+				// 	FName HashID = UMyLib::GenerateEquipItemHashKey(DropItem.m_Item.RowName,this);
+				//
+				// 	UMyGameInstance::Get->m_Inven->AddEquipItem(HashID);
+				//
+				// 	continue;;
+				// }
+				//
+				// UMyGameInstance::Get->m_Inven->AddItem(DropItem.m_Item.RowName,Amount);
 			}
 		}
 	}
@@ -84,20 +84,20 @@ bool URewardManager::RequestQuestReward(const TArray<FQuestReward>& aryQuest)
 		{
 			int Amount  = QQ.m_nAmount;
 			
-			if(EItemType::Equip == UMyLib::GetItemType(QQ.m_Item.RowName))
-			{
-				if(UMyGameInstance::Get->m_Inven->GetRemainSlotCount() < Amount)
-				{
-					return false;
-				}
-			}
-			else
-			{
-				if(UMyGameInstance::Get->m_Inven->GetAvailalbeStackCount(QQ.m_Item.RowName) < Amount)
-				{
-					return false;
-				}
-			}
+			// if(EItemType::Equip == UMyLib::GetItemType(QQ.m_Item.RowName))
+			// {
+			// 	if(UMyGameInstance::Get->m_Inven->GetRemainSlotCount() < Amount)
+			// 	{
+			// 		return false;
+			// 	}
+			// }
+			// else
+			// {
+			// 	if(UMyGameInstance::Get->m_Inven->GetAvailalbeStackCount(QQ.m_Item.RowName) < Amount)
+			// 	{
+			// 		return false;
+			// 	}
+			// }
 		}
 	}
 

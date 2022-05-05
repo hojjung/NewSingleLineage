@@ -50,18 +50,18 @@ FReply UWidgetEquipPanel::NativeOnTouchStarted(const FGeometry& InGeometry, cons
 
 void UWidgetEquipPanel::UpdateSlots()
 {
-	const TArray<FName>& EquippedItems = UMyGameInstance::Get->m_EquipManager->GetEquipAry();
-
-	for (int i = 0; i < m_AryEquips.Num(); i++)
-	{
-		if (EquippedItems[i].IsNone())
-		{
-			m_AryEquips[i]->Clear();
-			continue;
-		}
-
-		m_AryEquips[i]->UpdateElement();
-	}
+	// const TArray<FName>& EquippedItems = UMyGameInstance::Get->m_EquipManager->GetEquipAry();
+	//
+	// for (int i = 0; i < m_AryEquips.Num(); i++)
+	// {
+	// 	if (EquippedItems[i].IsNone())
+	// 	{
+	// 		m_AryEquips[i]->Clear();
+	// 		continue;
+	// 	}
+	//
+	// 	m_AryEquips[i]->UpdateElement();
+	// }
 }
 
 void UWidgetEquipPanel::RequestFilterItems()

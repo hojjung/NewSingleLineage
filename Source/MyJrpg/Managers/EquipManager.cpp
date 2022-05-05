@@ -6,7 +6,7 @@
 
 void UEquipManager::Init()
 {
-	m_AryEqupSlots.Init(NAME_None,(int)EEquipSlotType::Length-1);
+	//m_AryEqupSlots.Init(NAME_None,(int)EEquipSlotType::Length-1);
 }
 
 bool UEquipManager::Equip(EEquipSlotType slotWant,const FName& itemWant)
@@ -15,9 +15,9 @@ bool UEquipManager::Equip(EEquipSlotType slotWant,const FName& itemWant)
 	
 	int Index = (int)slotWant - 1;
 	
-	m_AryEqupSlots[Index] = itemWant;
+	//m_AryEqupSlots[Index] = itemWant;
 	
-	EquipOption(m_AryEqupSlots[Index]);
+	//EquipOption(m_AryEqupSlots[Index]);
 	
 	SetIsRangeStance();
 	
@@ -41,40 +41,35 @@ void UEquipManager::Unequip(EEquipSlotType slotWant)
 	PRINTF("Unequip01");
 	int Index = (int)slotWant - 1;
 	
-	const FName& Temp = m_AryEqupSlots[Index];
-
-	if(Temp.IsNone())
-	{
-		return;
-	}
-
-	UnequipOption(Temp);
-
-	m_AryEqupSlots[Index] = NAME_None;
-
-	SetIsRangeStance();
-	m_OnEquipChanged.Broadcast();
+	// const FName& Temp = m_AryEqupSlots[Index];
+	//
+	// if(Temp.IsNone())
+	// {
+	// 	return;
+	// }
+	//
+	// UnequipOption(Temp);
+	//
+	// m_AryEqupSlots[Index] = NAME_None;
+	//
+	// SetIsRangeStance();
+	// m_OnEquipChanged.Broadcast();
 }
 
 void UEquipManager::Unequip(const FName& itemWant)
 {
-	int Index = m_AryEqupSlots.Find(itemWant) + 1;
-	EEquipSlotType SlotT = (EEquipSlotType)Index;
-	Unequip(SlotT);
+	// int Index = m_AryEqupSlots.Find(itemWant) + 1;
+	// EEquipSlotType SlotT = (EEquipSlotType)Index;
+	// Unequip(SlotT);
 }
 
-const TArray<FName>& UEquipManager::GetEquipAry() const
+bool UEquipManager::IsItemEquipped(const FItemSpec& itemWant)
 {
-	return m_AryEqupSlots;
-}
-
-bool UEquipManager::IsItemEquipped(const FName& itemWant)
-{
-	EEquipSlotType SlotT = UMyLib::GetEquipItemSlot(itemWant);
+	EEquipSlotType SlotT = UMyLib::GetEquipItemSlot(itemWant.m_ID);
 	
 	int Index = (int) SlotT - 1;
 
-	return m_AryEqupSlots[Index] == itemWant;
+	return m_AryEqupSlots[Index] == &itemWant;
 }
 
 bool UEquipManager::IsItemEquipped(EEquipSlotType wantSlot)
@@ -82,9 +77,9 @@ bool UEquipManager::IsItemEquipped(EEquipSlotType wantSlot)
 	return !GetEquipItem(wantSlot).IsNone();
 }
 
-const FName& UEquipManager::GetEquipItem(EEquipSlotType wantSlot)
+FName UEquipManager::GetEquipItem(EEquipSlotType wantSlot)
 {
-	return m_AryEqupSlots[(int)wantSlot-1];
+	return NAME_None;//m_AryEqupSlots[(int)wantSlot-1];
 }
 
 bool UEquipManager::IsRangeStance()

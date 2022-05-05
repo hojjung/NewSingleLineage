@@ -48,48 +48,48 @@ void UPlAttchActorManage::UnEquipPet()
 
 void UPlAttchActorManage::UpdateEquipActor()
 {
-	const TArray<FName>& AryEquips = UMyGameInstance::Get->m_EquipManager->GetEquipAry();
-
-	int i=0;
-
-	while(i<m_AryEqupActors.Num())
-	{
-		AAttachEquipmentBase* CurrentEquip = m_AryEqupActors[i];
-
-		const FName& NewEquip = AryEquips[i];
-		
-		if(!NewEquip.IsNone())
-		{
-			if(CurrentEquip)
-			{
-				(CurrentEquip)->Destroy();
-			}
-			TSubclassOf<AAttachEquipmentBase> EquipClass = UMyLib::GetAttachItemClass(NewEquip);
-
-			if(!EquipClass->IsValidLowLevel())
-			{
-				SpawnEquipActor(i,m_ClassEquip);
-				return;
-			}
-			SpawnEquipActor(i,EquipClass);
-		}
-		else
-		{
-			if (i + 1 == (int)EEquipSlotType::Weapon)
-			{
-				SpawnEquipActor(i,m_ClassEquip);
-			}
-			else
-			{
-				if(CurrentEquip)
-				{
-					(CurrentEquip)->Destroy();
-				}
-				(CurrentEquip) = nullptr;
-			}
-		}
-		i++;
-	}
+	// const TArray<FName>& AryEquips = UMyGameInstance::Get->m_EquipManager->GetEquipAry();
+	//
+	// int i=0;
+	//
+	// while(i<m_AryEqupActors.Num())
+	// {
+	// 	AAttachEquipmentBase* CurrentEquip = m_AryEqupActors[i];
+	//
+	// 	const FName& NewEquip = AryEquips[i];
+	// 	
+	// 	if(!NewEquip.IsNone())
+	// 	{
+	// 		if(CurrentEquip)
+	// 		{
+	// 			(CurrentEquip)->Destroy();
+	// 		}
+	// 		TSubclassOf<AAttachEquipmentBase> EquipClass = UMyLib::GetAttachItemClass(NewEquip);
+	//
+	// 		if(!EquipClass->IsValidLowLevel())
+	// 		{
+	// 			SpawnEquipActor(i,m_ClassEquip);
+	// 			return;
+	// 		}
+	// 		SpawnEquipActor(i,EquipClass);
+	// 	}
+	// 	else
+	// 	{
+	// 		if (i + 1 == (int)EEquipSlotType::Weapon)
+	// 		{
+	// 			SpawnEquipActor(i,m_ClassEquip);
+	// 		}
+	// 		else
+	// 		{
+	// 			if(CurrentEquip)
+	// 			{
+	// 				(CurrentEquip)->Destroy();
+	// 			}
+	// 			(CurrentEquip) = nullptr;
+	// 		}
+	// 	}
+	// 	i++;
+	// }
 }
 
 void UPlAttchActorManage::SpawnEquipActor(int indexSlot, TSubclassOf<AAttachEquipmentBase> classEquipActor)

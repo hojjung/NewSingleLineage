@@ -32,9 +32,9 @@ protected:
 	
 	int m_nCrntLevel;
 	
-	FName m_CrntTarget;
+	int m_CrntTarget;
 
-	FName m_CrntMat;
+	int m_CrntMat;
 
 protected:
 	void EnchantSuccess(bool isSpecial);
@@ -50,9 +50,9 @@ public:
 
 	float GetEnchantPercent() const;
 	
-	void SetTargetEquip(const FName& target, UInventory* inven);
+	void SetTargetEquip(int target, UInventory* inven);
 
-	void SetMaterialEquip(const FName& mat, UInventory* inven);
+	void SetMaterialEquip(int mat, UInventory* inven);
 
 	const FName& GetCrntTarget() const;
 

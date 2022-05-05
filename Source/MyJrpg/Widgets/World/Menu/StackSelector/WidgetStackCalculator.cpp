@@ -223,7 +223,7 @@ int UWidgetStackCalculator::GetMaxAmount()
 {
 	if(!m_OnGetMax.IsBound())
 	{
-		return FGlobalVariable::INVEN_MAXSTACK;	
+		return 10;	
 	}
 	
 	return m_OnGetMax.Execute();

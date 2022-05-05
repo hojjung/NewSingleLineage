@@ -23,7 +23,7 @@ public:
 		m_ID = NAME_None;
 	}
 	
-	FItemSpec(FName id, int lvStack, int dur)
+	FItemSpec(FName id, int lvStack, int dur = 0)
 	{
 		m_ID = id;
 		m_nLvStack = lvStack;
@@ -42,6 +42,7 @@ UCLASS()
 class MYJRPG_API UInventory : public UObject
 {
 	GENERATED_BODY()
+	
 public:
 	DECLARE_MULTICAST_DELEGATE(FOnInvenChanged);
 
@@ -52,6 +53,8 @@ protected://
 	
 	TArray<FItemSpec> m_AryTotalItems;
 
+	TMap<FName, int> m_MapItems;
+
 protected:
 	bool GetEmptyIndex(int& out) const;
 
@@ -61,19 +64,37 @@ protected:
 
 	void ClearItem(int index);
 	
+	void AddMapItem(FName id, int cnt);
+
+	void RemoveMapItem(FName id, int cnt);
+	
 public:
+	FORCEINLINE const TArray<FItemSpec>& GetAryItems() const
+	{
+		return m_AryTotalItems;
+	}
+	
+	FORCEINLINE const FItemSpec& GetItem(int index) const
+	{
+		return m_AryTotalItems[index];
+	}
 	void Init(int size);
 	
 	int GetInvenSize() const;
 	
 	void UpdateInventory();
-	
-	bool AddItem(FName itemID, int lvCnt);
 
+	bool AddItem(FItemSpec addItem);
+	
 	bool RemoveItem(FName itemID, int lvCnt);
 
-	FORCEINLINE const TArray<FItemSpec>& GetItems() const
-	{
-		return m_AryTotalItems;
-	}
+	void RemoveItem(int index);
+
+	int GetUsingSlotCount() const;
+	
+	void AddItemLevel(int index, int i);
+	
+	bool FindItem(FName itemID);
+
 };
+

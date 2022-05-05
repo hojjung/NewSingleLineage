@@ -23,10 +23,8 @@ protected:
 	
 	FName m_OwnerID;
 
-	FName m_ItemID;
-
-	int m_nCountLevel;
-
+	FItemSpec m_ItemSpec;
+	
 public:
 	void Init(FName itemID, int countOrLevel);//그럼 어떻게 스택 아이템 처리?
 	

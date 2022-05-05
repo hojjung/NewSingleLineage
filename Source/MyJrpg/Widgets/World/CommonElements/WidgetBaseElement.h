@@ -53,6 +53,10 @@ class MYJRPG_API UWidgetBaseElement : public UUserWidget
  	void EndHolding();
 	
  public:
+	UDragDropOperation* CreateDDO();
+
+	UImage* GetImgIcon();
+	
 	virtual FReply NativeOnTouchStarted(const FGeometry& InGeometry, const FPointerEvent& InGestureEvent) override;
 
 	virtual FReply NativeOnMouseButtonDown(const FGeometry& InGeometry, const FPointerEvent& InMouseEvent) override;
@@ -62,7 +66,13 @@ class MYJRPG_API UWidgetBaseElement : public UUserWidget
 	virtual FReply NativeOnTouchEnded(const FGeometry& InGeometry, const FPointerEvent& InGestureEvent) override;
 
 	virtual void NativeOnMouseLeave(const FPointerEvent& InMouseEvent) override;
+
 	
+	virtual void NativeOnDragDetected(const FGeometry& InGeometry, const FPointerEvent& InMouseEvent, UDragDropOperation*& OutOperation) override;
+
+	virtual bool NativeOnDrop(const FGeometry& InGeometry, const FDragDropEvent& InDragDropEvent, UDragDropOperation* InOperation) override;
+
+public:
  	void SetIcon(TSoftObjectPtr<UTexture2D> t);
 
 	void SetGlowColor(const FColorDataHandle& color);

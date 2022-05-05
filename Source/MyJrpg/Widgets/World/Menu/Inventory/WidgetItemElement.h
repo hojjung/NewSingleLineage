@@ -12,6 +12,7 @@
 #include "MyJrpg/Widgets/World/CommonElements/WidgetBaseElement.h"
 #include "WidgetItemElement.generated.h"
 
+class UItemDDO;
 class AMonsterPawn;
 class UWidgetGaugeBar;
 class UWidgetInventory;
@@ -58,7 +59,7 @@ protected:
 
 	void OnHoldingComplete();
 
-	void MoveItem(UInventory* addHere,UInventory* removeHere,const FName& ItemSpec, bool IsEquipItem);
+	void MoveItem(UInventory* addHere,UInventory* removeHere, int targetIndexFromRemoveHere);
 
 	void TryPickPocketItem(UInventory* addHere,AMonsterPawn* target,const FName& ItemSpec, bool IsEquipItem);
 
@@ -71,7 +72,7 @@ protected:
 	void UpdateElement();
 
 	FText GetPickPocketText();
-	
+
 public:
 	void Init(EPanelType panel,UInventory* inven);
 
@@ -94,4 +95,9 @@ public:
 	int GetIndex();
 
 	void SetMyInteractable(bool isInteractAble);
+
+	FORCEINLINE const FItemSpec& GetItem() const
+	{
+		return m_Inven.Get()->GetItem(m_nIndex);
+	}
 };

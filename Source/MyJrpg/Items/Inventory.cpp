@@ -36,33 +36,72 @@ int UInventory::GetInvenSize() const
 	return m_nInvenMaxSize;
 }
 
-bool UInventory::AddItem(FName itemID, int lvCnt)//스택을 채우냐,칸수를 늘리냐,장비템의 경우 언제나 칸수이다. 스텍템의 경우,20개담을때, 100개들어오면 5칸 생겨야함
+bool UInventory::AddItem(FItemSpec addItem)
 {
-	const FItemDataRow& ItemData = UMyLib::GetItemData(itemID);
+	const FItemDataRow& ItemData = UMyLib::GetItemData(addItem.m_ID);
 	
 	bool IsEquip = UMyLib::IsEquip(ItemData);
 	
-	int AddStack = IsEquip ? 1 : lvCnt;
-
-	int MaxStack = UMyLib::GetItemData(itemID).m_nMaxStack;
+	int MaxStack = ItemData.m_nMaxStack;
 
 	int Iter = 0;
 
-	for (auto& ItemMap : m_AryTotalItems)
+	if (IsEquip)
 	{
-		if (ItemMap.m_ID == itemID || ItemMap.m_ID.IsNone())
+		for (auto& ItemMap : m_AryTotalItems)
 		{
-			if (AddItemStack(Iter, AddStack, itemID, MaxStack))
+			if (ItemMap.m_ID.IsNone())
 			{
+				m_AryTotalItems[Iter] = addItem;
 				UpdateInventory();
 				return true;
 			}
+			Iter++;
 		}
-		Iter++;
+	}
+	else
+	{
+		for (auto& ItemMap : m_AryTotalItems)
+		{
+			if (ItemMap.m_ID == addItem.m_ID || ItemMap.m_ID.IsNone())
+			{
+				if (AddItemStack(Iter, addItem.m_nLvStack, addItem.m_ID, MaxStack))
+				{
+					UpdateInventory();
+					return true;
+				}
+			}
+			Iter++;
+		}
 	}
 
 	UpdateInventory();
 	return false;
+}
+
+void UInventory::AddMapItem(FName id, int cnt)
+{
+	int* Count = m_MapItems.Find(id);
+	if(Count)
+	{
+		(*Count) += cnt;
+	}
+	else
+	{
+		m_MapItems.Add(id, cnt);
+	}
+}
+
+void UInventory::RemoveMapItem(FName id, int cnt)
+{
+	int& Cnt = m_MapItems[id];
+
+	Cnt -= cnt;
+
+	if(Cnt <= 0)
+	{
+		m_MapItems.Remove(id);
+	}
 }
 
 bool UInventory::AddItemStack(int index, int& lvCnt, FName id, int maxStack)// = FItemSpec(id,0,0);
@@ -71,7 +110,6 @@ bool UInventory::AddItemStack(int index, int& lvCnt, FName id, int maxStack)// =
 	{
 		m_AryTotalItems[index] = FItemSpec(id,0,0);
 	}
-	
 	int& ItemSpecFound = m_AryTotalItems[index].m_nLvStack;
 
 	int AvailableCnt = maxStack - ItemSpecFound;
@@ -80,18 +118,16 @@ bool UInventory::AddItemStack(int index, int& lvCnt, FName id, int maxStack)// =
 	{
 		return false;
 	}
-	
 	if (AvailableCnt >= lvCnt)//10, 5
 	{
 		ItemSpecFound += lvCnt;
+		AddMapItem(id, lvCnt);
 		lvCnt = 0;
 		return true;
-	}//3,5
-	
+	}
 	ItemSpecFound += AvailableCnt;
-
+	AddMapItem(id, AvailableCnt);
 	lvCnt -= AvailableCnt;
-	
 	return false;
 }
 
@@ -99,15 +135,17 @@ bool UInventory::RemoveItemStack(int index, int& stackCnt)
 {
 	int& CrntStack = m_AryTotalItems[index].m_nLvStack;
 
+	
 	if(CrntStack < stackCnt)// 3 5
 	{
 		stackCnt -= CrntStack;
 		ClearItem(index);
+		RemoveItem(m_AryTotalItems[index].m_ID, CrntStack);
 		return false;
 	}//5 3
 
 	CrntStack -= stackCnt;
-	
+	RemoveItem(m_AryTotalItems[index].m_ID, stackCnt);
 	return true;
 }
 
@@ -157,4 +195,33 @@ bool UInventory::RemoveItem(FName itemID, int lvCnt)
 
 	UpdateInventory();
 	return false;
+}
+
+void UInventory::RemoveItem(int index)
+{
+	ClearItem(index);
+}
+
+int UInventory::GetUsingSlotCount() const
+{
+	int UsingSlotCnt = 0;
+	
+	for (auto& ItemMap : m_AryTotalItems)
+	{
+		if (!ItemMap.m_ID.IsNone())
+		{
+			UsingSlotCnt++;
+		}
+	}
+	return UsingSlotCnt;
+}
+
+void UInventory::AddItemLevel(int index, int i)
+{
+	m_AryTotalItems[index].m_nLvStack += i;
+}
+
+bool UInventory::FindItem(FName itemID)
+{
+	return m_MapItems.Contains(itemID);
 }

@@ -85,14 +85,14 @@ void UEnchantManager::EnchantSuccess(bool isSpecial)
 
 void UEnchantManager::EnchantFail()
 {
-	if(UMyGameInstance::Get->m_EquipManager->IsItemEquipped(m_CrntTarget))
-	{
-		UMyGameInstance::Get->m_EquipManager->Unequip(m_CrntTarget);
-	}
-	
-	m_InvenTarget.Get()->RemoveEquipItem(m_CrntTarget);
-
-	m_CrntTarget = NAME_None;
+	// if(UMyGameInstance::Get->m_EquipManager->IsItemEquipped(GetCrntTarget()))
+	// {
+	// 	UMyGameInstance::Get->m_EquipManager->Unequip(GetCrntTarget());
+	// }
+	//
+	// m_InvenTarget.Get()->RemoveItem(GetCrntTarget(),m_CrntTarget);
+	//
+	// m_CrntTarget = NAME_None;
 }
 
 bool UEnchantManager::TryEnchant()
@@ -108,7 +108,7 @@ int UEnchantManager::GetEnchantCost() const
 {
 	int Level = 1;
 	
-	if(!m_CrntTarget.IsNone())
+	if(m_CrntTarget > INDEX_NONE)
 	{
 		Level = m_nCrntLevel + 1;
 	}
@@ -129,7 +129,7 @@ float UEnchantManager::GetEnchantPercent() const
 		return 0;
 	}
 	
-	TSubclassOf<UItemExecuteBase> ClassExe = UMyLib::GetItemData(m_CrntMat).m_ClassExeItem;
+	TSubclassOf<UItemExecuteBase> ClassExe = UMyLib::GetItemData(GetCrntMat()).m_ClassExeItem;
 
 	if (ClassExe == UExe_EnchantWeapon::StaticClass())
 	{
@@ -146,24 +146,24 @@ float UEnchantManager::GetEnchantPercent() const
 	return 0;
 }
 
-void UEnchantManager::SetTargetEquip(const FName& target, UInventory* inven)
+void UEnchantManager::SetTargetEquip(int target, UInventory* inven)
 {
 	m_CrntTarget = target;
 
 	m_InvenTarget = inven;
 
-	m_nCrntLevel = m_CrntTarget.IsNone() ? 0 : m_InvenTarget.Get()->GetItemLevel(m_CrntTarget);
+	m_nCrntLevel = m_CrntTarget == INDEX_NONE ? 0 : m_InvenTarget.Get()->GetAryItems()[m_CrntTarget].m_nLvStack;
 
 	m_OnEnchantChanged.Broadcast();
 }
 
-void UEnchantManager::SetMaterialEquip(const FName& mat, UInventory* inven)
+void UEnchantManager::SetMaterialEquip(int mat, UInventory* inven)
 {
 	m_CrntMat = mat;
 
 	m_InvenMat = inven;
 
-	if (!m_CrntTarget.IsNone() && !IsAbleTarget(m_CrntTarget))
+	if (m_CrntTarget != INDEX_NONE && !IsAbleTarget(GetCrntTarget()))
 	{
 		m_CrntTarget = NAME_None;
 		m_nCrntLevel = 0;
@@ -174,23 +174,23 @@ void UEnchantManager::SetMaterialEquip(const FName& mat, UInventory* inven)
 
 const FName& UEnchantManager::GetCrntTarget() const
 {
-	return m_CrntTarget;
+	return UMyLib::GetPlayerInven()->GetAryItems()[m_CrntTarget].m_ID;;
 }
 
 const FName& UEnchantManager::GetCrntMat() const
 {
-	return m_CrntMat;
+	return UMyLib::GetPlayerInven()->GetAryItems()[m_CrntMat].m_ID;;
 }
 
 bool UEnchantManager::IsAbleTarget(const FName& target)
 {
-	if (m_CrntMat.IsNone())
+	if (m_CrntMat == INDEX_NONE)
 	{
 		return true;
 	}
 	const FItemDataRow& FoundTarget = UMyLib::GetItemData(target);
 	
-	const FItemDataRow& FoundMat = UMyLib::GetItemData(m_CrntMat);
+	const FItemDataRow& FoundMat = UMyLib::GetItemData(GetCrntMat());
 	
 	if (FoundTarget.m_ItemType == EEquipSlotType::Weapon)
 	{
@@ -210,12 +210,12 @@ bool UEnchantManager::IsAbleTarget(const FName& target)
 
 bool UEnchantManager::IsAbleMaterial(const FName& material)
 {
-	if (m_CrntTarget.IsNone())
+	if (m_CrntTarget == INDEX_NONE)
 	{
 		return false;
 	}
 
-	const FItemDataRow& FoundTarget = UMyLib::GetItemData(m_CrntTarget);
+	const FItemDataRow& FoundTarget = UMyLib::GetItemData(GetCrntTarget());
 
 	const FItemDataRow& FoundMat = UMyLib::GetItemData(material);
 	
@@ -239,9 +239,9 @@ void UEnchantManager::Clear()
 {
 	m_nCrntLevel = 0;
 	
-	m_CrntMat = NAME_None;
+	m_CrntMat = INDEX_NONE;
 
-	m_CrntTarget = NAME_None;
+	m_CrntTarget = INDEX_NONE;
 
 	m_InvenMat = nullptr;
 
@@ -250,6 +250,8 @@ void UEnchantManager::Clear()
 
 void UEnchantManager::DoEnchant()
 {
+	FName MatID = GetCrntMat();
+	
 	if (TryEnchant())
 	{
 		EnchantSuccess(false);
@@ -259,21 +261,21 @@ void UEnchantManager::DoEnchant()
 		EnchantFail();
 	}
 	
-	m_InvenMat.Get()->RemoveItem(m_CrntMat, 1);
+	m_InvenMat.Get()->RemoveItem(GetCrntMat(), 1);
 
-	if(!m_InvenMat.Get()->FindMisItem(m_CrntMat))
+	if(!m_InvenMat.Get()->FindItem(MatID))
 	{
-		m_CrntMat = NAME_None;
+		m_CrntMat = INDEX_NONE;
 	}
 
-	m_nCrntLevel = m_CrntTarget.IsNone() ? 0 : m_InvenTarget.Get()->GetItemLevel(m_CrntTarget);
+	m_nCrntLevel = m_CrntTarget == INDEX_NONE ? 0 : m_InvenTarget.Get()->GetAryItems()[m_CrntTarget].m_nLvStack;
 
 	m_OnEnchantChanged.Broadcast();
 }
 
 bool UEnchantManager::IsEnchantAvailable() const
 {
-	if (m_CrntMat.IsNone() || m_CrntTarget.IsNone())
+	if (m_CrntMat == INDEX_NONE || m_CrntTarget == INDEX_NONE)
 	{
 		return false;
 	}

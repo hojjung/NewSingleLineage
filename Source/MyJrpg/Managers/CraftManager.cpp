@@ -72,7 +72,7 @@ int UCraftManager::GetCraftAvailableCountWithGold()
 {
 	if(m_CrntItemData->m_nCraftCost<=0)
 	{
-		return FGlobalVariable::INVEN_MAXSTACK;
+		return 10;
 	}
 	
 	return UMyGameInstance::Get->m_CurrencyManager->GetGold() / m_CrntItemData->m_nCraftCost * GetAmount(); 
@@ -80,29 +80,29 @@ int UCraftManager::GetCraftAvailableCountWithGold()
 
 int UCraftManager::GetCraftAvailableCountWithMaterial()
 {
-	int MinCount = FGlobalVariable::INVEN_MAXSTACK;
+	int MinCount = 10;
 	
 	for(const FCraftItemCost& Cost : m_CrntItemData->m_AryCostItem)
 	{
-		int InvenAmount = UMyLib::GetPlayerInven()->GetItemStack(Cost.m_ItemDataRowHandle.RowName);
-
-		int StorageAmount = 0;
-
-		for(UInventory* Inven : UMyLib::GetPlayerStorage())
-		{
-			StorageAmount += Inven->GetItemStack(Cost.m_ItemDataRowHandle.RowName);
-		}
-
-		int HasAmount = InvenAmount + StorageAmount; 
-		
-		int Count = Cost.m_nStackOrLevel * GetAmount();
-
-		int MaxCount = HasAmount / Count;
-
-		if(MaxCount<MinCount)
-		{
-			MinCount = MaxCount; 
-		}
+		// int InvenAmount = UMyLib::GetPlayerInven()->GetItemStack(Cost.m_ItemDataRowHandle.RowName);
+		//
+		// int StorageAmount = 0;
+		//
+		// for(UInventory* Inven : UMyLib::GetPlayerStorage())
+		// {
+		// 	StorageAmount += Inven->GetItemStack(Cost.m_ItemDataRowHandle.RowName);
+		// }
+		//
+		// int HasAmount = InvenAmount + StorageAmount; 
+		//
+		// int Count = Cost.m_nStackOrLevel * GetAmount();
+		//
+		// int MaxCount = HasAmount / Count;
+		//
+		// if(MaxCount<MinCount)
+		// {
+		// 	MinCount = MaxCount; 
+		// }
 	}
 
 	return MinCount;
@@ -110,13 +110,13 @@ int UCraftManager::GetCraftAvailableCountWithMaterial()
 
 int UCraftManager::GetCraftAvailableCountWithStackSize()
 {
-	int InvenStackAvailable = FGlobalVariable::INVEN_MAXSTACK;
+	int InvenStackAvailable = 10;
 	
 	if(UMyLib::GetItemType(*m_CrntItemData) != EItemType::Equip)
 	{
-		int CurrentAmount = UMyLib::GetPlayerInven()->GetItemStack(m_CrntID);
+		int CurrentAmount = 0;//UMyLib::GetPlayerInven()->GetItemStack(m_CrntID);
 
-		InvenStackAvailable = FGlobalVariable::INVEN_MAXSTACK - CurrentAmount;
+		InvenStackAvailable = 10 - CurrentAmount;
 	}//스택 아이템의 경우 더 스택할수 있는지?
 	return InvenStackAvailable;
 }
@@ -154,14 +154,15 @@ void UCraftManager::Clear()
 
 bool UCraftManager::IsInvenHasSpace()
 {
-	int Amount = GetAmount();
-	
-	if(UMyLib::IsEquip(*m_CrntItemData))
-	{
-		return UMyLib::GetPlayerInven()->IsCountAvailable(Amount);//소모품개수는,제작 개수를 결정할때 클램핑해주자.이함수는 제작후 남은 공간에 원하는 아이템을 넣을수 있는가
-	}
-	
-	return  Amount <= UMyGameInstance::Get->m_Inven->GetAvailalbeStackCount(m_CrntID);	
+	// int Amount = GetAmount();
+	//
+	// if(UMyLib::IsEquip(*m_CrntItemData))
+	// {
+	// 	return UMyLib::GetPlayerInven()->IsCountAvailable(Amount);//소모품개수는,제작 개수를 결정할때 클램핑해주자.이함수는 제작후 남은 공간에 원하는 아이템을 넣을수 있는가
+	// }
+	//
+	// return  Amount <= UMyGameInstance::Get->m_Inven->GetAvailalbeStackCount(m_CrntID);
+	return true;
 }
 
 bool UCraftManager::IsGoldEnough()
@@ -203,7 +204,7 @@ void UCraftManager::PurchaseItemForCraft()
 		{
 			const FName* gidItem;
 			UInventory* Inven = UMyLib::FindEquipItem(Cost.m_ItemDataRowHandle.RowName,Cost.m_nStackOrLevel,&gidItem);
-			Inven->RemoveEquipItem(*gidItem);
+			//Inven->RemoveEquipItem(*gidItem);
 		}
 		else
 		{
@@ -223,13 +224,13 @@ void UCraftManager::ReceiveItem()
 
 	if(!UMyLib::IsEquip(*m_CrntItemData))
 	{
-		UMyLib::GetPlayerInven()->AddItem(m_CrntID,m_nCraftItemCount);
+		//UMyLib::GetPlayerInven()->AddItem(m_CrntID,m_nCraftItemCount);
 	}
 	else
 	{
-		FName HashID = UMyLib::GenerateEquipItemHashKey(m_CrntID,this);
-
-		UMyLib::GetPlayerInven()->AddEquipItem(HashID);
+		// FName HashID = UMyLib::GenerateEquipItemHashKey(m_CrntID,this);
+		//
+		// UMyLib::GetPlayerInven()->AddEquipItem(HashID);
 	}
 	
 }

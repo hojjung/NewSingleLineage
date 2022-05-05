@@ -20,11 +20,11 @@ AItemActor::AItemActor()
 
 void AItemActor::Init(FName itemID, int countOrLevel)
 {
-	m_ItemID = itemID;
+	m_ItemSpec.m_ID = itemID;
 
-	m_nCountLevel = countOrLevel;
+	m_ItemSpec.m_nLvStack = countOrLevel;
 	
-	const FItemDataRow& ItemData = UMyLib::GetItemData(m_ItemID);
+	const FItemDataRow& ItemData = UMyLib::GetItemData(m_ItemSpec.m_ID);
 
 	UTexture2D* t = UMyAssetManager::Get()->LoadTexture(ItemData.m_Icon);
 
@@ -46,20 +46,7 @@ void AItemActor::Obtain()//주변에서 누가 보고있으면
 		}
 	}
 
-	bool Result = false;
-	
-	if(UMyLib::IsEquip(m_ItemID))
-	{
-		FName GId = UMyLib::GenerateEquipItemHashKey(m_ItemID,this);
-		
-		Result = UMyGameInstance::Get->m_Inven->AddEquipItem(GId,m_nCountLevel);
-	}
-	else
-	{
-		Result = UMyGameInstance::Get->m_Inven->AddItem(m_ItemID,m_nCountLevel);
-	}
-	
-	if(Result)
+	if(UMyGameInstance::Get->m_Inven->AddItem(m_ItemSpec))
 	{
 		UMyGameInstance::Get->m_SpawnManager->RemoveFocusActor(this);
 		Destroy();

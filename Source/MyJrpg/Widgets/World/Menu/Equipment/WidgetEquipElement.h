@@ -59,5 +59,5 @@ public:
 
 	bool IsSlotEmpty() const;
 
-	const FName& GetEquippedItem() const;
+	FName GetEquippedItem() const;
 };

@@ -1,4 +1,6 @@
 #include "WidgetItemElement.h"
+
+#include "ItemDDO.h"
 #include "WidgetInventory.h"
 #include "Blueprint/WidgetBlueprintLibrary.h"
 #include "MyJrpg/MyLib.h"
@@ -72,14 +74,14 @@ FText UWidgetItemElement::GetFocusText()
 
 	if(Type == EItemType::Equip)
 	{
-		if(UMyLib::GetEquip()->IsItemEquipped(ItemID))
-		{
-			return NSLOCTEXT("UWidgetItemElement","FocusUnequip","해제?");
-		}
-		else
-		{
-			return NSLOCTEXT("UWidgetItemElement","FocusEquip","장착?");
-		}
+		// if(UMyLib::GetEquip()->IsItemEquipped(ItemID))
+		// {
+		// 	return NSLOCTEXT("UWidgetItemElement","FocusUnequip","해제?");
+		// }
+		// else
+		// {
+		// 	return NSLOCTEXT("UWidgetItemElement","FocusEquip","장착?");
+		// }
 	}
 	else if(Type == EItemType::Consume)
 	{
@@ -104,56 +106,50 @@ void UWidgetItemElement::SetIndex(int index)
 
 const FName& UWidgetItemElement::GetItemID() const
 {
-	return m_Inven->GetItems()[m_nIndex].m_ID;
+	return m_Inven->GetAryItems()[m_nIndex].m_ID;
 }
 
-void UWidgetItemElement::MoveItem(UInventory* addHere,UInventory* removeHere,const FName& ItemSpec, bool IsEquipItem)
+void UWidgetItemElement::MoveItem(UInventory* addHere,UInventory* removeHere, int targetIndexFromRemoveHere)
 {
-	// if(IsEquipItem)
-	// {
-	// 	int Level = m_Inven->GetItemLevel(ItemSpec);
-	// 	
-	// 	if(UMyLib::GetEquip()->IsItemEquipped(ItemSpec))
-	// 	{
-	// 		UMyGameInstance::Get->m_EquipManager->Unequip(UMyLib::GetItemData(ItemSpec).m_ItemType);
-	// 	}
-	// 	
-	// 	if(addHere->AddEquipItem(ItemSpec, Level))
-	// 	{
-	// 		removeHere->RemoveEquipItem(ItemSpec);
-	// 	}
-	// }
-	// else
-	// {
-	// 	int Amount = removeHere->GetItemStack(ItemSpec);
-	// 	
-	// 	if(addHere->AddItem(ItemSpec,Amount))
-	// 	{
-	// 		removeHere->RemoveItem(ItemSpec,Amount);
-	// 	}
-	// }
+	const FItemSpec& Item = removeHere->GetItem(targetIndexFromRemoveHere);
+	
+	const FItemDataRow& ItemData = UMyLib::GetItemData(Item.m_ID);
+	
+	bool IsEquip = UMyLib::IsEquip(ItemData);
+	
+	if(IsEquip)
+	{
+		if(UMyLib::GetEquip()->IsItemEquipped(Item))
+		{
+			UMyGameInstance::Get->m_EquipManager->Unequip(ItemData.m_ItemType);
+		}
+	}
+	if (addHere->AddItem(Item))
+	{
+		removeHere->RemoveItem(targetIndexFromRemoveHere);
+	}
 }
 
 void UWidgetItemElement::TryPickPocketItem(UInventory* addHere, AMonsterPawn* target, const FName& ItemSpec, bool IsEquipItem)
 {
-	float PickPocketRate = 0.52f;
-
-	float Rand = FMath::RandRange(0,1);
-
-	if(Rand <= PickPocketRate)
-	{
-		MoveItem(addHere,target->GetInven(),ItemSpec,IsEquipItem);
-
-		return;
-	}
-
-	UMyGameInstance::Get->m_TeamKarma->DecreaseKarma(target->GetTeamID(),60);
-
-	UWidgetPickpocketPanel* Panel = UMyLib::GetCanvas()->GetPickpocketMenu();
-
-	Panel->GetCurrentTargetPawn()->SetFocusedTarget(UMyLib::GetPlayer());
-
-	Panel->ClosePanel();
+	// float PickPocketRate = 0.52f;
+	//
+	// float Rand = FMath::RandRange(0,1);
+	//
+	// if(Rand <= PickPocketRate)
+	// {
+	// 	MoveItem(addHere,target->GetInven(),ItemSpec,IsEquipItem);
+	//
+	// 	return;
+	// }
+	//
+	// UMyGameInstance::Get->m_TeamKarma->DecreaseKarma(target->GetTeamID(),60);
+	//
+	// UWidgetPickpocketPanel* Panel = UMyLib::GetCanvas()->GetPickpocketMenu();
+	//
+	// Panel->GetCurrentTargetPawn()->SetFocusedTarget(UMyLib::GetPlayer());
+	//
+	// Panel->ClosePanel();
 }
 
 void UWidgetItemElement::SellItem()
@@ -214,13 +210,13 @@ void UWidgetItemElement::UseItem()
 	switch (m_PanelType)
 	{
 	case EPanelType::StorageDeposit:
-		MoveItem(UMyLib::GetFocusedStroage(),UMyLib::GetPlayerInven(),ItemSpec, IsEquipItem);
+		MoveItem(UMyLib::GetFocusedStroage(),UMyLib::GetPlayerInven(),m_nIndex);
 		return;
 	case EPanelType::StorageWithdraw:
-		MoveItem(UMyLib::GetPlayerInven(),UMyLib::GetFocusedStroage(),ItemSpec, IsEquipItem);
+		MoveItem(UMyLib::GetPlayerInven(),UMyLib::GetFocusedStroage(),m_nIndex);
 		return;
 	case EPanelType::PickPocketPl:
-		MoveItem(UMyLib::GetPickPocketTarget()->GetInven(), UMyLib::GetPlayerInven(), ItemSpec, IsEquipItem);
+		//MoveItem(UMyLib::GetPickPocketTarget()->GetInven(), UMyLib::GetPlayerInven(), ItemSpec, IsEquipItem);
 		return;
 	case EPanelType::PickPocketTarget:
 		TryPickPocketItem(UMyLib::GetPlayerInven(),UMyLib::GetPickPocketTarget(),ItemSpec, IsEquipItem);
@@ -233,7 +229,7 @@ void UWidgetItemElement::UseItem()
 		{
 			if (UMyGameInstance::Get->m_EnchantManager->IsAbleTarget(ItemSpec))
 			{
-				UMyGameInstance::Get->m_EnchantManager->SetTargetEquip(ItemSpec,m_Inven.Get());
+				//UMyGameInstance::Get->m_EnchantManager->SetTargetEquip(ItemSpec,m_Inven.Get());
 			}
 			return;
 		}
@@ -276,7 +272,7 @@ void UWidgetItemElement::UpdateElement(const FName& id)
 {
 	const FItemDataRow& ItemData = UMyLib::GetItemData(id);
 
-	int Level = m_Inven.Get() ? m_Inven->GetItems()[m_nIndex].m_nLvStack : 0;
+	int Level = m_Inven.Get() ? m_Inven->GetAryItems()[m_nIndex].m_nLvStack : 0;
 
 	if(UMyLib::GetItemType(ItemData) == EItemType::Equip)
 	{
@@ -290,14 +286,14 @@ void UWidgetItemElement::UpdateElement(const FName& id)
 			m_TextStackAmount->SetVisibility(ESlateVisibility::Collapsed);
 		}
 
-		if(UMyLib::GetEquip()->IsItemEquipped(id))
-		{
-			m_OverlayEquip->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
-		}
-		else
-		{
-			m_OverlayEquip->SetVisibility(ESlateVisibility::Collapsed);
-		}	
+		// if(UMyLib::GetEquip()->IsItemEquipped(id))
+		// {
+		// 	m_OverlayEquip->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
+		// }
+		// else
+		// {
+		// 	m_OverlayEquip->SetVisibility(ESlateVisibility::Collapsed);
+		// }	
 	}
 	else
 	{

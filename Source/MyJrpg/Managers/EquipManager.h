@@ -6,6 +6,7 @@
 
 #include "MyJrpg/MyJrpg.h"
 #include "MyJrpg/DataTables/ItemData.h"
+#include "MyJrpg/Items/Inventory.h"
 #include "UObject/NoExportTypes.h"
 #include "EquipManager.generated.h"
 
@@ -23,7 +24,7 @@ public:
 	FOnEquipChanged m_OnEquipChanged;
 	
 protected:
-	TArray<FName> m_AryEqupSlots;
+	TArray<const FItemSpec*> m_AryEqupSlots;
 
 	bool m_bIsRange;
 	
@@ -37,19 +38,21 @@ protected:
 public:
 	void Init();
 
+ 	FORCEINLINE const TArray<const FItemSpec*>& GetEquipAry() const
+ 	{
+ 		return m_AryEqupSlots;
+ 	}
 	bool Equip(EEquipSlotType slotWant,const FName& itemWant);
 
 	void Unequip(EEquipSlotType slotWant);
 
 	void Unequip(const FName& itemWant);
 
- 	const TArray<FName>& GetEquipAry() const;
-
-	bool IsItemEquipped(const FName& itemWant);
+	bool IsItemEquipped(const FItemSpec& itemWant);
 
 	bool IsItemEquipped(EEquipSlotType wantSlot);
 
-	const FName& GetEquipItem(EEquipSlotType wantSlot);
+	FName GetEquipItem(EEquipSlotType wantSlot);
 
 	bool IsRangeStance();
 

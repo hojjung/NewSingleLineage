@@ -31,12 +31,12 @@ void UWidgetEnchantBase::Open()
 
 void UWidgetEnchantBase::SetEnchantEquipTarget(const FName& target, UInventory* inven)
 {
-	UMyGameInstance::Get->m_EnchantManager->SetTargetEquip(target, inven);
+	//UMyGameInstance::Get->m_EnchantManager->SetTargetEquip(target, inven);
 }
 
 void UWidgetEnchantBase::SetEnchantEquipMaterial(const FName& mat, UInventory* inven)
 {
-	UMyGameInstance::Get->m_EnchantManager->SetMaterialEquip(mat, inven);
+	//UMyGameInstance::Get->m_EnchantManager->SetMaterialEquip(mat, inven);
 }
 
 void UWidgetEnchantBase::OnClose()

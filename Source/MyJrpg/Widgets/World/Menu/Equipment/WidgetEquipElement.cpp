@@ -74,7 +74,7 @@ void UWidgetEquipElement::UpdateElement(const FName& spec)
 
 	m_OverlayEquip->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
 
-	int Level = UMyLib::GetPlayerInven()->GetItemLevel(spec);;
+	int Level = 0;//UMyLib::GetPlayerInven()->GetItemLevel(spec);;
 
 	if(Level>0)
 	{
@@ -147,7 +147,7 @@ bool UWidgetEquipElement::IsSlotEmpty() const
 	return !UMyLib::GetEquip()->IsItemEquipped(m_Slot);
 }
 
-const FName& UWidgetEquipElement::GetEquippedItem() const
+FName UWidgetEquipElement::GetEquippedItem() const
 {
 	return UMyLib::GetEquip()->GetEquipItem(m_Slot);
 }

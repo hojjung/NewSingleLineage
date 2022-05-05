@@ -12,7 +12,7 @@
 
 void UMyCheatManager::AddItemToPlayer(FName id, int amount)
 {
-	UMyLib::GetPlayerInven()->AddItem(id,amount);
+	UMyLib::GetPlayerInven()->AddItem(FItemSpec(id,amount));
 }
 
 void UMyCheatManager::RemoveItemFromPlayer(FName id, int amount)

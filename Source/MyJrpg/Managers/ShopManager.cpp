@@ -18,25 +18,25 @@ void UShopManager::BuyItem(const FName& itemID, int amount)
 		return;
 	}
 
-	if (UMyLib::IsEquip(itemID))
-	{
-		int Iter = -1;
-
-		while (++Iter < amount)
-		{
-			FName HashID = UMyLib::GenerateEquipItemHashKey(itemID, this);
-			
-			if(!UMyLib::GetPlayerInven()->AddEquipItem(HashID))
-			{
-				break;				
-			}
-		}
-	}
-	else
-	{
-		if(!UMyLib::GetPlayerInven()->AddItem(itemID,amount))
-			return;
-	}
+	// if (UMyLib::IsEquip(itemID))
+	// {
+	// 	int Iter = -1;
+	//
+	// 	while (++Iter < amount)
+	// 	{
+	// 		FName HashID = UMyLib::GenerateEquipItemHashKey(itemID, this);
+	// 		
+	// 		if(!UMyLib::GetPlayerInven()->AddEquipItem(HashID))
+	// 		{
+	// 			break;				
+	// 		}
+	// 	}
+	// }
+	// else
+	// {
+	// 	if(!UMyLib::GetPlayerInven()->AddItem(itemID,amount))
+	// 		return;
+	// }
 	
 	UMyGameInstance::Get->m_CurrencyManager->SubGold(TotalCost);
 	
@@ -47,16 +47,13 @@ void UShopManager::SellItem(const FName& itemID, int amount)
 {
 	const FItemDataRow& ItemDataRow = UMyLib::GetItemData(itemID);
 	
+	if(!UMyLib::GetPlayerInven()->RemoveItem(itemID,amount))
+	{
+		return;
+	}
+	
 	int SellGold = amount * ItemDataRow.m_nPlayerEarnGoldSell;
-
-	if (UMyLib::GetItemType(itemID) == EItemType::Equip)
-	{
-		UMyLib::GetPlayerInven()->RemoveEquipItem(itemID);
-	}
-	else
-	{
-		UMyLib::GetPlayerInven()->RemoveItem(itemID,amount);
-	}
+	
 	UMyGameInstance::Get->m_CurrencyManager->AddGold(SellGold);
 
 	m_OnItemSell.Broadcast(itemID);

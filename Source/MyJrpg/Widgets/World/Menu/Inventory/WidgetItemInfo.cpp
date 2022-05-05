@@ -64,9 +64,9 @@ void UWidgetItemInfo::SetItemInfo(EItemInfo info,const FName& oID,UInventory* in
 
 	if (Type == EItemType::Equip)
 	{
-		int Lv = m_Inven.Get() ? m_Inven.Get()->GetItemLevel(oID) : 0;
+		int Lv = 0;//m_Inven.Get() ? m_Inven.Get()->GetItemLevel(oID) : 0;
 		
-		m_BtnEraseItem->SetIsEnabled(!UMyLib::GetEquip()->IsItemEquipped(m_ItemKey));
+		//m_BtnEraseItem->SetIsEnabled(!UMyLib::GetEquip()->IsItemEquipped(m_ItemKey));
 		
 		UpdateStat(m_ItemKey,Lv);
 	}
@@ -112,7 +112,7 @@ void UWidgetItemInfo::OnClose()
 
 void UWidgetItemInfo::OnErase()
 {
-	if(UMyLib::GetItemType(m_ItemKey) == EItemType::Equip || m_Inven->GetItemStack(m_ItemKey) == 1)
+	if(UMyLib::GetItemType(m_ItemKey) == EItemType::Equip)// || m_Inven->GetItemStack(m_ItemKey) == 1
 	{
 		EraseConfirm();
 	}
@@ -127,7 +127,7 @@ void UWidgetItemInfo::OnErase()
 
 int UWidgetItemInfo::GetMax()
 {
-	return m_Inven.Get()->GetItemStack(m_ItemKey);
+	return 0;//m_Inven.Get()->GetItemStack(m_ItemKey);
 }
 
 void UWidgetItemInfo::EraseConfirm(int am)
@@ -137,7 +137,7 @@ void UWidgetItemInfo::EraseConfirm(int am)
 
 void UWidgetItemInfo::EraseConfirm()
 {
-	m_Inven.Get()->RemoveEquipItem(m_ItemKey);
+	//m_Inven.Get()->RemoveEquipItem(m_ItemKey);
 }
 
 void UWidgetItemInfo::UpdateEnchantBtn()//가지고있으면 해당 인벤으로
@@ -190,7 +190,7 @@ void UWidgetItemInfo::OnEnchant()//강화가 두개의 상황이 존재함.그�
 
 	if(m_Inven.Get())
 	{
-		UMyGameInstance::Get->m_EnchantManager->SetTargetEquip(m_ItemKey,m_Inven.Get());
+		//UMyGameInstance::Get->m_EnchantManager->SetTargetEquip(m_ItemKey,m_Inven.Get());
 
 		OnClose();
 		return;
@@ -200,7 +200,7 @@ void UWidgetItemInfo::OnEnchant()//강화가 두개의 상황이 존재함.그�
 
 	UInventory* Inven = UMyLib::FindEquipItem(m_ItemKey, &FoundItem);
 	
-	UMyGameInstance::Get->m_EnchantManager->SetTargetEquip(*FoundItem,Inven);
+	//UMyGameInstance::Get->m_EnchantManager->SetTargetEquip(*FoundItem,Inven);
 
 	OnClose();
 }

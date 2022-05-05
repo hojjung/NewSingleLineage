@@ -1,6 +1,7 @@
 #include "WidgetBaseElement.h"
 #include "MyJrpg/MyJrpg.h"
 #include "MyJrpg/DataTables/ItemData.h"
+#include "MyJrpg/Widgets/World/Menu/Inventory/ItemDDO.h"
 
 void UWidgetBaseElement::NativeOnInitialized()
 {
@@ -49,7 +50,7 @@ FReply UWidgetBaseElement::NativeOnTouchStarted(const FGeometry& InGeometry, con
 
 	m_fTimer = 0;
 
-	return FReply::Handled();
+	return UWidgetBlueprintLibrary::DetectDragIfPressed(InGestureEvent,this,EKeys::LeftMouseButton).NativeReply;
 }
 
 FReply UWidgetBaseElement::NativeOnTouchMoved(const FGeometry& InGeometry, const FPointerEvent& InGestureEvent)
@@ -85,11 +86,29 @@ void UWidgetBaseElement::NativeOnMouseLeave(const FPointerEvent& InMouseEvent)
 	EndHolding();
 }
 
+void UWidgetBaseElement::NativeOnDragDetected(const FGeometry& InGeometry, const FPointerEvent& InMouseEvent,
+	UDragDropOperation*& OutOperation)
+{
+	Super::NativeOnDragDetected(InGeometry, InMouseEvent, OutOperation);
+	OutOperation = CreateDDO();
+}
+
+bool UWidgetBaseElement::NativeOnDrop(const FGeometry& InGeometry, const FDragDropEvent& InDragDropEvent,
+	UDragDropOperation* InOperation)
+{
+	if(UItemDDO::GetDDOInst!=InOperation)
+	{
+		return false;
+	}
+
+	return true;
+}
+
 void UWidgetBaseElement::NativeTick(const FGeometry& MyGeometry, float InDeltaTime)
 {
 	Super::NativeTick(MyGeometry, InDeltaTime);
 
-	if (!m_bHolding ||!m_bIsHoldable) //포커싱이 이미되버렸으면 안함//||m_OverlayFocus->IsVisible()
+	if (!m_bHolding ||!m_bIsHoldable || UItemDDO::GetDDOInst) //포커싱이 이미되버렸으면 안함//||m_OverlayFocus->IsVisible()
 	{
 		return;
 	}
@@ -116,6 +135,18 @@ void UWidgetBaseElement::EndHolding()
 	m_bHolding = false;
 
 	m_HoldingBar->SetVisibility(ESlateVisibility::Collapsed);
+}
+
+UDragDropOperation* UWidgetBaseElement::CreateDDO()
+{
+	auto* DDO = Cast<UItemDDO>(UWidgetBlueprintLibrary::CreateDragDropOperation(UItemDDO::StaticClass()));
+	DDO->SetDDO(this);
+	return DDO;
+}
+
+UImage* UWidgetBaseElement::GetImgIcon()
+{
+	return m_ImgItemIcon;
 }
 
 void UWidgetBaseElement::SetIcon(TSoftObjectPtr<UTexture2D> t)

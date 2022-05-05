@@ -225,7 +225,7 @@ void AMonsterPawn::CreateInventory()
 {
 	m_Inven = NewObject<UInventory>(this);
 	m_Inven->Init(FGlobalVariable::MOB_INVEN);
-	m_Inven->AddItem(TEXT("misc_gold24k"), 3);
+	m_Inven->AddItem(FItemSpec(TEXT("misc_gold24k"), 3));
 }
 
 void AMonsterPawn::SetFocusedTarget(IFocusable* target)

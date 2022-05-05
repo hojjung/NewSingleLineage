@@ -75,7 +75,7 @@ void UWidgetInventory::UpdateInventory()
 	int ItemIndex = 0;
 	int Index = 0;
 	
-	for (const auto& Item : m_CurrentInven->GetItems())
+	for (const auto& Item : m_CurrentInven->GetAryItems())
 	{
 		if(!IsFilterType(Item.m_ID))
 		{

@@ -11,7 +11,7 @@ void UWidgetItemObtainPanel::NativeOnInitialized()
 
 	m_nIter = 0;
 	
-	UMyGameInstance::Get->m_Inven->m_OnItemObtain.AddUObject(this, &UWidgetItemObtainPanel::OnItemObtain);
+	//UMyGameInstance::Get->m_Inven->m_OnItemObtain.AddUObject(this, &UWidgetItemObtainPanel::OnItemObtain);
 
 	FTimerHandle Timer;
 

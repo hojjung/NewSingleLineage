@@ -138,9 +138,16 @@ void UWidgetInteract::ShowInteract(IFocusable* focus)
 
 void UWidgetInteract::OnObtain()
 {
+	if(!m_Focused.GetObject())
+	{
+		return;
+	}
 	AItemActor* Item = Cast<AItemActor>(m_Focused.GetObject());
 	
 	Item->Obtain();
+
+	m_Focused.SetObject(nullptr);
+	m_Focused.SetInterface(nullptr);
 }
 
 void UWidgetInteract::OnSteal()

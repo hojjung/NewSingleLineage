@@ -54,11 +54,11 @@ void UUWidgetShopItemElement::OpenStackCalculator()
 
 		if(!UMyLib::IsEquip(m_ItemID))
 		{
-			AbleToDeposit = UMyGameInstance::Get->m_Inven->GetItemStack(m_ItemID);
+			AbleToDeposit = 0;//UMyGameInstance::Get->m_Inven->GetItemStack(m_ItemID);
 		}
 		else
 		{
-			AbleToDeposit = UMyGameInstance::Get->m_Inven->GetRemainSlotCount();
+			AbleToDeposit = 0;//UMyGameInstance::Get->m_Inven->GetRemainSlotCount();
 		}
 
 		m_nMaxAmount = FMath::Min(AbleToBuy,AbleToDeposit);
@@ -108,12 +108,12 @@ bool UUWidgetShopItemElement::IsSlotEmpty()
 
 void UUWidgetShopItemElement::OnBuyConfirm(int amount)
 {
-	if(UMyLib::GetPlayerInven()->GetRemainSlotCount() < amount)
-	{
-		PRINTF("void UUWidgetShopItemElement::OnBuyConfirm(int amount) :: InvenMax");
-		return;
-	}
-	UMyGameInstance::Get->m_ShopManager->BuyItem(m_ItemID,amount);
+	// if(UMyLib::GetPlayerInven()->GetRemainSlotCount() < amount)
+	// {
+	// 	PRINTF("void UUWidgetShopItemElement::OnBuyConfirm(int amount) :: InvenMax");
+	// 	return;
+	// }
+	// UMyGameInstance::Get->m_ShopManager->BuyItem(m_ItemID,amount);
 }
 
 int UUWidgetShopItemElement::GetMaxAmount()

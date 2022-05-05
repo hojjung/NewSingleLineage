@@ -21,6 +21,7 @@ void UWidgetStorage::SetTargetInven(UInventory* storage)
 	m_StoragePanel->Init(m_TargetInven,EPanelType::StorageWithdraw);
 	
 	m_StoragePanel->OpenPanel();
+	
 	m_InvenPanel->OpenPanel();
 
 	UpdateText();
