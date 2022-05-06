@@ -41,8 +41,6 @@ class MYJRPG_API UWidgetBaseElement : public UUserWidget
 	UPROPERTY(EditDefaultsOnly)
 	UTexture2D* m_DefaultGlow;
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (BindWidget))
-	UOverlay* m_OverlayEquip;
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (BindWidget))
 	UTextBlock* m_TextFocus;
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (BindWidget))
 	UTextBlock* m_TextStackAmount;//Level
@@ -110,6 +108,4 @@ public:
 	int GetIndex();
 	
 	void SetTextFocus(FText t);
-	
-	void SetEquip(bool isEquip);
 };

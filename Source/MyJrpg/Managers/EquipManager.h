@@ -27,7 +27,7 @@ protected:
 	UPROPERTY()
 	UInventory* m_Inven;
 	
-	TArray<FItemSpec*> m_AryEqupSlots;
+	TArray<FItemSpec> m_AryEqupSlots;
 
 	bool m_bIsRange;
 	
@@ -41,23 +41,17 @@ protected:
 public:
 	void Init();
 
- 	FORCEINLINE const TArray<FItemSpec*>& GetEquipAry() const
+ 	FORCEINLINE const TArray<FItemSpec>& GetEquipAry() const
  	{
  		return m_AryEqupSlots;
  	}
 	void Equip(EEquipSlotType slotWant, int invenIndex);
 
-	void Unequip(EEquipSlotType slotWant);
-
-	void Unequip(const FName& itemWant);
-
-	bool IsItemEquipped(EEquipSlotType t, const FItemSpec& itemWant);
-
-	bool IsItemEquipped(const FItemSpec& itemWant);
+	bool Unequip(EEquipSlotType slotWant, int * returnInvenIndex = nullptr);
 
 	bool IsItemEquipped(EEquipSlotType wantSlot);
 
-	const FItemSpec* GetEquipItem(int slotIndex);
+	const FItemSpec& GetEquipItem(int slotIndex);
 
 	bool IsRangeStance();
 

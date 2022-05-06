@@ -110,8 +110,6 @@ void UWidgetInventory::SetItem(UWidgetBaseElement* target, const FItemSpec& item
 		{
 			target->HideTextStackLv();
 		}
-
-		target->SetEquip(itemSpec.m_bIsEquipped);
 	}
 	else
 	{
@@ -162,6 +160,37 @@ void UWidgetInventory::OnDrop(UWidgetBaseElement* ele)
 	if(UItemDDO::GetDDOInst->m_FromInven.Get())
 	{
 		m_CurrentInven->OnDropItem(ele->GetIndex(), UItemDDO::GetDDOInst->m_FromInven.Get(),UItemDDO::GetDDOInst->m_nIndex);
+
+		return;
+	}
+
+	if(UItemDDO::GetDDOInst->m_FromEquip.Get())
+	{
+		FItemSpec MyItem = m_CurrentInven->GetItemConstRef(ele->GetIndex());
+
+		FItemSpec OtherItem = UItemDDO::GetDDOInst->GetItem();
+		
+		if(MyItem.m_ID.IsNone())
+		{
+			int InvenIndex = ele->GetIndex();
+			
+			UMyLib::GetEquip()->Unequip((EEquipSlotType)UItemDDO::GetDDOInst->m_nIndex,&InvenIndex);
+			m_CurrentInven->UpdateInventory();
+			return;
+		}
+		
+
+		FItemDataRow A = UMyLib::GetItemData(MyItem.m_ID);
+
+		FItemDataRow B = UMyLib::GetItemData(OtherItem.m_ID);
+		
+		if(A.m_ItemType != B.m_ItemType)
+		{
+			return;
+		}
+		UMyLib::GetEquip()->Equip((EEquipSlotType)UItemDDO::GetDDOInst->m_nIndex,ele->GetIndex());
+		m_CurrentInven->UpdateInventory();
+		return;
 	}
 }
 

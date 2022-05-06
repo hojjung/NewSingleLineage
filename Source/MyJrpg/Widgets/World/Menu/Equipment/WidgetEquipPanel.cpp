@@ -39,7 +39,7 @@ void UWidgetEquipPanel::NativeOnInitialized()
 
 		m_AryEquips[Iter]->m_OnFocus.AddUObject(this, &UWidgetEquipPanel::OnFocused);
 
-		m_AryEquips[Iter]->SetDragable(false);
+		m_AryEquips[Iter]->m_OnDrag.AddUObject(this, &UWidgetEquipPanel::OnDrag);
 
 		m_AryEquips[Iter]->m_OnDrop.AddUObject(this, &UWidgetEquipPanel::OnDrop);
 
@@ -85,18 +85,18 @@ void UWidgetEquipPanel::UnFocusCurrent()
 
 void UWidgetEquipPanel::UpdateSlots()
 {
-	const TArray<FItemSpec*>& EquippedItems = m_Equip->GetEquipAry();
+	const TArray<FItemSpec>& EquippedItems = m_Equip->GetEquipAry();
 	
 	for (int i = 0; i < m_AryEquips.Num(); i++)
 	{
-		if (!EquippedItems[i])
+		if (EquippedItems[i].m_ID.IsNone())
 		{
 			if(m_AryEquips[i])
 				m_AryEquips[i]->Clear();
 			
 			continue;
 		}
-		UpdateElement(m_AryEquips[i], *EquippedItems[i]);
+		UpdateElement(m_AryEquips[i], EquippedItems[i]);
 	}
 
 	UnFocusCurrent();
@@ -120,8 +120,6 @@ void UWidgetEquipPanel::UpdateElement(UWidgetBaseElement* ele, const FItemSpec& 
 	{
 		ele->HideTextStackLv();
 	}
-
-	ele->SetEquip(item.m_bIsEquipped);
 }
 
 void UWidgetEquipPanel::OnFocused(UWidgetBaseElement* ele)
@@ -139,6 +137,15 @@ void UWidgetEquipPanel::OnFocused(UWidgetBaseElement* ele)
 	m_CurrentFocused = ele;
 
 	m_CurrentFocused->SetTextFocus(NSLOCTEXT("UWidgetEquipPanel","FocusUnequip","해제?"));
+}
+
+void UWidgetEquipPanel::OnDrag(UWidgetBaseElement* ele)
+{
+	UnFocusCurrent();
+
+	UItemDDO::GetDDOInst->m_FromEquip = m_Equip;
+
+	UItemDDO::GetDDOInst->m_nIndex = ele->GetIndex();
 }
 
 void UWidgetEquipPanel::OnDrop(UWidgetBaseElement* ele)

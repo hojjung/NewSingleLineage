@@ -58,6 +58,8 @@ protected:
 
 	void OnFocused(UWidgetBaseElement* ele);
 
+	void OnDrag(UWidgetBaseElement* ele);
+
 	void OnDrop(UWidgetBaseElement* ele);
 
 public:
@@ -65,3 +67,5 @@ public:
 
 	void Close();
 };
+
+

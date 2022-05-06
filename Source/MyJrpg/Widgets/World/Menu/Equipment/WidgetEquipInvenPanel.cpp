@@ -34,10 +34,7 @@ void UWidgetEquipInvenPanel::OnPlInvenFocused(UWidgetBaseElement* ele, UInventor
 		ele->SetTextFocus(NSLOCTEXT("UWidgetEquipInvenPanel","FocusUse","사용?"));
 		break;
 	case EItemType::Equip:
-		if(UMyLib::GetEquip()->IsItemEquipped(Item))
-			ele->SetTextFocus(NSLOCTEXT("UWidgetEquipInvenPanel","FocusUnequip","해제?"));
-		else
-			ele->SetTextFocus(NSLOCTEXT("UWidgetEquipInvenPanel","FocusEquip","장착?"));
+		ele->SetTextFocus(NSLOCTEXT("UWidgetEquipInvenPanel","FocusEquip","장착?"));
 		break;
 	}
 }
@@ -57,14 +54,7 @@ void UWidgetEquipInvenPanel::OnPlInvenFocuseConfirm(UWidgetBaseElement* ele, UIn
 		break;
 	case EItemType::Equip:
 		EEquipSlotType SlotT = UMyLib::GetEquipItemSlot(Item.m_ID);
-		if(UMyLib::GetEquip()->IsItemEquipped(SlotT, Item))
-		{
-			UMyLib::GetEquip()->Unequip(SlotT);
-		}
-		else
-		{
-			UMyLib::GetEquip()->Equip(SlotT, index);
-		}
+		UMyLib::GetEquip()->Equip(SlotT, index);
 		inven->UpdateInventory();
 		break;
 	}

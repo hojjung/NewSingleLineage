@@ -48,9 +48,9 @@ bool UInventory::AddItem(FItemSpec addItem)
 
 	if (IsEquip)
 	{
-		for (auto& ItemMap : m_AryTotalItems)
+		for (const FItemSpec& Item : m_AryTotalItems)
 		{
-			if (ItemMap.m_ID.IsNone())
+			if (Item.m_ID.IsNone())
 			{
 				m_AryTotalItems[Iter] = addItem;
 				UpdateInventory();
@@ -61,9 +61,9 @@ bool UInventory::AddItem(FItemSpec addItem)
 	}
 	else
 	{
-		for (auto& ItemMap : m_AryTotalItems)
+		for (const FItemSpec& Item : m_AryTotalItems)
 		{
-			if (ItemMap.m_ID == addItem.m_ID || ItemMap.m_ID.IsNone())
+			if (Item.m_ID == addItem.m_ID || Item.m_ID.IsNone())
 			{
 				if (AddItemStack(Iter, addItem.m_nLvStack, addItem.m_ID, MaxStack))
 				{

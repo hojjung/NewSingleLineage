@@ -30,7 +30,7 @@ const FItemSpec& UItemDDO::GetItem()
 		return m_FromInven->GetItemConstRef(m_nIndex);
 	}
 
-	return *m_FromEquip->GetEquipItem(m_nIndex);
+	return m_FromEquip->GetEquipItem(m_nIndex);
 }
 
 void UItemDDO::BeginDestroy()
