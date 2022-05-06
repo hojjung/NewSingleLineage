@@ -58,7 +58,7 @@ protected:
 	void OnDrop(UWidgetBaseElement* ele);
 
 	void SetItem(UWidgetBaseElement* target,const FItemSpec& itemSpec);
-	
+
 public:
 	void Init(UInventory* inven);
 

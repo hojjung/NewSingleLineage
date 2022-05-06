@@ -104,6 +104,10 @@ void UWidgetEquipPanel::UpdateSlots()
 
 void UWidgetEquipPanel::UpdateElement(UWidgetBaseElement* ele, const FItemSpec& item)
 {
+	ele->SetFocusable(true);
+	ele->SetDragable(true);
+	ele->SetHoldable(true);
+	
 	const FItemDataRow& Data = UMyLib::GetItemData(item.m_ID);
 
 	ele->SetIcon(Data.m_Icon);

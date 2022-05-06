@@ -12,12 +12,16 @@ FReply UWidgetInventory::NativeOnTouchStarted(const FGeometry& InGeometry, const
 {
 	Super::NativeOnTouchStarted(InGeometry, InGestureEvent);
 
+	UnFocusCurrent();
+
 	return FReply::Handled();
 }
 
 FReply UWidgetInventory::NativeOnMouseButtonDown(const FGeometry& InGeometry, const FPointerEvent& InMouseEvent)
 {
 	Super::NativeOnMouseButtonDown(InGeometry, InMouseEvent);
+
+	UnFocusCurrent();
 
 	return FReply::Handled();
 }
@@ -80,6 +84,7 @@ void UWidgetInventory::UpdateInventory()
 		if(Item.m_ID.IsNone())
 		{
 			m_AryItemEles[Index]->Clear();
+			
 			Index++;
 			continue;
 		}
@@ -90,6 +95,10 @@ void UWidgetInventory::UpdateInventory()
 
 void UWidgetInventory::SetItem(UWidgetBaseElement* target, const FItemSpec& itemSpec)
 {
+	target->SetFocusable(true);
+	target->SetDragable(true);
+	target->SetHoldable(true);
+	
 	const FItemDataRow& Data = UMyLib::GetItemData(itemSpec.m_ID);
 
 	target->SetIcon(Data.m_Icon);

@@ -17,26 +17,22 @@ class MYJRPG_API UWidgetStorage : public UWidgetBasePanel
 	
 protected:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (BindWidget))
-	UTextBlock* m_TxtStorageInvenCount;
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (BindWidget))
 	UWidgetInventory* m_StoragePanel;
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (BindWidget))
-	UWidgetFilterBtns* m_FilterBtns;
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (BindWidget))
 	UWidgetInventory* m_InvenPanel;
-	UPROPERTY()
-	UInventory* m_TargetInven;
-
-	FDelegateHandle m_Handle;
 	
 protected:
 	virtual void NativeOnInitialized() override;
 
-	virtual void UpdateText();
+	void OnPlInvenFocused(UWidgetBaseElement* ele, UInventory* inven, int index);
+
+	void OnPlInvenFocuseConfirm(UWidgetBaseElement* ele, UInventory* inven, int index);
+	
+	void OnStorageInvenFocused(UWidgetBaseElement* ele, UInventory* inven, int index);
+	
+	void OnStorageFocuseConfirm(UWidgetBaseElement* ele, UInventory* inven, int index);
 	
 public:
-	UInventory* GetTargetInven();
-	
 	void SetTargetInven(UInventory* storage);
 
 	virtual void ClosePanel() override;

@@ -141,6 +141,10 @@ void UWidgetBaseElement::Clear()
 	m_ImgItemIcon->SetVisibility(ESlateVisibility::Collapsed);
 
 	HideTextStackLv();
+
+	SetFocusable(false);
+	SetDragable(false);
+	SetHoldable(false);
 }
 
 void UWidgetBaseElement::SetHoldable(bool isActive)

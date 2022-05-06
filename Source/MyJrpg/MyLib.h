@@ -114,5 +114,4 @@ public:
 	
 	static TArray<UInventory*>& GetPlayerStorage();
 
-	static UInventory* GetFocusedStroage();
 };

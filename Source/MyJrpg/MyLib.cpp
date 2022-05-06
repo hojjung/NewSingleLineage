@@ -521,7 +521,3 @@ TArray<UInventory*>& UMyLib::GetPlayerStorage()
 	return UMyGameInstance::Get->GetStorages();
 }
 
-UInventory* UMyLib::GetFocusedStroage()
-{
-	return UMyLib::GetCanvas()->GetStorageMenu()->GetTargetInven();
-}

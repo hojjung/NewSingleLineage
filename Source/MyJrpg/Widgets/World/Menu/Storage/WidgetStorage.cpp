@@ -1,6 +1,7 @@
 #include "WidgetStorage.h"
 #include "Components/WrapBoxSlot.h"
 #include "MyJrpg/MyLib.h"
+#include "MyJrpg/Managers/EquipManager.h"
 #include "MyJrpg/Managers/MyGameInstance.h"
 
 void UWidgetStorage::NativeOnInitialized()
@@ -8,56 +9,56 @@ void UWidgetStorage::NativeOnInitialized()
 	Super::NativeOnInitialized();
 
 	m_InvenPanel->Init(UMyLib::GetPlayerInven());
-	
-	m_FilterBtns->RegisterFilter(m_StoragePanel);
-	
-	m_FilterBtns->RegisterFilter(m_InvenPanel);
+
+	m_InvenPanel->m_OnFocus.AddUObject(this, &UWidgetStorage::OnPlInvenFocused);
+
+	m_InvenPanel->m_OnFocusConfirm.AddUObject(this, &UWidgetStorage::OnPlInvenFocuseConfirm);
+
+	m_StoragePanel->m_OnFocus.AddUObject(this, &UWidgetStorage::OnStorageInvenFocused);
+
+	m_StoragePanel->m_OnFocusConfirm.AddUObject(this, &UWidgetStorage::OnStorageFocuseConfirm);
 }
 
 void UWidgetStorage::SetTargetInven(UInventory* storage)
 {
-	m_TargetInven = storage;
-
-	//m_InvenPanel->Init(UMyLib::GetPlayerInven(),EPanelType::Storage,storage);
-	
-	//m_StoragePanel->Init(m_TargetInven,EPanelType::StorageWithdraw);
+	m_StoragePanel->Init(storage);
 	
 	m_StoragePanel->OpenPanel();
 	
 	m_InvenPanel->OpenPanel();
 
-	UpdateText();
 	OpenPanel();
-
-	m_Handle = m_TargetInven->m_OnInvenChanged.AddUObject(this,&UWidgetStorage::UpdateText);
 }
 
 void UWidgetStorage::ClosePanel()
 {
 	Super::ClosePanel();
-	m_StoragePanel->ClosePanel();
 	m_InvenPanel->ClosePanel();
-
-	m_TargetInven->m_OnInvenChanged.Remove(m_Handle);
-	m_TargetInven = nullptr;
+	m_StoragePanel->ClosePanel();
 }
 
-void UWidgetStorage::UpdateText()
+void UWidgetStorage::OnPlInvenFocused(UWidgetBaseElement* ele, UInventory* inven, int index)
 {
-	UInventory* CrntStorage = m_StoragePanel->GetInven();
-	
-	int CurrentCount = CrntStorage->GetUsingSlotCount();
-	
-	int MaxCount = CrntStorage->GetInvenSize();
-
-	FText StorageText = NSLOCTEXT("UWidgetStorage","StorageText","창고");
-	
-	FString StorageStr = FString::Printf(TEXT("%s %d/%d"),*StorageText.ToString(),CurrentCount,MaxCount);
-	//
-	m_TxtStorageInvenCount->SetText(FText::FromString(StorageStr));
+	ele->SetTextFocus(NSLOCTEXT("UWidgetStorage","Deposite","넣기?"));
 }
 
-UInventory* UWidgetStorage::GetTargetInven()
+void UWidgetStorage::OnStorageInvenFocused(UWidgetBaseElement* ele, UInventory* inven, int index)
 {
-	return m_TargetInven;
+	ele->SetTextFocus(NSLOCTEXT("UWidgetStorage","WithDraw","꺼내기?"));
+}
+
+void UWidgetStorage::OnPlInvenFocuseConfirm(UWidgetBaseElement* ele, UInventory* inven, int index)
+{
+	FItemSpec Item = inven->GetItemConstRef(index);
+	inven->RemoveItem(index);
+	m_StoragePanel->GetInven()->AddItem(Item);
+	inven->UpdateInventory();
+}
+
+void UWidgetStorage::OnStorageFocuseConfirm(UWidgetBaseElement* ele, UInventory* inven, int index)
+{
+	FItemSpec Item = inven->GetItemConstRef(index);
+	inven->RemoveItem(index);
+	m_InvenPanel->GetInven()->AddItem(Item);
+	inven->UpdateInventory();
 }
