@@ -6,7 +6,7 @@
 
 void UEquipManager::Init()
 {
-	m_AryEqupSlots.Init(nullptr,(int)EEquipSlotType::Length-1);
+	m_AryEqupSlots.Init(nullptr,(int)EEquipSlotType::Length);
 
 	m_Inven = UMyGameInstance::Get->m_Inven;
 }
@@ -17,7 +17,7 @@ void UEquipManager::Equip(EEquipSlotType slotWant, int invenIndex)
 	
 	FItemSpec& Item = m_Inven->GetItemRef(invenIndex);
 	
-	int SlotIndex = (int)slotWant - 1;
+	int SlotIndex = (int)slotWant;
 	
 	m_AryEqupSlots[SlotIndex] = &Item;
 
@@ -43,7 +43,7 @@ void UEquipManager::UnequipOption(const FName& itemWant)
 void UEquipManager::Unequip(EEquipSlotType slotWant)
 {
 	PRINTF("Unequip01");
-	int SlotIndex = (int)slotWant - 1;
+	int SlotIndex = (int)slotWant;
 
 	FItemSpec* Temp = m_AryEqupSlots[SlotIndex];
 	
@@ -71,7 +71,7 @@ void UEquipManager::Unequip(const FName& itemWant)
 
 bool UEquipManager::IsItemEquipped(EEquipSlotType t, const FItemSpec& itemWant)
 {
-	int Index = (int) t - 1;
+	int Index = (int) t;
 
 	return m_AryEqupSlots[Index] == &itemWant;
 }
@@ -80,19 +80,19 @@ bool UEquipManager::IsItemEquipped(const FItemSpec& itemWant)
 {
 	EEquipSlotType SlotT = UMyLib::GetEquipItemSlot(itemWant.m_ID);
 	
-	int Index = (int) SlotT - 1;
+	int Index = (int) SlotT;
 
 	return m_AryEqupSlots[Index] == &itemWant;
 }
 
 bool UEquipManager::IsItemEquipped(EEquipSlotType wantSlot)
 {
-	return !GetEquipItem(wantSlot).IsNone();
+	return GetEquipItem((int)wantSlot) != nullptr;
 }
 
-FName UEquipManager::GetEquipItem(EEquipSlotType wantSlot)
+const FItemSpec* UEquipManager::GetEquipItem(int slotIndex)
 {
-	return NAME_None;//m_AryEqupSlots[(int)wantSlot-1];
+	return m_AryEqupSlots[slotIndex];
 }
 
 bool UEquipManager::IsRangeStance()
@@ -102,22 +102,28 @@ bool UEquipManager::IsRangeStance()
 
 void UEquipManager::SetIsRangeStance()
 {
-	const FName& FoundItem = GetEquipItem(EEquipSlotType::Weapon);
+	const auto* FoundItem = GetEquipItem((int)EEquipSlotType::Weapon);
 
-	if(FoundItem.IsNone())
+	if(!FoundItem)
 	{
 		m_bIsRange = false;
 		return ;
 	}
 	
-	m_bIsRange = UMyLib::GetItemData(FoundItem).m_bIsRange;
+	m_bIsRange = UMyLib::GetItemData(FoundItem->m_ID).m_bIsRange;
 }
 
 UParticleSystem* UEquipManager::GetBulletEffect()
 {
-	const FName& FoundItem = GetEquipItem(EEquipSlotType::Weapon);
+	const auto* FoundItem = GetEquipItem((int)EEquipSlotType::Weapon);
+	
+	if(!FoundItem)
+	{
+		m_bIsRange = false;
+		return nullptr;
+	}
 
-	const FColorDataRow* ColorData = UMyLib::GetItemData(FoundItem).m_ColorHandle.GetRow<FColorDataRow>("");
+	const FColorDataRow* ColorData = UMyLib::GetItemData(FoundItem->m_ID).m_ColorHandle.GetRow<FColorDataRow>("");
 
 	return ColorData->m_Bullet;
 }

@@ -37,8 +37,6 @@ void UWidgetInventory::OpenPanel()
 {
 	m_InvenDele = m_CurrentInven->m_OnInvenChanged.AddUObject(this, &UWidgetInventory::UpdateInventory);
 
-	m_EquipDele = UMyGameInstance::Get->m_EquipManager->m_OnEquipChanged.AddUObject(this, &UWidgetInventory::UpdateInventory);
-
 	UpdateInventory();
 }
 
@@ -46,8 +44,6 @@ void UWidgetInventory::ClosePanel()
 {
 	m_CurrentInven->m_OnInvenChanged.Remove(m_InvenDele);
 
-	UMyGameInstance::Get->m_EquipManager->m_OnEquipChanged.Remove(m_EquipDele);
-	
 	UnFocusCurrent();
 }
 
@@ -114,6 +110,8 @@ void UWidgetInventory::SetItem(UWidgetBaseElement* target, const FItemSpec& item
 		{
 			target->HideTextStackLv();
 		}
+
+		target->SetEquip(itemSpec.m_bIsEquipped);
 	}
 	else
 	{
@@ -160,10 +158,11 @@ void UWidgetInventory::OnDrag(UWidgetBaseElement* ele)
 void UWidgetInventory::OnDrop(UWidgetBaseElement* ele)
 {
 	UnFocusCurrent();
-
-	int Index =  ele->GetIndex();
 	
-	m_CurrentInven->OnDropItem(Index, UItemDDO::GetDDOInst->m_FromInven.Get(),UItemDDO::GetDDOInst->m_nIndex);
+	if(UItemDDO::GetDDOInst->m_FromInven.Get())
+	{
+		m_CurrentInven->OnDropItem(ele->GetIndex(), UItemDDO::GetDDOInst->m_FromInven.Get(),UItemDDO::GetDDOInst->m_nIndex);
+	}
 }
 
 UInventory* UWidgetInventory::GetInven() const

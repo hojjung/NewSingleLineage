@@ -140,6 +140,8 @@ void UWidgetBaseElement::Clear()
 	m_ImgItemIcon->SetVisibility(ESlateVisibility::Collapsed);
 
 	HideTextStackLv();
+
+	SetEquip(false);
 }
 
 void UWidgetBaseElement::SetHoldable(bool isActive)
@@ -208,6 +210,18 @@ int UWidgetBaseElement::GetIndex()
 void UWidgetBaseElement::SetTextFocus(FText t)
 {
 	m_TextFocus->SetText(t);
+}
+
+void UWidgetBaseElement::SetEquip(bool isEquip)
+{
+	if(isEquip)
+	{
+		m_OverlayEquip->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
+	}
+	else
+	{
+		m_OverlayEquip->SetVisibility(ESlateVisibility::Collapsed);
+	}
 }
 
 void UWidgetBaseElement::SetFocusable(bool isActive)

@@ -42,8 +42,6 @@ protected:
 
 	FDelegateHandle  m_InvenDele;
 
-	FDelegateHandle  m_EquipDele;
-	
 protected:
 	virtual FReply NativeOnTouchStarted(const FGeometry& InGeometry, const FPointerEvent& InGestureEvent) override;
 	//prevent penetrate touch

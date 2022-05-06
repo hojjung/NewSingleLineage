@@ -3,11 +3,6 @@
 #pragma once
 
 #include "MyJrpg/MyJrpg.h"
-#include "MyJrpg/DataTables/ItemCollectionTable.h"
-#include "MyJrpg/DataTables/ItemData.h"
-#include "MyJrpg/DataTables/QuestData.h"
-#include "MyJrpg/Managers/EnchantManager.h"
-#include "MyJrpg/Widgets/World/Menu/Inventory/ItemDDO.h"
 #include "Inventory.generated.h"
 
 /**

@@ -110,4 +110,6 @@ public:
 	int GetIndex();
 	
 	void SetTextFocus(FText t);
+	
+	void SetEquip(bool isEquip);
 };

@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "Blueprint/DragDropOperation.h"
+#include "MyJrpg/Managers/EquipManager.h"
 #include "ItemDDO.generated.h"
 
 struct FItemSpec;
@@ -22,6 +23,8 @@ public:
 	static UItemDDO* GetDDOInst;
 
 	TWeakObjectPtr<UInventory> m_FromInven;
+
+	TWeakObjectPtr<UEquipManager> m_FromEquip;
 
 	int m_nIndex;
 public:

@@ -8,6 +8,7 @@
 #include "Blueprint/UserWidget.h"
 #include "Components/Button.h"
 #include "Components/TextBlock.h"
+#include "MyJrpg/Widgets/World/CommonElements/WidgetBaseElement.h"
 #include "MyJrpg/Widgets/World/CommonElements/WidgetBasePanel.h"
 #include "MyJrpg/Widgets/World/CommonElements/WidgetFilterBtns.h"
 
@@ -51,3 +52,5 @@ public:
 	
 	void OpenInventory();
 };
+
+

@@ -57,7 +57,7 @@ public:
 
 	bool IsItemEquipped(EEquipSlotType wantSlot);
 
-	FName GetEquipItem(EEquipSlotType wantSlot);
+	const FItemSpec* GetEquipItem(int slotIndex);
 
 	bool IsRangeStance();
 

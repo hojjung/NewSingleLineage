@@ -6,6 +6,7 @@
 #include "MyJrpg/MyLib.h"
 #include "MyJrpg/Items/Inventory.h"
 #include "MyJrpg/Managers/EquipManager.h"
+#include "MyJrpg/Widgets/World/Menu/Inventory/ItemDDO.h"
 #include "MyJrpg/Widgets/World/Menu/Inventory/WidgetInventory.h"
 
 void UWidgetEquipInvenPanel::NativeOnInitialized()
@@ -64,6 +65,7 @@ void UWidgetEquipInvenPanel::OnPlInvenFocuseConfirm(UWidgetBaseElement* ele, UIn
 		{
 			UMyLib::GetEquip()->Equip(SlotT, index);
 		}
+		inven->UpdateInventory();
 		break;
 	}
 }
@@ -71,6 +73,8 @@ void UWidgetEquipInvenPanel::OnPlInvenFocuseConfirm(UWidgetBaseElement* ele, UIn
 void UWidgetEquipInvenPanel::ClosePanel()
 {
 	Super::ClosePanel();
+
+	m_EquipPanel->Close();
 	
 	m_InvenPanel->ClosePanel();
 }
@@ -78,6 +82,8 @@ void UWidgetEquipInvenPanel::ClosePanel()
 void UWidgetEquipInvenPanel::OpenInventory()
 {
 	SetVisibility(ESlateVisibility::SelfHitTestInvisible);
+
+	m_EquipPanel->Open();
 
 	m_InvenPanel->OpenPanel();
 }
