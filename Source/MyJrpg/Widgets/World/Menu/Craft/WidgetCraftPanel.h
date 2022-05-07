@@ -3,9 +3,12 @@
 #include "CoreMinimal.h"
 #include "ImageText.h"
 #include "WidgetCraftFilterBtns.h"
+#include "WidgetCraftSelected.h"
 #include "Components/ScrollBox.h"
+#include "Components/WrapBox.h"
 #include "MyJrpg/MyJrpg.h"
 #include "MyJrpg/DataTables/ItemData.h"
+#include "MyJrpg/Managers/CraftManager.h"
 #include "MyJrpg/Widgets/World/CommonElements/WidgetBaseElement.h"
 #include "MyJrpg/Widgets/World/CommonElements/WidgetBasePanel.h"
 #include "WidgetCraftPanel.generated.h"
@@ -15,95 +18,31 @@ struct FItemDataRow;
 class UWidgetCraftCostElement;
 class UWidgetCraftableElement;
 /**
- * 
+ * 아이템만 있는게 아니라 가구도 존재함.
+ * 소팅은 매번 돌면 비효울적이니 매니저에서 배열을 끝내놔야한다
+ * 가구랑 아이템을 어떻게 동시에 출력?
  */
 UCLASS()
 class MYJRPG_API UWidgetCraftPanel : public UWidgetBasePanel
 {
 	GENERATED_BODY()
 
-public:
-	UWidgetCraftPanel(const FObjectInitializer& ObjectInitializer);
-	
 protected:
-	UPROPERTY()
-	UTexture2D* m_CoinIcon;
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
 	TSubclassOf<UWidgetCraftableElement> m_ClassCraftableElement;
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
-	TSubclassOf<UWidgetCraftCostElement> m_ClassCostElement;
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (BindWidget))
-	UScrollBox* m_ScrollFilterBtns;
+	UWidgetCraftSelected* m_Selected;
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (BindWidget))
-	UScrollBox* m_ScrollCraftables;
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (BindWidget))
-	UScrollBox* m_ScrollCosts;
+	UWrapBox* m_GridEles;
 	
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (BindWidget))
-	UWidgetBaseElement* m_GoldIcon;
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (BindWidget))
-	UTextBlock* m_TextGoldCostAmount;
-	
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (BindWidget))
-	UWidgetBaseElement* m_CurrentCraftItem;
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (BindWidget))
-	UTextBlock* m_TextCurrentItemName;
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (BindWidget))
-	UHorizontalBox* m_CountBtns;
-	
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (BindWidget))
-	UTextBlock* m_TextAmount;
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (BindWidget))
-	UButton* m_BtnLeftCnt;
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (BindWidget))
-	UButton* m_BtnRightCnt;
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (BindWidget))
-	UButton* m_BtnCraft;
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (BindWidget))
-	UButton* m_BtnOpenCalculator;
-	
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (BindWidget))
-	UWidgetFilterBtns* m_ItemFilter;
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (BindWidget))
-	UWidgetCraftFilterBtns* m_EquipFilter;
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (BindWidget))
-	UWidgetCraftColorFilterBtns* m_ColorFilter;
-
-protected:
-	UPROPERTY()
-	TArray<UWidgetCraftCostElement*> m_AryEle;
-	
-	TWeakObjectPtr<UWidgetCraftableElement> m_SelectedElement;
-	
-	EItemType m_FilterCategoryItem;
-
-	EEquipSlotType m_FilterCategoryEquip;
-
-	FName m_FilterColorData;
-
 	FDelegateHandle m_DeleUpdate;
-
-	int m_nCnt;
 
 protected:
 	virtual void NativeOnInitialized() override;
 	
-	void CreateAllCraftWidget(const TMap<FName, const FCraftItemCost*>& mapItems);
+	void CreateAllCraftWidget(const TArray<FCraftable>& ary);
 
-	void OnSelectCraftItem(UWidgetCraftableElement* selectedElement, FName id);
-
-	void CreateCostWidgets(const FItemDataRow& costData);
-
-	void UpdateCraftablePanel();
-	
-	void UpdateCraftCostPanel();
-
-	void SetAmount(int amount);
-
-	int GetMaxAmount();
-
-	bool IsFilterType(const FItemDataRow& itemData);
-	
+	void OnSelectCraftItem(const FCraftable& data, int index);
 public:
 	virtual void ClosePanel() override;
 
@@ -111,18 +50,4 @@ public:
 	
 	UFUNCTION()
 	void Craft();
-	UFUNCTION()
-	void OpenCalculator();
-	UFUNCTION()
-	void OnLeftCnt();
-	UFUNCTION()
-	void OnRightCnt();
-	UFUNCTION()
-	void ClearFilter();
-	UFUNCTION()
-	void OnFilterItem();
-	UFUNCTION()
-	void OnFilterEquip();
-	UFUNCTION()
-	void OnFilterColor();
 };

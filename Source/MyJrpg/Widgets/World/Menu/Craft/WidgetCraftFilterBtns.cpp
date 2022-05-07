@@ -68,15 +68,7 @@ void UWidgetCraftFilterBtns::OnBtnPressed(UButton* btn ,EEquipSlotType type)
 
 void UWidgetCraftFilterBtns::RegisterFilter(UWidgetCraftPanel* craft)
 {
-	m_BtnWeapon->OnClicked.AddDynamic(craft, &UWidgetCraftPanel::OnFilterEquip);
-	m_BtnHead->OnClicked.AddDynamic(craft, &UWidgetCraftPanel::OnFilterEquip);
-	m_BtnTorso->OnClicked.AddDynamic(craft, &UWidgetCraftPanel::OnFilterEquip);
-	m_BtnHand->OnClicked.AddDynamic(craft, &UWidgetCraftPanel::OnFilterEquip);
-	m_BtnLeg->OnClicked.AddDynamic(craft, &UWidgetCraftPanel::OnFilterEquip);
-	m_BtnRing->OnClicked.AddDynamic(craft, &UWidgetCraftPanel::OnFilterEquip);
-	m_BtnNeckless->OnClicked.AddDynamic(craft, &UWidgetCraftPanel::OnFilterEquip);
-	m_BtnEarRing->OnClicked.AddDynamic(craft, &UWidgetCraftPanel::OnFilterEquip);
-	m_BtnBelt->OnClicked.AddDynamic(craft, &UWidgetCraftPanel::OnFilterEquip);
+	
 }
 
 EEquipSlotType UWidgetCraftFilterBtns::GetCrntEquipType()
@@ -184,12 +176,7 @@ void UWidgetCraftColorFilterBtns::ClearFilter()
 
 void UWidgetCraftColorFilterBtns::RegisterFilter(UWidgetCraftPanel* craft)
 {
-	m_BtnWhite->OnClicked.AddDynamic(craft, &UWidgetCraftPanel::OnFilterColor);
-	m_BtnGreen->OnClicked.AddDynamic(craft, &UWidgetCraftPanel::OnFilterColor);
-	m_BtnBlue->OnClicked.AddDynamic(craft, &UWidgetCraftPanel::OnFilterColor);
-	m_BtnRed->OnClicked.AddDynamic(craft, &UWidgetCraftPanel::OnFilterColor);
-	m_BtnPurple->OnClicked.AddDynamic(craft, &UWidgetCraftPanel::OnFilterColor);
-	m_BtnYellow->OnClicked.AddDynamic(craft, &UWidgetCraftPanel::OnFilterColor);
+	
 }
 
 FName UWidgetCraftColorFilterBtns::GetCrntColor()

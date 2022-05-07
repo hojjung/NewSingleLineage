@@ -57,10 +57,7 @@ void UWidgetFilterBtns::RegisterFilter(UWidgetShopPanel* shop)
 
 void UWidgetFilterBtns::RegisterFilter(UWidgetCraftPanel* craft)
 {
-	m_BtnClearFilter->OnClicked.AddDynamic(craft, &UWidgetCraftPanel::ClearFilter);
-	m_BtnFilterMisc->OnClicked.AddDynamic(craft, &UWidgetCraftPanel::OnFilterItem);
-	m_BtnFilterConsume->OnClicked.AddDynamic(craft, &UWidgetCraftPanel::OnFilterItem);
-	m_BtnFilterEquip->OnClicked.AddDynamic(craft, &UWidgetCraftPanel::OnFilterItem);
+	
 }
 
 EItemType UWidgetFilterBtns::GetCrntItemType()

@@ -199,7 +199,7 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	int m_nMaxStack = 2;
 	UPROPERTY(EditDefaultsOnly,BlueprintReadOnly)
-	int m_nCraftCost=1;
+	int m_nCraftLevelLimit=1;
 	UPROPERTY(EditDefaultsOnly,BlueprintReadOnly)
 	TArray<FCraftItemCost> m_AryCostItem;
 	UPROPERTY(EditDefaultsOnly)

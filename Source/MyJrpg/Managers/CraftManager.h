@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "MyJrpg/DataTables/BuildData.h"
 
 #include "MyJrpg/DataTables/ItemData.h"
 #include "UObject/NoExportTypes.h"
@@ -12,6 +13,59 @@
  * 만들수 있는 아이템 존재
  * 
  */
+
+
+UENUM(BlueprintType)
+enum class ECraftType :uint8
+{
+	Item,
+	Furniture
+};
+
+USTRUCT()
+struct FCraftable
+{
+	GENERATED_BODY()
+
+public:
+	FCraftable(): m_Row(nullptr), m_TypeCraft()
+	{
+	}
+
+	FCraftable(unsigned char* r, ECraftType t)
+	{
+		m_Row = r;
+
+		m_TypeCraft = t;
+	}
+
+public:
+	unsigned char* m_Row;
+	
+	ECraftType m_TypeCraft;
+
+	int GetLimitLevel() const
+	{
+		switch (m_TypeCraft)
+		{
+		case ECraftType::Item:
+			return ((FItemDataRow*)m_Row)->m_nCraftLevelLimit;
+		case ECraftType::Furniture:
+			return ((FBuildDataRow*)m_Row)->m_nCraftLevelLimit;
+		}
+		return -1;
+	}
+
+	const TArray<FCraftItemCost>& GetAryCraftCosts() const
+	{
+		switch (m_TypeCraft)
+		{
+		case ECraftType::Item:
+			return ((FItemDataRow*)m_Row)->m_AryCostItem;
+		}
+		return ((FBuildDataRow*)m_Row)->m_AryCostItem;
+	}
+};
 UCLASS()
 class MYJRPG_API UCraftManager : public UObject
 {
@@ -23,27 +77,21 @@ public:
 	FOnCraft m_OnCraft;
 	
 protected:
+	TArray<FCraftable> m_AryCraftables;
+	
 	UPROPERTY()
 	int m_nCraftItemCount;
 
-	TMap<FName, const FCraftItemCost*> m_MapCraftingItems;
-
-	FName m_CrntID;
-
-	const FItemDataRow* m_CrntItemData;
+	const FCraftable* m_CrntItemData;
 	
 protected:
 	bool IsInvenHasSpace();
-
-	bool IsGoldEnough();
 
 	bool IsMaterialEnough();
 
 	void PurchaseItemForCraft();
 
 	void ReceiveItem();
-
-	int GetCraftAvailableCountWithGold();
 
 	int GetCraftAvailableCountWithMaterial();
 
@@ -52,7 +100,7 @@ protected:
 public:
 	void Init();
 	
-	void SetCraftItem(const FName& id);
+	void SetCraftItem(int index);
 
 	void Clear();
 	
@@ -60,19 +108,14 @@ public:
 
 	void SetCraftAmount(int v);
 
-	int GetTotalCost();
-
 	int GetAmount();
 	
 	int GetMaxAmount();
 
 public:
-	void AddCraftItemData(const FName& itemKey, const FCraftItemCost& craft);
+	const FCraftable* GetCrntItemRow() const;
 
-	const TMap<FName, const FCraftItemCost*>& GetCraftItems() const
-	{
-		return m_MapCraftingItems;
-	}
-
-	const FItemDataRow* GetCrntItemRow() const;
+	const TArray<FCraftable>& GetAryCraftables() const;
+	
+	void AddCraftItemData(const FItemDataRow* element);
 };

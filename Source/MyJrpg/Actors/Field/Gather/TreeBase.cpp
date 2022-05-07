@@ -59,7 +59,6 @@ void ATreeBase::SetEntity(const FGatherDataRow& data, AMyPlayerPawn* pl)
 	float H = GetBoundHalfHeight() * -1.f;
 	m_MeshTree->SetRelativeLocation(FVector(0,0,H));
 	m_MeshTrunk->SetRelativeLocation(FVector(0,0,H));
-	m_ShadowMeshComp->SetRelativeLocation(FVector(0,0,H));
 	
 	m_GatherAsset = UMyAssetManager::Get()->LoadGatherAsset(data.m_GatherAsset);
 

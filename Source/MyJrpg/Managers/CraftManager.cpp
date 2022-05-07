@@ -6,27 +6,36 @@
 void UCraftManager::Init()
 {
 	Clear();
+
+	m_AryCraftables.Reset();
+	
+	for(auto& it : UBuildData::GetBuildTable->GetRowMap())
+	{
+		FBuildDataRow* Build = (FBuildDataRow*)it.Value;
+		if(Build->m_BuildType != EBuildType::Furniture || Build->m_AryCostItem.Num() < 1)
+		{
+			continue;
+		}
+		m_AryCraftables.Emplace(FCraftable(it.Value,ECraftType::Furniture));
+	}
+	
+	m_AryCraftables.Sort([](const FCraftable& LHS, const FCraftable& RHS)  { return LHS.GetLimitLevel() > RHS.GetLimitLevel(); });
 }
 
-void UCraftManager::SetCraftItem(const FName& id)
+void UCraftManager::AddCraftItemData(const FItemDataRow* element)//아이템이 너무 많으니까 반복문 밖에서 한번돌려줌
 {
-	m_CrntID = id;
-	
-	m_CrntItemData = UItemData::GetItemTable->FindRow<FItemDataRow>(m_CrntID, "");
+	m_AryCraftables.Emplace(FCraftable((unsigned char *)element,ECraftType::Item));
+}
+
+void UCraftManager::SetCraftItem(int index)
+{
+	m_CrntItemData = &m_AryCraftables[index];
 }
 
 bool UCraftManager::TryCraft()
 {
-	if(!m_CrntItemData || m_CrntID.IsNone())
+	if(!m_CrntItemData)
 	{
-		return false;
-	}
-	
-	bool IsGldEnough = IsGoldEnough();
-
-	if(!IsGldEnough)
-	{
-		PRINTF("UCraftManager::No Gold");
 		return false;
 	}
 	//재료 체크
@@ -58,31 +67,18 @@ void UCraftManager::SetCraftAmount(int v)
 	m_nCraftItemCount = v;
 }
 
-int UCraftManager::GetTotalCost()
-{
-	return m_CrntItemData->m_nCraftCost * GetAmount();
-}
-
 int UCraftManager::GetAmount()
 {
 	return m_nCraftItemCount;
 }
 
-int UCraftManager::GetCraftAvailableCountWithGold()
-{
-	if(m_CrntItemData->m_nCraftCost<=0)
-	{
-		return 10;
-	}
-	
-	return UMyGameInstance::Get->m_CurrencyManager->GetGold() / m_CrntItemData->m_nCraftCost * GetAmount(); 
-}//1000원 소유 = 가격 200원 = 5개, 가격 0원?
-
 int UCraftManager::GetCraftAvailableCountWithMaterial()
 {
 	int MinCount = 10;
+
+	const TArray<FCraftItemCost>& AryItems = m_CrntItemData->GetAryCraftCosts();
 	
-	for(const FCraftItemCost& Cost : m_CrntItemData->m_AryCostItem)
+	for(const FCraftItemCost& Cost : AryItems)
 	{
 		// int InvenAmount = UMyLib::GetPlayerInven()->GetItemStack(Cost.m_ItemDataRowHandle.RowName);
 		//
@@ -112,42 +108,40 @@ int UCraftManager::GetCraftAvailableCountWithStackSize()
 {
 	int InvenStackAvailable = 10;
 	
-	if(UMyLib::GetItemType(*m_CrntItemData) != EItemType::Equip)
-	{
-		int CurrentAmount = 0;//UMyLib::GetPlayerInven()->GetItemStack(m_CrntID);
-
-		InvenStackAvailable = 10 - CurrentAmount;
-	}//스택 아이템의 경우 더 스택할수 있는지?
+	// if(UMyLib::GetItemType(*m_CrntItemData) != EItemType::Equip)
+	// {
+	// 	int CurrentAmount = 0;//UMyLib::GetPlayerInven()->GetItemStack(m_CrntID);
+	//
+	// 	InvenStackAvailable = 10 - CurrentAmount;
+	// }//스택 아이템의 경우 더 스택할수 있는지?
 	return InvenStackAvailable;
 }
 
 int UCraftManager::GetMaxAmount()
 {
-	//못사더라도 제작 가능횟수가 있음, 5만골 보유,아이템의 가격 7만원,=이경우 맥스는 1
-	int GoldAvailable = GetCraftAvailableCountWithGold();
-
 	int MaterialAvailable = GetCraftAvailableCountWithMaterial();
 
 	int InvenStackAvailable = GetCraftAvailableCountWithStackSize();
 
-	return FMath::Min3(GoldAvailable,MaterialAvailable,InvenStackAvailable);
+	return FMath::Min(MaterialAvailable,InvenStackAvailable);
 }
 
-void UCraftManager::AddCraftItemData(const FName& itemKey, const FCraftItemCost& craft)
-{
-	m_MapCraftingItems.Emplace(itemKey,&craft);
-}
-
-const FItemDataRow* UCraftManager::GetCrntItemRow() const
+const FCraftable* UCraftManager::GetCrntItemRow() const
 {
 	return m_CrntItemData;
 }
+
+const TArray<FCraftable>& UCraftManager::GetAryCraftables() const
+{
+	return m_AryCraftables;
+}
+
 
 void UCraftManager::Clear()
 {
 	SetCraftAmount(1);
 
-	m_CrntID = NAME_None;
+	//m_CrntID = NAME_None;
 
 	m_CrntItemData = nullptr;
 }
@@ -165,14 +159,11 @@ bool UCraftManager::IsInvenHasSpace()
 	return true;
 }
 
-bool UCraftManager::IsGoldEnough()
-{
-	return UMyGameInstance::Get->m_CurrencyManager->CheckGoldEnough(m_CrntItemData->m_nCraftCost * GetAmount());
-}
-
 bool UCraftManager::IsMaterialEnough()
 {
-	for(const FCraftItemCost& Cost : m_CrntItemData->m_AryCostItem)
+	const TArray<FCraftItemCost>& AryItems = m_CrntItemData->GetAryCraftCosts();
+	
+	for(const FCraftItemCost& Cost : AryItems)
 	{
 		if (UMyLib::IsEquip(Cost.m_ItemDataRowHandle.RowName))
 		{
@@ -196,9 +187,9 @@ bool UCraftManager::IsMaterialEnough()
 
 void UCraftManager::PurchaseItemForCraft()
 {
-	UMyGameInstance::Get->m_CurrencyManager->SubGold(m_CrntItemData->m_nCraftCost);
-
-	for(const FCraftItemCost& Cost : m_CrntItemData->m_AryCostItem)
+	const TArray<FCraftItemCost>& AryItems = m_CrntItemData->GetAryCraftCosts();
+	
+	for(const FCraftItemCost& Cost : AryItems)
 	{
 		if (UMyLib::IsEquip(Cost.m_ItemDataRowHandle.RowName))
 		{
@@ -217,21 +208,20 @@ void UCraftManager::PurchaseItemForCraft()
 
 void UCraftManager::ReceiveItem()
 {
-	if(m_OnCraft.IsBound())
-	{
-		m_OnCraft.Broadcast(m_CrntID);
-	}
+	// if(m_OnCraft.IsBound())
+	// {
+	// 	m_OnCraft.Broadcast(m_CrntID);
+	// }
 
-	if(!UMyLib::IsEquip(*m_CrntItemData))
-	{
-		//UMyLib::GetPlayerInven()->AddItem(m_CrntID,m_nCraftItemCount);
-	}
-	else
-	{
-		// FName HashID = UMyLib::GenerateEquipItemHashKey(m_CrntID,this);
-		//
-		// UMyLib::GetPlayerInven()->AddEquipItem(HashID);
-	}
-	
+	// if(!UMyLib::IsEquip(*m_CrntItemData))
+	// {
+	// 	//UMyLib::GetPlayerInven()->AddItem(m_CrntID,m_nCraftItemCount);
+	// }
+	// else
+	// {
+	// 	// FName HashID = UMyLib::GenerateEquipItemHashKey(m_CrntID,this);
+	// 	//
+	// 	// UMyLib::GetPlayerInven()->AddEquipItem(HashID);
+	// }
 }
 

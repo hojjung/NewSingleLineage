@@ -2,44 +2,40 @@
 
 #include "MyJrpg/Managers/MyGameInstance.h"
 
-void UWidgetCraftableElement::SetCraftable(const FName& id)
+void UWidgetCraftableElement::SetCraftable(const FCraftable& id, int index)
 {
-	m_ItemID =  id;
-
-	m_ItemData = UItemData::GetItemTable->FindRow<FItemDataRow>(m_ItemID, "");
+	m_nIndex = index;
 	
-	//m_ItemElement->SetItem(*m_ItemData);
+	m_PtrCraftData =  &id;
 
-	//m_ItemElement->m_OnHold.AddUObject(this,&UWidgetCraftableElement::OnHoldComplete);
+	m_ItemElement->SetIcon(((FEntityRow*)m_PtrCraftData->m_Row)->m_Icon);
+	
+	m_ItemElement->m_OnFocus.AddUObject(this,&UWidgetCraftableElement::OnClicked);
+
+	m_ItemElement->m_OnHold.AddUObject(this,&UWidgetCraftableElement::OnHoldComplete);
 
 	m_ItemElement->SetHoldable(true);
 
 	m_ItemElement->SetFocusable(true);
+
+	m_ItemElement->SetDragable(false);
 }
 
-void UWidgetCraftableElement::SetUnfocus()
+const FCraftable& UWidgetCraftableElement::GetCraftItem() const
+{
+	return *m_PtrCraftData;
+}
+
+void UWidgetCraftableElement::OnHoldComplete(UWidgetBaseElement*)
+{
+	
+}
+
+void UWidgetCraftableElement::OnClicked(UWidgetBaseElement*)
 {
 	m_ItemElement->SetMyUnFocus();
-}
-
-void UWidgetCraftableElement::SetMyFocus()
-{
-	m_ItemElement->SetMyFocus();
-}
-
-const FItemDataRow& UWidgetCraftableElement::GetItemDataRow() const
-{
-	return *m_ItemData;
-}
-
-void UWidgetCraftableElement::OnHoldComplete()
-{
-	UMyLib::GetCanvas()->OpenItemInfo(EItemInfo::Craft,m_ItemID,nullptr);
-}
-
-void UWidgetCraftableElement::OnClicked()
-{
-	m_OnClicked.Broadcast(this,m_ItemID);
+	
+	m_OnClicked.Broadcast(*m_PtrCraftData,m_nIndex);
 }
 
 

@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "Blueprint/UserWidget.h"
 #include "MyJrpg/DataTables/ItemData.h"
+#include "MyJrpg/Managers/CraftManager.h"
 #include "MyJrpg/Widgets/World/CommonElements/WidgetBaseElement.h"
 #include "WidgetCraftableElement.generated.h"
 
@@ -17,7 +18,7 @@ class MYJRPG_API UWidgetCraftableElement : public UUserWidget
 	GENERATED_BODY()
 
 public:
-	DECLARE_MULTICAST_DELEGATE_TwoParams(FOnClicked,UWidgetCraftableElement*, FName);
+	DECLARE_MULTICAST_DELEGATE_TwoParams(FOnClicked, const FCraftable&, int index);
 
 	FOnClicked m_OnClicked;
 	
@@ -25,21 +26,17 @@ protected:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (BindWidget))
 	UWidgetBaseElement* m_ItemElement;
 
-	FName m_ItemID;
+	const FCraftable* m_PtrCraftData;
 
-	const FItemDataRow* m_ItemData;
-	
+	int m_nIndex;
+
 protected:
-	void OnHoldComplete();//인포 띄워주기
+	void OnHoldComplete(UWidgetBaseElement*);//인포 띄워주기
 
-	void OnClicked();//제작재료 생성시켜주기
+	void OnClicked(UWidgetBaseElement*);//제작재료 생성시켜주기
 
 public:
-	void SetCraftable(const FName& id);
+	void SetCraftable(const FCraftable& id, int index);
 
-	void SetUnfocus();
-
-	void SetMyFocus();
-
-	const FItemDataRow& GetItemDataRow() const;
+	const FCraftable& GetCraftItem() const;
 };

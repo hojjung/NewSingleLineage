@@ -26,21 +26,19 @@ public:
 };
 
 USTRUCT()
-struct FBuildDataRow : public FTableRowBase
+struct FBuildDataRow : public FEntityRow
 {
 	GENERATED_BODY()
 
 public:
 	UPROPERTY(EditDefaultsOnly,BlueprintReadOnly)
-	FText m_ShowingName;
-	UPROPERTY(EditDefaultsOnly,BlueprintReadOnly)
 	EBuildType m_BuildType;
+	UPROPERTY(EditDefaultsOnly,BlueprintReadOnly)
+	int m_nCraftLevelLimit=1;
 	UPROPERTY(EditDefaultsOnly,BlueprintReadOnly)
 	TArray<FCraftItemCost> m_AryCostItem;
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, meta = (MustImplement = "Buildable") )
 	TSubclassOf<AActor> m_ClassActor;
 	UPROPERTY(EditDefaultsOnly,BlueprintReadOnly)
 	FName m_NextUpgradeActorID;
-	UPROPERTY(EditDefaultsOnly,BlueprintReadOnly)
-	TSoftObjectPtr<UTexture2D> m_Icon;
 };

@@ -25,7 +25,7 @@ FReply UWidgetBaseElement::NativeOnTouchStarted(const FGeometry& InGeometry, con
 {
 	Super::NativeOnTouchStarted(InGeometry, InGestureEvent);
 
-	if(!m_bIsHoldable || !m_bIsDragable)
+	if(!m_bIsHoldable)
 	{
 		return FReply::Handled();
 	}
@@ -34,16 +34,21 @@ FReply UWidgetBaseElement::NativeOnTouchStarted(const FGeometry& InGeometry, con
 
 	m_fTimer = 0;
 	
-	return UWidgetBlueprintLibrary::DetectDragIfPressed(InGestureEvent,this,EKeys::LeftMouseButton).NativeReply;
+	return FReply::Handled();
 }
 
 FReply UWidgetBaseElement::NativeOnTouchMoved(const FGeometry& InGeometry, const FPointerEvent& InGestureEvent)
 {
 	Super::NativeOnTouchMoved(InGeometry, InGestureEvent);
 
-	if (InGestureEvent.GetCursorDelta().SizeSquared()>100.0f)
+	if (InGestureEvent.GetCursorDelta().SizeSquared()>50.0f)
 	{
 		EndHolding();
+
+		if(!UItemDDO::GetDDOInst &&  m_bIsDragable)
+		{
+			return UWidgetBlueprintLibrary::DetectDragIfPressed(InGestureEvent,this,EKeys::LeftMouseButton).NativeReply;
+		}
 	}
 
 	return FReply::Handled();
