@@ -9,15 +9,17 @@ void UWidgetCraftCostElement::SetCraftCost(const FCraftItemCost& cost)
 	
 	const FItemDataRow* CraftData = m_CraftData->m_ItemDataRowHandle.GetRow<FItemDataRow>("");
 	
-	//m_ItemElement->SetIcon(CraftData->m_Icon);
+	m_ItemElement->SetIcon(CraftData->m_Icon);
 
-//	m_ItemElement->SetGlowColor(CraftData->m_ColorHandle);
+	m_ItemElement->SetGlowColor(CraftData->m_ColorHandle);
 
 	//m_ItemElement->m_OnHold.AddUObject(this,&UWidgetCraftCostElement::OnHoldComplete);
 
 	m_ItemElement->SetHoldable(true);
 
 	m_ItemElement->SetFocusable(false);
+
+	m_ItemElement->SetDragable(false);
 
 	UpdateCostAmount();
 }

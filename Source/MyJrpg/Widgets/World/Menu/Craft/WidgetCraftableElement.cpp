@@ -4,15 +4,17 @@
 
 void UWidgetCraftableElement::SetCraftable(const FCraftable& id, int index)
 {
-	m_nIndex = index;
-	
 	m_PtrCraftData =  &id;
 
-	m_ItemElement->SetIcon(((FEntityRow*)m_PtrCraftData->m_Row)->m_Icon);
+	m_ItemElement->SetIcon(m_PtrCraftData->GetEntityRow()->m_Icon);
+
+	m_ItemElement->SetIndex(index);
 	
 	m_ItemElement->m_OnFocus.AddUObject(this,&UWidgetCraftableElement::OnClicked);
 
 	m_ItemElement->m_OnHold.AddUObject(this,&UWidgetCraftableElement::OnHoldComplete);
+
+	m_ItemElement->SetTextStackLv(GetCraftItem().GetEntityRow()->m_ShowingName);
 
 	m_ItemElement->SetHoldable(true);
 
@@ -35,7 +37,7 @@ void UWidgetCraftableElement::OnClicked(UWidgetBaseElement*)
 {
 	m_ItemElement->SetMyUnFocus();
 	
-	m_OnClicked.Broadcast(*m_PtrCraftData,m_nIndex);
+	m_OnClicked.Broadcast(*m_PtrCraftData,m_ItemElement->GetIndex());
 }
 
 

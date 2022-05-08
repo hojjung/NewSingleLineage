@@ -27,6 +27,8 @@ protected:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (BindWidget))
 	UImage* m_ImgFocus;
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (BindWidget))
+	UTextBlock* m_TextCnt;
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (BindWidget))
 	UVerticalBox* m_VertCost;
 	UPROPERTY(EditAnywhere)
 	TSubclassOf<UWidgetCraftCostElement> m_ClassCostElement;
@@ -36,7 +38,9 @@ protected:
 
 public:
 	void Init(const FBuildDataRow& data);
-	
+
+	void SetStackCount(int cnt);
+
 	void MyFocus();
 	
 	void MyUnFocus();

@@ -101,6 +101,8 @@ public:
 	
 	void SetTextStackLv(FString t);
 
+	void SetTextStackLv(FText t);
+
 	void HideTextStackLv();
 
 	void SetIndex(int index);

@@ -15,7 +15,8 @@ struct FEntityRow : public FTableRowBase
 public:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
 	FText m_ShowingName;
-	//Editor
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (MultiLine="true"))
+	FText m_Desc;
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
 	TSoftObjectPtr<UTexture2D> m_Icon;
 };

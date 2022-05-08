@@ -11,6 +11,15 @@ void UWidgetBuildElement::Init(const FBuildDataRow& data)
 	m_ImgIcon->SetBrushFromSoftTexture(data.m_Icon);
 
 	CreateCostWidgets(data.m_AryCostItem);
+
+	m_TextCnt->SetVisibility(ESlateVisibility::Collapsed);
+}
+
+void UWidgetBuildElement::SetStackCount(int cnt)
+{
+	m_TextCnt->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
+
+	m_TextCnt->SetText(FText::AsNumber(cnt));
 }
 
 void UWidgetBuildElement::MyFocus()

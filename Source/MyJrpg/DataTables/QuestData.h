@@ -47,7 +47,7 @@ struct FQuestDataRow : public FTableRowBase
 public:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
 	FText m_QuestName;
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly,meta = (MultiLine="true") )
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (MultiLine="true") )
 	FText m_QuestDesc;
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
 	FName m_TargetName;

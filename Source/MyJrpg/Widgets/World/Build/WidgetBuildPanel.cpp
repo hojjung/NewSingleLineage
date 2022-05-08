@@ -12,19 +12,14 @@ void UWidgetBuildPanel::NativeOnInitialized()
 
 	for(const FBuildDataRow* Data : AryDatas)
 	{
-		UWidgetBuildElement* SelectButton = CreateWidget<UWidgetBuildElement>(this,m_ClassBuildEle);
-
-		SelectButton->Init(*Data);
-		SelectButton->m_OnClick.BindUObject(this, &UWidgetBuildPanel::OnClickElement);
-
 		if(Data->m_BuildType == EBuildType::Furniture)
 		{
-			m_ScrollFurnitureElements->AddChild(SelectButton);
+			continue;
 		}
-		else
-		{
-			m_ScrollElements->AddChild(SelectButton);
-		}
+		UWidgetBuildElement* SelectButton = CreateWidget<UWidgetBuildElement>(this,m_ClassBuildEle);
+		SelectButton->Init(*Data);
+		SelectButton->m_OnClick.BindUObject(this, &UWidgetBuildPanel::OnClickElement);
+		m_ScrollElements->AddChild(SelectButton);
 	}
 	
 	m_ScrollFurnitureElements->SetVisibility(ESlateVisibility::Collapsed);
@@ -65,11 +60,15 @@ void UWidgetBuildPanel::OpenPanel()
 
 	UMyLib::GetPlayerCon()->EnableJoystick(false);
 	
-	m_Dele = UMyLib::GetPlayerCon()->m_OnTouch.AddUObject(this, &UWidgetBuildPanel::OnTouchWorld);
-
 	UMyGameInstance::Get->m_BuildManager->StartBuilding();
+	
+	m_DeleTouchWorld = UMyLib::GetPlayerCon()->m_OnTouch.AddUObject(this, &UWidgetBuildPanel::OnTouchWorld);
 
-	UMyGameInstance::Get->m_BuildManager->m_OnCancel.AddUObject(this, &UWidgetBuildPanel::OnCancel);
+	m_DeleCancel = UMyGameInstance::Get->m_BuildManager->m_OnCancel.AddUObject(this, &UWidgetBuildPanel::OnCancel);
+	
+	m_DeleFurniture = UMyGameInstance::Get->m_BuildManager->m_OnChanged.AddUObject(this, &UWidgetBuildPanel::UpdateFurnitureTab);
+
+	UpdateFurnitureTab();
 }
 
 void UWidgetBuildPanel::ClosePanel()
@@ -82,9 +81,11 @@ void UWidgetBuildPanel::ClosePanel()
 
 	OnCancel();
 	
-	UMyLib::GetPlayerCon()->m_OnTouch.Remove(m_Dele);
+	UMyLib::GetPlayerCon()->m_OnTouch.Remove(m_DeleTouchWorld);
 
-	UMyGameInstance::Get->m_BuildManager->m_OnCancel.Remove(m_Dele2);
+	UMyGameInstance::Get->m_BuildManager->m_OnCancel.Remove(m_DeleCancel);
+
+	UMyGameInstance::Get->m_BuildManager->m_OnChanged.Remove(m_DeleFurniture);
 
 	UMyLib::GetCanvas()->ShowMainHUD(true);
 }
@@ -117,4 +118,24 @@ void UWidgetBuildPanel::OnCancel()
 		m_Focused = nullptr;
 	}
 	
+}
+
+void UWidgetBuildPanel::UpdateFurnitureTab()
+{
+	m_ScrollFurnitureElements->ClearChildren();
+	
+	for(auto& Furniture : UMyLib::GetBuildManager()->GetInvenFurniture())
+	{
+		UWidgetBuildElement* SelectButton = CreateWidget<UWidgetBuildElement>(this,m_ClassBuildEle);
+		
+		const FBuildDataRow* Data = UBuildData::GetBuildTable->FindRow<FBuildDataRow>(Furniture.Key, "");
+		
+		SelectButton->Init(*Data);
+
+		SelectButton->SetStackCount(Furniture.Value);
+
+		SelectButton->m_OnClick.BindUObject(this, &UWidgetBuildPanel::OnClickElement);
+		
+		m_ScrollFurnitureElements->AddChild(SelectButton);
+	}
 }

@@ -19,20 +19,20 @@ void ULevelMoveManager::StartGame()
 	OpenMyLevel(TEXT("PlayerHome"));
 }
 
-void ULevelMoveManager::OpenMyLevel(const FZoneDataRow& zoneData)
-{
-	m_ZoneData = &zoneData;
-
-	UGameplayStatics::OpenLevel(this,m_ZoneData->m_MapName);
-}
-
 void ULevelMoveManager::OpenMyLevel(FName zoneData)
 {
-	UMyGameInstance::Get->m_GameRule = nullptr;
-	
 	const FZoneDataRow* DataRow = UZoneData::GetZoneTable->FindRow<FZoneDataRow>(zoneData, "");
 	
 	OpenMyLevel(*DataRow);
+}
+
+void ULevelMoveManager::OpenMyLevel(const FZoneDataRow& zoneData)
+{
+	UMyGameInstance::Get->m_GameRule = nullptr;
+	
+	m_ZoneData = &zoneData;
+
+	UGameplayStatics::OpenLevel(this,m_ZoneData->m_MapName);
 }
 
 void ULevelMoveManager::OnOpenWorldLevelComplete()
@@ -40,12 +40,12 @@ void ULevelMoveManager::OnOpenWorldLevelComplete()
 	UMyAssetManager::Get()->ClearUnits();
 	
 	UBUITween::Shutdown();
-
+	
 	if(m_ZoneData->m_ClassGameRule->IsValidLowLevel())
 	{
 		UMyGameInstance::Get->m_GameRule = NewObject<UGameRuleBase>(this, m_ZoneData->m_ClassGameRule);
-
 	}
+	
 	UMyGameInstance::Get->m_SpawnManager->SetSpawnActors(m_ZoneData->m_SpawnDataNpc);
 
 	UMyGameInstance::Get->m_EquipManager->UpdateEquip();
@@ -60,6 +60,10 @@ void ULevelMoveManager::OnOpenWorldLevelComplete()
 	{
 		UMyGameInstance::Get->m_BuildManager->LoadConstruction();
 	}
+
+	UMyGameInstance::Get->m_AvatarManager->CreatePreviewActor();
+	UMyGameInstance::Get->m_PetManager->CreatePreviewActor();
+	UMyGameInstance::Get->m_AvatarManager->EquipSkin(*UMyGameInstance::Get->m_AvatarManager->GetCrntSkin());
 }
 
 bool ULevelMoveManager::IsGameStart()

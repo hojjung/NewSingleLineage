@@ -195,9 +195,14 @@ void UWidgetBaseElement::SetMyUnFocus()
 
 void UWidgetBaseElement::SetTextStackLv(FString t)
 {
-	m_TextStackAmount->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
+	SetTextStackLv(FText::FromString(t));
+}
 
-	m_TextStackAmount->SetText(FText::FromString(t));
+void UWidgetBaseElement::SetTextStackLv(FText t)
+{
+	m_TextStackAmount->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
+	
+	m_TextStackAmount->SetText(t);
 }
 
 void UWidgetBaseElement::HideTextStackLv()

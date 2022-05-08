@@ -583,7 +583,8 @@ void UConstructionManager::ConfirmBuild()
 		{
 			GetIndex(Loc,X,Y);
 			FConEle& Ele = m_Grid[X][Y];
-			Ele.m_Furniture = m_PreviewActor; 
+			Ele.m_Furniture = m_PreviewActor;
+			
 		}
 		break;
 	case EBuildType::Wall:
@@ -639,15 +640,6 @@ void UConstructionManager::SelectStruct(IBuildable* sActor)
 	m_FocusActor->ShowSelect(true);
 }
 
-void UConstructionManager::CancelSelect()
-{
-	if(m_FocusActor)
-	{
-		m_FocusActor->ShowSelect(false);
-		m_FocusActor = nullptr;
-	}
-}
-
 void UConstructionManager::Erase(IBuildable* buildActor)
 {
 	if(!IsEraseable())
@@ -666,6 +658,10 @@ void UConstructionManager::Erase(IBuildable* buildActor)
 	{
 		FVector Loc = Cast<AActor>((*Holder).GetObject())->GetActorLocation(); 
 		OnErase(Loc);
+	}
+	else if (buildActor->GetBuildData().m_BuildType == EBuildType::Furniture)
+	{
+		
 	}
 	TryEraseActor(*Holder);
 }
@@ -721,6 +717,26 @@ void UConstructionManager::GetStructureHolder(IBuildable* want, TScriptInterface
 	}
 }
 
+void UConstructionManager::AddFurniture(const FName& id)
+{
+	int* Count = m_InvenFurniture.Find(id);
+	if(Count)
+	{
+		(*Count)++;
+	}
+	else
+	{
+		m_InvenFurniture.Add(id, 1);
+	}
+
+	m_OnChanged.Broadcast();
+}
+
+const TMap<FName, int>& UConstructionManager::GetInvenFurniture() const
+{
+	return m_InvenFurniture;
+}
+
 void UConstructionManager::Cancel()
 {
 	if(m_PreviewActor)
@@ -728,5 +744,14 @@ void UConstructionManager::Cancel()
 		Cast<AActor>(m_PreviewActor.GetObject())->Destroy();
 		m_PreviewActor = nullptr;
 		m_OnCancel.Broadcast();
+	}
+}
+
+void UConstructionManager::CancelSelect()
+{
+	if(m_FocusActor)
+	{
+		m_FocusActor->ShowSelect(false);
+		m_FocusActor = nullptr;
 	}
 }

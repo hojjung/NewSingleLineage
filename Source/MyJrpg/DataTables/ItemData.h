@@ -46,15 +46,15 @@ public:
 
 	FStatGroup(float initAll)//for multiplier
 	{
-		m_nAvoid= initAll;
-		m_nAccu = initAll;
-		m_MaxHp = initAll;
-		m_Hp = initAll;
-		m_Dmg = initAll;
-		m_AtkSpeed = initAll;
+		m_nAvoid    = initAll;
+		m_nAccu     = initAll;
+		m_MaxHp     = initAll;
+		m_Hp        = initAll;
+		m_Dmg       = initAll;
+		m_AtkSpeed  = initAll;
 		m_MoveSpeed = initAll;
-		m_CriPer = initAll;
-		m_CriDmg = initAll;
+		m_CriPer    = initAll;
+		m_CriDmg    = initAll;
 		m_DmgReduce = initAll;
 	}
 

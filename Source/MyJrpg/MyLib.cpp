@@ -22,6 +22,11 @@ UInventory* UMyLib::GetPlayerInven()
 	return UMyGameInstance::Get->m_Inven;
 }
 
+UConstructionManager* UMyLib::GetBuildManager()
+{
+	return UMyGameInstance::Get->m_BuildManager;
+}
+
 AMonsterPawn* UMyLib::GetPickPocketTarget()
 {
 	return GetCanvas()->GetPickpocketMenu()->GetCurrentTargetPawn();

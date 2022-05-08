@@ -3,8 +3,10 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "CraftManager.h"
 #include "MyJrpg/MyJrpg.h"
 #include "MyJrpg/Interfaces/Buildable.h"
+#include "MyJrpg/Widgets/World/Build/WidgetBuildElement.h"
 #include "UObject/NoExportTypes.h"
 #include "ConstructionManager.generated.h"
 
@@ -62,6 +64,8 @@ public:
 
 	FOnBuildDone m_OnCancel;
 
+	FOnBuildDone m_OnChanged;
+
 	UConstructionManager();
 
 private:
@@ -86,6 +90,8 @@ private:
 	TArray<FWallAry> m_WallHorizontal; //[FGlobalVariable::GRID_COUNT + 1][FGlobalVariable::GRID_COUNT + 2];
 	UPROPERTY()
 	TArray<FWallAry> m_WallVertical; //[FGlobalVariable::GRID_COUNT + 2][FGlobalVariable::GRID_COUNT + 1];
+
+	TMap<FName,int> m_InvenFurniture;
 
 private:
 	FVector GetWorldPos(int x, int y);
@@ -158,6 +164,9 @@ public:
 
 	void GetStructureHolder(IBuildable* want, TScriptInterface<IBuildable> *& holder, bool &isHori);
 	
+	void AddFurniture(const FName& id);
+
+	const TMap<FName,int>& GetInvenFurniture() const;
 };
 
 

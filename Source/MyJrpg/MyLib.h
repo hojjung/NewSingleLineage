@@ -8,6 +8,8 @@
 #include "DataTables/ItemData.h"
 #include "DataTables/SkillData.h"
 #include "Kismet/BlueprintFunctionLibrary.h"
+#include "Managers/ConstructionManager.h"
+#include "Managers/CraftManager.h"
 #include "Managers/ParticleEffectManager.h"
 #include "Widgets/HUDs/MyHUD.h"
 #include "MyLib.generated.h"
@@ -29,6 +31,8 @@ public:
 	static AMyPlayerPawn* GetPlayer();
 
 	static UInventory* GetPlayerInven();
+
+	static UConstructionManager* GetBuildManager();
 
 	static AMonsterPawn* GetPickPocketTarget();
 	

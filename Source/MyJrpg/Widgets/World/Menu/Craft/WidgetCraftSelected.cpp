@@ -5,12 +5,16 @@
 void UWidgetCraftSelected::NativeOnInitialized()
 {
 	Super::NativeOnInitialized();
+	
+	SetVisibility(ESlateVisibility::Collapsed);
 
 	m_Icon->SetDragable(false);
 
 	m_Icon->SetFocusable(false);
 
 	m_Icon->SetHoldable(false);
+
+	m_BtnCraft->OnClicked.AddDynamic(this, &UWidgetCraftSelected::Craft);
 }
 
 void UWidgetCraftSelected::SelectCraft(const FCraftable& data)
@@ -21,7 +25,7 @@ void UWidgetCraftSelected::SelectCraft(const FCraftable& data)
 
 	m_Dele = UMyGameInstance::Get->m_Inven->m_OnInvenChanged.AddUObject(this, &UWidgetCraftSelected::UpdateCraftCostPanel);
 
-	m_Icon->SetIcon(((FEntityRow*)data.m_Row)->m_Icon);
+	m_Icon->SetIcon(data.GetEntityRow()->m_Icon);
 
 	m_Wrap->ClearChildren();
 	
@@ -33,10 +37,11 @@ void UWidgetCraftSelected::SelectCraft(const FCraftable& data)
 		
 		SelectButton->SetCraftCost(CraftData);
 		
-		SelectButton->SetPadding(FMargin(0,30,0,0));
-		
 		m_Wrap->AddChild(SelectButton);
 	}
+
+	m_TextName->SetText(data.GetEntityRow()->m_ShowingName);
+	m_TextDesc->SetText(data.GetEntityRow()->m_Desc);
 }
 
 void UWidgetCraftSelected::Close()
@@ -44,6 +49,11 @@ void UWidgetCraftSelected::Close()
 	SetVisibility(ESlateVisibility::Collapsed);
 
 	UMyGameInstance::Get->m_Inven->m_OnInvenChanged.Remove(m_Dele);
+}
+
+void UWidgetCraftSelected::Craft()
+{
+	UMyGameInstance::Get->m_CraftManager->TryCraft();
 }
 
 void UWidgetCraftSelected::UpdateCraftCostPanel()

@@ -31,9 +31,11 @@ protected:
 	UPROPERTY()
 	UWidgetBuildElement* m_Focused;
 
-	FDelegateHandle m_Dele;
+	FDelegateHandle m_DeleTouchWorld;
 
-	FDelegateHandle m_Dele2;
+	FDelegateHandle m_DeleCancel;
+
+	FDelegateHandle m_DeleFurniture;
 
 protected:
 	virtual void NativeOnInitialized() override;
@@ -43,6 +45,8 @@ protected:
 	void OnTouchWorld(const FHitResult& hit);
 
 	void OnCancel();
+
+	void UpdateFurnitureTab();
 	
 public:
 	virtual void OpenPanel() override;

@@ -28,8 +28,6 @@ protected:
 
 	const FCraftable* m_PtrCraftData;
 
-	int m_nIndex;
-
 protected:
 	void OnHoldComplete(UWidgetBaseElement*);//인포 띄워주기
 

@@ -44,4 +44,7 @@ public:
 	void SelectCraft(const FCraftable& data);
 
 	void Close();
+
+	UFUNCTION()
+	void Craft();
 };

@@ -30,16 +30,21 @@ struct FCraftable
 public:
 	FCraftable(): m_Row(nullptr), m_TypeCraft()
 	{
+		
 	}
 
-	FCraftable(unsigned char* r, ECraftType t)
+	FCraftable(const FName& id,unsigned char* r, ECraftType t)
 	{
+		m_ID = id;
+		
 		m_Row = r;
 
 		m_TypeCraft = t;
 	}
 
 public:
+	FName m_ID;
+	
 	unsigned char* m_Row;
 	
 	ECraftType m_TypeCraft;
@@ -64,6 +69,11 @@ public:
 			return ((FItemDataRow*)m_Row)->m_AryCostItem;
 		}
 		return ((FBuildDataRow*)m_Row)->m_AryCostItem;
+	}
+
+	const FEntityRow* GetEntityRow() const
+	{
+		return ((FEntityRow*)m_Row);
 	}
 };
 UCLASS()
@@ -117,5 +127,5 @@ public:
 
 	const TArray<FCraftable>& GetAryCraftables() const;
 	
-	void AddCraftItemData(const FItemDataRow* element);
+	void AddCraftItemData(FName id, const FItemDataRow* element);
 };

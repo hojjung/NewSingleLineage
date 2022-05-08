@@ -16,20 +16,22 @@ void UCraftManager::Init()
 		{
 			continue;
 		}
-		m_AryCraftables.Emplace(FCraftable(it.Value,ECraftType::Furniture));
+		m_AryCraftables.Emplace(FCraftable(it.Key, it.Value,ECraftType::Furniture));
 	}
 	
 	m_AryCraftables.Sort([](const FCraftable& LHS, const FCraftable& RHS)  { return LHS.GetLimitLevel() > RHS.GetLimitLevel(); });
 }
 
-void UCraftManager::AddCraftItemData(const FItemDataRow* element)//아이템이 너무 많으니까 반복문 밖에서 한번돌려줌
+void UCraftManager::AddCraftItemData(FName id, const FItemDataRow* element)//아이템이 너무 많으니까 반복문 밖에서 한번돌려줌
 {
-	m_AryCraftables.Emplace(FCraftable((unsigned char *)element,ECraftType::Item));
+	m_AryCraftables.Emplace(FCraftable(id, (unsigned char *)element,ECraftType::Item));
 }
 
 void UCraftManager::SetCraftItem(int index)
 {
 	m_CrntItemData = &m_AryCraftables[index];
+
+	
 }
 
 bool UCraftManager::TryCraft()
@@ -39,23 +41,23 @@ bool UCraftManager::TryCraft()
 		return false;
 	}
 	//재료 체크
-	bool IsMatrialEnough = IsMaterialEnough();
-
-	if(!IsMatrialEnough)
-	{
-		PRINTF("UCraftManager::No MatrialEnough");
-		return false;
-	}
-	//공간체크
-	bool IsInvHasSpace = IsInvenHasSpace();
-
-	if(!IsInvHasSpace)
-	{
-		PRINTF("UCraftManager::No InvenSpace");
-		return false;
-	}
-	
-	PurchaseItemForCraft();
+	// bool IsMatrialEnough = IsMaterialEnough();
+	//
+	// if(!IsMatrialEnough)
+	// {
+	// 	PRINTF("UCraftManager::No MatrialEnough");
+	// 	return false;
+	// }
+	// //공간체크
+	// bool IsInvHasSpace = IsInvenHasSpace();
+	//
+	// if(!IsInvHasSpace)
+	// {
+	// 	PRINTF("UCraftManager::No InvenSpace");
+	// 	return false;
+	// }
+	//
+	// PurchaseItemForCraft();
 		
 	ReceiveItem();
 
@@ -210,18 +212,22 @@ void UCraftManager::ReceiveItem()
 {
 	// if(m_OnCraft.IsBound())
 	// {
-	// 	m_OnCraft.Broadcast(m_CrntID);
+	// 	m_OnCraft.Broadcast(m_CrntID); //퀘스트임
 	// }
 
-	// if(!UMyLib::IsEquip(*m_CrntItemData))
-	// {
-	// 	//UMyLib::GetPlayerInven()->AddItem(m_CrntID,m_nCraftItemCount);
-	// }
-	// else
-	// {
-	// 	// FName HashID = UMyLib::GenerateEquipItemHashKey(m_CrntID,this);
-	// 	//
-	// 	// UMyLib::GetPlayerInven()->AddEquipItem(HashID);
-	// }
+	switch (m_CrntItemData->m_TypeCraft)
+	{
+	case ECraftType::Item:
+		{
+			FItemSpec Items(m_CrntItemData->m_ID,UMyLib::IsEquip(*((FItemDataRow*)(m_CrntItemData->m_Row))) ? 0 : 1);
+			UMyLib::GetPlayerInven()->AddItem(Items);
+		}
+		break;
+	case ECraftType::Furniture:
+		{
+			UMyLib::GetBuildManager()->AddFurniture(m_CrntItemData->m_ID);
+		}
+		break;
+	}
 }
 

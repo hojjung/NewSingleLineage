@@ -47,7 +47,4 @@ public:
 	virtual void ClosePanel() override;
 
 	virtual void OpenPanel() override;
-	
-	UFUNCTION()
-	void Craft();
 };

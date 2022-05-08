@@ -25,8 +25,6 @@ void UWidgetCraftPanel::CreateAllCraftWidget(const TArray<FCraftable>& ary)
 
 		m_GridEles->AddChild(SelectButton);
 
-		SelectButton->SetPadding(FMargin(0,30,0,0));
-
 		Index++;
 	}
 }
@@ -36,11 +34,6 @@ void UWidgetCraftPanel::OnSelectCraftItem(const FCraftable& data, int index)
 	UMyGameInstance::Get->m_CraftManager->SetCraftItem(index);
 
 	m_Selected->SelectCraft(data);
-}
-
-void UWidgetCraftPanel::Craft()
-{
-	UMyGameInstance::Get->m_CraftManager->TryCraft();
 }
 
 void UWidgetCraftPanel::ClosePanel()
