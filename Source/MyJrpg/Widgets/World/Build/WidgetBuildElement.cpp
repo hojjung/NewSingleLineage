@@ -10,8 +10,6 @@ void UWidgetBuildElement::Init(const FBuildDataRow& data)
 
 	m_ImgIcon->SetBrushFromSoftTexture(data.m_Icon);
 
-	CreateCostWidgets(data.m_AryCostItem);
-
 	m_TextCnt->SetVisibility(ESlateVisibility::Collapsed);
 }
 

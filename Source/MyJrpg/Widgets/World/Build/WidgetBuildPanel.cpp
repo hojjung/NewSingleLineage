@@ -18,6 +18,7 @@ void UWidgetBuildPanel::NativeOnInitialized()
 		}
 		UWidgetBuildElement* SelectButton = CreateWidget<UWidgetBuildElement>(this,m_ClassBuildEle);
 		SelectButton->Init(*Data);
+		SelectButton->CreateCostWidgets(Data->m_AryCostItem);
 		SelectButton->m_OnClick.BindUObject(this, &UWidgetBuildPanel::OnClickElement);
 		m_ScrollElements->AddChild(SelectButton);
 	}

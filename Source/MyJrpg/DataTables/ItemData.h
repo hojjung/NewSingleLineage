@@ -167,8 +167,10 @@ public:
 	int m_nExpectDropCount=5;//5번에 한번,20% 드랍이란뜻임
 };
 
+
+
 USTRUCT(BlueprintType)
-struct FItemDataRow : public FEntityRow//FEntityRow
+struct FItemDataRow : public FEntityRow//FCraftable 상속?
 {
 	GENERATED_USTRUCT_BODY()
 

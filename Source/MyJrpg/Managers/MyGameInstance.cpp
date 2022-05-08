@@ -106,7 +106,7 @@ void UMyGameInstance::Init()
 	m_Inven->Init(FGlobalVariable::INVEN_SIZE);
 	m_QuestManager->Init();
 	m_CurrencyManager->Init(0);
-	m_CraftManager->Init();
+	
 	m_ItemExeManager->Init();
 	m_PlayerStatManager->Init();
 	m_EquipManager->Init();
@@ -114,6 +114,8 @@ void UMyGameInstance::Init()
 	m_TeamKarma->Init();
 	//
 	IterateItemTableToRegister();
+
+	m_CraftManager->Init();
 
 	m_Inven->AddItem(FItemSpec(TEXT("misc_leather01"), 3));
 	m_Inven->AddItem(FItemSpec(TEXT("TorsoAdv"), 0));

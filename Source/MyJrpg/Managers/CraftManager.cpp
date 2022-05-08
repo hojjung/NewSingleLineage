@@ -7,8 +7,6 @@ void UCraftManager::Init()
 {
 	Clear();
 
-	m_AryCraftables.Reset();
-	
 	for(auto& it : UBuildData::GetBuildTable->GetRowMap())
 	{
 		FBuildDataRow* Build = (FBuildDataRow*)it.Value;
@@ -19,7 +17,7 @@ void UCraftManager::Init()
 		m_AryCraftables.Emplace(FCraftable(it.Key, it.Value,ECraftType::Furniture));
 	}
 	
-	m_AryCraftables.Sort([](const FCraftable& LHS, const FCraftable& RHS)  { return LHS.GetLimitLevel() > RHS.GetLimitLevel(); });
+	m_AryCraftables.Sort([](const FCraftable& LHS, const FCraftable& RHS)  { return LHS.GetLimitLevel() < RHS.GetLimitLevel(); });
 }
 
 void UCraftManager::AddCraftItemData(FName id, const FItemDataRow* element)//아이템이 너무 많으니까 반복문 밖에서 한번돌려줌
@@ -30,8 +28,6 @@ void UCraftManager::AddCraftItemData(FName id, const FItemDataRow* element)//아
 void UCraftManager::SetCraftItem(int index)
 {
 	m_CrntItemData = &m_AryCraftables[index];
-
-	
 }
 
 bool UCraftManager::TryCraft()
