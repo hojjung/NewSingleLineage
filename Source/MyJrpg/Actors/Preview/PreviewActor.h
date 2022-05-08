@@ -39,15 +39,11 @@ protected:
 	bool m_bTouched;
 
 	FRotator m_InitVisualRot;
-	UPROPERTY()
-	const UUnitEntityAsset* m_SkinAsset;
 
 protected:
 	virtual void BeginPlay() override;
 
 	virtual void Tick(float DeltaSeconds) override;
-
-	virtual void EndPlay(const EEndPlayReason::Type EndPlayReason) override;
 
 	void CalculateVisualActorRot(float delta);
 

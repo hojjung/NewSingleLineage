@@ -79,12 +79,10 @@ void APreviewActor::SetEntity(TSoftObjectPtr<UUnitEntityAsset> asset)
 {
 	const UUnitEntityAsset* entityData = UMyAssetManager::Get()->LoadUnitAsset(asset);
 	
-	m_SkinAsset = entityData;
-	
-	m_MeshBody->SetSkeletalMesh(m_SkinAsset->m_BodyMesh);
+	m_MeshBody->SetSkeletalMesh(entityData->m_BodyMesh);
 	m_MeshBody->SetAnimationMode(EAnimationMode::AnimationBlueprint);
-	m_MeshBody->SetAnimClass(m_SkinAsset->m_AnimBP);
-	m_MeshBody->AddRelativeRotation(FRotator(0,m_SkinAsset->m_RotYawOffset,0));
+	m_MeshBody->SetAnimClass(entityData->m_AnimBP);
+	m_MeshBody->AddRelativeRotation(FRotator(0,entityData->m_RotYawOffset,0));
 	
 	for(const FAttach& Attach : asset->m_AryAttaches)
 	{
@@ -147,13 +145,6 @@ void APreviewActor::Tick(float delta)
 	Super::Tick(delta);
 
 	CalculateVisualActorRot(delta);
-}
-
-void APreviewActor::EndPlay(const EEndPlayReason::Type EndPlayReason)
-{
-	Super::EndPlay(EndPlayReason);
-	if(m_SkinAsset)
-		m_SkinAsset = nullptr;
 }
 
 void APreviewActor::CalculateVisualActorRot(float delta)

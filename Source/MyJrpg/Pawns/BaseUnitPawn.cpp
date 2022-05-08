@@ -92,8 +92,7 @@ void ABaseUnitPawn::LoadSetSkMeshAnim(TSoftObjectPtr<UUnitEntityAsset> asset)
 void ABaseUnitPawn::EndPlay(const EEndPlayReason::Type EndPlayReason)
 {
 	Super::EndPlay(EndPlayReason);
-	if(m_EntityAsset)
-		m_EntityAsset = nullptr;
+	m_EntityAsset.Reset();
 }
 
 void ABaseUnitPawn::ActiveMovement()

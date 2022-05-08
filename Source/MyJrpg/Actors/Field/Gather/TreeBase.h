@@ -53,6 +53,8 @@ protected:
 
 	virtual void Tick(float DeltaSeconds) override;
 
+	virtual void EndPlay(const EEndPlayReason::Type EndPlayReason) override;
+
 public:
 	void SetEntity(const FGatherDataRow& data, AMyPlayerPawn* pl);
 	

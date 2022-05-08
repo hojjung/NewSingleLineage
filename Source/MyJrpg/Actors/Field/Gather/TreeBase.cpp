@@ -159,3 +159,10 @@ void ATreeBase::Tick(float DeltaSeconds)
 	}
 }
 
+void ATreeBase::EndPlay(const EEndPlayReason::Type EndPlayReason)
+{
+	Super::EndPlay(EndPlayReason);
+
+	m_GatherAsset.Reset();
+}
+
