@@ -3,13 +3,11 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "InteractActorBase.h"
-#include "Components/WidgetInteractionComponent.h"
-#include "GameFramework/Actor.h"
+#include "FurnitureBase.h"
 #include "PortalActor.generated.h"
 
 UCLASS()
-class MYJRPG_API APortalActor : public AInteractActorBase
+class MYJRPG_API APortalActor : public AFurnitureBase
 {
 	GENERATED_BODY()
 	

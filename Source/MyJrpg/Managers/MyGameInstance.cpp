@@ -44,7 +44,7 @@ void UMyGameInstance::IterateItemTableToRegister()
 
 		if(CraftDatas.Num() > 0)
 		{
-			m_CraftManager->AddCraftItemData(AryItemNames[Iter], AryItemRows[Iter]);
+			m_CraftManager->AddCraftItemData(AryItemNames[Iter]);
 		}
 
 		const auto& TradeDatas = AryItemRows[Iter]->m_AryTraderIDs;

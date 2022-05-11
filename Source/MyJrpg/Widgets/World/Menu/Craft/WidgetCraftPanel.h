@@ -40,9 +40,10 @@ protected:
 protected:
 	virtual void NativeOnInitialized() override;
 	
-	void CreateAllCraftWidget(const TArray<FCraftable>& ary);
+	void CreateAllCraftWidget(const TArray<FCraftDataInfo>& ary);
 
-	void OnSelectCraftItem(const FCraftable& data, int index);
+	void OnSelectCraftItem(int index);
+	
 public:
 	virtual void ClosePanel() override;
 

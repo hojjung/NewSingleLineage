@@ -26,17 +26,13 @@ public:
 };
 
 USTRUCT()
-struct FBuildDataRow : public FEntityRow
+struct FBuildDataRow : public FCraftable
 {
 	GENERATED_BODY()
 
 public:
 	UPROPERTY(EditDefaultsOnly,BlueprintReadOnly)
 	EBuildType m_BuildType;
-	UPROPERTY(EditDefaultsOnly,BlueprintReadOnly)
-	int m_nCraftLevelLimit=1;
-	UPROPERTY(EditDefaultsOnly,BlueprintReadOnly)
-	TArray<FCraftItemCost> m_AryCostItem;
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, meta = (MustImplement = "Buildable") )
 	TSubclassOf<AActor> m_ClassActor;
 	UPROPERTY(EditDefaultsOnly,BlueprintReadOnly)

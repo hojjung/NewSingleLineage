@@ -15,67 +15,31 @@
  */
 
 
-UENUM(BlueprintType)
-enum class ECraftType :uint8
+struct FCraftDataInfo
 {
-	Item,
-	Furniture
-};
-
-USTRUCT()
-struct FCraftable
-{
-	GENERATED_BODY()
-
 public:
-	FCraftable(): m_Row(nullptr), m_TypeCraft()
+	FCraftDataInfo(): m_IsItem(false), m_ItemData(nullptr)
 	{
-		
 	}
 
-	FCraftable(const FName& id,unsigned char* r, ECraftType t)
+	FCraftDataInfo(FName id, bool isItem)
 	{
 		m_ID = id;
+
+		m_IsItem = isItem;
 		
-		m_Row = r;
+		m_ItemData = m_IsItem ? UItemData::GetItemTable->FindRow<FCraftable>(m_ID,"") : UBuildData::GetBuildTable->FindRow<FCraftable>(m_ID,"");
 
-		m_TypeCraft = t;
+		
 	}
-
 public:
+	bool m_IsItem;//or furniture
+	
 	FName m_ID;
-	
-	unsigned char* m_Row;
-	
-	ECraftType m_TypeCraft;
 
-	int GetLimitLevel() const
-	{
-		switch (m_TypeCraft)
-		{
-		case ECraftType::Item:
-			return ((FItemDataRow*)m_Row)->m_nCraftLevelLimit;
-		case ECraftType::Furniture:
-			return ((FBuildDataRow*)m_Row)->m_nCraftLevelLimit;
-		}
-		return -1;
-	}
-
-	const TArray<FCraftItemCost>& GetAryCraftCosts() const
-	{
-		switch (m_TypeCraft)
-		{
-		case ECraftType::Item:
-			return ((FItemDataRow*)m_Row)->m_AryCostItem;
-		}
-		return ((FBuildDataRow*)m_Row)->m_AryCostItem;
-	}
-
-	const FEntityRow* GetEntityRow() const
-	{
-		return ((FEntityRow*)m_Row);
-	}
+	const FCraftable* m_ItemData;
 };
+
 UCLASS()
 class MYJRPG_API UCraftManager : public UObject
 {
@@ -87,12 +51,9 @@ public:
 	FOnCraft m_OnCraft;
 	
 protected:
-	TArray<FCraftable> m_AryCraftables;
-	
-	UPROPERTY()
-	int m_nCraftItemCount;
+	TArray<FCraftDataInfo> m_AryCraftables;
 
-	const FCraftable* m_CrntItemData;
+	const FCraftDataInfo* m_CrntItemData;
 	
 protected:
 	bool IsInvenHasSpace();
@@ -116,16 +77,9 @@ public:
 	
 	bool TryCraft();
 
-	void SetCraftAmount(int v);
+	const FCraftDataInfo* GetCrntItemRow() const;
 
-	int GetAmount();
+	const TArray<FCraftDataInfo>& GetAryCraftables() const;
 	
-	int GetMaxAmount();
-
-public:
-	const FCraftable* GetCrntItemRow() const;
-
-	const TArray<FCraftable>& GetAryCraftables() const;
-	
-	void AddCraftItemData(FName id, const FItemDataRow* element);
+	void AddCraftItemData(FName id);
 };

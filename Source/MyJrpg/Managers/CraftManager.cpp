@@ -10,19 +10,20 @@ void UCraftManager::Init()
 	for(auto& it : UBuildData::GetBuildTable->GetRowMap())
 	{
 		FBuildDataRow* Build = (FBuildDataRow*)it.Value;
+		
 		if(Build->m_BuildType != EBuildType::Furniture || Build->m_AryCostItem.Num() < 1)
 		{
 			continue;
 		}
-		m_AryCraftables.Emplace(FCraftable(it.Key, it.Value,ECraftType::Furniture));
+		m_AryCraftables.Emplace(FCraftDataInfo(it.Key,false));
 	}
 	
-	m_AryCraftables.Sort([](const FCraftable& LHS, const FCraftable& RHS)  { return LHS.GetLimitLevel() < RHS.GetLimitLevel(); });
+	m_AryCraftables.Sort([](const FCraftDataInfo& LHS, const FCraftDataInfo& RHS)  { return LHS.m_ItemData->m_nCraftLevelLimit < RHS.m_ItemData->m_nCraftLevelLimit; });
 }
 
-void UCraftManager::AddCraftItemData(FName id, const FItemDataRow* element)//아이템이 너무 많으니까 반복문 밖에서 한번돌려줌
+void UCraftManager::AddCraftItemData(FName id)
 {
-	m_AryCraftables.Emplace(FCraftable(id, (unsigned char *)element,ECraftType::Item));
+	m_AryCraftables.Emplace(FCraftDataInfo(id, true));
 }
 
 void UCraftManager::SetCraftItem(int index)
@@ -60,23 +61,11 @@ bool UCraftManager::TryCraft()
 	return true;
 }
 
-void UCraftManager::SetCraftAmount(int v)
-{
-	m_nCraftItemCount = v;
-}
-
-int UCraftManager::GetAmount()
-{
-	return m_nCraftItemCount;
-}
-
 int UCraftManager::GetCraftAvailableCountWithMaterial()
 {
 	int MinCount = 10;
 
-	const TArray<FCraftItemCost>& AryItems = m_CrntItemData->GetAryCraftCosts();
-	
-	for(const FCraftItemCost& Cost : AryItems)
+	for(const FCraftItemCost& Cost : m_CrntItemData->m_ItemData->m_AryCostItem)
 	{
 		// int InvenAmount = UMyLib::GetPlayerInven()->GetItemStack(Cost.m_ItemDataRowHandle.RowName);
 		//
@@ -115,32 +104,18 @@ int UCraftManager::GetCraftAvailableCountWithStackSize()
 	return InvenStackAvailable;
 }
 
-int UCraftManager::GetMaxAmount()
-{
-	int MaterialAvailable = GetCraftAvailableCountWithMaterial();
-
-	int InvenStackAvailable = GetCraftAvailableCountWithStackSize();
-
-	return FMath::Min(MaterialAvailable,InvenStackAvailable);
-}
-
-const FCraftable* UCraftManager::GetCrntItemRow() const
+const FCraftDataInfo* UCraftManager::GetCrntItemRow() const
 {
 	return m_CrntItemData;
 }
 
-const TArray<FCraftable>& UCraftManager::GetAryCraftables() const
+const TArray<FCraftDataInfo>& UCraftManager::GetAryCraftables() const
 {
 	return m_AryCraftables;
 }
 
-
 void UCraftManager::Clear()
 {
-	SetCraftAmount(1);
-
-	//m_CrntID = NAME_None;
-
 	m_CrntItemData = nullptr;
 }
 
@@ -159,9 +134,7 @@ bool UCraftManager::IsInvenHasSpace()
 
 bool UCraftManager::IsMaterialEnough()
 {
-	const TArray<FCraftItemCost>& AryItems = m_CrntItemData->GetAryCraftCosts();
-	
-	for(const FCraftItemCost& Cost : AryItems)
+	for(const FCraftItemCost& Cost : m_CrntItemData->m_ItemData->m_AryCostItem)
 	{
 		if (UMyLib::IsEquip(Cost.m_ItemDataRowHandle.RowName))
 		{
@@ -172,7 +145,7 @@ bool UCraftManager::IsMaterialEnough()
 		}
 		else
 		{
-			int Count = Cost.m_nStackOrLevel * GetAmount();
+			int Count = 1;//Cost.m_nStackOrLevel * GetAmount();
 		
 			if(!UMyLib::FindMiscItem(Cost.m_ItemDataRowHandle.RowName,Count))
 			{
@@ -185,9 +158,7 @@ bool UCraftManager::IsMaterialEnough()
 
 void UCraftManager::PurchaseItemForCraft()
 {
-	const TArray<FCraftItemCost>& AryItems = m_CrntItemData->GetAryCraftCosts();
-	
-	for(const FCraftItemCost& Cost : AryItems)
+	for(const FCraftItemCost& Cost : m_CrntItemData->m_ItemData->m_AryCostItem)
 	{
 		if (UMyLib::IsEquip(Cost.m_ItemDataRowHandle.RowName))
 		{
@@ -197,7 +168,7 @@ void UCraftManager::PurchaseItemForCraft()
 		}
 		else
 		{
-			int Count = Cost.m_nStackOrLevel * GetAmount();
+			int Count = 1;//Cost.m_nStackOrLevel * GetAmount();
 
 			UMyLib::RemoveMiscItem(Cost.m_ItemDataRowHandle.RowName,Count);
 		}
@@ -211,19 +182,14 @@ void UCraftManager::ReceiveItem()
 	// 	m_OnCraft.Broadcast(m_CrntID); //퀘스트임
 	// }
 
-	switch (m_CrntItemData->m_TypeCraft)
+	if(m_CrntItemData->m_IsItem)
 	{
-	case ECraftType::Item:
-		{
-			FItemSpec Items(m_CrntItemData->m_ID,UMyLib::IsEquip(*((FItemDataRow*)(m_CrntItemData->m_Row))) ? 0 : 1);
-			UMyLib::GetPlayerInven()->AddItem(Items);
-		}
-		break;
-	case ECraftType::Furniture:
-		{
-			UMyLib::GetBuildManager()->AddFurniture(m_CrntItemData->m_ID);
-		}
-		break;
+		FItemSpec Items(m_CrntItemData->m_ID,UMyLib::IsEquip(*((FItemDataRow*)(m_CrntItemData->m_ItemData))) ? 0 : 1);
+		UMyLib::GetPlayerInven()->AddItem(Items);
+	}
+	else
+	{
+		UMyLib::GetBuildManager()->AddFurniture(m_CrntItemData->m_ID);
 	}
 }
 

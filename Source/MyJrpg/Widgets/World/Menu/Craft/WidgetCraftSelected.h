@@ -29,6 +29,14 @@ protected:
 	UWrapBox* m_Wrap;
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (BindWidget))
 	UButton* m_BtnCraft;
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (BindWidget))
+	UButton* m_BtnCancel;
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (BindWidget))
+	UOverlay* m_OverlayLimit;
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (BindWidget))
+	UTextBlock* m_TextLevelLimit;
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (BindWidget))
+	UProgressBar* m_CancelHoldingBar;
 	UPROPERTY()
 	TArray<UWidgetCraftCostElement*> m_AryEle;
 
@@ -39,12 +47,17 @@ protected:
 	virtual void NativeOnInitialized() override;
 
 	void UpdateCraftCostPanel();
+
+	void SetLimitLevel(const FCraftDataInfo& data);
 	
 public:
-	void SelectCraft(const FCraftable& data);
+	void SelectCraft(const FCraftDataInfo& data);
 
 	void Close();
 
 	UFUNCTION()
 	void Craft();
+
+	UFUNCTION()
+	void Cancel();
 };

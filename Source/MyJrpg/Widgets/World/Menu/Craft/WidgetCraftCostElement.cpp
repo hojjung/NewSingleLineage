@@ -47,7 +47,7 @@ void UWidgetCraftCostElement::UpdateCostAmount()
 	{
 		int AmountCurrent = UMyLib::GetMiscTotalCount(m_CraftData->m_ItemDataRowHandle.RowName);
 
-		int AmountCost = m_CraftData->m_nStackOrLevel * UMyGameInstance::Get->m_CraftManager->GetAmount();
+		int AmountCost = m_CraftData->m_nStackOrLevel ;//* UMyGameInstance::Get->m_CraftManager->GetAmount();
 
 		FormatAmount = FString::Printf(TEXT("%d/%d"),AmountCurrent,AmountCost);
 		

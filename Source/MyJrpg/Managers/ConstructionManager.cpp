@@ -45,10 +45,11 @@ void UConstructionManager::LoadConstruction()
 	Param.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
 	m_GridMesh = GetWorld()->SpawnActor<AGridActor>(AGridActor::StaticClass(), FVector(0,0,20), FRotator::ZeroRotator, Param);
 	m_GridMesh->SetActorScale3D(FVector(50));
-	EndBuilding();
 	
 	m_WallHorizontal.Init(FWallAry(FGlobalVariable::GRID_COUNT + 1),FGlobalVariable::GRID_COUNT);//y x
 	m_WallVertical.Init(FWallAry(FGlobalVariable::GRID_COUNT),FGlobalVariable::GRID_COUNT + 1);
+	
+	EndBuilding();
 }
 
 void UConstructionManager::StartBuilding()
@@ -62,6 +63,7 @@ void UConstructionManager::EndBuilding()
 	
 	Cancel();
 	CancelSelect();
+	SetFurnitureWallShow();
 }
 
 FVector UConstructionManager::GetWorldPos(int x, int y)
@@ -420,6 +422,45 @@ bool UConstructionManager::TraceBuildable(const FVector& Loc, const FVector&& ex
 	}
 	
 	return true;
+}
+
+void UConstructionManager::SetFurnitureWallShow()
+{
+	int Iter = 0;
+	int IterY = 0;
+
+	while (Iter < FGlobalVariable::GRID_COUNT)
+	{
+		while (IterY < FGlobalVariable::GRID_COUNT)
+		{
+			FConEle& Grid = m_Grid[Iter][IterY]; 
+			if(Grid.m_Furniture)
+			{
+				Grid.m_Furniture->SetMat(nullptr);
+				Grid.m_Furniture->SetColl(true);
+			}
+			if(Grid.m_Foundation)
+			{
+				Grid.m_Foundation->SetMat(nullptr);
+				Grid.m_Foundation->SetColl(true);
+			}
+			TScriptInterface<IBuildable> HoriWall = m_WallHorizontal[Iter].m_Walls[IterY]; 
+			if(HoriWall)
+			{
+				HoriWall->SetMat(nullptr);
+				HoriWall->SetColl(true);
+			}
+			TScriptInterface<IBuildable> VertWall = m_WallVertical[Iter].m_Walls[IterY];
+			if(VertWall)
+			{
+				VertWall->SetMat(nullptr);
+				VertWall->SetColl(true);
+			}
+			IterY++;
+		}
+		IterY = 0;
+		Iter++;
+	}
 }
 
 void UConstructionManager::SetFurnitureHide()

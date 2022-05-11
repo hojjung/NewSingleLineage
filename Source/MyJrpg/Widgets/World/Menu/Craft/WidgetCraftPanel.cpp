@@ -12,14 +12,14 @@ void UWidgetCraftPanel::NativeOnInitialized()//Texture2D'/Game/Sprites/UI/HarmoB
 	CreateAllCraftWidget(UMyGameInstance::Get->m_CraftManager->GetAryCraftables());
 }
 
-void UWidgetCraftPanel::CreateAllCraftWidget(const TArray<FCraftable>& ary)
+void UWidgetCraftPanel::CreateAllCraftWidget(const TArray<FCraftDataInfo>& ary)
 {
 	int Index = 0;
 	for(auto& CraftData : ary)
 	{
 		UWidgetCraftableElement* SelectButton = CreateWidget<UWidgetCraftableElement>(this,m_ClassCraftableElement);
 
-		SelectButton->SetCraftable(CraftData,Index);
+		SelectButton->SetCraftable(Index);
 
 		SelectButton->m_OnClicked.AddUObject(this,&UWidgetCraftPanel::OnSelectCraftItem);
 
@@ -29,11 +29,11 @@ void UWidgetCraftPanel::CreateAllCraftWidget(const TArray<FCraftable>& ary)
 	}
 }
 
-void UWidgetCraftPanel::OnSelectCraftItem(const FCraftable& data, int index)
+void UWidgetCraftPanel::OnSelectCraftItem(int index)
 {
 	UMyGameInstance::Get->m_CraftManager->SetCraftItem(index);
 
-	m_Selected->SelectCraft(data);
+	m_Selected->SelectCraft(*UMyGameInstance::Get->m_CraftManager->GetCrntItemRow());
 }
 
 void UWidgetCraftPanel::ClosePanel()

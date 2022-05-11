@@ -167,10 +167,20 @@ public:
 	int m_nExpectDropCount=5;//5번에 한번,20% 드랍이란뜻임
 };
 
+USTRUCT(BlueprintType)
+struct FCraftable :  public FEntityRow
+{
+	GENERATED_BODY()
 
+public:
+	UPROPERTY(EditDefaultsOnly,BlueprintReadOnly)
+	int m_nCraftLevelLimit=1;
+	UPROPERTY(EditDefaultsOnly,BlueprintReadOnly)
+	TArray<FCraftItemCost> m_AryCostItem;
+};
 
 USTRUCT(BlueprintType)
-struct FItemDataRow : public FEntityRow//FCraftable 상속?
+struct FItemDataRow : public FCraftable//FCraftable 상속?
 {
 	GENERATED_USTRUCT_BODY()
 
@@ -200,10 +210,6 @@ public:
 	TSubclassOf<UItemExecuteBase> m_ClassExeItem;
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	int m_nMaxStack = 2;
-	UPROPERTY(EditDefaultsOnly,BlueprintReadOnly)
-	int m_nCraftLevelLimit=1;
-	UPROPERTY(EditDefaultsOnly,BlueprintReadOnly)
-	TArray<FCraftItemCost> m_AryCostItem;
 	UPROPERTY(EditDefaultsOnly)
 	TArray<FName> m_AryTraderIDs;
 	UPROPERTY(EditDefaultsOnly)

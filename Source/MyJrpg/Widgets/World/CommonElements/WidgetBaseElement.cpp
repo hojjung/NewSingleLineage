@@ -27,14 +27,14 @@ FReply UWidgetBaseElement::NativeOnTouchStarted(const FGeometry& InGeometry, con
 
 	if(!m_bIsHoldable)
 	{
-		return FReply::Handled();
+		return FReply::Unhandled();
 	}
 	
 	m_bHolding = true;
 
 	m_fTimer = 0;
 	
-	return FReply::Handled();
+	return FReply::Unhandled();
 }
 
 FReply UWidgetBaseElement::NativeOnTouchMoved(const FGeometry& InGeometry, const FPointerEvent& InGestureEvent)

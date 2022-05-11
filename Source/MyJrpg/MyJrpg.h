@@ -117,6 +117,7 @@ enum class EEquipSlotType:uint8
 	Neckless,
 	EarRing,
 	Belt,
+	Bag,
 	Length UMETA(Hidden)
 };
 

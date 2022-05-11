@@ -126,6 +126,8 @@ private:
 
 	bool TraceBuildable(const FVector& Loc, const FVector&& extent, const FRotator& rot, float height);
 
+	void SetFurnitureWallShow();
+
 public:
 	void Init();
 	
