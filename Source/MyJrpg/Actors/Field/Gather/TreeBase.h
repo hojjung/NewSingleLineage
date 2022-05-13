@@ -3,7 +3,6 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "MyJrpg/Actors/Field/InteractActorBase.h"
 #include "MyJrpg/Pawns/MyPlayerPawn.h"
 #include "TreeBase.generated.h"
 
@@ -11,7 +10,7 @@ class UGatherAsset;
 struct FGatherDataRow;
 
 UCLASS()
-class MYJRPG_API ATreeBase : public AInteractActorBase
+class MYJRPG_API ATreeBase : public AActor, public IFocusable
 {
 	GENERATED_BODY()
 
@@ -19,6 +18,8 @@ public:
 	ATreeBase();
 
 protected:
+	UPROPERTY(VisibleAnywhere,BlueprintReadWrite,Category=Character)
+	UCapsuleComponent* m_Capsule;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 	UStaticMeshComponent* m_ShadowMeshComp;
 	UPROPERTY(VisibleAnywhere)
@@ -63,4 +64,6 @@ public:
 	virtual void OnHarvestMotionDone();
 
 	virtual void OnGatherDone();
+
+	virtual float GetBoundHalfHeight() override;
 };

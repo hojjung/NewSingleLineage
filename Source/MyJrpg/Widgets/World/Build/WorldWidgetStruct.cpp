@@ -36,7 +36,7 @@ void UWorldWidgetStruct::DeselectErase()
 
 void UWorldWidgetStruct::ConfirmErase()
 {
-	UMyGameInstance::Get->m_BuildManager->Erase(Cast<IBuildable>(m_Owner.GetObject()));
+	UMyGameInstance::Get->m_BuildManager->Erase(m_Owner.Get());
 }
 
 void UWorldWidgetStruct::ShowRotation(bool b)
@@ -89,7 +89,7 @@ void UWorldWidgetStruct::OnErase()
 
 void UWorldWidgetStruct::OnUpgrade()
 {
-	UMyGameInstance::Get->m_BuildManager->Upgrade( Cast<IBuildable>(m_Owner.GetObject()));
+	UMyGameInstance::Get->m_BuildManager->Upgrade( m_Owner.Get());
 }
 
 void UWorldWidgetStruct::ShowSelect(bool b)
@@ -98,7 +98,7 @@ void UWorldWidgetStruct::ShowSelect(bool b)
 	if(b)
 	{
 		m_BtnErase->SetVisibility(ESlateVisibility::Visible);
-		bool Result = Cast<IBuildable>(m_Owner.GetObject())->HasNextUpgrade();//지맘대로네
+		bool Result = m_Owner->IsUpgradeable();
 		if(Result)
 			m_BtnUpgrade->SetVisibility(ESlateVisibility::Visible);
 	}
@@ -112,8 +112,7 @@ void UWorldWidgetStruct::ShowSelect(bool b)
 	m_BtnCancel->SetVisibility(ESlateVisibility::Collapsed);
 }
 
-void UWorldWidgetStruct::SetOwnerActor(AActor* actor)
+void UWorldWidgetStruct::SetOwnerActor(AStructureActor* actor)
 {
-	m_Owner.SetObject(actor);
-	m_Owner.SetInterface(actor);
+	m_Owner = actor;
 }

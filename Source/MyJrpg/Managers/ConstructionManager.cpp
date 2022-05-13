@@ -55,6 +55,8 @@ void UConstructionManager::LoadConstruction()
 void UConstructionManager::StartBuilding()
 {
 	m_GridMesh->Show();
+
+	SetFurnitureHide();
 }
 
 void UConstructionManager::EndBuilding()
@@ -154,7 +156,7 @@ bool UConstructionManager::GetEmptyFoundationLoc(int x, int y, FVector& outEmpty
 		while (x < FGlobalVariable::GRID_COUNT)
 		{
 			const FConEle& Ele = m_Grid[x][y];
-			if(Ele.m_Foundation)
+			if(Ele.m_Foundation.Get())
 			{
 				x++;
 				continue;
@@ -179,7 +181,7 @@ bool UConstructionManager::GetEmptyFurnitureLoc(int x, int y, FVector& outEmptyL
 		while (x < FGlobalVariable::GRID_COUNT)
 		{
 			const FConEle& Ele = m_Grid[x][y];
-			if(Ele.m_Furniture)
+			if(Ele.m_Furniture.Get())
 			{
 				x++;
 				continue;
@@ -229,7 +231,7 @@ bool UConstructionManager::GetEmptyWallLoc(int x, int y, bool isHori, FVector& o
 		{
 			while (y < (*AryWall)[x].m_Walls.Num())
 			{
-				if((*AryWall)[x].m_Walls[y])
+				if((*AryWall)[x].m_Walls[y].Get())
 				{
 					y++;
 					continue;
@@ -249,7 +251,7 @@ bool UConstructionManager::GetEmptyWallLoc(int x, int y, bool isHori, FVector& o
 		{
 			while (x < AryWall->Num())
 			{
-				if ((*AryWall)[x].m_Walls[y])
+				if ((*AryWall)[x].m_Walls[y].Get())
 				{
 					x++;
 					continue;
@@ -273,6 +275,7 @@ bool UConstructionManager::GetEmptyLoc(const FVector& inloc, FVector& outEmptyLo
 	switch (t)
 	{
 	case EBuildType::Foundation:
+	case EBuildType::Field:
 		{
 			GetIndex(inloc ,X,Y);
 			PRINTF("Floor Index:%d:%d",X,Y);
@@ -311,7 +314,7 @@ void UConstructionManager::SpawnPreviewActor(FVector loc, const FBuildDataRow* d
 {
 	if(!dataRow)
 	{
-		if(m_PreviewActor)
+		if(m_PreviewActor.Get())
 			dataRow = &m_PreviewActor->GetBuildData();
 		else
 			return;
@@ -322,44 +325,40 @@ void UConstructionManager::SpawnPreviewActor(FVector loc, const FBuildDataRow* d
 
 	GetEmptyLoc(loc,NewLoc, NewRot, dataRow->m_BuildType);
 
-	AActor* SelectedActor = Cast<AActor>(m_PreviewActor.GetObject());
-
-	if (!m_PreviewActor || SelectedActor->GetClass() != dataRow->m_ClassActor)
+	if (!m_PreviewActor.Get() || &m_PreviewActor->GetBuildData() != dataRow)
 	{
-		if(m_PreviewActor)
+		if(m_PreviewActor.Get())
 		{
-			SelectedActor->Destroy();
+			m_PreviewActor->Destroy();
 			m_PreviewActor = nullptr;
 		}
-		IBuildable* SpawnedActor = SpawnStructure(*dataRow);
-		m_PreviewActor.SetInterface(SpawnedActor);
-		m_PreviewActor.SetObject(Cast<UObject>(SpawnedActor));
-		SelectedActor = Cast<AActor>(m_PreviewActor.GetObject());
-		SelectedActor->SetActorEnableCollision(false);
+		m_PreviewActor = SpawnStructure(*dataRow);
+		m_PreviewActor->SetActorEnableCollision(false);
 	}
 	
-	SelectedActor->SetActorLocation(NewLoc);
-	SelectedActor->SetActorRotation(NewRot);
+	m_PreviewActor->SetActorLocation(NewLoc);
+	m_PreviewActor->SetActorRotation(NewRot);
 
 	CheckBuildable();
 }
 
 bool UConstructionManager::IsBuildable()
 {
-	if(!m_PreviewActor)
+	if(!m_PreviewActor.Get())
 		return false;
 	
 	int X,Y;
 
-	FVector Loc = Cast<AActor>(m_PreviewActor.GetObject())->GetActorLocation();
+	FVector Loc = m_PreviewActor->GetActorLocation();
 	
 	switch (m_PreviewActor->GetBuildData().m_BuildType)
 	{
 	case EBuildType::Foundation:
+	case EBuildType::Field:
 		{
 			GetIndex(Loc , X, Y);
 			FConEle& Ele = m_Grid[X][Y];
-			if (Ele.m_Foundation)
+			if (Ele.m_Foundation.Get())
 				return false;
 			if(!TraceBuildable(Loc,FVector(170.f,170.f,10),FRotator::ZeroRotator, 50))
 				return false;
@@ -371,16 +370,16 @@ bool UConstructionManager::IsBuildable()
 			GetWallIndex(Loc, X, Y, IsHori);
 			if (IsHori)
 			{
-				if (!m_Grid[X][Y - 1].m_Foundation && !m_Grid[X][Y].m_Foundation)
+				if (!m_Grid[X][Y - 1].m_Foundation.Get() && !m_Grid[X][Y].m_Foundation.Get())
 					return false;
-				if (m_WallHorizontal[X].m_Walls[Y])
+				if (m_WallHorizontal[X].m_Walls[Y].Get())
 					return false;
 			}
 			else
 			{
-				if (!m_Grid[X - 1][Y].m_Foundation && !m_Grid[X][Y].m_Foundation)
+				if (!m_Grid[X - 1][Y].m_Foundation.Get() && !m_Grid[X][Y].m_Foundation.Get())
 					return false;
-				if (m_WallVertical[X].m_Walls[Y])
+				if (m_WallVertical[X].m_Walls[Y].Get())
 					return false;
 			}
 			if(!TraceBuildable(Loc,FVector(120,30,10),IsHori ? FRotator(0,90,0) : FRotator::ZeroRotator, 75))
@@ -391,7 +390,9 @@ bool UConstructionManager::IsBuildable()
 		{
 			GetIndex( Loc, X, Y);
 			FConEle& Ele = m_Grid[X][Y];
-			if (!Ele.m_Foundation || Ele.m_Furniture)
+			if (!Ele.m_Foundation.Get() || Ele.m_Furniture.Get())
+				return false;
+			if(Ele.m_Foundation->GetBuildData().m_BuildType == EBuildType::Field)
 				return false;
 			if(!TraceBuildable(Loc,FVector(120,120,10),FRotator::ZeroRotator, 100))
 				return false;
@@ -434,24 +435,24 @@ void UConstructionManager::SetFurnitureWallShow()
 		while (IterY < FGlobalVariable::GRID_COUNT)
 		{
 			FConEle& Grid = m_Grid[Iter][IterY]; 
-			if(Grid.m_Furniture)
+			if(Grid.m_Furniture.Get())
 			{
 				Grid.m_Furniture->SetMat(nullptr);
 				Grid.m_Furniture->SetColl(true);
 			}
-			if(Grid.m_Foundation)
+			if(Grid.m_Foundation.Get())
 			{
 				Grid.m_Foundation->SetMat(nullptr);
 				Grid.m_Foundation->SetColl(true);
 			}
-			TScriptInterface<IBuildable> HoriWall = m_WallHorizontal[Iter].m_Walls[IterY]; 
-			if(HoriWall)
+			TWeakObjectPtr<AStructureActor> HoriWall = m_WallHorizontal[Iter].m_Walls[IterY]; 
+			if(HoriWall.Get())
 			{
 				HoriWall->SetMat(nullptr);
 				HoriWall->SetColl(true);
 			}
-			TScriptInterface<IBuildable> VertWall = m_WallVertical[Iter].m_Walls[IterY];
-			if(VertWall)
+			TWeakObjectPtr<AStructureActor> VertWall = m_WallVertical[Iter].m_Walls[IterY];
+			if(VertWall.Get())
 			{
 				VertWall->SetMat(nullptr);
 				VertWall->SetColl(true);
@@ -473,24 +474,32 @@ void UConstructionManager::SetFurnitureHide()
 		while (IterY < FGlobalVariable::GRID_COUNT)
 		{
 			FConEle& Grid = m_Grid[Iter][IterY]; 
-			if(Grid.m_Furniture)
+			if(Grid.m_Furniture.Get())
 			{
 				Grid.m_Furniture->SetMat(m_MatCyan);
 				Grid.m_Furniture->SetColl(false);
 			}
-			if(Grid.m_Foundation)
+			if(Grid.m_Foundation.Get())
 			{
-				Grid.m_Foundation->SetMat(nullptr);
-				Grid.m_Foundation->SetColl(true);
+				if(Grid.m_Foundation.Get()->GetBuildData().m_BuildType != EBuildType::Field)
+				{
+					Grid.m_Foundation->SetMat(nullptr);
+					Grid.m_Foundation->SetColl(true);
+				}
+				else
+				{
+					Grid.m_Foundation->SetMat(m_MatCyan);
+					Grid.m_Foundation->SetColl(false);
+				}
 			}
-			TScriptInterface<IBuildable> HoriWall = m_WallHorizontal[Iter].m_Walls[IterY]; 
-			if(HoriWall)
+			TWeakObjectPtr<AStructureActor> HoriWall = m_WallHorizontal[Iter].m_Walls[IterY]; 
+			if(HoriWall.Get())
 			{
 				HoriWall->SetMat(nullptr);
 				HoriWall->SetColl(true);
 			}
-			TScriptInterface<IBuildable> VertWall = m_WallVertical[Iter].m_Walls[IterY];
-			if(VertWall)
+			TWeakObjectPtr<AStructureActor> VertWall = m_WallVertical[Iter].m_Walls[IterY];
+			if(VertWall.Get())
 			{
 				VertWall->SetMat(nullptr);
 				VertWall->SetColl(true);
@@ -512,24 +521,32 @@ void UConstructionManager::SetWallStructureHide()
 		while (IterY < FGlobalVariable::GRID_COUNT)
 		{
 			FConEle& Grid = m_Grid[Iter][IterY];
-			if (Grid.m_Furniture)
+			if (Grid.m_Furniture.Get())
 			{
 				Grid.m_Furniture->SetMat(nullptr);
 				Grid.m_Furniture->SetColl(true);
 			}
-			if (Grid.m_Foundation)
+			if (Grid.m_Foundation.Get())
 			{
-				Grid.m_Foundation->SetMat(m_MatCyan);
-				Grid.m_Foundation->SetColl(false);
+				if (Grid.m_Foundation.Get()->GetBuildData().m_BuildType != EBuildType::Field)
+				{
+					Grid.m_Foundation->SetMat(m_MatCyan);
+					Grid.m_Foundation->SetColl(false);
+				}
+				else
+				{
+					Grid.m_Foundation->SetMat(nullptr);
+					Grid.m_Foundation->SetColl(true);
+				}
 			}
-			TScriptInterface<IBuildable> HoriWall = m_WallHorizontal[Iter].m_Walls[IterY];
-			if (HoriWall)
+			TWeakObjectPtr<AStructureActor> HoriWall = m_WallHorizontal[Iter].m_Walls[IterY];
+			if (HoriWall.Get())
 			{
 				HoriWall->SetMat(m_MatCyan);
 				HoriWall->SetColl(false);
 			}
-			TScriptInterface<IBuildable> VertWall = m_WallVertical[Iter].m_Walls[IterY];
-			if (VertWall)
+			TWeakObjectPtr<AStructureActor> VertWall = m_WallVertical[Iter].m_Walls[IterY];
+			if (VertWall.Get())
 			{
 				VertWall->SetMat(m_MatCyan);
 				VertWall->SetColl(false);
@@ -541,12 +558,12 @@ void UConstructionManager::SetWallStructureHide()
 	}
 }
 
-IBuildable* UConstructionManager::SpawnStructure(const FBuildDataRow& data)
+AStructureActor* UConstructionManager::SpawnStructure(const FBuildDataRow& data)
 {
 	FActorSpawnParameters Param;
 	Param.bNoFail = true;
 	Param.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
-	IBuildable* StructActor = GetWorld()->SpawnActor<IBuildable>(data.m_ClassActor, Param);
+	AStructureActor* StructActor = GetWorld()->SpawnActor<AStructureActor>(data.m_ClassActor, Param);
 	Cast<AActor>(StructActor)->SetActorScale3D(FVector(0.885f));
 	StructActor->SetBuildData(data);
 
@@ -560,12 +577,13 @@ bool UConstructionManager::IsEraseable()
 	case EBuildType::Foundation:
 		{
 			int X,Y;
-			FVector Loc = Cast<AActor>(m_FocusActor.GetObject())->GetActorLocation();		
+			FVector Loc = m_FocusActor->GetActorLocation();		
 			GetIndex(Loc,X,Y);
-			return !m_Grid[X][Y].m_Furniture.GetObject();
+			return !m_Grid[X][Y].m_Furniture.Get();
 		}
+	case EBuildType::Field:
 	case EBuildType::Furniture:
-		return Cast<IBuildable>(m_FocusActor.GetObject())->IsEraseable();
+		return m_FocusActor->IsEraseable();
 	}
 	return true;
 }
@@ -576,44 +594,45 @@ void UConstructionManager::OnErase(const FVector& Loc)
 	
 	GetIndex(Loc,X,Y);
 	
-	if(0 > Y - 1 || !m_Grid[X][Y - 1].m_Foundation)
+	if(0 > Y - 1 || !m_Grid[X][Y - 1].m_Foundation.Get())
 	{
-		TScriptInterface<IBuildable>& Holder = m_WallHorizontal[X].m_Walls[Y];
+		TWeakObjectPtr<AStructureActor>& Holder = m_WallHorizontal[X].m_Walls[Y];
 		TryEraseActor(Holder);
 	}
-	if(FGlobalVariable::GRID_COUNT <= Y + 1 || !m_Grid[X][Y + 1].m_Foundation)//없다면 인데 최대 인덱스를 초과해서 똥값확인중,인덱스 초과시 어떻게?없는것으로 처줘야함
+	if(FGlobalVariable::GRID_COUNT <= Y + 1 || !m_Grid[X][Y + 1].m_Foundation.Get())//없다면 인데 최대 인덱스를 초과해서 똥값확인중,인덱스 초과시 어떻게?없는것으로 처줘야함
 	{
-		TScriptInterface<IBuildable>& Holder = m_WallHorizontal[X].m_Walls[Y + 1];//n
+		TWeakObjectPtr<AStructureActor>& Holder = m_WallHorizontal[X].m_Walls[Y + 1];//n
 		TryEraseActor(Holder);
 	}
-	if(0 > X - 1 || !m_Grid[X - 1][Y].m_Foundation)
+	if(0 > X - 1 || !m_Grid[X - 1][Y].m_Foundation.Get())
 	{
-		TScriptInterface<IBuildable>& Holder = m_WallVertical[X].m_Walls[Y];//w
+		TWeakObjectPtr<AStructureActor>& Holder = m_WallVertical[X].m_Walls[Y];//w
 		TryEraseActor(Holder);
 	}
-	if(FGlobalVariable::GRID_COUNT <= X + 1 && !m_Grid[X + 1][Y].m_Foundation)//FGlobalVariable::GRID_COUNT > X + 1 
+	if(FGlobalVariable::GRID_COUNT <= X + 1 && !m_Grid[X + 1][Y].m_Foundation.Get())//FGlobalVariable::GRID_COUNT > X + 1 
 	{
-		TScriptInterface<IBuildable>& Holder = m_WallVertical[X + 1].m_Walls[Y];//e
+		TWeakObjectPtr<AStructureActor>& Holder = m_WallVertical[X + 1].m_Walls[Y];//e
 		TryEraseActor(Holder);
 	}
 }
 
-void UConstructionManager::TryEraseActor(TScriptInterface<IBuildable>& holder)
+void UConstructionManager::TryEraseActor(TWeakObjectPtr<AStructureActor>& holder)
 {
-	if(!holder.GetObject())
+	if(!holder.Get())
 		return;
-	Cast<AActor>(holder.GetObject())->Destroy();
+	holder->Destroy();
 	holder = nullptr;
 }
 
 void UConstructionManager::ConfirmBuild()
 {
 	int X,Y;
-	FVector Loc = Cast<AActor>(m_PreviewActor.GetObject())->GetActorLocation(); 
+	FVector Loc = m_PreviewActor->GetActorLocation(); 
 
 	switch (m_PreviewActor->GetBuildData().m_BuildType)
 	{
 	case EBuildType::Foundation:
+	case EBuildType::Field:
 		{
 			GetIndex(Loc,X,Y);
 			FConEle& Ele = m_Grid[X][Y];
@@ -644,9 +663,11 @@ void UConstructionManager::ConfirmBuild()
 	
 	m_PreviewActor->ConfirmBuild();
 
-	if(Cast<IFocusable>(m_PreviewActor.GetObject()))
+	IFocusable* Focus = Cast<IFocusable>(m_PreviewActor.Get());
+
+	if(Focus && Focus->IsInteractImplemented())
 	{
-		UMyGameInstance::Get->m_SpawnManager->AddFocusActor(m_PreviewActor.GetObject());
+		UMyGameInstance::Get->m_SpawnManager->AddFocusActor(m_PreviewActor.Get());
 	}
 	
 	m_PreviewActor = nullptr;
@@ -659,45 +680,44 @@ void UConstructionManager::ConfirmBuild()
 void UConstructionManager::Rotate()
 {
 	//float Yaw = FMath::RoundToFloat(m_PreviewActor->GetActorRotation().GetDenormalized().Yaw);
-	if(m_PreviewActor)
+	if(m_PreviewActor.Get())
 	{
-		Cast<AActor>(m_PreviewActor.GetObject())->AddActorLocalRotation(FRotator(0,90,0));
+		m_PreviewActor->AddActorLocalRotation(FRotator(0,90,0));
 	}
-	else if(m_FocusActor)
+	else if(m_FocusActor.Get())
 	{
-		Cast<AActor>(m_FocusActor.GetObject())->AddActorLocalRotation(FRotator(0,90,0));	
+		m_FocusActor->AddActorLocalRotation(FRotator(0,90,0));	
 	}
 }
 
-IBuildable* UConstructionManager::GetPreview()
+AStructureActor* UConstructionManager::GetPreview()
 {
-	return (IBuildable*) m_PreviewActor.GetInterface();
+	return m_PreviewActor.Get();
 }
 
-void UConstructionManager::SelectStruct(IBuildable* sActor)
+void UConstructionManager::SelectStruct(AStructureActor* sActor)
 {
-	m_FocusActor.SetInterface(sActor);
-	m_FocusActor.SetObject(Cast<UObject>(sActor));
+	m_FocusActor = sActor;
 	m_FocusActor->ShowSelect(true);
 }
 
-void UConstructionManager::Erase(IBuildable* buildActor)
+void UConstructionManager::Erase(AStructureActor* buildActor)
 {
 	if(!IsEraseable())
 	{
 		return;
 	}
-	TScriptInterface<IBuildable> * Holder;
+	TWeakObjectPtr<AStructureActor> * Holder;
 	bool isHori;
 	GetStructureHolder(buildActor,Holder,isHori);
 
-	if(Cast<IFocusable>((*Holder).GetObject()))
+	if(Cast<IFocusable>((*Holder).Get()))
 	{
-		UMyGameInstance::Get->m_SpawnManager->RemoveFocusActor((*Holder).GetObject());
+		UMyGameInstance::Get->m_SpawnManager->RemoveFocusActor((*Holder).Get());
 	}
 	if(buildActor->GetBuildData().m_BuildType == EBuildType::Foundation)
 	{
-		FVector Loc = Cast<AActor>((*Holder).GetObject())->GetActorLocation(); 
+		FVector Loc = (*Holder)->GetActorLocation(); 
 		OnErase(Loc);
 	}
 	else if (buildActor->GetBuildData().m_BuildType == EBuildType::Furniture)
@@ -707,13 +727,13 @@ void UConstructionManager::Erase(IBuildable* buildActor)
 	TryEraseActor(*Holder);
 }
 
-void UConstructionManager::Upgrade(IBuildable* buildActor)
+void UConstructionManager::Upgrade(AStructureActor* buildActor)
 {
-	TScriptInterface<IBuildable> * Holder;
+	TWeakObjectPtr<AStructureActor> * Holder;
 	bool isHori;
 	GetStructureHolder(buildActor,Holder,isHori);
-	AStructureActor* Structure = Cast<AStructureActor>((*Holder).GetObject()); 
-	if(!Structure->TryUpgrade())
+	AStructureActor* Structure = Holder->Get(); 
+	if(!Structure->IsUpgradeable())
 		return;
 	FVector Loc = Structure->GetActorLocation();
 	FName NextID = Structure->GetBuildData().m_NextUpgradeActorID;
@@ -728,7 +748,7 @@ void UConstructionManager::Upgrade(IBuildable* buildActor)
 	m_FocusActor = NewUpgradeActor;
 }
 
-void UConstructionManager::GetStructureHolder(IBuildable* want, TScriptInterface<IBuildable> *& holder, bool &isHori)
+void UConstructionManager::GetStructureHolder(AStructureActor* want, TWeakObjectPtr<AStructureActor> *& holder, bool &isHori)
 {
 	FVector Loc =  Cast<AActor>(want)->GetActorLocation();
 
@@ -737,6 +757,7 @@ void UConstructionManager::GetStructureHolder(IBuildable* want, TScriptInterface
 	switch (want->GetBuildData().m_BuildType)
 	{
 	case EBuildType::Foundation:
+	case EBuildType::Field:
 		GetIndex(Loc,X,Y);
 		holder = &m_Grid[X][Y].m_Foundation;
 		isHori = false;
@@ -780,9 +801,9 @@ const TMap<FName, int>& UConstructionManager::GetInvenFurniture() const
 
 void UConstructionManager::Cancel()
 {
-	if(m_PreviewActor)
+	if(m_PreviewActor.Get())
 	{
-		Cast<AActor>(m_PreviewActor.GetObject())->Destroy();
+		m_PreviewActor->Destroy();
 		m_PreviewActor = nullptr;
 		m_OnCancel.Broadcast();
 	}
@@ -790,7 +811,7 @@ void UConstructionManager::Cancel()
 
 void UConstructionManager::CancelSelect()
 {
-	if(m_FocusActor)
+	if(m_FocusActor.Get())
 	{
 		m_FocusActor->ShowSelect(false);
 		m_FocusActor = nullptr;

@@ -4,36 +4,30 @@
 
 #include "CoreMinimal.h"
 #include "StructureActor.h"
-#include "DoorWood01.generated.h"
+#include "DoorActor.generated.h"
 
 /**
  * 
  */
 UCLASS()
-class MYJRPG_API ADoorWood01 : public AStructureActor
+class MYJRPG_API ADoorActor : public AStructureActor
 {
 	GENERATED_BODY()
-
+	
 public:
-	ADoorWood01();
+	ADoorActor();
 
 private:
 	UPROPERTY(VisibleAnywhere)
 	UStaticMeshComponent* m_MeshDoor;
 	UPROPERTY(VisibleAnywhere)
 	USphereComponent* m_DoorTrigger;
-	UPROPERTY()
-	TArray<UMaterialInterface*> m_AryDoorMats;
 
 	bool m_bIsDoorOpen;
 
 	float m_fRot;
 protected:
-	virtual void BeginPlay() override;
-	
-	virtual void SetMat(UMaterialInterface* mat) override;
-
-	virtual void ConfirmBuild() override;
+	virtual void SetBuildData(const FBuildDataRow& data) override;
 	
 	virtual void TickActor(float DeltaTime, ELevelTick TickType, FActorTickFunction& ThisTickFunction) override;
 
@@ -43,6 +37,3 @@ public:
 	UFUNCTION()
 	void OnTriggerEnd(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex);
 };
-
-
-

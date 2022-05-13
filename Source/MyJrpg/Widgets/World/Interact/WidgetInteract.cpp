@@ -1,6 +1,5 @@
 #include "WidgetInteract.h"
 #include "MyJrpg/MyLib.h"
-#include "MyJrpg/Actors/Field/InteractActorBase.h"
 #include "MyJrpg/Actors/Field/ItemActor.h"
 #include "MyJrpg/Managers/MyGameInstance.h"
 #include "MyJrpg/Pawns/MonsterPawn.h"
@@ -127,7 +126,7 @@ void UWidgetInteract::ShowInteract(IFocusable* focus)
 		return;
 	}
 	
-	AInteractActorBase* Prop = Cast<AInteractActorBase>(focus);
+	AActor* Prop = Cast<AActor>(focus);
 	if(Prop)
 	{
 		m_Focused.SetObject(Prop);
@@ -157,7 +156,7 @@ void UWidgetInteract::OnSteal()
 
 void UWidgetInteract::OnControl()
 {
-	AInteractActorBase* Prop = Cast<AInteractActorBase>(m_Focused.GetObject());
+	IFocusable* Prop = Cast<IFocusable>(m_Focused.GetObject());
 	
 	Prop->OnInteract();
 }

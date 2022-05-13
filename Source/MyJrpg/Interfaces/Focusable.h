@@ -31,4 +31,8 @@ class MYJRPG_API IFocusable
 
 public:
 	virtual float GetBoundHalfHeight() = 0;
+
+	virtual void OnInteract() {};
+
+	virtual bool IsInteractImplemented() { return true;};
 };

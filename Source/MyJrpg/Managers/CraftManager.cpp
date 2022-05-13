@@ -11,7 +11,7 @@ void UCraftManager::Init()
 	{
 		FBuildDataRow* Build = (FBuildDataRow*)it.Value;
 		
-		if(Build->m_BuildType != EBuildType::Furniture || Build->m_AryCostItem.Num() < 1)
+		if(Build->m_BuildType == EBuildType::Foundation || Build->m_BuildType == EBuildType::Wall || Build->m_AryCostItem.Num() < 1)
 		{
 			continue;
 		}

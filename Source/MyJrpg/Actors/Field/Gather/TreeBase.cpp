@@ -12,7 +12,18 @@ ATreeBase::ATreeBase()
 {
 	PrimaryActorTick.bCanEverTick = true; 
 	
+	m_Capsule = CreateDefaultSubobject<UCapsuleComponent>(TEXT("Capsule00"));
+	m_Capsule->InitCapsuleSize(34.0f, 88.0f);
+	m_Capsule->SetCollisionProfileName(TEXT("BlockAll"));
+	m_Capsule->CanCharacterStepUpOn = ECB_No;
+	m_Capsule->SetShouldUpdatePhysicsVolume(false);
+	m_Capsule->SetCanEverAffectNavigation(true);
+	m_Capsule->bDynamicObstacle = false;
+	m_Capsule->AreaClass = nullptr;
+	m_Capsule->SetMobility(EComponentMobility::Movable);
+	m_Capsule->bReceivesDecals = false;
 	m_Capsule->InitCapsuleSize(50, 50.0f);
+	RootComponent = m_Capsule;
 
 	m_MeshTree = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("m_MeshTree"));
 	m_MeshTree->CanCharacterStepUpOn = ECB_No;
@@ -113,6 +124,11 @@ void ATreeBase::OnGatherDone()
 	m_MeshTree->SetCollisionEnabled(ECollisionEnabled::PhysicsOnly);
 	if(m_bUsePhysics)
 		m_MeshTree->SetSimulatePhysics(true);
+}
+
+float ATreeBase::GetBoundHalfHeight()
+{
+	return m_Capsule->GetScaledCapsuleHalfHeight();
 }
 
 void ATreeBase::CreateSetDeathCurve(float fullLength)

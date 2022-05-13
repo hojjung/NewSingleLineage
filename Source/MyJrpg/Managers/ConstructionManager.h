@@ -5,7 +5,6 @@
 #include "CoreMinimal.h"
 #include "CraftManager.h"
 #include "MyJrpg/MyJrpg.h"
-#include "MyJrpg/Interfaces/Buildable.h"
 #include "MyJrpg/Widgets/World/Build/WidgetBuildElement.h"
 #include "UObject/NoExportTypes.h"
 #include "ConstructionManager.generated.h"
@@ -18,7 +17,6 @@
 
 class AGridActor;
 class AStaticMeshActor;
-class AInteractActorBase;
 class AStructureActor;
 struct FBuildDataRow;
 
@@ -31,10 +29,11 @@ public:
 	FConEle();
 
 public:
-	UPROPERTY()
-	TScriptInterface<IBuildable> m_Foundation;
-	UPROPERTY()
-	TScriptInterface<IBuildable> m_Furniture;
+	
+	TWeakObjectPtr<AStructureActor> m_Foundation;
+
+	
+	TWeakObjectPtr<AStructureActor> m_Furniture;
 };
 
 USTRUCT()
@@ -48,8 +47,8 @@ public:
 	FWallAry(int count);
 
 public:
-	UPROPERTY()
-	TArray<TScriptInterface<IBuildable>> m_Walls;
+	
+	TArray<TWeakObjectPtr<AStructureActor>> m_Walls;
 };
 
 UCLASS()
@@ -77,10 +76,10 @@ private:
 	UMaterialInterface* m_MatCyan;
 	UPROPERTY()
 	AGridActor* m_GridMesh;
-	UPROPERTY()
-	TScriptInterface<IBuildable> m_PreviewActor;
-	UPROPERTY()
-	TScriptInterface<IBuildable>  m_FocusActor;
+	
+	TWeakObjectPtr<AStructureActor> m_PreviewActor;
+	
+	TWeakObjectPtr<AStructureActor>  m_FocusActor;
 
 	TArray<FBuildDataRow*> m_AryBuildDatas;
 
@@ -116,13 +115,13 @@ private:
 
 	bool IsBuildable();
 
-	IBuildable* SpawnStructure(const FBuildDataRow& data);
+	AStructureActor* SpawnStructure(const FBuildDataRow& data);
 
 	bool IsEraseable();
 
 	void OnErase(const FVector& Loc);
 
-	void TryEraseActor(TScriptInterface<IBuildable>& holder);
+	void TryEraseActor(TWeakObjectPtr<AStructureActor>& holder);
 
 	bool TraceBuildable(const FVector& Loc, const FVector&& extent, const FRotator& rot, float height);
 
@@ -148,23 +147,23 @@ public:
 	
 	void EndBuilding();
 	
-	void Cancel();
+	void Cancel(); 
 	
 	void ConfirmBuild();
 	
 	void Rotate();
 
-	IBuildable* GetPreview();
+	AStructureActor* GetPreview();
 	
-	void SelectStruct(IBuildable* sActor);
+	void SelectStruct(AStructureActor* sActor);
 
 	void CancelSelect();
 	
-	void Erase(IBuildable* buildActor);
+	void Erase(AStructureActor* buildActor);
 	
-	void Upgrade(IBuildable* buildActor);
+	void Upgrade(AStructureActor* buildActor);
 
-	void GetStructureHolder(IBuildable* want, TScriptInterface<IBuildable> *& holder, bool &isHori);
+	void GetStructureHolder(AStructureActor* want, TWeakObjectPtr<AStructureActor> *& holder, bool &isHori);
 	
 	void AddFurniture(const FName& id);
 

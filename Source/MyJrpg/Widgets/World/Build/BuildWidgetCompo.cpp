@@ -22,10 +22,10 @@ UBuildWidgetCompo::UBuildWidgetCompo()
 void UBuildWidgetCompo::Init()
 {
 	SetWidgetClass(m_ClassWidget);
-	AActor* Owner = GetOwner();
+	AStructureActor* Owner = GetOwner<AStructureActor>();
 	m_Widget = Cast<UWorldWidgetStruct>(GetUserWidgetObject());
 	m_Widget->SetOwnerActor(Owner);
-	m_Type = Cast<IBuildable>(Owner)->GetBuildData().m_BuildType;
+	m_Type = Owner->GetBuildData().m_BuildType;
 }
 
 void UBuildWidgetCompo::ShowBuildWidget(bool b)

@@ -187,6 +187,7 @@ enum class EBuildType :uint8
 {
 	Foundation,
 	Wall,
-	Furniture
+	Furniture,
+	Field
 };
 

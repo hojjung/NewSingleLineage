@@ -1,47 +1,53 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "BuildInteract/BuildInteractBase.h"
 #include "Engine/StaticMeshActor.h"
 #include "GameFramework/Actor.h"
+#include "MyJrpg/Interfaces/Focusable.h"
 #include "MyJrpg/Widgets/World/Build/BuildWidgetCompo.h"
-#include "MyJrpg/Interfaces/Buildable.h"
 #include "StructureActor.generated.h"
 
 struct FBuildDataRow;
 UCLASS()
-class MYJRPG_API AStructureActor : public AStaticMeshActor , public IBuildable
+class MYJRPG_API AStructureActor : public AActor, public IFocusable
 {
 	GENERATED_BODY()
-	
-public:	
+public:
 	AStructureActor();
 
 protected:
 	UPROPERTY(VisibleAnywhere)
 	UBuildWidgetCompo* m_WidgetComp;
+	UPROPERTY(VisibleAnywhere)
+	UStaticMeshComponent* m_MeshComp;
 	UPROPERTY()
-	TArray<UMaterialInterface*> m_AryMats;
+	UBuildInteractBase* m_BuildInteract;
+	UPROPERTY()
+	TArray<UMeshComponent*> m_AryMeshCompos;
+	
+	TArray<TArray<TStrongObjectPtr<UMaterialInterface>>> m_AryAryMats;
+	
+	const FBuildDataRow* m_BuildData;
 
-	const FBuildDataRow* m_DataRow;
 protected:
-	virtual void BeginPlay() override;
-
+	virtual void EndPlay(const EEndPlayReason::Type EndPlayReason) override;
+	
 public:
-	virtual bool HasNextUpgrade() override;
+	virtual const FBuildDataRow& GetBuildData() const ;
+	virtual void SetBuildData(const FBuildDataRow& data);
+	virtual void SetMat(UMaterialInterface* mat);
+	virtual void ShowBuildWidget(bool b);
+	virtual void ConfirmBuild();
+	virtual void ShowSelect(bool b);
+	virtual bool IsEraseable() ;
+	virtual void SetColl(bool b) ;
 	
-	virtual void SetBuildData(const FBuildDataRow& data_row) override;
-	
-	virtual void SetMat(UMaterialInterface* mat) override;
+	bool IsUpgradeable();
 
-	virtual void ConfirmBuild() override;
+	virtual void OnInteract() override;
 
-	virtual const FBuildDataRow& GetBuildData() const override;
+	virtual float GetBoundHalfHeight() override;
 
-	virtual void ShowBuildWidget(bool b) override;
-
-	virtual void ShowSelect(bool b) override;
-
-	virtual bool TryUpgrade();
-
-	virtual void SetColl(bool b) override;
+	virtual bool IsInteractImplemented() override;
 };

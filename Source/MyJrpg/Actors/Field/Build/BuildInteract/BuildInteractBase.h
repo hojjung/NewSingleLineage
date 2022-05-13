@@ -4,16 +4,20 @@
 
 #include "CoreMinimal.h"
 #include "UObject/NoExportTypes.h"
-#include "InteractBase.generated.h"
+#include "BuildInteractBase.generated.h"
 
 /**
  * 
  */
 UCLASS()
-class MYJRPG_API UInteractBase : public UObject
+class MYJRPG_API UBuildInteractBase : public UObject
 {
 	GENERATED_BODY()
 
 public:
-	virtual void Interact() {};
+	virtual void Init() {};
+	
+	virtual bool IsEraseable() { return true;};
+
+	virtual void OnInteract() {};
 };

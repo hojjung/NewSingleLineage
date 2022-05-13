@@ -12,7 +12,7 @@ void UWidgetBuildPanel::NativeOnInitialized()
 
 	for(const FBuildDataRow* Data : AryDatas)
 	{
-		if(Data->m_BuildType == EBuildType::Furniture)
+		if(Data->m_BuildType == EBuildType::Furniture || Data->m_BuildType == EBuildType::Field)
 		{
 			continue;
 		}
@@ -42,7 +42,7 @@ void UWidgetBuildPanel::OnClickElement(UWidgetBuildElement* ele, const FBuildDat
 
 void UWidgetBuildPanel::OnTouchWorld(const FHitResult& hit)
 {
-	IBuildable* SActor = Cast<IBuildable>(hit.Actor.Get());
+	AStructureActor* SActor = Cast<AStructureActor>(hit.Actor.Get());
 	
 	if(SActor && !m_Focused)
 	{
@@ -75,6 +75,8 @@ void UWidgetBuildPanel::OpenPanel()
 void UWidgetBuildPanel::ClosePanel()
 {
 	Super::ClosePanel();
+
+	OnClickStruct();
 
 	UMyGameInstance::Get->m_BuildManager->EndBuilding();
 	

@@ -6,10 +6,11 @@
 #include "ItemData.h"
 #include "Engine/DataTable.h"
 #include "MyJrpg/MyJrpg.h"
-#include "MyJrpg/Interfaces/Buildable.h"
+#include "MyJrpg/Actors/Field/Build/BuildInteract/BuildInteractBase.h"
 #include "UObject/NoExportTypes.h"
 #include "BuildData.generated.h"
 
+class UInteractBase;
 class AStructureActor;
 /**
  * 
@@ -31,10 +32,23 @@ struct FBuildDataRow : public FCraftable
 	GENERATED_BODY()
 
 public:
+	FBuildDataRow();
+
+public:
 	UPROPERTY(EditDefaultsOnly,BlueprintReadOnly)
 	EBuildType m_BuildType;
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, meta = (MustImplement = "Buildable") )
-	TSubclassOf<AActor> m_ClassActor;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+	TSubclassOf<UBuildInteractBase> m_ClassInter = nullptr;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+	TSubclassOf<AStructureActor> m_ClassActor;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+	TSoftObjectPtr<UStaticMesh> m_Mesh;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+	FVector m_Offset;
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (UIMin = "0.1"))
+	float m_fScale = 1.f;
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
+	float m_fRotYaw = 0.f;
 	UPROPERTY(EditDefaultsOnly,BlueprintReadOnly)
 	FName m_NextUpgradeActorID;
 };
