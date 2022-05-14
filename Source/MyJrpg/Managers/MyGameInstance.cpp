@@ -18,6 +18,10 @@ void UMyGameInstance::BeginDestroy()
 	Super::BeginDestroy();
 
 	Get = nullptr;
+	
+	m_Player = nullptr;
+
+	m_PlayerCon = nullptr;
 }
 
 void UMyGameInstance::IterateItemTableToRegister()

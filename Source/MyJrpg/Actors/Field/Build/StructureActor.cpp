@@ -24,10 +24,13 @@ void AStructureActor::SetBuildData(const FBuildDataRow& data)
 {
 	m_BuildData = &data;
 
-	m_MeshComp->SetStaticMesh(m_BuildData->m_Mesh.LoadSynchronous());
-	m_MeshComp->SetRelativeLocation(m_BuildData->m_Offset);
-	m_MeshComp->SetRelativeScale3D(FVector(m_BuildData->m_fScale));
-	m_MeshComp->SetRelativeRotation(FRotator(0,m_BuildData->m_fRotYaw,0));
+	if(!m_BuildData->m_Mesh.ToSoftObjectPath().IsNull())
+	{
+		m_MeshComp->SetStaticMesh(m_BuildData->m_Mesh.LoadSynchronous());
+		m_MeshComp->SetRelativeLocation(m_BuildData->m_Offset);
+		m_MeshComp->SetRelativeScale3D(FVector(m_BuildData->m_fScale));
+		m_MeshComp->SetRelativeRotation(FRotator(0,m_BuildData->m_fRotYaw,0));
+	}
 
 	if(data.m_ClassInter->IsValidLowLevel())
 	{
@@ -35,7 +38,6 @@ void AStructureActor::SetBuildData(const FBuildDataRow& data)
 		
 		m_BuildInteract->Init();
 	}
-
 
 	GetComponents(m_AryMeshCompos);
 

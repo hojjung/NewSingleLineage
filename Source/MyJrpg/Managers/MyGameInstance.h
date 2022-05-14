@@ -94,6 +94,12 @@ public:
 	UPROPERTY()
 	UConstructionManager* m_BuildManager;
 	
+public:
+	UPROPERTY()
+	AMyPlayerPawn* m_Player;
+	UPROPERTY()
+	AMyPlayerController* m_PlayerCon;
+	
 protected:
 	virtual void BeginDestroy() override;
 	
