@@ -15,6 +15,7 @@
 #include "PlayerStatusManager.h"
 #include "PotionManager.h"
 #include "QuestManager.h"
+#include "QuickSlotManager.h"
 #include "ShopManager.h"
 #include "SkillManager.h"
 #include "SpawnManager.h"
@@ -93,6 +94,8 @@ public:
 	UFriendKarmaManager* m_TeamKarma;
 	UPROPERTY()
 	UConstructionManager* m_BuildManager;
+	UPROPERTY()
+	UQuickSlotManager* m_QuickManager;
 	
 public:
 	UPROPERTY()

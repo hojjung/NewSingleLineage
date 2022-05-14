@@ -66,6 +66,8 @@ public:
 	
 	void ClosePanel();
 
+	void Clear();
+
 	UInventory* GetInven() const;
 
 	void UnFocusCurrent();

@@ -39,6 +39,10 @@ void UWidgetInventory::Init(UInventory* inven)
 
 void UWidgetInventory::OpenPanel()
 {
+	if(!m_CurrentInven.Get())
+	{
+		return;
+	}
 	m_InvenDele = m_CurrentInven->m_OnInvenChanged.AddUObject(this, &UWidgetInventory::UpdateInventory);
 
 	UpdateInventory();
@@ -46,8 +50,22 @@ void UWidgetInventory::OpenPanel()
 
 void UWidgetInventory::ClosePanel()
 {
-	m_CurrentInven->m_OnInvenChanged.Remove(m_InvenDele);
+	if(m_CurrentInven.Get())
+	{
+		m_CurrentInven->m_OnInvenChanged.Remove(m_InvenDele);
+	}
 
+	UnFocusCurrent();
+}
+
+void UWidgetInventory::Clear()
+{
+	m_InvenBox->ClearChildren();	
+	if(m_CurrentInven.Get())
+	{
+		m_CurrentInven->m_OnInvenChanged.Remove(m_InvenDele);
+	}
+	m_CurrentInven.Reset();
 	UnFocusCurrent();
 }
 
@@ -183,7 +201,7 @@ void UWidgetInventory::OnDrop(UWidgetBaseElement* ele)
 		{
 			int InvenIndex = ele->GetIndex();
 			
-			UMyLib::GetEquip()->Unequip((EEquipSlotType)UItemDDO::GetDDOInst->m_nIndex,&InvenIndex);
+			UMyLib::GetEquip()->Unequip((EEquipSlotType)UItemDDO::GetDDOInst->m_nIndex,m_CurrentInven.Get(),&InvenIndex);
 			m_CurrentInven->UpdateInventory();
 			return;
 		}
@@ -197,7 +215,7 @@ void UWidgetInventory::OnDrop(UWidgetBaseElement* ele)
 		{
 			return;
 		}
-		UMyLib::GetEquip()->Equip((EEquipSlotType)UItemDDO::GetDDOInst->m_nIndex,ele->GetIndex());
+		UMyLib::GetEquip()->Equip((EEquipSlotType)UItemDDO::GetDDOInst->m_nIndex,m_CurrentInven.Get(),ele->GetIndex());
 		m_CurrentInven->UpdateInventory();
 		return;
 	}

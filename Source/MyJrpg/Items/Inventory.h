@@ -105,5 +105,7 @@ public:
 	void SetStLv(int index, int stLv);
 
 	int GetStLv(int index);
+
+	FOnInvenChanged& OnInvenChanged();
 };
 

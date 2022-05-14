@@ -25,7 +25,8 @@ protected:
 	UBuildInteractBase* m_BuildInteract;
 	UPROPERTY()
 	TArray<UMeshComponent*> m_AryMeshCompos;
-	
+	UPROPERTY()
+	TArray<UMeshComponent*> m_AryMeshComposColl;
 	TArray<TArray<TStrongObjectPtr<UMaterialInterface>>> m_AryAryMats;
 	
 	const FBuildDataRow* m_BuildData;

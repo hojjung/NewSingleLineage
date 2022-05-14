@@ -101,6 +101,8 @@ void UMyGameInstance::Init()
 
 	m_BuildManager = NewObject<UConstructionManager>(this);
 
+	m_QuickManager = NewObject<UQuickSlotManager>(this);
+
 	m_BuildManager->Init();
 	m_ItemCollecManager->Init();
 	m_AvatarManager->Init();
@@ -123,7 +125,11 @@ void UMyGameInstance::Init()
 
 	m_Inven->AddItem(FItemSpec(TEXT("misc_leather01"), 3));
 	m_Inven->AddItem(FItemSpec(TEXT("TorsoAdv"), 0));
-	m_Inven->AddItem(FItemSpec(TEXT("TorsoAdv"), 2));
+	m_Inven->AddItem(FItemSpec(TEXT("GoldCoin"), 20000));
+	m_Inven->AddItem(FItemSpec(TEXT("Bag01"), 0));
+	m_Inven->AddItem(FItemSpec(TEXT("Bag02"), 0));
+	m_Inven->AddItem(FItemSpec(TEXT("BeltLord"), 0));
+	m_Inven->AddItem(FItemSpec(TEXT("BeltCross"), 0));
 	m_AryStorage.Reset();
 }
 

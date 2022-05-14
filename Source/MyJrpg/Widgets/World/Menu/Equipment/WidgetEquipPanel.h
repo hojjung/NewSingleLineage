@@ -30,6 +30,8 @@ protected:
 	UWidgetBaseElement* m_Neckless;
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (BindWidget))
 	UWidgetBaseElement* m_Belt;
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (BindWidget))
+	UWidgetBaseElement* m_Bag;
 	UPROPERTY()
 	TArray<UWidgetBaseElement*> m_AryEquips;
 
@@ -44,9 +46,10 @@ protected:
 	TWeakObjectPtr<UInventory> m_Inven;
 	
 protected:
+	bool TryUnequip(EEquipSlotType t);
+	
 	void UnFocusCurrent();
 	
-	void UpdateSlots();
 
 	virtual void NativeOnInitialized() override;
 
@@ -63,6 +66,8 @@ protected:
 	void OnDrop(UWidgetBaseElement* ele);
 
 public:
+	void UpdateSlots();
+	
 	void Open();
 
 	void Close();

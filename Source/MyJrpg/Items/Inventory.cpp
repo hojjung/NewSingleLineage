@@ -304,3 +304,8 @@ int UInventory::GetStLv(int index)
 {
 	return m_AryTotalItems[index].m_nLvStack;
 }
+
+UInventory::FOnInvenChanged& UInventory::OnInvenChanged()
+{
+	return m_OnInvenChanged;
+}

@@ -7,6 +7,7 @@
 #include "ItemData.generated.h"
 
 
+class UEE_Base;
 class UItemExecuteBase;
 class UOptionBase;
 class AItemActor;
@@ -206,6 +207,8 @@ public:
 	FStatGroup m_EnchantStats;//this * level = enchant
 	UPROPERTY(EditAnywhere, meta=(EditCondition = "m_ItemType != EEquipSlotType::None", EditConditionHides))
 	TArray<TSubclassOf<UOptionBase>> m_Options;
+	UPROPERTY(EditAnywhere, meta=(EditCondition = "m_ItemType != EEquipSlotType::None", EditConditionHides))
+	TArray<TSubclassOf<UEE_Base>> m_EquipEffects;
 	UPROPERTY(EditAnywhere, meta=(EditCondition = "m_ItemType != EEquipSlotType::Weapon", EditConditionHides))
 	TSubclassOf<UItemExecuteBase> m_ClassExeItem;
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)

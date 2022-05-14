@@ -26,11 +26,20 @@ class MYJRPG_API UWidgetEquipInvenPanel : public UWidgetBasePanel
 
 protected:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (BindWidget))
+	UWidgetStatPanel* m_StatPanel;
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (BindWidget))
 	UWidgetEquipPanel* m_EquipPanel;
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (BindWidget))
 	UWidgetInventory* m_InvenPanel;
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (BindWidget))
-	UWidgetStatPanel* m_StatPanel;
+	UWidgetInventory* m_BagPanel;
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (BindWidget))
+	UWidgetInventory* m_BeltPanel;
+
+protected:
+	FDelegateHandle m_DeleBag;
+
+	FDelegateHandle m_DeleBelt;
 	
 protected:
 	virtual void NativeOnInitialized() override;
@@ -38,6 +47,10 @@ protected:
 	void OnPlInvenFocused(UWidgetBaseElement* ele, UInventory* inven, int index);
 
 	void OnPlInvenFocuseConfirm(UWidgetBaseElement* ele, UInventory* inven, int index);
+
+	void OnEquipChanged();
+
+	void OnBagBeltChanged();
 
 public:
 	UWidgetInventory* GetInvenPanel();
@@ -50,5 +63,6 @@ public:
 	
 	void OpenInventory();
 };
+
 
 

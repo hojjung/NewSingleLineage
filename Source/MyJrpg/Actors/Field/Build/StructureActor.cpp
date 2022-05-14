@@ -46,6 +46,11 @@ void AStructureActor::SetBuildData(const FBuildDataRow& data)
 	for(UMeshComponent* MeshComp : m_AryMeshCompos)
 	{
 		m_AryAryMats.Emplace(MeshComp->GetMaterials());
+
+		if(MeshComp->GetCollisionEnabled() != ECollisionEnabled::NoCollision)
+		{
+			m_AryMeshComposColl.Add(MeshComp);
+		}
 	}
 
 	m_WidgetComp->Init();
@@ -123,10 +128,20 @@ void AStructureActor::SetColl(bool b)
 	if(b)
 	{
 		m_MeshComp->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
+
+		for(UMeshComponent* Mc : m_AryMeshComposColl)
+		{
+			Mc->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
+		}
 	}
 	else
 	{
 		m_MeshComp->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+
+		for(UMeshComponent* Mc : m_AryMeshComposColl)
+		{
+			Mc->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+		}
 	}
 }
 

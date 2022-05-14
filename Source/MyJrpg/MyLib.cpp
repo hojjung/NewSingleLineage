@@ -533,4 +533,3 @@ TArray<UInventory*>& UMyLib::GetPlayerStorage()
 {
 	return UMyGameInstance::Get->GetStorages();
 }
-

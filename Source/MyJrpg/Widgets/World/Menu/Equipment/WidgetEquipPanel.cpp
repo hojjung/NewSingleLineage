@@ -26,6 +26,7 @@ void UWidgetEquipPanel::NativeOnInitialized()
 	m_AryEquips.Add(m_Neckless);
 	m_AryEquips.Add(m_EarRing);
 	m_AryEquips.Add(m_Belt);
+	m_AryEquips.Add(m_Bag);
 	//
 	int Iter = 0;
 	for (UWidgetBaseElement* Ele : m_AryEquips)
@@ -45,7 +46,6 @@ void UWidgetEquipPanel::NativeOnInitialized()
 
 		Iter++;
 	}
-	
 }
 
 FReply UWidgetEquipPanel::NativeOnMouseButtonDown(const FGeometry& InGeometry, const FPointerEvent& InMouseEvent)
@@ -85,7 +85,7 @@ void UWidgetEquipPanel::UnFocusCurrent()
 
 void UWidgetEquipPanel::UpdateSlots()
 {
-	const TArray<FItemSpec>& EquippedItems = m_Equip->GetEquipAry();
+	const FItemSpec* EquippedItems = m_Equip->GetEquipAry();
 	
 	for (int i = 0; i < m_AryEquips.Num(); i++)
 	{
@@ -104,9 +104,27 @@ void UWidgetEquipPanel::UpdateSlots()
 
 void UWidgetEquipPanel::UpdateElement(UWidgetBaseElement* ele, const FItemSpec& item)
 {
-	ele->SetFocusable(true);
-	ele->SetDragable(true);
 	ele->SetHoldable(true);
+
+	if (ele == m_Belt)
+	{
+		bool b =  UMyLib::GetEquip()->IsBeltUnequipable();
+		
+		ele->SetFocusable(b);
+		ele->SetDragable(b);
+	}
+	else if (ele == m_Bag)
+	{
+		bool b =  UMyLib::GetEquip()->IsBagUnequipable();
+		
+		ele->SetFocusable(b);
+		ele->SetDragable(b);
+	}
+	else
+	{
+		ele->SetFocusable(true);
+		ele->SetDragable(true);
+	}
 	
 	const FItemDataRow& Data = UMyLib::GetItemData(item.m_ID);
 
@@ -126,14 +144,39 @@ void UWidgetEquipPanel::UpdateElement(UWidgetBaseElement* ele, const FItemSpec& 
 	}
 }
 
+bool UWidgetEquipPanel::TryUnequip(EEquipSlotType t)
+{
+	UInventory* Inven = UMyLib::GetPlayerInven();
+	
+	if(!m_Equip->Unequip(t,Inven))
+	{
+		Inven = UMyLib::GetEquip()->GetBag();
+		
+		if(!m_Equip->Unequip(t,Inven))
+		{
+			Inven = UMyLib::GetEquip()->GetBelt();
+		
+			if(!m_Equip->Unequip(t,Inven))
+			{
+				return false;
+			}
+		}	
+	}
+	
+	UnFocusCurrent();
+	
+	Inven->UpdateInventory();
+
+	return true;
+}
 void UWidgetEquipPanel::OnFocused(UWidgetBaseElement* ele)
 {
 	if(m_CurrentFocused.Get() && m_CurrentFocused.Get() == ele)
 	{
 		EEquipSlotType t =  (EEquipSlotType)ele->GetIndex();
-		m_Equip->Unequip(t);	
-		UnFocusCurrent();
-		m_Inven->UpdateInventory();
+		
+		TryUnequip(t);
+		
 		return;
 	}
 	UnFocusCurrent();
@@ -161,13 +204,29 @@ void UWidgetEquipPanel::OnDrop(UWidgetBaseElement* ele)
 	const FItemDataRow& ItemData = UMyLib::GetItemData(Item.m_ID);
 
 	EEquipSlotType t =  (EEquipSlotType)ele->GetIndex();
+
 	
 	if(!UMyLib::IsEquip(ItemData) || ItemData.m_ItemType != t)
 	{
 		return;
 	}
+	
+	if(t == EEquipSlotType::Bag)
+	{
+		if(!UMyLib::GetEquip()->IsBagUnequipable())
+		{
+			return;
+		}
+	}
+	else if(t == EEquipSlotType::Belt)
+	{
+		if(!UMyLib::GetEquip()->IsBeltUnequipable())
+		{
+			return;
+		}
+	}
 
-	m_Equip->Equip(t,UItemDDO::GetDDOInst->m_nIndex);
+	m_Equip->Equip(t,UItemDDO::GetDDOInst->m_FromInven.Get(),UItemDDO::GetDDOInst->m_nIndex);
 
 	UItemDDO::GetDDOInst->m_FromInven->UpdateInventory();
 }

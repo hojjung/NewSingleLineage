@@ -6,6 +6,7 @@
 #include "MyJrpg/MyLib.h"
 #include "MyJrpg/Items/Inventory.h"
 #include "MyJrpg/Managers/EquipManager.h"
+#include "MyJrpg/Managers/MyGameInstance.h"
 #include "MyJrpg/Widgets/World/Menu/Inventory/ItemDDO.h"
 #include "MyJrpg/Widgets/World/Menu/Inventory/WidgetInventory.h"
 
@@ -18,6 +19,43 @@ void UWidgetEquipInvenPanel::NativeOnInitialized()
 	m_InvenPanel->m_OnFocus.AddUObject(this, &UWidgetEquipInvenPanel::OnPlInvenFocused);
 
 	m_InvenPanel->m_OnFocusConfirm.AddUObject(this, &UWidgetEquipInvenPanel::OnPlInvenFocuseConfirm);
+
+	m_BagPanel->m_OnFocus.AddUObject(this, &UWidgetEquipInvenPanel::OnPlInvenFocused);
+
+	m_BagPanel->m_OnFocusConfirm.AddUObject(this, &UWidgetEquipInvenPanel::OnPlInvenFocuseConfirm);
+
+	m_BeltPanel->m_OnFocus.AddUObject(this, &UWidgetEquipInvenPanel::OnPlInvenFocused);
+
+	m_BeltPanel->m_OnFocusConfirm.AddUObject(this, &UWidgetEquipInvenPanel::OnPlInvenFocuseConfirm);
+
+	UMyLib::GetEquip()->m_OnEquipChanged.AddUObject(this, &UWidgetEquipInvenPanel::OnEquipChanged);
+}
+
+void UWidgetEquipInvenPanel::OnEquipChanged()
+{
+	if(!UMyGameInstance::Get->m_EquipManager->GetBag())
+	{
+		m_BagPanel->Clear();
+	}
+	else
+	{
+		m_BagPanel->Init(UMyGameInstance::Get->m_EquipManager->GetBag());
+		m_BagPanel->OpenPanel();
+
+		m_DeleBag = UMyGameInstance::Get->m_EquipManager->GetOnBagChanged().AddUObject(m_EquipPanel, &UWidgetEquipPanel::UpdateSlots);
+	}
+
+	if(!UMyGameInstance::Get->m_EquipManager->GetBelt())
+	{
+		m_BeltPanel->Clear();
+	}
+	else
+	{
+		m_BeltPanel->Init(UMyGameInstance::Get->m_EquipManager->GetBelt());
+		m_BeltPanel->OpenPanel();
+
+		m_DeleBelt = UMyGameInstance::Get->m_EquipManager->GetOnBeltChanged().AddUObject(m_EquipPanel, &UWidgetEquipPanel::UpdateSlots);
+	}
 }
 
 void UWidgetEquipInvenPanel::OnPlInvenFocused(UWidgetBaseElement* ele, UInventory* inven, int index)
@@ -54,7 +92,7 @@ void UWidgetEquipInvenPanel::OnPlInvenFocuseConfirm(UWidgetBaseElement* ele, UIn
 		break;
 	case EItemType::Equip:
 		EEquipSlotType SlotT = UMyLib::GetEquipItemSlot(Item.m_ID);
-		UMyLib::GetEquip()->Equip(SlotT, index);
+		UMyLib::GetEquip()->Equip(SlotT, inven, index);
 		inven->UpdateInventory();
 		break;
 	}
@@ -67,6 +105,14 @@ void UWidgetEquipInvenPanel::ClosePanel()
 	m_EquipPanel->Close();
 	
 	m_InvenPanel->ClosePanel();
+
+	UMyGameInstance::Get->m_EquipManager->GetOnBagChanged().Remove(m_DeleBag);
+
+	UMyGameInstance::Get->m_EquipManager->GetOnBeltChanged().Remove(m_DeleBelt);
+
+	m_BagPanel->ClosePanel();
+
+	m_BeltPanel->ClosePanel();
 }
 
 void UWidgetEquipInvenPanel::OpenInventory()
@@ -76,6 +122,10 @@ void UWidgetEquipInvenPanel::OpenInventory()
 	m_EquipPanel->Open();
 
 	m_InvenPanel->OpenPanel();
+
+	m_BagPanel->OpenPanel();
+
+	m_BeltPanel->OpenPanel();
 }
 
 UWidgetInventory* UWidgetEquipInvenPanel::GetInvenPanel()

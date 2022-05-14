@@ -3,10 +3,10 @@
 #pragma once
 
 #include "CoreMinimal.h"
-
 #include "MyJrpg/MyJrpg.h"
-#include "MyJrpg/DataTables/ItemData.h"
+//#include "MyJrpg/DataTables/ItemData.h"
 #include "MyJrpg/Items/Inventory.h"
+#include "MyJrpg/Items/EquipEffect/EE_Base.h"
 #include "UObject/NoExportTypes.h"
 #include "EquipManager.generated.h"
 
@@ -22,32 +22,40 @@ public:
 	DECLARE_MULTICAST_DELEGATE(FOnEquipChanged);
 
 	FOnEquipChanged m_OnEquipChanged;
+
+protected:
+	bool m_bIsRange;
+	
+	FItemSpec m_AryEqupSlots [(int)EEquipSlotType::Length];
+
+protected:
+	TQueue<TStrongObjectPtr<UEE_Base>> m_AryEqupEffects[(int)EEquipSlotType::Length];
 	
 protected:
 	UPROPERTY()
-	UInventory* m_Inven;
-	
-	TArray<FItemSpec> m_AryEqupSlots;
+	UInventory* m_BagInven;
+	UPROPERTY()
+	UInventory* m_BeltSlots;
 
-	bool m_bIsRange;
 	
 protected:
-	void EquipOption(const FName& itemWant);
+	void EquipOption(int index, const FItemSpec& itemWant);
 
-	void UnequipOption(const FName& itemWant);
+	void UnequipOption(int index, const FItemSpec& itemWant);
 
 	void SetIsRangeStance();
 
 public:
-	void Init();
-
- 	FORCEINLINE const TArray<FItemSpec>& GetEquipAry() const
+ 	FORCEINLINE const FItemSpec* GetEquipAry() const
  	{
  		return m_AryEqupSlots;
  	}
-	void Equip(EEquipSlotType slotWant, int invenIndex);
 
-	bool Unequip(EEquipSlotType slotWant, int * returnInvenIndex = nullptr);
+	void Init();
+
+	void Equip(EEquipSlotType slotWant, UInventory* inven, int invenIndex);
+
+	bool Unequip(EEquipSlotType slotWant, UInventory* returnInven , int * returnInvenIndex = nullptr);
 
 	bool IsItemEquipped(EEquipSlotType wantSlot);
 
@@ -56,6 +64,27 @@ public:
 	bool IsRangeStance();
 
 	UParticleSystem* GetBulletEffect();
-	
+
 	void UpdateEquip();
+	
+public:
+	void EquipBag(int i);
+	
+	void UnequipBag();
+
+	void EquipBelt(int i);
+	
+	void UnequipBelt();
+
+	bool IsBagUnequipable();
+
+	bool IsBeltUnequipable();
+	
+	UInventory* GetBag() ;
+
+	UInventory* GetBelt() ;
+
+	UInventory::FOnInvenChanged& GetOnBagChanged();
+
+	UInventory::FOnInvenChanged& GetOnBeltChanged();
 };

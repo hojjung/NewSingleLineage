@@ -1,46 +1,69 @@
 #include "EquipManager.h"
-
 #include "MyAssetManager.h"
 #include "MyGameInstance.h"
 #include "MyJrpg/MyLib.h"
+#include "MyJrpg/Items/EquipEffect/EE_Base.h"
 
 void UEquipManager::Init()
 {
-	m_AryEqupSlots.Init(FItemSpec(),(int)EEquipSlotType::Length);
-
-	m_Inven = UMyGameInstance::Get->m_Inven;
+	int Iter = -1;
+	
+	int Len = (int)EEquipSlotType::Length;
+	
+	while (++Iter < Len)
+		m_AryEqupSlots[Iter] = FItemSpec();
 }
 
-void UEquipManager::Equip(EEquipSlotType slotWant, int invenIndex)
+void UEquipManager::Equip(EEquipSlotType slotWant,UInventory* inven, int invenIndex)
 {
-	FItemSpec Item = m_Inven->GetItemRef(invenIndex);
+	FItemSpec Item = inven->GetItemRef(invenIndex);
 	
-	m_Inven->RemoveItem(invenIndex);
+	inven->RemoveItem(invenIndex);
 	
-	Unequip(slotWant,&invenIndex);
+	Unequip(slotWant,inven,&invenIndex);
 	
 	int SlotIndex = (int)slotWant;
 	
 	m_AryEqupSlots[SlotIndex] = Item;
 
-	//EquipOption(m_AryEqupSlots[Index]);
+	EquipOption(SlotIndex, m_AryEqupSlots[SlotIndex]);
 	
 	SetIsRangeStance();
 	
 	m_OnEquipChanged.Broadcast();
 }
 
-void UEquipManager::EquipOption(const FName& itemWant)
+void UEquipManager::EquipOption(int index, const FItemSpec& itemWant)
 {
-	UMyGameInstance::Get->m_PlayerStatManager->EquipItem(itemWant);
+	const FItemDataRow& ItemData = UMyLib::GetItemData(itemWant.m_ID);
+	const TArray<TSubclassOf<UEE_Base>>& AryEffects = ItemData.m_EquipEffects;
+	if (AryEffects.Num() > 0)
+	{
+		for (TSubclassOf<UEE_Base> EE : AryEffects)
+		{
+			TStrongObjectPtr<UEE_Base> StrongEE(NewObject<UEE_Base>(this, EE));
+
+			m_AryEqupEffects[index].Enqueue(StrongEE);
+
+			StrongEE->Equip();
+		}
+	}
+	//UMyGameInstance::Get->m_PlayerStatManager->EquipItem(itemWant.m_ID);
 }
 
-void UEquipManager::UnequipOption(const FName& itemWant)
+void UEquipManager::UnequipOption(int index, const FItemSpec& itemWant)
 {
-	UMyGameInstance::Get->m_PlayerStatManager->UnequipItem(itemWant);
+	TStrongObjectPtr<UEE_Base> StrongEE;
+	
+	while(m_AryEqupEffects[index].Dequeue(StrongEE))
+	{
+		StrongEE->UnEquip();
+	}
+	m_AryEqupEffects[index].Empty();
+	//UMyGameInstance::Get->m_PlayerStatManager->UnequipItem(itemWant.m_ID);
 }
 
-bool UEquipManager::Unequip(EEquipSlotType slotWant, int * returnInvenIndex)
+bool UEquipManager::Unequip(EEquipSlotType slotWant, UInventory* returnInven , int * returnInvenIndex)
 {
 	PRINTF("Unequip01");
 	int SlotIndex = (int)slotWant;
@@ -50,16 +73,20 @@ bool UEquipManager::Unequip(EEquipSlotType slotWant, int * returnInvenIndex)
 	{
 		return true;
 	}
-	
+
+	UnequipOption(SlotIndex,m_AryEqupSlots[SlotIndex]);
 	m_AryEqupSlots[SlotIndex] = FItemSpec();
 
 	if(!returnInvenIndex)
 	{
-		m_Inven->AddItem(Temp);
+		if(!returnInven->AddItem(Temp))
+		{
+			return false;
+		}
 	}
 	else
 	{
-		m_Inven->AddItem(*returnInvenIndex,Temp);
+		returnInven->AddItem(*returnInvenIndex,Temp);//이거때문에 위 if문을 합치면 안된다
 	}
 	
 	SetIsRangeStance();
@@ -115,4 +142,64 @@ UParticleSystem* UEquipManager::GetBulletEffect()
 void UEquipManager::UpdateEquip()
 {
 	m_OnEquipChanged.Broadcast();
+}
+///////////////////////
+
+///////////////////////
+void UEquipManager::EquipBag(int i)
+{
+	m_BagInven = NewObject<UInventory>(this);
+
+	m_BagInven->Init(i);
+
+	m_BagInven->UpdateInventory();
+}
+
+void UEquipManager::UnequipBag()
+{
+	m_BagInven = nullptr;
+}
+
+void UEquipManager::EquipBelt(int i)
+{
+	m_BeltSlots	= NewObject<UInventory>(this);
+
+	m_BeltSlots->Init(i);
+
+	m_BeltSlots->UpdateInventory();
+}
+
+void UEquipManager::UnequipBelt()
+{
+	m_BeltSlots = nullptr;
+}
+
+bool UEquipManager::IsBagUnequipable()
+{
+	return m_BagInven->GetUsingSlotCount() <= 0;	
+}
+
+bool UEquipManager::IsBeltUnequipable()
+{
+	return m_BeltSlots->GetUsingSlotCount() <= 0;
+}
+
+UInventory* UEquipManager::GetBag() 
+{
+	return m_BagInven;
+}
+
+UInventory* UEquipManager::GetBelt() 
+{
+	return m_BeltSlots;
+}
+
+UInventory::FOnInvenChanged& UEquipManager::GetOnBagChanged()
+{
+	return GetBag()->OnInvenChanged();
+}
+
+UInventory::FOnInvenChanged& UEquipManager::GetOnBeltChanged()
+{
+	return GetBelt()->OnInvenChanged();
 }
