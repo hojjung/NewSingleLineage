@@ -8,7 +8,6 @@
 #include "Menu/QuickSlotsPanel/WidgetQuickslotBar.h"
 #include "Menu/Shop/WidgetShopPanel.h"
 #include "Menu/Skill/WidgetSkillPanel.h"
-#include "Menu/Skin/WidgetSkinPanel.h"
 #include "Menu/Storage/WidgetStorage.h"
 #include "Menu/ZoneMove/WidgetZoneSelectPanel.h"
 #include "MyJrpg/MyLib.h"
@@ -19,8 +18,6 @@
 void UWidgetCanvasWorld::NativeOnInitialized()
 {
 	Super::NativeOnInitialized();
-
-	m_SkinPanel->SetVisibility(ESlateVisibility::Collapsed);
 
 	m_WindowGameOver->SetVisibility(ESlateVisibility::Collapsed);
 
@@ -111,7 +108,7 @@ void UWidgetCanvasWorld::ToggleMenu()
 
 void UWidgetCanvasWorld::OpenSkin()
 {
-	m_SkinPanel->Open();
+	
 }
 
 void UWidgetCanvasWorld::OpenItemCollec()

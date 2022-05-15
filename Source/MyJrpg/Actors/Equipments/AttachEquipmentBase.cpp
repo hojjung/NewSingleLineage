@@ -27,3 +27,8 @@ void AAttachEquipmentBase::SetActive(bool b)
 		Comp->SetComponentTickEnabled(b);
 	}
 }
+
+const TSubclassOf<UAnimInstance>& AAttachEquipmentBase::GetAnimBP() const
+{
+	return m_ABP;
+}

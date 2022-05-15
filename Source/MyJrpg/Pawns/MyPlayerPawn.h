@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "ModularUnitPawn.h"
 
 #include "Components/CameraDissolve.h"
 #include "Components/MyWidgetInteractionComponent.h"
@@ -19,8 +20,10 @@
 class UPlSkillAuto;
 class UPlAttchActorManage;
 class UPlayerAnimInst;
+
+
 UCLASS()
-class MYJRPG_API AMyPlayerPawn : public ACombatUnitPawn
+class MYJRPG_API AMyPlayerPawn : public AModularUnitPawn
 {
 	GENERATED_BODY()
 
@@ -62,8 +65,6 @@ protected:
 	UPlSkillAuto* m_SkillAuto;
 	UPROPERTY()
 	UPlayerAnimInst* m_AnimInst;
-	UPROPERTY()
-	UPlAttchActorManage* m_AttchActorMng;
 	
 	FTimerHandle m_InvincTimer;
 
@@ -86,15 +87,13 @@ private:
 	
 	virtual void ShowPopupText(float nbr, ETextType t) override;
 
+	virtual void EndPlay(const EEndPlayReason::Type EndPlayReason) override;
+
 public:
 	virtual void SetFocusedTarget(IFocusable* target) override;
 	
-	virtual void SetPlayerEntity(const FPlayerUnitEntityRow& unitEntityRow);
+	void SetPlayerEntity();
 
-	void SetPet(const FPetRow& petRow);
-
-	void UnEquipPet();
-	
 	virtual void BeginPlay() override;
 	
 	virtual void Tick(float DeltaTime) override;

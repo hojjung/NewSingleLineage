@@ -28,25 +28,7 @@ ABaseUnitPawn::ABaseUnitPawn(const FObjectInitializer& objInit): Super(objInit)
 	RootComponent = m_Capsule;
 	m_Capsule->bReceivesDecals = false;
 	//
-	m_BodyMesh = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("BodyMesh"));
-	m_BodyMesh->SetupAttachment(RootComponent);
-	m_BodyMesh->SetCollisionProfileName(TEXT("NoCollision"));
-	m_BodyMesh->SetGenerateOverlapEvents(false);
-	m_BodyMesh->SetCanEverAffectNavigation(false);
-	m_BodyMesh->SetRelativeLocation(FVector(0, 0, -88));
-	m_BodyMesh->SetRelativeRotation(FRotator(0, -90.f, 0.f));
-	m_BodyMesh->SetCollisionProfileName(TEXT("CharacterMesh"));
-	m_BodyMesh->bReceivesDecals = false;
-	m_BodyMesh->bOwnerNoSee = false;
-	//
-	m_BodyMesh->bCastDynamicShadow = false; //chanage for mobile
-	m_BodyMesh->VisibilityBasedAnimTickOption = EVisibilityBasedAnimTickOption::OnlyTickPoseWhenRendered;//최적화
-	m_BodyMesh->bAffectDynamicIndirectLighting = true;
-	m_BodyMesh->PrimaryComponentTick.TickGroup = TG_PrePhysics;
-	m_BodyMesh->CanCharacterStepUpOn = ECanBeCharacterBase::ECB_No;
-	m_BodyMesh->bEnableUpdateRateOptimizations = true;
-	m_BodyMesh->bComponentUseFixedSkelBounds = true;
-	
+	m_BodyMesh = CreateSkMeshComp(TEXT("BodyMesh"));
 	//
 	m_Movement = CreateDefaultSubobject<UMyMovement>(TEXT("m_Movement"));
 	m_Movement->UpdatedComponent = m_Capsule;
@@ -55,6 +37,28 @@ ABaseUnitPawn::ABaseUnitPawn(const FObjectInitializer& objInit): Super(objInit)
 	AIControllerClass = nullptr;
 	
 	m_PFComp = CreateDefaultSubobject<UPathFollowingComponent>(TEXT("PathFollowingComponent"));
+}
+
+USkeletalMeshComponent* ABaseUnitPawn::CreateSkMeshComp(FName keyID)
+{
+	USkeletalMeshComponent* skMesh = CreateDefaultSubobject<USkeletalMeshComponent>(keyID);
+	skMesh->SetupAttachment(RootComponent);
+	skMesh->SetCollisionProfileName(TEXT("CharacterMesh"));
+	skMesh->SetGenerateOverlapEvents(false);
+	skMesh->SetCanEverAffectNavigation(false);
+	skMesh->SetRelativeLocation(FVector(0, 0, -88));
+	skMesh->SetRelativeRotation(FRotator(0, -90.f, 0.f));
+	skMesh->bReceivesDecals = false;
+	skMesh->bOwnerNoSee = false;
+	//
+	skMesh->bCastDynamicShadow = false; //chanage for mobile
+	skMesh->VisibilityBasedAnimTickOption = EVisibilityBasedAnimTickOption::OnlyTickPoseWhenRendered;//최적화
+	skMesh->bAffectDynamicIndirectLighting = true;
+	skMesh->PrimaryComponentTick.TickGroup = TG_PrePhysics;
+	skMesh->CanCharacterStepUpOn = ECanBeCharacterBase::ECB_No;
+	skMesh->bEnableUpdateRateOptimizations = true;
+	skMesh->bComponentUseFixedSkelBounds = true;
+	return skMesh;
 }
 
 void ABaseUnitPawn::SetEntity(const FName& id, const FNpcUnitEntityRow& unitEntityRow)
@@ -257,6 +261,7 @@ FAIRequestID ABaseUnitPawn::RequestMove(const FAIMoveRequest& MoveRequest, FNavP
 	RequestID = m_PFComp->RequestMove(MoveRequest, Path);
 	return RequestID;
 }
+
 
 
 

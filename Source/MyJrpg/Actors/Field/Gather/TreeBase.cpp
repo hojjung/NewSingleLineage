@@ -13,7 +13,7 @@ ATreeBase::ATreeBase()
 	PrimaryActorTick.bCanEverTick = true; 
 	
 	m_Capsule = CreateDefaultSubobject<UCapsuleComponent>(TEXT("Capsule00"));
-	m_Capsule->InitCapsuleSize(34.0f, 88.0f);
+	m_Capsule->InitCapsuleSize(34.0f, 40);
 	m_Capsule->SetCollisionProfileName(TEXT("BlockAll"));
 	m_Capsule->CanCharacterStepUpOn = ECB_No;
 	m_Capsule->SetShouldUpdatePhysicsVolume(false);
@@ -22,7 +22,6 @@ ATreeBase::ATreeBase()
 	m_Capsule->AreaClass = nullptr;
 	m_Capsule->SetMobility(EComponentMobility::Movable);
 	m_Capsule->bReceivesDecals = false;
-	m_Capsule->InitCapsuleSize(50, 50.0f);
 	RootComponent = m_Capsule;
 
 	m_MeshTree = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("m_MeshTree"));
@@ -57,7 +56,7 @@ ATreeBase::ATreeBase()
 	m_ShadowMeshComp->SetRelativeScale3D(FVector(10));
 	m_ShadowMeshComp->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 	m_ShadowMeshComp->SetCanEverAffectNavigation(false);
-	m_ShadowMeshComp->SetRelativeLocation(FVector(0,0,-88));
+	m_ShadowMeshComp->SetRelativeLocation(FVector(0,0,-40));
 
 	m_nTreeHp = 3;
 }
@@ -65,6 +64,8 @@ ATreeBase::ATreeBase()
 //
 void ATreeBase::SetEntity(const FGatherDataRow& data, AMyPlayerPawn* pl)
 {
+	m_nTreeHp = data.m_nTreeHp;
+	
 	m_Player = pl;
 
 	float H = GetBoundHalfHeight() * -1.f;

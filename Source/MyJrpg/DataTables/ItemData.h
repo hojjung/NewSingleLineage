@@ -199,6 +199,8 @@ public:
     int m_nPlayerSpentGoldBuy = 50;
 	UPROPERTY(EditDefaultsOnly)
 	FColorDataHandle m_ColorHandle;
+	UPROPERTY(EditAnywhere, meta=(EditCondition = "m_ItemType != EEquipSlotType::None && m_ItemType != EEquipSlotType::Weapon", EditConditionHides))
+	TSoftObjectPtr<USkeletalMesh> m_ArmorMesh;
 	UPROPERTY(EditAnywhere, meta=(EditCondition = "m_ItemType != EEquipSlotType::None", EditConditionHides))
 	bool m_bIsRange = false;
 	UPROPERTY(EditAnywhere, meta=(EditCondition = "m_ItemType != EEquipSlotType::None", EditConditionHides))

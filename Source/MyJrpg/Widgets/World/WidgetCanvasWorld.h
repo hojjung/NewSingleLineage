@@ -21,7 +21,6 @@
 #include "MyJrpg/Pawns/MonsterPawn.h"
 #include "WidgetCanvasWorld.generated.h"
 
-class UWidgetSkinPanel;
 struct FZoneDataRow;
 class UWidgetStackCalculator;
 class UWidgetShopPanel;
@@ -127,8 +126,6 @@ protected:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (BindWidget))
 	UWidgetEnchantBase* m_Enchant;
 	//
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (BindWidget))
-	UWidgetSkinPanel* m_SkinPanel;
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (BindWidget))
 	UWidgetCollecPanelParent* m_ItemCollecPanel;
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (BindWidget))

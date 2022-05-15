@@ -56,6 +56,8 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	TSoftObjectPtr<UGatherAsset> m_GatherAsset;
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
+	int m_nTreeHp = 3;
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
 	float m_fDisappearDelay = 12;
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
 	float m_fTopMeshScale = 1.f;

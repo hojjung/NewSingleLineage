@@ -22,7 +22,7 @@ public:
 protected:
 	UPROPERTY(VisibleAnywhere,BlueprintReadWrite,Category=Character)
 	UCapsuleComponent* m_Capsule;
-	UPROPERTY(VisibleAnywhere,BlueprintReadWrite,Category=Character,meta = ( AllowPrivateAccess = "true"))
+	UPROPERTY(VisibleAnywhere,BlueprintReadWrite,Category=Character)
 	USkeletalMeshComponent* m_BodyMesh;
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite,Category = "AI")
 	UPathFollowingComponent* m_PFComp;//UCrowdFollowingComponent
@@ -52,7 +52,7 @@ protected:
 
 	FAIRequestID RequestMove(const FAIMoveRequest& MoveRequest, FNavPathSharedPtr Path);
 
-
+	USkeletalMeshComponent* CreateSkMeshComp(FName keyID);
 public:
 	virtual void SetEntity(const FName& id, const FNpcUnitEntityRow& unitEntityRow);//Init
 	

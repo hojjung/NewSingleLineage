@@ -3,8 +3,10 @@
 #include "CoreMinimal.h"
 #include "Animation/AnimInstance.h"
 #include "Animation/AnimInstanceProxy.h"
+#include "MyJrpg/MyJrpg.h"
 #include "MyAnimInstance.generated.h"
 
+class AMyPlayerPawn;
 class ACombatUnitPawn;
 class UMyAnimInstance;
 
@@ -36,8 +38,7 @@ public:
 	bool m_bIsMoving;
 	UPROPERTY(Transient,VisibleAnywhere,BlueprintReadWrite)
 	bool m_bIsRange;
-	UPROPERTY(Transient,VisibleAnywhere,BlueprintReadWrite)
-	bool m_bIsSneaking;
+	
 public:
 	virtual void NativeBeginPlay() override;
 
@@ -50,5 +51,28 @@ public:
 	
 	virtual void DestroyAnimInstanceProxy(FAnimInstanceProxy* InProxy) override {}
 
-	void UpdateMoveFlag();
+	virtual void UpdateMoveFlag();
+};
+
+
+UCLASS()
+class MYJRPG_API UPlayerAnimInstance : public UMyAnimInstance
+{
+	GENERATED_BODY()
+	
+public:
+	UPROPERTY(Transient,VisibleAnywhere,BlueprintReadWrite)
+	bool m_bIsSneaking;
+	UPROPERTY(Transient,VisibleAnywhere,BlueprintReadWrite)
+	EStanceType m_Stance;
+	UPROPERTY()
+	AMyPlayerPawn* m_PlOwner;
+
+protected:
+	virtual void NativeBeginPlay() override;
+
+	virtual void NativeInitializeAnimation() override;
+	
+public:
+	virtual void UpdateMoveFlag() override;
 };

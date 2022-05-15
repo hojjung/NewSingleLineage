@@ -17,10 +17,14 @@ public:
 protected:
 	UPROPERTY(EditAnywhere)
 	FName m_SocketID;
+	UPROPERTY(EditAnywhere)
+	TSubclassOf<UAnimInstance> m_ABP;
 	
 public:	
 	FName GetSocketName();
 
 	void SetActive(bool b);
+
+	const TSubclassOf<UAnimInstance>& GetAnimBP() const;
 };
 

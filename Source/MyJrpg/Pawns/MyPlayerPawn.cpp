@@ -2,7 +2,6 @@
 
 #include "Components/SceneCaptureComponent2D.h"
 #include "Engine/TextureRenderTarget2D.h"
-#include "Logics/PlAttchActorManage.h"
 #include "Logics/PlayerAnimInst.h"
 #include "Logics/PlSkillAuto.h"
 #include "MyJrpg/MyLib.h"
@@ -38,7 +37,7 @@ AMyPlayerPawn::AMyPlayerPawn(const FObjectInitializer& objInit):Super(objInit)
 	m_DissolveCam = CreateDefaultSubobject<UCameraDissolve>(TEXT("CamDissolve00"));
 	m_DissolveCam->SetupAttachment(RootComponent);
 	m_DissolveCam->SetRelativeRotation(FRotator(-45, -45.f, 0.f)); //-45.f
-	m_DissolveCam->TargetArmLength = 2000; //1375
+	m_DissolveCam->TargetArmLength = 1500; //1375
 	m_DissolveCam->m_SocketOffset = FVector(0,0,-50);
 	m_DissolveCam->CameraLagSpeed=30;
 	//
@@ -53,6 +52,10 @@ AMyPlayerPawn::AMyPlayerPawn(const FObjectInitializer& objInit):Super(objInit)
 	m_ShadowMeshComp->SetRelativeScale3D(FVector(4));
 
 	m_bIsInteracting = false;
+
+	m_fRangeAttackRange = 900;
+
+	m_fAttackRange = 300;
 }
 
 void AMyPlayerPawn::BeginPlay()
@@ -64,26 +67,12 @@ void AMyPlayerPawn::BeginPlay()
 	m_AryIgnores.Add(this);
 
 	m_DissolveCam->SetActive(true);
+
+	SetPlayerEntity();
 }
 
-void AMyPlayerPawn::SetPlayerEntity(const FPlayerUnitEntityRow& unitEntityRow)
+void AMyPlayerPawn::SetPlayerEntity()
 {
-	m_fRangeAttackRange = unitEntityRow.m_fRangeRange;
-
-	m_fAttackRange = unitEntityRow.m_fMeleeRange;
-	
-	LoadSetSkMeshAnim(unitEntityRow.m_UnitDataAsset);
-
-	if (m_AnimInst)
-	{
-		m_AnimInst->KillAll();
-	}
-	m_AnimInst = NewObject<UPlayerAnimInst>(this);
-	m_AnimInst->Init(unitEntityRow,this);
-
-	m_AttchActorMng = NewObject<UPlAttchActorManage>(this);
-	m_AttchActorMng->Init(this);
-
 	ULogic_Player* Player = NewObject<ULogic_Player>(this,ULogic_Player::StaticClass());
 
 	m_AiFsm = Player;
@@ -94,7 +83,10 @@ void AMyPlayerPawn::SetPlayerEntity(const FPlayerUnitEntityRow& unitEntityRow)
 	
 	m_AiSensor->Init(this);
 
-	UMyGameInstance::Get->m_PlayerStatManager->SetBaseStat(unitEntityRow.m_StatTable);
+	FStatGroup DefaultStat;
+	DefaultStat.m_MoveSpeed = FGlobalVariable::HERO_DEFAULT_SPEED;
+
+	UMyGameInstance::Get->m_PlayerStatManager->SetBaseStat(DefaultStat);
 	UMyGameInstance::Get->m_PlayerStatManager->UpdateStat();
 	m_StatGroup.m_Hp = m_StatGroup.m_MaxHp;
 
@@ -104,16 +96,6 @@ void AMyPlayerPawn::SetPlayerEntity(const FPlayerUnitEntityRow& unitEntityRow)
 	{
 		SetPet(*PetRow);
 	}
-}
-
-void AMyPlayerPawn::SetPet(const FPetRow& petRow)
-{
-	m_AttchActorMng->SetPet(petRow);
-}
-
-void AMyPlayerPawn::UnEquipPet()
-{
-	m_AttchActorMng->UnEquipPet();
 }
 
 void AMyPlayerPawn::MoveForward(float AxisValue)
@@ -238,6 +220,16 @@ void AMyPlayerPawn::ShowPopupText(float nbr, ETextType t)
 	//not use
 }
 
+void AMyPlayerPawn::EndPlay(const EEndPlayReason::Type EndPlayReason)
+{
+	Super::EndPlay(EndPlayReason);
+
+	if(m_AnimInst)
+	{
+		m_AnimInst->KillAll();
+	}
+}
+
 void AMyPlayerPawn::SetFocusedTarget(IFocusable* target)
 {
 	if(m_bIsInteracting)
@@ -328,12 +320,12 @@ void AMyPlayerPawn::SetSneak()
 	if(m_bIsSneaking)
 	{
 		m_Movement->m_fSpeedMultiple = 0.65f;
-		m_AttchActorMng->HideWeapon();
+		HideWeapon();
 	}
 	else
 	{
 		m_Movement->m_fSpeedMultiple = 1.f;
-		m_AttchActorMng->ShowWeapon();
+		ShowWeapon();
 	}
 }
 

@@ -32,6 +32,7 @@ protected:
 	UScrollBox* m_ScrollBarQuickSlot;
 	UPROPERTY()
 	TArray< UWidgetQuickSlot*> m_AryQuickSlot;
+	
 protected:
 	virtual void NativeOnInitialized() override;
 

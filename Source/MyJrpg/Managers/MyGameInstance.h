@@ -3,7 +3,6 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "AvatarManager.h"
 #include "CollectionManager.h"
 #include "CraftManager.h"
 #include "CurrencyManager.h"
@@ -82,8 +81,6 @@ public:
 	UPotionManager* m_PotionManager;
 	UPROPERTY()
 	UEnchantManager* m_EnchantManager;
-	UPROPERTY()
-	UAvatarManager* m_AvatarManager;
 	UPROPERTY()
 	UCollectionManager* m_ItemCollecManager;
 	UPROPERTY()

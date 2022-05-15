@@ -61,9 +61,9 @@ void ULevelMoveManager::OnOpenWorldLevelComplete()
 		UMyGameInstance::Get->m_BuildManager->LoadConstruction();
 	}
 
-	UMyGameInstance::Get->m_AvatarManager->CreatePreviewActor();
+	//UMyGameInstance::Get->m_AvatarManager->CreatePreviewActor();
 	UMyGameInstance::Get->m_PetManager->CreatePreviewActor();
-	UMyGameInstance::Get->m_AvatarManager->EquipSkin(*UMyGameInstance::Get->m_AvatarManager->GetCrntSkin());
+	//UMyGameInstance::Get->m_AvatarManager->EquipSkin(*UMyGameInstance::Get->m_AvatarManager->GetCrntSkin());
 }
 
 bool ULevelMoveManager::IsGameStart()

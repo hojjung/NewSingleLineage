@@ -106,9 +106,15 @@ void UWidgetEquipInvenPanel::ClosePanel()
 	
 	m_InvenPanel->ClosePanel();
 
-	UMyGameInstance::Get->m_EquipManager->GetOnBagChanged().Remove(m_DeleBag);
+	if(UMyGameInstance::Get->m_EquipManager->GetBag())
+	{
+		UMyGameInstance::Get->m_EquipManager->GetOnBagChanged().Remove(m_DeleBag);
+	}
 
-	UMyGameInstance::Get->m_EquipManager->GetOnBeltChanged().Remove(m_DeleBelt);
+	if(UMyGameInstance::Get->m_EquipManager->GetBelt())
+	{
+		UMyGameInstance::Get->m_EquipManager->GetOnBeltChanged().Remove(m_DeleBelt);
+	}
 
 	m_BagPanel->ClosePanel();
 

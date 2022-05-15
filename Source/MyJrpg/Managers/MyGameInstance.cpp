@@ -90,7 +90,6 @@ void UMyGameInstance::Init()
 	m_BadwordTable =NewObject<UBadwordTable>(this);
 	m_ChatManager = NewObject<UChatManager>(this);
 
-	m_AvatarManager = NewObject<UAvatarManager>(this);
 	m_SkillAuto = NewObject<UPlSkillAuto>(this);
 
 	m_ItemCollecManager = NewObject<UCollectionManager>(this);
@@ -105,7 +104,6 @@ void UMyGameInstance::Init()
 
 	m_BuildManager->Init();
 	m_ItemCollecManager->Init();
-	m_AvatarManager->Init();
 	m_PetManager->Init();
 	m_PotionManager->Init();
 	m_SkillManager->Init();
@@ -124,12 +122,15 @@ void UMyGameInstance::Init()
 	m_CraftManager->Init();
 
 	m_Inven->AddItem(FItemSpec(TEXT("misc_leather01"), 3));
-	m_Inven->AddItem(FItemSpec(TEXT("TorsoAdv"), 0));
 	m_Inven->AddItem(FItemSpec(TEXT("GoldCoin"), 20000));
 	m_Inven->AddItem(FItemSpec(TEXT("Bag01"), 0));
 	m_Inven->AddItem(FItemSpec(TEXT("Bag02"), 0));
 	m_Inven->AddItem(FItemSpec(TEXT("BeltLord"), 0));
 	m_Inven->AddItem(FItemSpec(TEXT("BeltCross"), 0));
+	m_Inven->AddItem(FItemSpec(TEXT("TorsoAdv"), 0));
+	m_Inven->AddItem(FItemSpec(TEXT("LegAdv"), 0));
+	m_Inven->AddItem(FItemSpec(TEXT("HandAdv"), 0));
+	m_Inven->AddItem(FItemSpec(TEXT("HeadAdv"), 0));
 	m_AryStorage.Reset();
 }
 

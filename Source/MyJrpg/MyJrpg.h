@@ -191,3 +191,17 @@ enum class EBuildType :uint8
 	Field
 };
 
+UENUM(BlueprintType)
+enum class EStanceType :uint8
+{
+	None,
+	OneSword,
+	SwordShield,
+	TwoSword,
+	Spear,
+	Bow,
+	CrossBow,
+	OneMagic,
+	TwoMagic,
+	Length
+};
