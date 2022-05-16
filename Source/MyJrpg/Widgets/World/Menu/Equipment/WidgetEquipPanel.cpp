@@ -4,6 +4,7 @@
 #include "MyJrpg/MyLib.h"
 #include "MyJrpg/Managers/EquipManager.h"
 #include "MyJrpg/Managers/MyGameInstance.h"
+#include "MyJrpg/Managers/PreviewActorManager.h"
 #include "MyJrpg/Widgets/World/Menu/Inventory/ItemDDO.h"
 #include "MyJrpg/Widgets/World/Menu/Inventory/WidgetInventory.h"
 
@@ -46,6 +47,8 @@ void UWidgetEquipPanel::NativeOnInitialized()
 
 		Iter++;
 	}
+
+	m_Preview->Init(UMyGameInstance::Get->m_PreviewActorManager);
 }
 
 FReply UWidgetEquipPanel::NativeOnMouseButtonDown(const FGeometry& InGeometry, const FPointerEvent& InMouseEvent)
@@ -66,11 +69,15 @@ void UWidgetEquipPanel::Open()
 {
 	m_Handle = m_Equip->m_OnEquipChanged.AddUObject(this, &UWidgetEquipPanel::UpdateSlots);
 	UpdateSlots();
+
+	UMyGameInstance::Get->m_PreviewActorManager->ShowPawn();
 }
 
 void UWidgetEquipPanel::Close()
 {
 	m_Equip->m_OnEquipChanged.Remove(m_Handle);
+
+	UMyGameInstance::Get->m_PreviewActorManager->HidePawn();
 }
 
 void UWidgetEquipPanel::UnFocusCurrent()

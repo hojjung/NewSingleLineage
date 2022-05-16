@@ -75,4 +75,10 @@ protected:
 	
 public:
 	virtual void UpdateMoveFlag() override;
+
+public:
+	UFUNCTION(BlueprintCallable, Category = "My Stance",meta = (BlueprintThreadSafe))
+	bool IsStance(EStanceType t) const;
+	UFUNCTION(BlueprintCallable, Category = "My Stance",meta = (BlueprintThreadSafe))
+	bool IsNotStance(EStanceType t) const;
 };

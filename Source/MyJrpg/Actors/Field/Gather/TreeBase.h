@@ -58,6 +58,8 @@ protected:
 
 public:
 	void SetEntity(const FGatherDataRow& data, AMyPlayerPawn* pl);
+
+	void SetActorFeetLoc(FVector loc);
 	
 	virtual void OnTakeChopping();
 

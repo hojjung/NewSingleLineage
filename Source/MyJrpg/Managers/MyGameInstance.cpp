@@ -6,6 +6,7 @@
 #include "MyAssetManager.h"
 #include "RewardManager.h"
 #include "PetManager.h"
+#include "PreviewActorManager.h"
 #include "GameFramework/GameUserSettings.h"
 #include "MyJrpg/MyLib.h"
 #include "MyJrpg/Items/Inventory.h"
@@ -102,6 +103,8 @@ void UMyGameInstance::Init()
 
 	m_QuickManager = NewObject<UQuickSlotManager>(this);
 
+	m_PreviewActorManager = NewObject<UPreviewActorManager>(this);
+
 	m_BuildManager->Init();
 	m_ItemCollecManager->Init();
 	m_PetManager->Init();
@@ -143,11 +146,7 @@ void UMyGameInstance::LoadComplete(const float LoadTime, const FString& MapName)
 {
 	if(MapName!=TEXT("InitLevel"))
 	{
-		//if(m_LevelMoveManager->IsGameStart())
-		{
-			m_LevelMoveManager->OnOpenWorldLevelComplete();
-			m_SkillAuto->Init();
-		}
+		m_LevelMoveManager->OnOpenWorldLevelComplete();
 	}
 }
 

@@ -26,14 +26,17 @@ protected:
 	
 protected:
 	virtual void NativePreConstruct() override;
-	
+
+	virtual void NativeDestruct() override;
 public:
-	void Init(UObject* proxyObj,IPreviewProxy* proxy);
+	void Init(UObject* proxyObj);
 	
 	virtual FReply NativeOnTouchStarted(const FGeometry& InGeometry, const FPointerEvent& InGestureEvent) override;
 	
 	virtual FReply NativeOnTouchMoved(const FGeometry& InGeometry, const FPointerEvent& InGestureEvent) override;
 
 	virtual FReply NativeOnTouchEnded(const FGeometry& InGeometry, const FPointerEvent& InGestureEvent) override;
+
+	virtual void NativeOnMouseLeave(const FPointerEvent& InMouseEvent) override;
 };
 

@@ -12,12 +12,12 @@ UWorld* UMyLib::GetUWorld()
 
 AMyPlayerPawn* UMyLib::GetPlayer()
 {
-	if(!UMyGameInstance::Get->m_Player)
+	if(!UMyGameInstance::Get->m_Player.Get())
 	{
 		UMyGameInstance::Get->m_Player = Cast<AMyPlayerPawn>(UGameplayStatics::GetPlayerPawn(GetUWorld(), 0));
 	}
 	
-	return UMyGameInstance::Get->m_Player;
+	return UMyGameInstance::Get->m_Player.Get();
 }
 
 UInventory* UMyLib::GetPlayerInven()
@@ -37,12 +37,12 @@ AMonsterPawn* UMyLib::GetPickPocketTarget()
 
 AMyPlayerController* UMyLib::GetPlayerCon()
 {
-	if(!UMyGameInstance::Get->m_PlayerCon)
+	if(!UMyGameInstance::Get->m_PlayerCon.Get())
 	{
 		UMyGameInstance::Get->m_PlayerCon = Cast<AMyPlayerController>( UGameplayStatics::GetPlayerController(GetUWorld(),0));
 	}
 	
-	return UMyGameInstance::Get->m_PlayerCon;
+	return UMyGameInstance::Get->m_PlayerCon.Get();
 }
 
 UWidgetCanvasWorld* UMyLib::GetCanvas()

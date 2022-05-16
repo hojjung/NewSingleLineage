@@ -84,10 +84,10 @@ void APreviewActor::SetEntity(TSoftObjectPtr<UUnitEntityAsset> asset)
 	m_MeshBody->SetAnimClass(entityData->m_AnimBP);
 	m_MeshBody->AddRelativeRotation(FRotator(0,entityData->m_RotYawOffset,0));
 	
-	for(const FAttach& Attach : asset->m_AryAttaches)
-	{
-		
-	}
+	// for(const FAttach& Attach : asset->m_AryAttaches)
+	// {
+	// 	
+	// }
 }
 
 void APreviewActor::SetMeshScale(float s)
@@ -95,14 +95,16 @@ void APreviewActor::SetMeshScale(float s)
 	m_MeshBody->SetRelativeScale3D(FVector(s));
 }
 
-void APreviewActor::OnMeshVisualChanged(const FPlayerUnitEntityRow& charData)
+void APreviewActor::OnMeshVisualChanged(const AModularUnitPawn* charData)
 {
-	SetEntity(charData.m_UnitDataAsset);
+	m_MeshBody->SetSkeletalMesh(charData->GetSkMesh()->SkeletalMesh);
+	//m_MeshBody->SetAnimationMode(EAnimationMode::AnimationBlueprint);
+	//m_MeshBody->SetAnimClass(entityData->m_AnimBP);
 }
 
-void APreviewActor::OnMeshVisualChanged(const FPetRow& selected)
+void APreviewActor::OnMeshVisualChanged(const FUnitEntityRow& charData)
 {
-	SetEntity(selected.m_UnitDataAsset);
+	SetEntity(charData.m_UnitDataAsset);
 }
 
 void APreviewActor::ShowMeshWithTick()

@@ -155,7 +155,6 @@ public:
 	void SetInteracting(bool b);
 
 	bool GetInteracting() const;
-	
 };
 
 

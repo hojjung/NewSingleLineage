@@ -7,7 +7,7 @@ void UWidgetPetPanel::NativeOnInitialized()
 
 	SetVisibility(ESlateVisibility::Collapsed);
 
-	m_Preview->Init(UMyGameInstance::Get->m_PetManager,UMyGameInstance::Get->m_PetManager);
+	m_Preview->Init(UMyGameInstance::Get->m_PetManager);
 
 	m_BtnClose->OnClicked.AddDynamic(this, &UWidgetPetPanel::OnClose);
 

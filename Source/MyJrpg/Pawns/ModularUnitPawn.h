@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "CombatUnitPawn.h"
+#include "MyJrpg/MeshMergeLib.h"
 #include "ModularUnitPawn.generated.h"
 
 /*
@@ -53,11 +54,10 @@ protected:
 	UPROPERTY(VisibleAnywhere)
 	TArray<USkeletalMeshComponent*> m_ArySkMeshes;
 	
+	FSkeletalMeshMergeParams m_MergeParam;
 protected:
 	UPROPERTY()
 	APetPawn* m_Pet;
-	UPROPERTY()
-	USkeletalMesh* m_CachedMeshHead;
 	UPROPERTY()
 	USkeletalMesh* m_CachedMeshBody;
 	UPROPERTY()

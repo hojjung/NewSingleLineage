@@ -7,6 +7,7 @@
 #include "Engine/TextureRenderTarget2D.h"
 #include "GameFramework/SpringArmComponent.h"
 #include "MyJrpg/DataTables/UnitEntityData.h"
+#include "MyJrpg/Pawns/ModularUnitPawn.h"
 #include "PreviewActor.generated.h"
 
 struct FPetRow;
@@ -51,10 +52,10 @@ protected:
 
 public:
 	void SetMeshScale(float s);
-	
-	void OnMeshVisualChanged(const FPlayerUnitEntityRow& charData);
 
-	void OnMeshVisualChanged(const FPetRow& selected);
+	void OnMeshVisualChanged(const AModularUnitPawn* charData);
+	
+	void OnMeshVisualChanged(const FUnitEntityRow& charData);
 
 	void ShowMeshWithTick();
 

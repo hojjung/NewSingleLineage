@@ -9,10 +9,16 @@ void UWidgetPreview::NativePreConstruct()
 	m_PreviewImage->SetBrushFromMaterial(m_PreviewMat);
 }
 
-void UWidgetPreview::Init(UObject* proxyObj,IPreviewProxy* proxy)
+void UWidgetPreview::NativeDestruct()
+{
+	Super::NativeDestruct();
+	m_PreviewProxy = nullptr;
+}
+
+void UWidgetPreview::Init(UObject* proxyObj)
 {
 	m_PreviewProxy.SetObject(proxyObj);
-	m_PreviewProxy.SetInterface(proxy);
+	m_PreviewProxy.SetInterface(Cast<IPreviewProxy>(proxyObj));
 }
 
 FReply UWidgetPreview::NativeOnTouchStarted(const FGeometry& InGeometry, const FPointerEvent& InGestureEvent)
@@ -31,6 +37,13 @@ FReply UWidgetPreview::NativeOnTouchEnded(const FGeometry& InGeometry, const FPo
 	m_PreviewProxy->SetIsTouched(false);
 
 	return FReply::Handled();
+}
+
+void UWidgetPreview::NativeOnMouseLeave(const FPointerEvent& InMouseEvent)
+{
+	Super::NativeOnMouseLeave(InMouseEvent);
+
+	m_PreviewProxy->SetIsTouched(false);
 }
 
 FReply UWidgetPreview::NativeOnTouchMoved(const FGeometry& InGeometry, const FPointerEvent& InGestureEvent)

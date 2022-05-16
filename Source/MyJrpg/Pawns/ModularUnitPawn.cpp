@@ -4,30 +4,29 @@
 #include "ModularUnitPawn.h"
 
 #include "PetPawn.h"
+#include "MyJrpg/MeshMergeLib.h"
 #include "MyJrpg/Managers/EquipManager.h"
 #include "MyJrpg/Managers/MyGameInstance.h"
+#include "MyJrpg/Managers/PreviewActorManager.h"
 
 AModularUnitPawn::AModularUnitPawn(const FObjectInitializer& objInit): Super(objInit)
 {
-	m_MeshHat = CreateSkMeshComp(TEXT("m_MeshHat"));
-	m_MeshHead = CreateSkMeshComp(TEXT("m_MeshHead"));
-	m_MeshChest = CreateSkMeshComp(TEXT("mm_MeshChest"));
-	m_MeshGloves = CreateSkMeshComp(TEXT("m_MeshGloves"));
-	m_MeshLegs = CreateSkMeshComp(TEXT("m_MeshLegs"));
-
-	m_ArySkMeshes.Reset();
-	m_ArySkMeshes.Add(m_MeshHead);
-	m_ArySkMeshes.Add(m_MeshHat);
-	m_ArySkMeshes.Add(m_MeshChest);
-	m_ArySkMeshes.Add(m_MeshGloves);
-	m_ArySkMeshes.Add(m_MeshLegs);
+	// m_MeshHat = CreateSkMeshComp(TEXT("m_MeshHat"));
+	// m_MeshHead = CreateSkMeshComp(TEXT("m_MeshHead"));
+	//m_MeshChest = CreateSkMeshComp(TEXT("mm_MeshChest"));
+	// m_MeshGloves = CreateSkMeshComp(TEXT("m_MeshGloves"));
+	// m_MeshLegs = CreateSkMeshComp(TEXT("m_MeshLegs"));
 	//
-	static ConstructorHelpers::FObjectFinder<USkeletalMesh> FoundHead(TEXT(
-		"SkeletalMesh'/Game/14_ModularArmor/MedievalArmour/CharacterParts/Meshes/Basebody/SK_ma_armour_head_01_.SK_ma_armour_head_01_'"));
+	// m_ArySkMeshes.Reset();
+	// m_ArySkMeshes.Add(m_MeshHead);
+	// m_ArySkMeshes.Add(m_MeshHat);
+	// m_ArySkMeshes.Add(m_MeshChest);
+	// m_ArySkMeshes.Add(m_MeshGloves);
+	// m_ArySkMeshes.Add(m_MeshLegs);
+	//
 	static ConstructorHelpers::FObjectFinder<USkeletalMesh> FoundBody(TEXT(
-		"SkeletalMesh'/Game/14_ModularArmor/MedievalArmour/CharacterParts/Meshes/Basebody/SK_ma_body_master.SK_ma_body_master'"));
+		"SkeletalMesh'/Game/14_ModularArmor/MedievalArmour/CharacterParts/Meshes/Basebody/SKEL_FullBody.SKEL_FullBody'"));
 	//AnimBlueprint'/Game/14_ModularArmor/Anims/ABP_Default.ABP_Default'
-	m_CachedMeshHead = FoundHead.Object;
 	m_CachedMeshBody = FoundBody.Object;
 
 	static ConstructorHelpers::FClassFinder<UAnimInstance> FoundAnim(
@@ -65,7 +64,6 @@ AModularUnitPawn::AModularUnitPawn(const FObjectInitializer& objInit): Super(obj
 	static ConstructorHelpers::FObjectFinder<UAnimMontage> Attack07(TEXT("AnimMontage'/Game/14_ModularArmor/Anims/Pistol/AM_Pistol.AM_Pistol'"));
 	static ConstructorHelpers::FObjectFinder<UAnimMontage> Attack08(TEXT("AnimMontage'/Game/14_ModularArmor/Anims/Rifle/AM_Rifle.AM_Rifle'"));
 	static ConstructorHelpers::FObjectFinder<UAnimMontage> Attack09(TEXT("AnimMontage'/Game/14_ModularArmor/Anims/MagicOne/AM_Magic01.AM_Magic01'"));
-	static ConstructorHelpers::FObjectFinder<UAnimMontage> Attack10(TEXT("AnimMontage'/Game/14_ModularArmor/Anims/MagicTwo/AM_Magic02.AM_Magic02'"));
 	static ConstructorHelpers::FObjectFinder<UAnimMontage> Attack11(TEXT("AnimMontage'/Game/14_ModularArmor/Anims/Dual/AM_Dual.AM_Dual'"));
 	m_BaseAttack.Init(nullptr,(int)EStanceType::Length);
 	m_BaseAttack[(int)EStanceType::None] = Attack01.Object;
@@ -77,26 +75,29 @@ AModularUnitPawn::AModularUnitPawn(const FObjectInitializer& objInit): Super(obj
 	m_BaseAttack[(int)EStanceType::Pistol] = Attack07.Object;
 	m_BaseAttack[(int)EStanceType::Rifle] = Attack08.Object;
 	m_BaseAttack[(int)EStanceType::OneMagic] = Attack09.Object;
-	m_BaseAttack[(int)EStanceType::TwoMagic] = Attack10.Object;
 	m_BaseAttack[(int)EStanceType::Dual] = Attack11.Object;
 }
 
 void AModularUnitPawn::BeginPlay()
 {
 	Super::BeginPlay();
-	SetMasterPose();
+	SetDefaultMesh();
 	UpdateMorpthTarget();
+	m_MergeParam.Skeleton = m_CachedMeshBody->GetSkeleton();
+	m_MergeParam.MeshesToMerge.Init(nullptr,(int)EBodyIndex::Len + 1);
+	m_MergeParam.MeshesToMerge[(int)EBodyIndex::Len] = m_CachedMeshBody;
 
 	UMyGameInstance::Get->m_EquipManager->m_OnEquipChanged.AddUObject(this, &AModularUnitPawn::UpdateEquipActor);
-	SetDefaultMesh();
+;
+	UMyGameInstance::Get->m_PreviewActorManager->CreatePreviewActor();
 	UpdateEquipActor();
 }
 
 void AModularUnitPawn::SetDefaultMesh()
 {
-	GetModuleSkMesh(EBodyIndex::Head)->SetSkeletalMesh(m_CachedMeshHead);
+	//GetModuleSkMesh(EBodyIndex::Head)->SetSkeletalMesh(m_CachedMeshHead);
 	m_BodyMesh->SetSkeletalMesh(m_CachedMeshBody);
-	m_BodyMesh->SetAnimClass(m_ClassAnimBP);
+	
 }
 
 void AModularUnitPawn::EndPlay(const EEndPlayReason::Type EndPlayReason)
@@ -168,11 +169,11 @@ void AModularUnitPawn::UpdateEquipActor()
 		{
 			const FItemDataRow& Itemdata = UMyLib::GetItemData(ID);
 
-			GetModuleSkMesh(Iter)->SetSkeletalMesh(Itemdata.m_ArmorMesh.LoadSynchronous());
+			m_MergeParam.MeshesToMerge[Iter] = Itemdata.m_ArmorMesh.LoadSynchronous();
 		}
 		else
 		{
-			GetModuleSkMesh(Iter)->SetSkeletalMesh(nullptr);
+			m_MergeParam.MeshesToMerge[Iter] = nullptr;
 		}
 	}
 	
@@ -191,6 +192,13 @@ void AModularUnitPawn::UpdateEquipActor()
 		m_Stance = EStanceType::None;
 		HideWeapon();
 	}
+
+
+	USkeletalMesh* SkMeshMerged = UMeshMergeLib::MergeMeshes(m_MergeParam);
+
+	m_BodyMesh->SetSkeletalMesh(SkMeshMerged);
+	m_BodyMesh->SetAnimClass(m_ClassAnimBP);
+	UMyGameInstance::Get->m_PreviewActorManager->Update(this);
 }
 
 void AModularUnitPawn::SpawnEquipActor(const FWeaponData& weaponData)

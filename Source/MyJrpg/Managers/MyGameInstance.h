@@ -25,6 +25,7 @@
 #include "Web/ChatManager.h"
 #include "MyGameInstance.generated.h"
 
+class UPreviewActorManager;
 class UConstructionManager;
 class UEquipManager;
 class URewardManager;
@@ -93,13 +94,14 @@ public:
 	UConstructionManager* m_BuildManager;
 	UPROPERTY()
 	UQuickSlotManager* m_QuickManager;
+	UPROPERTY()
+	UPreviewActorManager* m_PreviewActorManager;
 	
 public:
-	UPROPERTY()
-	AMyPlayerPawn* m_Player;
-	UPROPERTY()
-	AMyPlayerController* m_PlayerCon;
+	TWeakObjectPtr<AMyPlayerPawn> m_Player;
 	
+	TWeakObjectPtr<AMyPlayerController> m_PlayerCon;
+
 protected:
 	virtual void BeginDestroy() override;
 	

@@ -87,6 +87,26 @@ void ATreeBase::SetEntity(const FGatherDataRow& data, AMyPlayerPawn* pl)
 	m_bUsePhysics = data.m_bUsePhysics;
 }
 
+void ATreeBase::SetActorFeetLoc(FVector loc)
+{
+	FVector NewLoc = loc;
+
+	NewLoc.Z -= m_Capsule->Bounds.BoxExtent.Z;
+		
+	SetActorLocation(NewLoc);
+}
+//
+// void UMyMovement::SnapToNav()
+// {
+// 	FVector ActorLoc = GetActorLocation();
+// 	FNavLocation Loc;
+// 	if(!UMyLib::GetNavSys()->ProjectPointToNavigation(ActorLoc,Loc))
+// 	{
+// 		UMyLib::GetNavSys()->GetRandomPointInNavigableRadius(ActorLoc,1000,Loc);
+// 	}
+// 	m_Owner->SetActorFeetLocation(Loc.Location);
+// }
+
 void ATreeBase::OnInteract()
 {
 	if(m_Player->GetInteracting())

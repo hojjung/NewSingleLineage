@@ -5,6 +5,8 @@
 #include "MyJrpg/Widgets/World/CommonElements/WidgetBaseElement.h"
 #include "WidgetEquipPanel.generated.h"
 
+class AModularUnitPawn;
+class UWidgetPreview;
 class UEquipManager;
 UCLASS()
 class MYJRPG_API UWidgetEquipPanel : public UUserWidget
@@ -12,6 +14,8 @@ class MYJRPG_API UWidgetEquipPanel : public UUserWidget
 	GENERATED_BODY()
 
 protected:
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (BindWidget))
+	UWidgetPreview* m_Preview;
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (BindWidget))
 	UWidgetBaseElement* m_Weapon;
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (BindWidget))

@@ -336,7 +336,7 @@ void UConstructionManager::SpawnPreviewActor(FVector loc, const FBuildDataRow* d
 		m_PreviewActor->SetActorEnableCollision(false);
 	}
 	
-	m_PreviewActor->SetActorLocation(NewLoc);
+	m_PreviewActor->SetActorLocation(NewLoc + dataRow->m_Offset);
 	m_PreviewActor->SetActorRotation(NewRot);
 
 	CheckBuildable();

@@ -204,6 +204,5 @@ enum class EStanceType :uint8
 	Pistol,
 	Rifle,
 	OneMagic,
-	TwoMagic,
 	Length
 };

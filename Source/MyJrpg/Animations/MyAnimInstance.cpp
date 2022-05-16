@@ -67,3 +67,13 @@ void UPlayerAnimInstance::UpdateMoveFlag()
 	m_bIsSneaking=m_PlOwner->IsSneak();
 	m_Stance=m_PlOwner->GetStance();
 }
+
+bool UPlayerAnimInstance::IsStance(EStanceType t) const
+{
+	return m_Stance == t;
+}
+
+bool UPlayerAnimInstance::IsNotStance(EStanceType t) const
+{
+	return m_Stance != t;
+}
