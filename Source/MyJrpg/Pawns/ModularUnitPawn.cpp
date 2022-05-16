@@ -4,7 +4,6 @@
 #include "ModularUnitPawn.h"
 
 #include "PetPawn.h"
-#include "MyJrpg/Actors/Equipments/AttachEquipmentBase.h"
 #include "MyJrpg/Managers/EquipManager.h"
 #include "MyJrpg/Managers/MyGameInstance.h"
 
@@ -34,6 +33,52 @@ AModularUnitPawn::AModularUnitPawn(const FObjectInitializer& objInit): Super(obj
 	static ConstructorHelpers::FClassFinder<UAnimInstance> FoundAnim(
 		TEXT("AnimBlueprint'/Game/14_ModularArmor/Anims/ABP_Default.ABP_Default_C'"));
 	m_ClassAnimBP = FoundAnim.Class;
+	//
+	m_MeshLeftHand = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("m_MeshLeftHand"));
+	m_MeshLeftHand->SetupAttachment(m_BodyMesh);
+	m_MeshLeftHand->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+	m_MeshLeftHand->bCastDynamicShadow = false;
+	m_MeshLeftHand->bAffectDynamicIndirectLighting = true;
+	m_MeshLeftHand->PrimaryComponentTick.TickGroup = TG_PrePhysics;
+	m_MeshLeftHand->CanCharacterStepUpOn = ECanBeCharacterBase::ECB_No;
+	//
+	m_MeshRightHand = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("m_MeshRightHand"));
+	m_MeshRightHand->SetupAttachment(m_BodyMesh);
+	m_MeshRightHand->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+	m_MeshRightHand->bCastDynamicShadow = false;
+	m_MeshRightHand->bAffectDynamicIndirectLighting = true;
+	m_MeshRightHand->PrimaryComponentTick.TickGroup = TG_PrePhysics;
+	m_MeshRightHand->CanCharacterStepUpOn = ECanBeCharacterBase::ECB_No;
+	//
+	static ConstructorHelpers::FObjectFinder<UStaticMesh> FoundSm01(TEXT("StaticMesh'/Game/09_SharedAnimations/Farming_And_Mining/Meshes/Axe_Tool_SM.Axe_Tool_SM'"));
+	static ConstructorHelpers::FObjectFinder<UStaticMesh> FoundSm02(TEXT("StaticMesh'/Game/09_SharedAnimations/Farming_And_Mining/Meshes/Pickaxe_SM.Pickaxe_SM'"));
+
+	m_Axe = FoundSm01.Object;
+	m_Pickaxe = FoundSm02.Object;
+	//
+	static ConstructorHelpers::FObjectFinder<UAnimMontage> Attack01(TEXT("AnimMontage'/Game/14_ModularArmor/Anims/BareHand/AM_Punch.AM_Punch'"));
+	static ConstructorHelpers::FObjectFinder<UAnimMontage> Attack02(TEXT("AnimMontage'/Game/14_ModularArmor/Anims/OneHand/AM_OH.AM_OH'"));
+	static ConstructorHelpers::FObjectFinder<UAnimMontage> Attack03(TEXT("AnimMontage'/Game/14_ModularArmor/Anims/Shield/AM_Shield.AM_Shield'"));
+	static ConstructorHelpers::FObjectFinder<UAnimMontage> Attack04(TEXT("AnimMontage'/Game/14_ModularArmor/Anims/Twohand/AM_TH.AM_TH'"));
+	static ConstructorHelpers::FObjectFinder<UAnimMontage> Attack05(TEXT("AAnimMontage'/Game/14_ModularArmor/Anims/Spear/AM_Spear.AM_Spear'"));
+	static ConstructorHelpers::FObjectFinder<UAnimMontage> Attack06(TEXT("AnimMontage'/Game/14_ModularArmor/Anims/Bow/AM_Bow.AM_Bow'"));
+	static ConstructorHelpers::FObjectFinder<UAnimMontage> Attack07(TEXT("AnimMontage'/Game/14_ModularArmor/Anims/Pistol/AM_Pistol.AM_Pistol'"));
+	static ConstructorHelpers::FObjectFinder<UAnimMontage> Attack08(TEXT("AnimMontage'/Game/14_ModularArmor/Anims/Rifle/AM_Rifle.AM_Rifle'"));
+	static ConstructorHelpers::FObjectFinder<UAnimMontage> Attack09(TEXT("AnimMontage'/Game/14_ModularArmor/Anims/MagicOne/AM_Magic01.AM_Magic01'"));
+	static ConstructorHelpers::FObjectFinder<UAnimMontage> Attack10(TEXT("AnimMontage'/Game/14_ModularArmor/Anims/MagicTwo/AM_Magic02.AM_Magic02'"));
+	static ConstructorHelpers::FObjectFinder<UAnimMontage> Attack11(TEXT("AnimMontage'/Game/14_ModularArmor/Anims/Dual/AM_Dual.AM_Dual'"));
+	m_BaseAttack.Init(nullptr,(int)EStanceType::Length);
+	m_BaseAttack[(int)EStanceType::None] = Attack01.Object;
+	m_BaseAttack[(int)EStanceType::OneSword] = Attack02.Object;
+	m_BaseAttack[(int)EStanceType::SwordShield] = Attack03.Object;
+	m_BaseAttack[(int)EStanceType::TwoSword] = Attack04.Object;
+	m_BaseAttack[(int)EStanceType::Spear] = Attack05.Object;
+	m_BaseAttack[(int)EStanceType::Bow] = Attack06.Object;
+	m_BaseAttack[(int)EStanceType::Pistol] = Attack07.Object;
+	m_BaseAttack[(int)EStanceType::Rifle] = Attack08.Object;
+	m_BaseAttack[(int)EStanceType::OneMagic] = Attack09.Object;
+	m_BaseAttack[(int)EStanceType::TwoMagic] = Attack10.Object;
+	m_BaseAttack[(int)EStanceType::Dual] = Attack11.Object;
 }
 
 void AModularUnitPawn::BeginPlay()
@@ -42,10 +87,16 @@ void AModularUnitPawn::BeginPlay()
 	SetMasterPose();
 	UpdateMorpthTarget();
 
-	m_AryEqupActors.Init(nullptr, (int)EEquipSlotType::Length - 1);
 	UMyGameInstance::Get->m_EquipManager->m_OnEquipChanged.AddUObject(this, &AModularUnitPawn::UpdateEquipActor);
 	SetDefaultMesh();
 	UpdateEquipActor();
+}
+
+void AModularUnitPawn::SetDefaultMesh()
+{
+	GetModuleSkMesh(EBodyIndex::Head)->SetSkeletalMesh(m_CachedMeshHead);
+	m_BodyMesh->SetSkeletalMesh(m_CachedMeshBody);
+	m_BodyMesh->SetAnimClass(m_ClassAnimBP);
 }
 
 void AModularUnitPawn::EndPlay(const EEndPlayReason::Type EndPlayReason)
@@ -56,6 +107,14 @@ void AModularUnitPawn::EndPlay(const EEndPlayReason::Type EndPlayReason)
 	{
 		Sk->SetSkeletalMesh(nullptr);
 	}
+
+	HideWeapon();
+
+	m_CacheLeftHand = nullptr;
+
+	m_CacheRightHand = nullptr;
+
+	m_Stance = EStanceType::None;
 }
 
 void AModularUnitPawn::SetMasterPose()
@@ -80,6 +139,10 @@ void AModularUnitPawn::UpdateMorpthTarget()
 		m_ArySkMeshes[Iter]->SetMorphTarget(TEXT("gloves_equipped"), m_bIsGloveEquipped ? 1.f : 0.f);
 		m_ArySkMeshes[Iter]->SetMorphTarget(TEXT("boot_high_equipped"), m_bIsBootHighEquipped ? 1.f : 0.f);
 	}
+
+	FAttachmentTransformRules Rules(EAttachmentRule::KeepRelative, true);
+	m_MeshLeftHand->AttachToComponent(m_BodyMesh, Rules, TEXT("LeftHandSocket"));
+	m_MeshRightHand->AttachToComponent(m_BodyMesh, Rules, TEXT("RightHandSocket"));
 }
 
 USkeletalMeshComponent* AModularUnitPawn::GetModuleSkMesh(EBodyIndex t)
@@ -90,6 +153,91 @@ USkeletalMeshComponent* AModularUnitPawn::GetModuleSkMesh(EBodyIndex t)
 USkeletalMeshComponent* AModularUnitPawn::GetModuleSkMesh(int t)
 {
 	return m_ArySkMeshes[t];
+}
+
+void AModularUnitPawn::UpdateEquipActor()
+{
+	const FItemSpec* EquippedItems = UMyGameInstance::Get->m_EquipManager->GetEquipAry();
+
+	int Iter = 0;
+	while (++Iter < (int)EBodyIndex::Len)
+	{
+		FName ID = EquippedItems[Iter + 1].m_ID;
+
+		if (!ID.IsNone())
+		{
+			const FItemDataRow& Itemdata = UMyLib::GetItemData(ID);
+
+			GetModuleSkMesh(Iter)->SetSkeletalMesh(Itemdata.m_ArmorMesh.LoadSynchronous());
+		}
+		else
+		{
+			GetModuleSkMesh(Iter)->SetSkeletalMesh(nullptr);
+		}
+	}
+	
+	FName WeaponID = EquippedItems[(int)EEquipSlotType::Weapon].m_ID;
+	
+	if(!WeaponID.IsNone())
+	{
+		const FItemDataRow& Itemdata = UMyLib::GetItemData(WeaponID);
+		
+		SpawnEquipActor(Itemdata.m_WeaponData);
+
+		ShowWeapon();
+	}
+	else
+	{
+		m_Stance = EStanceType::None;
+		HideWeapon();
+	}
+}
+
+void AModularUnitPawn::SpawnEquipActor(const FWeaponData& weaponData)
+{
+	m_Stance = weaponData.m_Stance;
+	
+	m_CacheLeftHand = weaponData.m_MeshLeft.LoadSynchronous();
+
+	m_CacheRightHand = weaponData.m_MeshRight.LoadSynchronous();
+}
+
+UAnimMontage* AModularUnitPawn::GetBaseAttackMontage()
+{
+	return m_BaseAttack[(int)m_Stance];
+}
+
+void AModularUnitPawn::ShowWeapon()
+{
+	m_MeshLeftHand->SetStaticMesh(m_CacheLeftHand);
+
+	m_MeshRightHand->SetStaticMesh(m_CacheRightHand);
+}
+
+void AModularUnitPawn::HideWeapon()
+{
+	m_MeshLeftHand->SetStaticMesh(nullptr);
+
+	m_MeshRightHand->SetStaticMesh(nullptr);
+}
+
+void AModularUnitPawn::TryShowPickAxe()
+{
+	HideWeapon();
+	
+	m_MeshRightHand->SetStaticMesh(m_Pickaxe);
+}
+
+void AModularUnitPawn::TryShowAxe()
+{
+	HideWeapon();
+	
+	m_MeshRightHand->SetStaticMesh(m_Axe);
+}
+
+EStanceType AModularUnitPawn::GetStance()
+{
+	return m_Stance;
 }
 
 void AModularUnitPawn::SetPet(const FPetRow& pet_row)
@@ -113,74 +261,4 @@ void AModularUnitPawn::UnEquipPet()
 	{
 		m_Pet->Destroy();
 	}
-}
-
-void AModularUnitPawn::SetDefaultMesh()
-{
-	GetModuleSkMesh(EBodyIndex::Head)->SetSkeletalMesh(m_CachedMeshHead);
-	m_BodyMesh->SetSkeletalMesh(m_CachedMeshBody);
-	m_BodyMesh->SetAnimClass(m_ClassAnimBP);
-}
-
-void AModularUnitPawn::UpdateEquipActor()
-{
-	const FItemSpec* EquippedItems = UMyGameInstance::Get->m_EquipManager->GetEquipAry();
-
-	int Iter = 0;
-	while (++Iter < (int)EBodyIndex::Len)
-	{
-		FName ID = EquippedItems[Iter + 1].m_ID;
-
-		if (!ID.IsNone())
-		{
-			const FItemDataRow& Itemdata = UMyLib::GetItemData(ID);
-
-			GetModuleSkMesh(Iter)->SetSkeletalMesh(Itemdata.m_ArmorMesh.LoadSynchronous());
-		}
-		else
-		{
-			GetModuleSkMesh(Iter)->SetSkeletalMesh(nullptr);
-		}
-	}
-}
-
-void AModularUnitPawn::SpawnEquipActor(int indexSlot, TSubclassOf<AAttachEquipmentBase> classEquipActor)
-{
-	if (m_AryEqupActors[indexSlot])
-	{
-		if (m_AryEqupActors[indexSlot]->GetClass() == classEquipActor)
-		{
-			return;
-		}
-		m_AryEqupActors[indexSlot]->Destroy();
-	}
-
-	FActorSpawnParameters Params;
-
-	Params.bNoFail = true;
-	Params.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
-
-	AAttachEquipmentBase* SpawnActor = GetWorld()->SpawnActor<AAttachEquipmentBase>(
-		classEquipActor, FVector(0), FRotator(0), Params);
-
-	FName SocketName = SpawnActor->GetSocketName();
-
-	m_AryEqupActors[indexSlot] = SpawnActor;
-
-	SpawnActor->AttachToComponent(GetSkMesh(),
-	                              FAttachmentTransformRules(EAttachmentRule::SnapToTarget, false), SocketName);
-}
-
-void AModularUnitPawn::ShowWeapon()
-{
-	int WeapIndex = (int)(EEquipSlotType::Weapon) - 1;
-	if (m_AryEqupActors[WeapIndex])
-		m_AryEqupActors[WeapIndex]->SetActive(true);
-}
-
-void AModularUnitPawn::HideWeapon()
-{
-	int WeapIndex = (int)(EEquipSlotType::Weapon) - 1;
-	if (m_AryEqupActors[WeapIndex])
-		m_AryEqupActors[WeapIndex]->SetActive(false);
 }

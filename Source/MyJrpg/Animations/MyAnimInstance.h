@@ -67,7 +67,7 @@ public:
 	EStanceType m_Stance;
 	UPROPERTY()
 	AMyPlayerPawn* m_PlOwner;
-
+	
 protected:
 	virtual void NativeBeginPlay() override;
 

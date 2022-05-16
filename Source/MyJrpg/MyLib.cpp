@@ -137,11 +137,6 @@ const FItemDataRow& UMyLib::GetItemData(const FName& specID)
 	return *FoundItemRow;
 }
 
-const TSubclassOf<AAttachEquipmentBase>& UMyLib::GetAttachItemClass(const FName& specID)
-{
-	return GetItemData(specID).m_ColorHandle.GetRow<FColorDataRow>("")->m_ClassEquip;
-}
-
 FStatGroup UMyLib::GetItemStatData(const FName& specID)
 {
 	// int Level = UMyLib::GetPlayerInven()->GetItemLevel(specID);

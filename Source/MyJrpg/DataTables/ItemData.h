@@ -11,7 +11,6 @@ class UEE_Base;
 class UItemExecuteBase;
 class UOptionBase;
 class AItemActor;
-class AAttachEquipmentBase;
 UCLASS()
 class MYJRPG_API UItemData : public UObject
 {
@@ -105,8 +104,6 @@ public:
 	UPROPERTY(EditDefaultsOnly)
 	UTexture2D* m_GlowTexture;
 	UPROPERTY(EditAnywhere)
-	TSubclassOf<AAttachEquipmentBase> m_ClassEquip;//오오라,트레일,총알
-	UPROPERTY(EditAnywhere)
 	UParticleSystem* m_HeadAura;
 	UPROPERTY(EditAnywhere)
 	UParticleSystem* m_Bullet;
@@ -181,6 +178,20 @@ public:
 };
 
 USTRUCT(BlueprintType)
+struct FWeaponData
+{
+	GENERATED_BODY()
+
+public:
+	UPROPERTY(EditAnywhere)
+	EStanceType m_Stance;
+	UPROPERTY(EditAnywhere)
+	TSoftObjectPtr<UStaticMesh> m_MeshRight;
+	UPROPERTY(EditAnywhere)
+	TSoftObjectPtr<UStaticMesh> m_MeshLeft;
+};
+
+USTRUCT(BlueprintType)
 struct FItemDataRow : public FCraftable//FCraftable 상속?
 {
 	GENERATED_USTRUCT_BODY()
@@ -207,6 +218,8 @@ public:
 	FStatGroup m_EquipStats;
 	UPROPERTY(EditAnywhere, meta=(EditCondition = "m_ItemType != EEquipSlotType::None", EditConditionHides))
 	FStatGroup m_EnchantStats;//this * level = enchant
+	UPROPERTY(EditAnywhere, meta=(EditCondition = "m_ItemType == EEquipSlotType::Weapon", EditConditionHides))
+	FWeaponData m_WeaponData;
 	UPROPERTY(EditAnywhere, meta=(EditCondition = "m_ItemType != EEquipSlotType::None", EditConditionHides))
 	TArray<TSubclassOf<UOptionBase>> m_Options;
 	UPROPERTY(EditAnywhere, meta=(EditCondition = "m_ItemType != EEquipSlotType::None", EditConditionHides))

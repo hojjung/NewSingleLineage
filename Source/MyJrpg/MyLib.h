@@ -51,8 +51,6 @@ public:
 
 	static const FItemDataRow& GetItemData(const FName& specID);
 
-	static const TSubclassOf<AAttachEquipmentBase>& GetAttachItemClass(const FName& specID);
-
 	static FStatGroup GetItemStatData(const FName& specID);
 
 	static const FSkillDataRow& GetSkillData(const FName& specID);

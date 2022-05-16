@@ -121,16 +121,21 @@ void UMyGameInstance::Init()
 
 	m_CraftManager->Init();
 
-	m_Inven->AddItem(FItemSpec(TEXT("misc_leather01"), 3));
 	m_Inven->AddItem(FItemSpec(TEXT("GoldCoin"), 20000));
 	m_Inven->AddItem(FItemSpec(TEXT("Bag01"), 0));
-	m_Inven->AddItem(FItemSpec(TEXT("Bag02"), 0));
-	m_Inven->AddItem(FItemSpec(TEXT("BeltLord"), 0));
-	m_Inven->AddItem(FItemSpec(TEXT("BeltCross"), 0));
 	m_Inven->AddItem(FItemSpec(TEXT("TorsoAdv"), 0));
-	m_Inven->AddItem(FItemSpec(TEXT("LegAdv"), 0));
-	m_Inven->AddItem(FItemSpec(TEXT("HandAdv"), 0));
-	m_Inven->AddItem(FItemSpec(TEXT("HeadAdv"), 0));
+	m_Inven->AddItem(FItemSpec(TEXT("Axe01"), 0));
+	m_Inven->AddItem(FItemSpec(TEXT("Sword01"), 0));
+	m_Inven->AddItem(FItemSpec(TEXT("THSword01"), 0));
+	m_Inven->AddItem(FItemSpec(TEXT("Bow01"), 0));
+	m_Inven->AddItem(FItemSpec(TEXT("Dual01"), 0));
+	m_Inven->AddItem(FItemSpec(TEXT("Shield01"), 0));
+	m_Inven->AddItem(FItemSpec(TEXT("Spear01"), 0));
+	m_Inven->AddItem(FItemSpec(TEXT("Pistol01"), 0));
+	m_Inven->AddItem(FItemSpec(TEXT("Rifle01"), 0));
+	m_Inven->AddItem(FItemSpec(TEXT("Magic01"), 0));
+	m_Inven->AddItem(FItemSpec(TEXT("Magic02"), 0));
+	
 	m_AryStorage.Reset();
 }
 

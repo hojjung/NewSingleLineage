@@ -63,8 +63,6 @@ protected:
 	FVector m_DeltaY;
 	UPROPERTY()
 	UPlSkillAuto* m_SkillAuto;
-	UPROPERTY()
-	UPlayerAnimInst* m_AnimInst;
 	
 	FTimerHandle m_InvincTimer;
 
@@ -79,15 +77,11 @@ private:
 
 	void ShootBaseRangeAttack();
 
-	virtual UAnimMontage* GetBaseAttackMontage() override;
-	
 	void MoveForward(float AxisValue);
 
 	void MoveRight(float AxisValue);
 	
 	virtual void ShowPopupText(float nbr, ETextType t) override;
-
-	virtual void EndPlay(const EEndPlayReason::Type EndPlayReason) override;
 
 public:
 	virtual void SetFocusedTarget(IFocusable* target) override;
@@ -161,6 +155,7 @@ public:
 	void SetInteracting(bool b);
 
 	bool GetInteracting() const;
+	
 };
 
 

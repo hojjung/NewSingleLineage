@@ -37,6 +37,10 @@ public:
 	
 protected:
 	UPROPERTY(VisibleAnywhere)
+	UStaticMeshComponent* m_MeshLeftHand;
+	UPROPERTY(VisibleAnywhere)
+	UStaticMeshComponent* m_MeshRightHand;
+	UPROPERTY(VisibleAnywhere)
 	USkeletalMeshComponent* m_MeshHead;
 	UPROPERTY(VisibleAnywhere)
 	USkeletalMeshComponent* m_MeshHat;
@@ -50,8 +54,6 @@ protected:
 	TArray<USkeletalMeshComponent*> m_ArySkMeshes;
 	
 protected:
-	UPROPERTY()
-	TArray<AAttachEquipmentBase*> m_AryEqupActors;
 	UPROPERTY()
 	APetPawn* m_Pet;
 	UPROPERTY()
@@ -67,12 +69,24 @@ protected:
 	bool m_bIsGloveEquipped;
 
 	bool m_bIsBootHighEquipped;
+
+	EStanceType m_Stance;
 	
 protected:
+	UPROPERTY()
+	TArray<UAnimMontage*> m_BaseAttack;
 	UPROPERTY()
 	USkeletalMesh* m_DefaultHead;
 	UPROPERTY()
 	USkeletalMesh* m_DefaultBody;
+	UPROPERTY()
+	UStaticMesh* m_CacheLeftHand;
+	UPROPERTY()
+	UStaticMesh* m_CacheRightHand;
+	UPROPERTY()
+	UStaticMesh* m_Pickaxe;
+	UPROPERTY()
+	UStaticMesh* m_Axe;
 	
 protected:
 	virtual void BeginPlay() override;
@@ -88,7 +102,9 @@ protected:
 	
 	void UpdateEquipActor();
 
-	void SpawnEquipActor(int indexSlot, TSubclassOf<AAttachEquipmentBase> classEquipActor);
+	void SpawnEquipActor(const FWeaponData& weaponData);
+
+	virtual UAnimMontage* GetBaseAttackMontage() override;
 
 public:
 	USkeletalMeshComponent* GetModuleSkMesh(EBodyIndex t);
@@ -104,4 +120,10 @@ public:
 	void ShowWeapon();
 
 	void HideWeapon();
+
+	void TryShowPickAxe();
+
+	void TryShowAxe();
+
+	EStanceType GetStance();
 };

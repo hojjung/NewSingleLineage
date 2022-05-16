@@ -17,7 +17,7 @@ void UQuestManager::Init()
 	//
 	m_nCurrentMainQuestIndex = 0;
 	//세이브 데이터받아옴
-	int MainQuestValue=0;
+	int MainQuestValue = 0;
 
 	RegisterMainQuestByIndex(0);
 
@@ -31,7 +31,7 @@ const FQuestDataRow& UQuestManager::GetMainQuestData(FName id) const
 	return *UQuestData::GetMainQuestTable->FindRow<FQuestDataRow>(id,"!!!UQuestManager::GetMainQuestData=Key Wrong!!!");
 }
 
-const FQuestDataRow& UQuestManager::GetSubQuestData(FName id) const
+const FQuestDataRow& UQuestManager::GetSubQuestData(FName id) const 
 {
 	return *UQuestData::GetSubQuestTable->FindRow<FQuestDataRow>(id,"!!!UQuestManager::GetSubQuestData=Key Wrong!!!");
 }

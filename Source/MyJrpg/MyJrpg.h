@@ -197,10 +197,12 @@ enum class EStanceType :uint8
 	None,
 	OneSword,
 	SwordShield,
+	Dual,
 	TwoSword,
 	Spear,
 	Bow,
-	CrossBow,
+	Pistol,
+	Rifle,
 	OneMagic,
 	TwoMagic,
 	Length

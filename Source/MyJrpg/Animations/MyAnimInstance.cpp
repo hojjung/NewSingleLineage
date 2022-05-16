@@ -65,5 +65,5 @@ void UPlayerAnimInstance::UpdateMoveFlag()
 	m_bIsMoving=m_PlOwner->IsMoving();
 	m_bIsRange=m_PlOwner->IsRange();
 	m_bIsSneaking=m_PlOwner->IsSneak();
-	//m_Stance=m_Owner->IsSneak();
+	m_Stance=m_PlOwner->GetStance();
 }

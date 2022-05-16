@@ -38,6 +38,8 @@ public://Visual
 	UAnimMontage* m_AnimGatherMotion;
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
 	USoundBase* m_SoundGatherEnd;
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
+	bool m_bIsAxe = true;
 	
 	virtual FPrimaryAssetId GetPrimaryAssetId() const override
 	{

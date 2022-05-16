@@ -2,7 +2,6 @@
 
 #include "Components/SceneCaptureComponent2D.h"
 #include "Engine/TextureRenderTarget2D.h"
-#include "Logics/PlayerAnimInst.h"
 #include "Logics/PlSkillAuto.h"
 #include "MyJrpg/MyLib.h"
 #include "MyJrpg/Animations/MyAnimInstance.h"
@@ -220,16 +219,6 @@ void AMyPlayerPawn::ShowPopupText(float nbr, ETextType t)
 	//not use
 }
 
-void AMyPlayerPawn::EndPlay(const EEndPlayReason::Type EndPlayReason)
-{
-	Super::EndPlay(EndPlayReason);
-
-	if(m_AnimInst)
-	{
-		m_AnimInst->KillAll();
-	}
-}
-
 void AMyPlayerPawn::SetFocusedTarget(IFocusable* target)
 {
 	if(m_bIsInteracting)
@@ -306,11 +295,6 @@ void AMyPlayerPawn::DealBaseMeleeAttack()
 void AMyPlayerPawn::ShootBaseRangeAttack()
 {
 	m_Pool->ShootBullet(TEXT("Trail_End_L"),GetFocusedTarget<ACombatUnitPawn>());
-}
-
-UAnimMontage* AMyPlayerPawn::GetBaseAttackMontage()
-{
-	return m_AnimInst->GetBasAttackAnim();
 }
 
 void AMyPlayerPawn::SetSneak()
@@ -422,7 +406,7 @@ void AMyPlayerPawn::StopInvincible()
 
 float AMyPlayerPawn::PlaySkillAnim(const FName& skillID)
 {
-	return PlayAnimMontage(m_AnimInst->GetSkillAnim(skillID));
+	return 0.f;//No skill
 }
 
 float AMyPlayerPawn::GetRangeRange()

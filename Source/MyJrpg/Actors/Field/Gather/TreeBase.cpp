@@ -101,11 +101,21 @@ void ATreeBase::OnInteract()
 	m_Player->PlayAnimMontage(m_GatherAsset->m_AnimGatherMotion);
 	m_Player->HomingRotateToTarget(0);
 	m_Player->SetInteracting(true);
+
+	if(m_GatherAsset->m_bIsAxe)
+	{
+		m_Player->TryShowAxe();
+	}
+	else
+	{
+		m_Player->TryShowPickAxe();
+	}
 }
 
 void ATreeBase::OnHarvestMotionDone()
 {
 	m_Player->SetInteracting(false);
+	m_Player->ShowWeapon();
 }
 
 void ATreeBase::OnTakeChopping()
