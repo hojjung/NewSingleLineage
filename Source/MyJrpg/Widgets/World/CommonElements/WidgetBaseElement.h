@@ -30,6 +30,8 @@ class MYJRPG_API UWidgetBaseElement : public UUserWidget
 	FOnFocus m_OnDrop;
 
  protected:
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (BindWidget))
+	USizeBox* m_Size;
  	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (BindWidget))
  	UImage* m_ImgGlow;
  	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (BindWidget))
@@ -117,4 +119,6 @@ public:
 	int GetIndex();
 	
 	void SetTextFocus(FText t);
+
+	void SetBoxSize(float x, float y);
 };

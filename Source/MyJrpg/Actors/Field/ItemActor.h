@@ -5,7 +5,7 @@
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
 #include "MyJrpg/Interfaces/Focusable.h"
-#include "MyJrpg/Widgets/World/Menu/QuickSlotsPanel/WidgetQuickSlot.h"
+#include "MyJrpg/Items/Inventory.h"
 #include "ItemActor.generated.h"
 
 class UBillboardComponent;

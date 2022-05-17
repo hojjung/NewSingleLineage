@@ -20,7 +20,7 @@ void UEquipManager::Equip(EEquipSlotType slotWant,UInventory* inven, int invenIn
 	
 	inven->RemoveItem(invenIndex);
 	
-	Unequip(slotWant,inven,&invenIndex);
+	Unequip(slotWant,inven,&invenIndex,false);
 	
 	int SlotIndex = (int)slotWant;
 	
@@ -63,7 +63,7 @@ void UEquipManager::UnequipOption(int index, const FItemSpec& itemWant)
 	//UMyGameInstance::Get->m_PlayerStatManager->UnequipItem(itemWant.m_ID);
 }
 
-bool UEquipManager::Unequip(EEquipSlotType slotWant, UInventory* returnInven , int * returnInvenIndex)
+bool UEquipManager::Unequip(EEquipSlotType slotWant, UInventory* returnInven , int * returnInvenIndex, bool updateDele)
 {
 	PRINTF("Unequip01");
 	int SlotIndex = (int)slotWant;
@@ -91,7 +91,10 @@ bool UEquipManager::Unequip(EEquipSlotType slotWant, UInventory* returnInven , i
 	
 	SetIsRangeStance();
 	
-	m_OnEquipChanged.Broadcast();
+	if(updateDele)
+	{
+		m_OnEquipChanged.Broadcast();
+	}
 
 	return true;
 }
@@ -205,6 +208,11 @@ UInventory* UEquipManager::GetBag()
 UInventory* UEquipManager::GetBelt() 
 {
 	return m_BeltSlots;
+}
+
+UInventory** UEquipManager::GetBeltHolder()
+{
+	return &m_BeltSlots;
 }
 
 UInventory::FOnInvenChanged& UEquipManager::GetOnBagChanged()

@@ -57,7 +57,7 @@ public:
 
 	void Equip(EEquipSlotType slotWant, UInventory* inven, int invenIndex);
 
-	bool Unequip(EEquipSlotType slotWant, UInventory* returnInven , int * returnInvenIndex = nullptr);
+	bool Unequip(EEquipSlotType slotWant, UInventory* returnInven , int * returnInvenIndex = nullptr, bool updateDele = true);
 
 	void DestoryItem(EEquipSlotType t);
 
@@ -89,6 +89,8 @@ public:
 	UInventory* GetBag() ;
 
 	UInventory* GetBelt() ;
+
+	UInventory** GetBeltHolder();
 
 	UInventory::FOnInvenChanged& GetOnBagChanged();
 

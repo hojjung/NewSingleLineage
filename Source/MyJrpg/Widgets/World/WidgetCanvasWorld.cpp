@@ -45,8 +45,6 @@ void UWidgetCanvasWorld::NativeOnInitialized()
 
 	m_BtnCraft->OnClicked.AddDynamic(this,&UWidgetCanvasWorld::OpenCraft);
 
-	m_QuickBar->SetInvenSkill(m_EquipInvenPanel->GetInvenPanel(),m_SkillPanel);
-
 	m_BtnQuest->OnClicked.AddDynamic(this,&UWidgetCanvasWorld::OpenQuest);
 
 	m_BtnMapMove->OnClicked.AddDynamic(this,&UWidgetCanvasWorld::OpenZone);

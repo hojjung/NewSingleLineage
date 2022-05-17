@@ -92,7 +92,7 @@ void AModularUnitPawn::SetDefaultMesh()
 {
 	//GetModuleSkMesh(EBodyIndex::Head)->SetSkeletalMesh(m_CachedMeshHead);
 	m_BodyMesh->SetSkeletalMesh(m_CachedMeshBody);
-	
+	m_BodyMesh->SetAnimClass(m_ClassAnimBP);
 }
 
 void AModularUnitPawn::EndPlay(const EEndPlayReason::Type EndPlayReason)
@@ -160,9 +160,7 @@ void AModularUnitPawn::UpdateEquipActor()
 
 	USkeletalMesh* SkMeshMerged = UMeshMergeLib::MergeMeshes(m_MergeParam);
 
-	m_BodyMesh->SetSkeletalMesh(SkMeshMerged);
-	
-	m_BodyMesh->SetAnimClass(m_ClassAnimBP);
+	m_BodyMesh->SetSkeletalMesh(SkMeshMerged,false);
 	
 	UMyGameInstance::Get->m_PreviewActorManager->Update(this);
 }

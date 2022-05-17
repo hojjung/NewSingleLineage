@@ -241,6 +241,13 @@ void UWidgetBaseElement::SetTextFocus(FText t)
 	m_TextFocus->SetText(t);
 }
 
+void UWidgetBaseElement::SetBoxSize(float x, float y)
+{
+	m_Size->WidthOverride = x;
+
+	m_Size->HeightOverride = y;
+}
+
 void UWidgetBaseElement::SetFocusable(bool isActive)
 {
 	m_bIsFocusable = isActive;

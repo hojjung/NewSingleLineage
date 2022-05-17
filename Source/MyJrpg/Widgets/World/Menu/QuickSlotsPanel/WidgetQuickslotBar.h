@@ -19,36 +19,31 @@ UCLASS()
 class MYJRPG_API UWidgetQuickslotBar : public UUserWidget
 {
 	GENERATED_BODY()
-	
-protected:
-	TWeakObjectPtr<UWidgetInventory> m_WidgetInven;
 
-	TWeakObjectPtr<UWidgetSkillPanel> m_WidgetSkill;
-	
 protected:
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
-	TSubclassOf<UWidgetQuickSlot> m_ClassQuickSlot;
+	UPROPERTY(EditDefaultsOnly)
+	TSubclassOf<UWidgetBaseElement> m_ClassWidgetItemEle;
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (BindWidget))
-	UScrollBox* m_ScrollBarQuickSlot;
+	UHorizontalBox* m_ScrollBarQuickSlot;
 	UPROPERTY()
-	TArray< UWidgetQuickSlot*> m_AryQuickSlot;
+	TArray< UWidgetBaseElement*> m_AryQuickSlot;
+
+	UInventory** m_InvenHolder;
 	
 protected:
+	void CreateBeltSlots();
+	
 	virtual void NativeOnInitialized() override;
 
-public:
+	virtual void NativeDestruct() override;
+
+	void OnClick(UWidgetBaseElement* ele);
+
+	void SetItem(UWidgetBaseElement* target, const FItemSpec& itemSpec);
+
+	void Clear();
+
+	void OnBeltEquipChanged();
+	
 	void UpdateQuickSlots();
-
-	void SetInvenSkill(UWidgetInventory* inven,UWidgetSkillPanel* skill);
-
-	UWidgetInventory* GetInven() const
-	{
-		return m_WidgetInven.Get();
-	}
-
-	UWidgetSkillPanel* GetSkill() const
-	{
-		return m_WidgetSkill.Get();
-	}
-	void OnStartCD(int index);
 };
