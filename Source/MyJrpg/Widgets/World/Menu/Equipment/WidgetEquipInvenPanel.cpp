@@ -143,8 +143,3 @@ UWidgetEquipPanel* UWidgetEquipInvenPanel::GetEquipPanel()
 {
 	return m_EquipPanel;
 }
-
-UWidgetStatPanel* UWidgetEquipInvenPanel::GetStatPanel()
-{
-	return m_StatPanel;
-}

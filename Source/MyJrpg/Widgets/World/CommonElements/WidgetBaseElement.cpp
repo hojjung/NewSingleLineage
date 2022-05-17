@@ -19,6 +19,8 @@ void UWidgetBaseElement::NativeOnInitialized()
 	Clear();
 
 	SetMyUnFocus();
+	
+	HideDurBar();
 }
 
 FReply UWidgetBaseElement::NativeOnTouchStarted(const FGeometry& InGeometry, const FPointerEvent& InGestureEvent)
@@ -96,7 +98,7 @@ bool UWidgetBaseElement::NativeOnDrop(const FGeometry& InGeometry, const FDragDr
 {
 	bool Result = Super::NativeOnDrop(InGeometry, InDragDropEvent, InOperation);
 	
-	if(UItemDDO::GetDDOInst!=InOperation)
+	if(UItemDDO::GetDDOInst != InOperation)
 	{
 		return false;
 	}
@@ -109,6 +111,18 @@ bool UWidgetBaseElement::NativeOnDrop(const FGeometry& InGeometry, const FDragDr
 	m_OnDrop.Broadcast(this);
 
 	return true;
+}
+
+void UWidgetBaseElement::HideDurBar()
+{
+	m_DurParent->SetVisibility(ESlateVisibility::Collapsed);
+}
+
+void UWidgetBaseElement::ShowDurBar(float per)
+{
+	m_DurParent->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
+
+	m_Dur->SetPercent(per);
 }
 
 void UWidgetBaseElement::NativeTick(const FGeometry& MyGeometry, float InDeltaTime)
@@ -150,6 +164,8 @@ void UWidgetBaseElement::Clear()
 	SetFocusable(false);
 	SetDragable(false);
 	SetHoldable(false);
+
+	HideDurBar();
 }
 
 void UWidgetBaseElement::SetHoldable(bool isActive)

@@ -38,8 +38,8 @@ APreviewActor::APreviewActor()
 	//
 	m_Spring = CreateDefaultSubobject<USpringArmComponent>("Spring");
 	m_Spring->SetupAttachment(RootComponent);
-	m_Spring->SetRelativeRotation(FRotator(1, 200.f, 0));
-	m_Spring->TargetArmLength = 260;
+	m_Spring->SetRelativeRotation(FRotator(-5, 200.f, 0));
+	m_Spring->TargetArmLength = 200;
 	m_Spring->bDoCollisionTest = 0;
 
 	m_Capture = CreateDefaultSubobject<USceneCaptureComponent2D>("Capture2D");
@@ -58,6 +58,30 @@ APreviewActor::APreviewActor()
 	m_Light->CastShadows = false;
 	//
 	m_bTouched = false;
+	//
+	static ConstructorHelpers::FObjectFinder<UAnimSequence> Anim(TEXT("AnimSequence'/Game/14_ModularArmor/Anims/Spear/Frank_RPG_Spear_Unequip_Idle.Frank_RPG_Spear_Unequip_Idle'"));
+
+	m_AnimIdle = Anim.Object;
+	//
+	m_MeshLeftHand = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("m_MeshLeftHand"));
+	m_MeshLeftHand->SetupAttachment(m_MeshBody);
+	m_MeshLeftHand->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+	m_MeshLeftHand->bCastDynamicShadow = false;
+	m_MeshLeftHand->bAffectDynamicIndirectLighting = true;
+	m_MeshLeftHand->PrimaryComponentTick.TickGroup = TG_PrePhysics;
+	m_MeshLeftHand->CanCharacterStepUpOn = ECanBeCharacterBase::ECB_No;
+	//
+	m_MeshRightHand = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("m_MeshRightHand"));
+	m_MeshRightHand->SetupAttachment(m_MeshBody);
+	m_MeshRightHand->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+	m_MeshRightHand->bCastDynamicShadow = false;
+	m_MeshRightHand->bAffectDynamicIndirectLighting = true;
+	m_MeshRightHand->PrimaryComponentTick.TickGroup = TG_PrePhysics;
+	m_MeshRightHand->CanCharacterStepUpOn = ECanBeCharacterBase::ECB_No;
+
+	static ConstructorHelpers::FObjectFinder<USkeletalMesh> FoundBody(TEXT(
+		"SkeletalMesh'/Game/14_ModularArmor/MedievalArmour/CharacterParts/Meshes/Basebody/SKEL_FullBody.SKEL_FullBody'"));
+	m_DefaultSkMesh = FoundBody.Object;
 }
 
 void APreviewActor::BeginPlay()
@@ -83,11 +107,6 @@ void APreviewActor::SetEntity(TSoftObjectPtr<UUnitEntityAsset> asset)
 	m_MeshBody->SetAnimationMode(EAnimationMode::AnimationBlueprint);
 	m_MeshBody->SetAnimClass(entityData->m_AnimBP);
 	m_MeshBody->AddRelativeRotation(FRotator(0,entityData->m_RotYawOffset,0));
-	
-	// for(const FAttach& Attach : asset->m_AryAttaches)
-	// {
-	// 	
-	// }
 }
 
 void APreviewActor::SetMeshScale(float s)
@@ -97,9 +116,15 @@ void APreviewActor::SetMeshScale(float s)
 
 void APreviewActor::OnMeshVisualChanged(const AModularUnitPawn* charData)
 {
-	m_MeshBody->SetSkeletalMesh(charData->GetSkMesh()->SkeletalMesh);
-	//m_MeshBody->SetAnimationMode(EAnimationMode::AnimationBlueprint);
-	//m_MeshBody->SetAnimClass(entityData->m_AnimBP);
+	m_MeshBody->SetSkeletalMesh(charData->GetSkMesh()->SkeletalMesh,false);
+
+	UStaticMesh* LeftMesh = charData->GetLeftWeaponMesh()->GetStaticMesh();
+
+	UStaticMesh* RightMesh = charData->GetRightWeaponMesh()->GetStaticMesh();
+
+	m_MeshLeftHand->SetStaticMesh(LeftMesh);
+
+	m_MeshRightHand->SetStaticMesh(RightMesh);
 }
 
 void APreviewActor::OnMeshVisualChanged(const FUnitEntityRow& charData)
@@ -140,6 +165,21 @@ void APreviewActor::RotatePawn(float delta_x)
 	FRotator Rot(0.f);
 	Rot.Yaw = delta_x;
 	m_MeshBody->AddLocalRotation(Rot);
+}
+
+void APreviewActor::SetAnimation(UAnimSequence* anim_sequence)
+{
+	m_MeshBody->SetAnimationMode(EAnimationMode::AnimationSingleNode);
+	m_MeshBody->SetAnimation(anim_sequence);
+}
+
+void APreviewActor::SetupPlayerPreview()
+{
+	m_MeshBody->SetSkeletalMesh(m_DefaultSkMesh);
+	SetAnimation(m_AnimIdle);
+	FAttachmentTransformRules Rules(EAttachmentRule::KeepRelative, true);
+	m_MeshLeftHand->AttachToComponent(m_MeshBody, Rules, TEXT("LeftHandSocket"));
+	m_MeshRightHand->AttachToComponent(m_MeshBody, Rules, TEXT("RightHandSocket"));
 }
 
 void APreviewActor::Tick(float delta)

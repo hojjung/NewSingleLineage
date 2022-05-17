@@ -35,24 +35,13 @@ class MYJRPG_API AModularUnitPawn : public ACombatUnitPawn
 
 public:
 	AModularUnitPawn(const FObjectInitializer& objInit);
-	
+	void AttachWeapons();
+
 protected:
 	UPROPERTY(VisibleAnywhere)
 	UStaticMeshComponent* m_MeshLeftHand;
 	UPROPERTY(VisibleAnywhere)
 	UStaticMeshComponent* m_MeshRightHand;
-	UPROPERTY(VisibleAnywhere)
-	USkeletalMeshComponent* m_MeshHead;
-	UPROPERTY(VisibleAnywhere)
-	USkeletalMeshComponent* m_MeshHat;
-	UPROPERTY(VisibleAnywhere)
-	USkeletalMeshComponent* m_MeshChest;
-	UPROPERTY(VisibleAnywhere)
-	USkeletalMeshComponent* m_MeshGloves;
-	UPROPERTY(VisibleAnywhere)
-	USkeletalMeshComponent* m_MeshLegs;
-	UPROPERTY(VisibleAnywhere)
-	TArray<USkeletalMeshComponent*> m_ArySkMeshes;
 	
 	FSkeletalMeshMergeParams m_MergeParam;
 protected:
@@ -93,8 +82,6 @@ protected:
 
 	virtual void EndPlay(const EEndPlayReason::Type EndPlayReason) override;
 	
-	void SetMasterPose();
-
 	void UpdateMorpthTarget();
 
 protected:
@@ -107,11 +94,6 @@ protected:
 	virtual UAnimMontage* GetBaseAttackMontage() override;
 
 public:
-	USkeletalMeshComponent* GetModuleSkMesh(EBodyIndex t);
-	
-	USkeletalMeshComponent* GetModuleSkMesh(int t);
-
-public:
 	void SetPet(const FPetRow& pet_row);
 	
 	void UnEquipPet();
@@ -121,9 +103,13 @@ public:
 
 	void HideWeapon();
 
-	void TryShowPickAxe();
+	FName TryShowPickAxe();
 
-	void TryShowAxe();
+	FName TryShowAxe();
 
 	EStanceType GetStance();
+
+	UStaticMeshComponent* GetLeftWeaponMesh() const;
+	
+	UStaticMeshComponent* GetRightWeaponMesh() const;
 };

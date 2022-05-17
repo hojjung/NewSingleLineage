@@ -1,5 +1,6 @@
 #include "Inventory.h"
 #include "MyJrpg/MyLib.h"
+#include "MyJrpg/Managers/EquipManager.h"
 #include "MyJrpg/Managers/MyGameInstance.h"
 
 void UInventory::Init(int size)
@@ -36,7 +37,7 @@ int UInventory::GetInvenSize() const
 	return m_nInvenMaxSize;
 }
 
-bool UInventory::AddItem(FItemSpec addItem)
+bool UInventory::AddItem(FItemSpec addItem, bool newItem)
 {
 	const FItemDataRow& ItemData = UMyLib::GetItemData(addItem.m_ID);
 	
@@ -52,6 +53,10 @@ bool UInventory::AddItem(FItemSpec addItem)
 		{
 			if (Item.m_ID.IsNone())
 			{
+				if(newItem)
+				{
+					addItem.m_nDurability = ItemData.m_nDurability;
+				}
 				m_AryTotalItems[Iter] = addItem;
 				UpdateInventory();
 				return true;
@@ -84,31 +89,6 @@ void UInventory::AddItem(int index, FItemSpec addItem)
 	m_AryTotalItems[index] = addItem;
 }
 
-void UInventory::AddMapItem(FName id, int cnt)
-{
-	int* Count = m_MapItems.Find(id);
-	if(Count)
-	{
-		(*Count) += cnt;
-	}
-	else
-	{
-		m_MapItems.Add(id, cnt);
-	}
-}
-
-void UInventory::RemoveMapItem(FName id, int cnt)
-{
-	int& Cnt = m_MapItems[id];
-
-	Cnt -= cnt;
-
-	if(Cnt <= 0)
-	{
-		m_MapItems.Remove(id);
-	}
-}
-
 bool UInventory::AddItemStack(int index, int& lvCnt, FName id, int maxStack)// = FItemSpec(id,0,0);
 {
 	if(m_AryTotalItems[index].m_ID.IsNone())
@@ -126,12 +106,10 @@ bool UInventory::AddItemStack(int index, int& lvCnt, FName id, int maxStack)// =
 	if (AvailableCnt >= lvCnt)//10, 5
 	{
 		ItemSpecFound += lvCnt;
-		AddMapItem(id, lvCnt);
 		lvCnt = 0;
 		return true;
 	}
 	ItemSpecFound += AvailableCnt;
-	AddMapItem(id, AvailableCnt);
 	lvCnt -= AvailableCnt;
 	return false;
 }
@@ -139,7 +117,7 @@ bool UInventory::AddItemStack(int index, int& lvCnt, FName id, int maxStack)// =
 bool UInventory::RemoveItemStack(int index, int& stackCnt)
 {
 	int& CrntStack = m_AryTotalItems[index].m_nLvStack;
-
+	
 	if(CrntStack < stackCnt)// 3 5
 	{
 		stackCnt -= CrntStack;
@@ -220,9 +198,29 @@ int UInventory::GetUsingSlotCount() const
 	return UsingSlotCnt;
 }
 
-bool UInventory::FindItem(FName itemID)
+int UInventory::FindItem(FName itemID)
 {
-	return m_MapItems.Contains(itemID);
+	int Iter = -1;
+	while (++Iter < m_AryTotalItems.Num())
+	{
+		if(m_AryTotalItems[Iter].m_ID == itemID)
+		{
+			return Iter;
+		}
+	}
+
+	return INDEX_NONE;
+}
+
+void UInventory::ReduceDurability(int index, int dur)//Equip은따로있는데?
+{
+	m_AryTotalItems[index].m_nDurability -= dur;
+	if(m_AryTotalItems[index].m_nDurability < 1)
+	{
+		ClearItem(index);
+	}
+	m_OnInvenChanged.Broadcast();
+	UMyGameInstance::Get->m_EquipManager->UpdateDur();
 }
 
 bool UInventory::MoveItem(int myIndex, UInventory* targetInvenToAdd)

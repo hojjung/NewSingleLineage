@@ -7,6 +7,7 @@
 #include "Engine/TextureRenderTarget2D.h"
 #include "GameFramework/SpringArmComponent.h"
 #include "MyJrpg/DataTables/UnitEntityData.h"
+#include "MyJrpg/Managers/PreviewActorManager.h"
 #include "MyJrpg/Pawns/ModularUnitPawn.h"
 #include "PreviewActor.generated.h"
 
@@ -29,6 +30,15 @@ protected:
 	USpringArmComponent* m_Spring;
 	UPROPERTY(VisibleAnywhere)
 	UPointLightComponent* m_Light;
+	UPROPERTY()
+	UAnimSequence* m_AnimIdle;
+	UPROPERTY()
+	USkeletalMesh* m_DefaultSkMesh;
+protected:
+	UPROPERTY(VisibleAnywhere)
+	UStaticMeshComponent* m_MeshLeftHand;
+	UPROPERTY(VisibleAnywhere)
+	UStaticMeshComponent* m_MeshRightHand;
 protected:
 	UPROPERTY()
 	UTextureRenderTarget2D* m_CaptureTexture;
@@ -64,4 +74,8 @@ public:
 	void SetIsTouched(bool b);
 	
 	void RotatePawn(float delta_x);
+	
+	void SetAnimation(UAnimSequence* anim_sequence);
+
+	void SetupPlayerPreview();
 };

@@ -44,7 +44,10 @@ class MYJRPG_API UWidgetBaseElement : public UUserWidget
 	UTextBlock* m_TextFocus;
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (BindWidget))
 	UTextBlock* m_TextStackAmount;//Level
-	
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (BindWidget))
+	USizeBox* m_DurParent;//
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (BindWidget))
+	UProgressBar* m_Dur;//	
  	float m_fTimer;
 	
  	bool m_bHolding;
@@ -79,6 +82,10 @@ class MYJRPG_API UWidgetBaseElement : public UUserWidget
 	virtual bool NativeOnDrop(const FGeometry& InGeometry, const FDragDropEvent& InDragDropEvent, UDragDropOperation* InOperation) override;
 
 public:
+	void ShowDurBar(float per);
+	
+	void HideDurBar();
+	
 	UWidget* GetImgIcon();
 	
  	void Clear();

@@ -42,6 +42,8 @@ private:
 
 	float m_fDeathAnimDurationTimer;
 
+	FName m_CrntToolID;
+
 private:
 	void CreateSetDeathCurve(float fullLength);
 

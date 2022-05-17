@@ -137,12 +137,16 @@ void UWidgetInventory::SetItem(UWidgetBaseElement* target, const FItemSpec& item
 		{
 			target->HideTextStackLv();
 		}
+
+		target->ShowDurBar((float)itemSpec.m_nDurability / (float)Data.m_nDurability);
 	}
 	else
 	{
 		FString Str = FString::Printf(TEXT("%d"), itemSpec.m_nLvStack);
 			
 		target->SetTextStackLv(Str);
+
+		target->HideDurBar();
 	}
 }
 

@@ -212,10 +212,12 @@ public:
 	FColorDataHandle m_ColorHandle;
 	UPROPERTY(EditAnywhere, meta=(EditCondition = "m_ItemType != EEquipSlotType::None && m_ItemType != EEquipSlotType::Weapon", EditConditionHides))
 	TSoftObjectPtr<USkeletalMesh> m_ArmorMesh;
-	UPROPERTY(EditAnywhere, meta=(EditCondition = "m_ItemType != EEquipSlotType::None", EditConditionHides))
+	UPROPERTY(EditAnywhere, meta=(EditCondition = "m_ItemType != EEquipSlotType::None && m_ItemType == EEquipSlotType::Weapon", EditConditionHides))
 	bool m_bIsRange = false;
 	UPROPERTY(EditAnywhere, meta=(EditCondition = "m_ItemType != EEquipSlotType::None", EditConditionHides))
 	FStatGroup m_EquipStats;
+	UPROPERTY(EditAnywhere, meta=(EditCondition = "m_ItemType != EEquipSlotType::None", EditConditionHides))
+	int m_nDurability = 100;
 	UPROPERTY(EditAnywhere, meta=(EditCondition = "m_ItemType != EEquipSlotType::None", EditConditionHides))
 	FStatGroup m_EnchantStats;//this * level = enchant
 	UPROPERTY(EditAnywhere, meta=(EditCondition = "m_ItemType == EEquipSlotType::Weapon", EditConditionHides))

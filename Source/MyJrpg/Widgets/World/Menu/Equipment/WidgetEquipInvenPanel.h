@@ -26,8 +26,6 @@ class MYJRPG_API UWidgetEquipInvenPanel : public UWidgetBasePanel
 
 protected:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (BindWidget))
-	UWidgetStatPanel* m_StatPanel;
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (BindWidget))
 	UWidgetEquipPanel* m_EquipPanel;
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (BindWidget))
 	UWidgetInventory* m_InvenPanel;
@@ -56,8 +54,6 @@ public:
 	UWidgetInventory* GetInvenPanel();
 
 	UWidgetEquipPanel* GetEquipPanel();
-
-	UWidgetStatPanel* GetStatPanel();
 
 	virtual void ClosePanel() override;
 	

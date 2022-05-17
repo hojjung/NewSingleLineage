@@ -48,7 +48,7 @@ void UPlayerAnimInstance::NativeBeginPlay()
 	m_PlOwner=Cast<AMyPlayerPawn>( TryGetPawnOwner());
 }
 
-void UPlayerAnimInstance::NativeInitializeAnimation()
+void UPlayerAnimInstance::NativeInitializeAnimation() 
 {
 	Super::NativeInitializeAnimation();
 	m_PlOwner=Cast<AMyPlayerPawn>( TryGetPawnOwner());

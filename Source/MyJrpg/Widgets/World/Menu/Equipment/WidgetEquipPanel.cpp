@@ -139,6 +139,15 @@ void UWidgetEquipPanel::UpdateElement(UWidgetBaseElement* ele, const FItemSpec& 
 
 	ele->SetGlowColor(Data.m_ColorHandle);
 
+	if(UMyLib::IsEquip(Data))
+	{
+		ele->ShowDurBar((float)item.m_nDurability / (float)Data.m_nDurability);
+	}
+	else
+	{
+		ele->HideDurBar();
+	}
+
 	if (item.m_nLvStack > 0)
 	{
 		FString Str = FString::Printf(TEXT("+%d"), item.m_nLvStack);

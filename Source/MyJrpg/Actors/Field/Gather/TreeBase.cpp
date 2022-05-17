@@ -124,24 +124,47 @@ void ATreeBase::OnInteract()
 
 	if(m_GatherAsset->m_bIsAxe)
 	{
-		m_Player->TryShowAxe();
+		m_CrntToolID = m_Player->TryShowAxe();
 	}
 	else
 	{
-		m_Player->TryShowPickAxe();
+		m_CrntToolID = m_Player->TryShowPickAxe();
 	}
-}
-
-void ATreeBase::OnHarvestMotionDone()
-{
-	m_Player->SetInteracting(false);
-	m_Player->ShowWeapon();
 }
 
 void ATreeBase::OnTakeChopping()
 {
-	m_nTreeHp--;
-	
+	if(!m_CrntToolID.IsNone())
+	{
+		if(m_GatherAsset->m_bIsAxe)
+		{
+			if(m_CrntToolID == TEXT("Axe01"))
+			{
+				m_nTreeHp -= 3;
+			}
+			else
+			{
+				m_nTreeHp -= 6;
+			}
+		}
+		else
+		{
+			if(m_CrntToolID == TEXT("Pickaxe01"))
+			{
+				m_nTreeHp -= 3;
+			}
+			else
+			{
+				m_nTreeHp -= 6;
+			}
+		}
+
+		UMyLib::ReduceDurability(m_CrntToolID);
+	}
+	else
+	{
+		m_nTreeHp--;
+	}
 	if(m_nTreeHp<=0)
 	{
 		OnGatherDone();
@@ -155,6 +178,15 @@ void ATreeBase::OnGatherDone()
 	m_MeshTree->SetCollisionEnabled(ECollisionEnabled::PhysicsOnly);
 	if(m_bUsePhysics)
 		m_MeshTree->SetSimulatePhysics(true);
+}
+
+void ATreeBase::OnHarvestMotionDone()
+{
+	m_Player->SetInteracting(false);
+	
+	m_CrntToolID = NAME_None;
+	
+	m_Player->ShowWeapon();
 }
 
 float ATreeBase::GetBoundHalfHeight()

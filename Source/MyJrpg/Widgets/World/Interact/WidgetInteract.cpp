@@ -1,6 +1,7 @@
 #include "WidgetInteract.h"
 #include "MyJrpg/MyLib.h"
 #include "MyJrpg/Actors/Field/ItemActor.h"
+#include "MyJrpg/Managers/EquipManager.h"
 #include "MyJrpg/Managers/MyGameInstance.h"
 #include "MyJrpg/Pawns/MonsterPawn.h"
 #include "MyJrpg/Pawns/MyPlayerPawn.h"
@@ -30,6 +31,10 @@ void UWidgetInteract::NativeOnInitialized()
 
 	m_Pl = UMyLib::GetPlayer();
 	m_Pl->m_OnFocus.AddUObject(this, &UWidgetInteract::ShowInteract);
+
+	UMyGameInstance::Get->m_EquipManager->m_OnEquipChanged.AddUObject(this, &UWidgetInteract::OnEquipChanged);
+	UMyGameInstance::Get->m_EquipManager->m_OnDurChanged.AddUObject(this, &UWidgetInteract::OnEquipChanged);
+	OnEquipChanged();
 }
 
 void UWidgetInteract::ShowWidgetMonster(const AMonsterPawn* mob)
@@ -93,6 +98,18 @@ bool UWidgetInteract::IsInRange(IFocusable* focus)
 	FVector FocusLoc = FocusActor->GetActorLocation();
 
 	return FVector::DistSquared2D(PlayerLoc, FocusLoc) <= 90000;
+}
+
+void UWidgetInteract::HideDur()
+{
+	m_DurGauge->SetVisibility(ESlateVisibility::Collapsed);
+}
+
+void UWidgetInteract::ShowDur(float per)
+{
+	m_DurGauge->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
+
+	m_DurGauge->SetProgressValue(per);
 }
 
 void UWidgetInteract::ShowInteract(IFocusable* focus)
@@ -197,4 +214,17 @@ void UWidgetInteract::OnAutoToggle()
 	UWidgetInteract::AutoToggle=!UWidgetInteract::AutoToggle;
 	UMyLib::GetPlayer()->SetAutoCombat(AutoToggle);
 	UMyGameInstance::Get->m_SkillAuto->SetUseAuto(AutoToggle);
+}
+
+void UWidgetInteract::OnEquipChanged()
+{
+	FItemSpec& Item = UMyGameInstance::Get->m_EquipManager->GetEquipItem(EEquipSlotType::Weapon);
+	if(Item.m_ID.IsNone())
+	{
+		HideDur();
+		return;
+	}
+	int Dur = (float)UMyLib::GetItemData(Item.m_ID).m_nDurability;
+	float Per = (float)Item.m_nDurability / (float)Dur;
+	ShowDur(Per);
 }

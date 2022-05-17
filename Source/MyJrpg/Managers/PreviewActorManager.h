@@ -18,6 +18,8 @@ class MYJRPG_API UPreviewActorManager : public UObject, public IPreviewProxy
 	GENERATED_BODY()
 
 protected:
+
+	
 	TWeakObjectPtr<APreviewActor> m_PreviewActor;
 
 public:

@@ -23,6 +23,8 @@ public:
 
 	FOnEquipChanged m_OnEquipChanged;
 
+	FOnEquipChanged m_OnDurChanged;
+
 protected:
 	bool m_bIsRange;
 	
@@ -57,9 +59,13 @@ public:
 
 	bool Unequip(EEquipSlotType slotWant, UInventory* returnInven , int * returnInvenIndex = nullptr);
 
+	void DestoryItem(EEquipSlotType t);
+
 	bool IsItemEquipped(EEquipSlotType wantSlot);
 
-	const FItemSpec& GetEquipItem(int slotIndex);
+	FItemSpec& GetEquipItem(int slotIndex);
+
+	FItemSpec& GetEquipItem(EEquipSlotType t);
 
 	bool IsRangeStance();
 
@@ -87,4 +93,8 @@ public:
 	UInventory::FOnInvenChanged& GetOnBagChanged();
 
 	UInventory::FOnInvenChanged& GetOnBeltChanged();
+	
+	void ReduceDurability(EEquipSlotType t, int amount);
+
+	void UpdateDur();
 };

@@ -96,14 +96,27 @@ bool UEquipManager::Unequip(EEquipSlotType slotWant, UInventory* returnInven , i
 	return true;
 }
 
+void UEquipManager::DestoryItem(EEquipSlotType t)
+{
+	GetEquipItem(t) = FItemSpec();
+
+	SetIsRangeStance();
+	m_OnEquipChanged.Broadcast();
+}
+
 bool UEquipManager::IsItemEquipped(EEquipSlotType wantSlot)
 {
 	return !GetEquipItem((int)wantSlot).m_ID.IsNone();
 }
 
-const FItemSpec& UEquipManager::GetEquipItem(int slotIndex)
+FItemSpec& UEquipManager::GetEquipItem(int slotIndex)
 {
 	return m_AryEqupSlots[slotIndex];
+}
+
+FItemSpec& UEquipManager::GetEquipItem(EEquipSlotType t)
+{
+	return GetEquipItem((int)t);
 }
 
 bool UEquipManager::IsRangeStance()
@@ -202,4 +215,21 @@ UInventory::FOnInvenChanged& UEquipManager::GetOnBagChanged()
 UInventory::FOnInvenChanged& UEquipManager::GetOnBeltChanged()
 {
 	return GetBelt()->OnInvenChanged();
+}
+
+void UEquipManager::ReduceDurability(EEquipSlotType t, int amount)
+{
+	GetEquipItem(t).m_nDurability -= amount;
+
+	UpdateDur();
+	
+	if(GetEquipItem(t).m_nDurability < 1)
+	{
+		DestoryItem(t);
+	}
+}
+
+void UEquipManager::UpdateDur()
+{
+	m_OnDurChanged.Broadcast();
 }

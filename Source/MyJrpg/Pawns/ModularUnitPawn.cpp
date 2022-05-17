@@ -11,19 +11,6 @@
 
 AModularUnitPawn::AModularUnitPawn(const FObjectInitializer& objInit): Super(objInit)
 {
-	// m_MeshHat = CreateSkMeshComp(TEXT("m_MeshHat"));
-	// m_MeshHead = CreateSkMeshComp(TEXT("m_MeshHead"));
-	//m_MeshChest = CreateSkMeshComp(TEXT("mm_MeshChest"));
-	// m_MeshGloves = CreateSkMeshComp(TEXT("m_MeshGloves"));
-	// m_MeshLegs = CreateSkMeshComp(TEXT("m_MeshLegs"));
-	//
-	// m_ArySkMeshes.Reset();
-	// m_ArySkMeshes.Add(m_MeshHead);
-	// m_ArySkMeshes.Add(m_MeshHat);
-	// m_ArySkMeshes.Add(m_MeshChest);
-	// m_ArySkMeshes.Add(m_MeshGloves);
-	// m_ArySkMeshes.Add(m_MeshLegs);
-	//
 	static ConstructorHelpers::FObjectFinder<USkeletalMesh> FoundBody(TEXT(
 		"SkeletalMesh'/Game/14_ModularArmor/MedievalArmour/CharacterParts/Meshes/Basebody/SKEL_FullBody.SKEL_FullBody'"));
 	//AnimBlueprint'/Game/14_ModularArmor/Anims/ABP_Default.ABP_Default'
@@ -78,11 +65,19 @@ AModularUnitPawn::AModularUnitPawn(const FObjectInitializer& objInit): Super(obj
 	m_BaseAttack[(int)EStanceType::Dual] = Attack11.Object;
 }
 
+void AModularUnitPawn::AttachWeapons()
+{
+	FAttachmentTransformRules Rules(EAttachmentRule::KeepRelative, true);
+	m_MeshLeftHand->AttachToComponent(m_BodyMesh, Rules, TEXT("LeftHandSocket"));
+	m_MeshRightHand->AttachToComponent(m_BodyMesh, Rules, TEXT("RightHandSocket"));
+}
+
 void AModularUnitPawn::BeginPlay()
 {
 	Super::BeginPlay();
 	SetDefaultMesh();
 	UpdateMorpthTarget();
+	AttachWeapons();
 	m_MergeParam.Skeleton = m_CachedMeshBody->GetSkeleton();
 	m_MergeParam.MeshesToMerge.Init(nullptr,(int)EBodyIndex::Len + 1);
 	m_MergeParam.MeshesToMerge[(int)EBodyIndex::Len] = m_CachedMeshBody;
@@ -104,27 +99,15 @@ void AModularUnitPawn::EndPlay(const EEndPlayReason::Type EndPlayReason)
 {
 	Super::EndPlay(EndPlayReason);
 
-	for (USkeletalMeshComponent* Sk : m_ArySkMeshes)
-	{
-		Sk->SetSkeletalMesh(nullptr);
-	}
-
 	HideWeapon();
 
 	m_CacheLeftHand = nullptr;
 
 	m_CacheRightHand = nullptr;
 
-	m_Stance = EStanceType::None;
-}
+	m_MergeParam.MeshesToMerge.Empty();
 
-void AModularUnitPawn::SetMasterPose()
-{
-	int Iter = -1;
-	while (++Iter < m_ArySkMeshes.Num())
-	{
-		m_ArySkMeshes[Iter]->SetMasterPoseComponent(m_BodyMesh);
-	}
+	m_Stance = EStanceType::None;
 }
 
 void AModularUnitPawn::UpdateMorpthTarget()
@@ -132,28 +115,6 @@ void AModularUnitPawn::UpdateMorpthTarget()
 	m_BodyMesh->SetMorphTarget(TEXT("hat_equipped"), m_bIsHatEquipped ? 1.f : 0.f);
 	m_BodyMesh->SetMorphTarget(TEXT("gloves_equipped"), m_bIsGloveEquipped ? 1.f : 0.f);
 	m_BodyMesh->SetMorphTarget(TEXT("boot_high_equipped"), m_bIsBootHighEquipped ? 1.f : 0.f);
-	
-	int Iter = -1;
-	while (++Iter < m_ArySkMeshes.Num())
-	{
-		m_ArySkMeshes[Iter]->SetMorphTarget(TEXT("hat_equipped"), m_bIsHatEquipped ? 1.f : 0.f);
-		m_ArySkMeshes[Iter]->SetMorphTarget(TEXT("gloves_equipped"), m_bIsGloveEquipped ? 1.f : 0.f);
-		m_ArySkMeshes[Iter]->SetMorphTarget(TEXT("boot_high_equipped"), m_bIsBootHighEquipped ? 1.f : 0.f);
-	}
-
-	FAttachmentTransformRules Rules(EAttachmentRule::KeepRelative, true);
-	m_MeshLeftHand->AttachToComponent(m_BodyMesh, Rules, TEXT("LeftHandSocket"));
-	m_MeshRightHand->AttachToComponent(m_BodyMesh, Rules, TEXT("RightHandSocket"));
-}
-
-USkeletalMeshComponent* AModularUnitPawn::GetModuleSkMesh(EBodyIndex t)
-{
-	return GetModuleSkMesh((int)t);
-}
-
-USkeletalMeshComponent* AModularUnitPawn::GetModuleSkMesh(int t)
-{
-	return m_ArySkMeshes[t];
 }
 
 void AModularUnitPawn::UpdateEquipActor()
@@ -189,6 +150,9 @@ void AModularUnitPawn::UpdateEquipActor()
 	}
 	else
 	{
+		m_CacheLeftHand = nullptr;
+
+		m_CacheRightHand = nullptr;
 		m_Stance = EStanceType::None;
 		HideWeapon();
 	}
@@ -197,7 +161,9 @@ void AModularUnitPawn::UpdateEquipActor()
 	USkeletalMesh* SkMeshMerged = UMeshMergeLib::MergeMeshes(m_MergeParam);
 
 	m_BodyMesh->SetSkeletalMesh(SkMeshMerged);
+	
 	m_BodyMesh->SetAnimClass(m_ClassAnimBP);
+	
 	UMyGameInstance::Get->m_PreviewActorManager->Update(this);
 }
 
@@ -229,23 +195,45 @@ void AModularUnitPawn::HideWeapon()
 	m_MeshRightHand->SetStaticMesh(nullptr);
 }
 
-void AModularUnitPawn::TryShowPickAxe()
+FName AModularUnitPawn::TryShowPickAxe()
 {
-	HideWeapon();
+	FName Id;
 	
-	m_MeshRightHand->SetStaticMesh(m_Pickaxe);
+	if(UMyLib::HasPickaxe(Id))
+	{
+		HideWeapon();
+		
+		m_MeshRightHand->SetStaticMesh(m_Pickaxe);
+	}
+	return Id;
 }
 
-void AModularUnitPawn::TryShowAxe()
+FName AModularUnitPawn::TryShowAxe()
 {
-	HideWeapon();
+	FName Id;
 	
-	m_MeshRightHand->SetStaticMesh(m_Axe);
+	if(UMyLib::HasAxe(Id))
+	{
+		HideWeapon();
+		
+		m_MeshRightHand->SetStaticMesh(m_Axe);
+	}
+	return Id;
 }
 
 EStanceType AModularUnitPawn::GetStance()
 {
 	return m_Stance;
+}
+
+UStaticMeshComponent* AModularUnitPawn::GetLeftWeaponMesh() const
+{
+	return m_MeshLeftHand;
+}
+
+UStaticMeshComponent* AModularUnitPawn::GetRightWeaponMesh() const
+{
+	return m_MeshRightHand;
 }
 
 void AModularUnitPawn::SetPet(const FPetRow& pet_row)

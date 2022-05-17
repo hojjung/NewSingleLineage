@@ -12,6 +12,7 @@ void UPreviewActorManager::CreatePreviewActor()
 	Param.bNoFail = true;
 	
 	m_PreviewActor = GetWorld()->SpawnActor<APreviewActor>(APreviewActor::StaticClass(),FVector(9999,9999,9999),FRotator(0),Param);
+	m_PreviewActor->SetupPlayerPreview();
 }
 //AnimSequence'/Game/14_ModularArmor/Anims/Spear/Frank_RPG_Spear_Unequip_Idle.Frank_RPG_Spear_Unequip_Idle'
 void UPreviewActorManager::SetIsTouched(bool b)

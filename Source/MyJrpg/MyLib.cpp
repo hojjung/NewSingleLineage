@@ -1,6 +1,7 @@
 #include "MyLib.h"
 
 #include "Items/ItemExecuteBase.h"
+#include "Managers/EquipManager.h"
 #include "Managers/MyGameInstance.h"
 #include "Pawns/MyPlayerPawn.h"
 #include "Widgets/World/Menu/Storage/WidgetStorage.h"
@@ -527,4 +528,115 @@ bool UMyLib::IsCollecItemEquip(const FName& collecID, int index)
 TArray<UInventory*>& UMyLib::GetPlayerStorage()
 {
 	return UMyGameInstance::Get->GetStorages();
+}
+
+bool UMyLib::HasAxe(FName& outFoundAxe)
+{
+	FName Axe01 = TEXT("Axe01");
+	FName Axe02 = TEXT("Axe02");
+	UEquipManager* Equip = UMyGameInstance::Get->m_EquipManager;
+	FName EquipID = Equip->GetEquipItem(EEquipSlotType::Weapon).m_ID; 
+	if(EquipID == Axe01)
+	{
+		outFoundAxe = Axe01;
+		return true;
+	}
+	if(EquipID == Axe02)
+	{
+		outFoundAxe = Axe02;
+		return true;
+	}
+	if(FindItemAllInven(Axe01))
+	{
+		outFoundAxe = Axe01;
+		return  true;
+	}
+	else if(FindItemAllInven(Axe02))
+	{
+		outFoundAxe = Axe02;
+		return  true;
+	}
+
+	return false;
+}
+
+bool UMyLib::HasPickaxe(FName& outFoundPickaxe)
+{
+	FName Pickaxe01 = TEXT("Pickaxe01");
+	FName Pickaxe02 = TEXT("Pickaxe02");
+	if(FindItemAllInven(Pickaxe01))
+	{
+		outFoundPickaxe = Pickaxe01;
+		return  true;
+	}
+	else if(FindItemAllInven(Pickaxe02))
+	{
+		outFoundPickaxe = Pickaxe02;
+		return  true;
+	}
+
+	return false;
+}
+
+FItemSpec* UMyLib::FindItemAllInven(FName idwant)
+{
+	FItemSpec* ItemFound = nullptr;
+	int Index = INDEX_NONE;
+	UEquipManager* Equip = UMyGameInstance::Get->m_EquipManager;
+	if(Equip->GetBag())
+	{
+		Index = Equip->GetBag()->FindItem(idwant);
+		if(Index != INDEX_NONE)
+		{
+			return &(Equip->GetBag()->GetItemRef(Index));
+		}
+	}
+	if(Equip->GetBelt())
+	{
+		Index = Equip->GetBelt()->FindItem(idwant);
+		if(Index != INDEX_NONE)
+		{
+			return &(Equip->GetBelt()->GetItemRef(Index));
+		}
+	}
+	Index = UMyLib::GetPlayerInven()->FindItem(idwant);
+	if(Index != INDEX_NONE)
+	{
+		return  &(UMyLib::GetPlayerInven()->GetItemRef(Index));
+	}
+	return nullptr;
+}
+
+void UMyLib::ReduceDurability(FName idwant, int amount)
+{
+	int Index = INDEX_NONE;
+	UEquipManager* Equip = UMyGameInstance::Get->m_EquipManager;
+	if(Equip->GetEquipItem(EEquipSlotType::Weapon).m_ID == idwant)
+	{
+		Equip->ReduceDurability(EEquipSlotType::Weapon, amount);
+		return;
+	}
+	if(Equip->GetBag())
+	{
+		Index = Equip->GetBag()->FindItem(idwant);
+		if(Index != INDEX_NONE)
+		{
+			Equip->GetBag()->ReduceDurability(Index,amount);
+			return;
+		}
+	}
+	if(Equip->GetBelt())
+	{
+		Index = Equip->GetBelt()->FindItem(idwant);
+		if(Index != INDEX_NONE)
+		{
+			Equip->GetBelt()->ReduceDurability(Index,amount);
+			return;
+		}
+	}
+	Index = UMyLib::GetPlayerInven()->FindItem(idwant);
+	if(Index != INDEX_NONE)
+	{
+		UMyLib::GetPlayerInven()->ReduceDurability(Index,amount);
+	}
 }

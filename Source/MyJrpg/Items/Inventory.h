@@ -49,8 +49,6 @@ protected://
 	
 	TArray<FItemSpec> m_AryTotalItems;
 
-	TMap<FName, int> m_MapItems;
-
 protected:
 	bool GetEmptyIndex(int& out) const;
 
@@ -59,10 +57,6 @@ protected:
 	bool RemoveItemStack(int index, int& stackCnt);
 
 	void ClearItem(int index);
-	
-	void AddMapItem(FName id, int cnt);
-
-	void RemoveMapItem(FName id, int cnt);
 	
 public:
 	FORCEINLINE const TArray<FItemSpec>& GetAryItems() const
@@ -86,7 +80,7 @@ public:
 	
 	void UpdateInventory();
 
-	bool AddItem(FItemSpec addItem);
+	bool AddItem(FItemSpec addItem, bool newItem = false);
 
 	void AddItem(int index, FItemSpec addItem);
 	
@@ -96,7 +90,9 @@ public:
 
 	int GetUsingSlotCount() const;
 	
-	bool FindItem(FName itemID);
+	int FindItem(FName itemID);
+
+	void ReduceDurability(int index, int dur = 1);
 
 	bool MoveItem(int myIndex, UInventory* targetInvenToAdd);
 	

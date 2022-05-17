@@ -116,4 +116,11 @@ public:
 	
 	static TArray<UInventory*>& GetPlayerStorage();
 
+	static bool HasAxe(FName& outFoundAxe);
+
+	static bool HasPickaxe(FName& outFoundPickaxe);
+
+	static FItemSpec* FindItemAllInven(FName idwant);
+
+	static void ReduceDurability(FName idwant, int amount = 1);
 };
