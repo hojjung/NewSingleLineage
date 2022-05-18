@@ -114,8 +114,6 @@ public:
 
 	static bool IsCollecItemEquip(const FName& collecID, int index);
 	
-	static TArray<UInventory*>& GetPlayerStorage();
-
 	static bool HasAxe(FName& outFoundAxe);
 
 	static bool HasPickaxe(FName& outFoundPickaxe);

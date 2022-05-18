@@ -18,7 +18,7 @@ void UEquipManager::Equip(EEquipSlotType slotWant,UInventory* inven, int invenIn
 {
 	FItemSpec Item = inven->GetItemRef(invenIndex);
 	
-	inven->RemoveItem(invenIndex);
+	inven->NewClearItem(invenIndex);
 	
 	Unequip(slotWant,inven,&invenIndex,false);
 	
@@ -86,7 +86,7 @@ bool UEquipManager::Unequip(EEquipSlotType slotWant, UInventory* returnInven , i
 	}
 	else
 	{
-		returnInven->AddItem(*returnInvenIndex,Temp);//이거때문에 위 if문을 합치면 안된다
+		returnInven->NewAddItem(*returnInvenIndex,Temp);//이거때문에 위 if문을 합치면 안된다
 	}
 	
 	SetIsRangeStance();

@@ -3,9 +3,9 @@
 #include "EquipManager.h"
 #include "MyGameInstance.h"
 #include "MyJrpg/MyLib.h"
-#include "MyJrpg/Items/Exe_EnchantArmor.h"
-#include "MyJrpg/Items/Exe_EnchantTrinket.h"
-#include "MyJrpg/Items/Exe_EnchantWeapon.h"
+#include "MyJrpg/Items/Item_Exe/Exe_EnchantArmor.h"
+#include "MyJrpg/Items/Item_Exe/Exe_EnchantTrinket.h"
+#include "MyJrpg/Items/Item_Exe/Exe_EnchantWeapon.h"
 #include "MyJrpg/Pawns/MyPlayerPawn.h"
 
 UEnchantManager::UEnchantManager()

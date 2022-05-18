@@ -77,6 +77,7 @@ void UWidgetQuickslotBar::OnClick(UWidgetBaseElement* ele)
 	switch (Type)
 	{
 	case EItemType::Consume:
+		UMyGameInstance::Get->m_QuickManager->ExeItem(ItemData.m_ClassExeItem,Belt,Index,1);
 		break;
 	case EItemType::Equip:
 		UMyLib::GetEquip()->Equip(ItemData.m_ItemType,Belt,Index);

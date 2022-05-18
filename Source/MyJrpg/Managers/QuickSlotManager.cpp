@@ -1,71 +1,33 @@
 #include "QuickSlotManager.h"
 
-bool UQuickSlotManager::EquipQuickSlot(int cnt)
+#include "MyJrpg/Items/Item_Exe/ItemExecuteBase.h"
+
+void UQuickSlotManager::RegisterItem(TSubclassOf<UItemExecuteBase> exe)
 {
-	if(!TryUnequipQuickSlot())
+	TStrongObjectPtr<UItemExecuteBase>* ItemFound = m_MapItemExe.Find(exe);
+	
+	if(ItemFound)
 	{
-		return false;
+		return;
 	}
 
-	m_BeltSlots	= NewObject<UInventory>(this);
-
-	m_BeltSlots->Init(cnt);
-
-	m_OnBeltChanged.Broadcast();
+	TStrongObjectPtr<UItemExecuteBase> NewItem = TStrongObjectPtr<UItemExecuteBase>( NewObject<UItemExecuteBase>(this, exe));
 	
-	return true;
+	m_MapItemExe.Emplace(exe, NewItem);
 }
 
-bool UQuickSlotManager::TryUnequipQuickSlot()
+void UQuickSlotManager::UnregisterItem(TSubclassOf<UItemExecuteBase> exe)
 {
-	if(m_BeltSlots->GetUsingSlotCount() > 0)
+	m_MapItemExe.Remove(exe);
+}
+
+void UQuickSlotManager::ExeItem(TSubclassOf<UItemExecuteBase> exe,UInventory* inven, int index, int cnt)
+{
+	auto& ItemInst = m_MapItemExe[exe];
+	int Iter = -1;
+	while (++Iter < cnt)
 	{
-		return false;
+		ItemInst->Use();
 	}
-
-	m_BeltSlots = nullptr;
-
-	m_OnBeltChanged.Broadcast();
-	
-	return true;
-}
-
-bool UQuickSlotManager::EquipBag(int cnt)
-{
-	if(!TryUnequipBag())
-	{
-		return false;
-	}
-
-	m_BagInven	= NewObject<UInventory>(this);
-
-	m_BagInven->Init(cnt);
-
-	m_OnBeltChanged.Broadcast();
-	
-	return true;
-}
-
-bool UQuickSlotManager::TryUnequipBag()
-{
-	if(m_BagInven->GetUsingSlotCount() > 0)
-	{
-		return false;
-	}
-
-	m_BagInven = nullptr;
-
-	m_OnBagChanged.Broadcast();
-	
-	return true;
-}
-
-const UInventory* UQuickSlotManager::GetInven() const
-{
-	return m_BagInven;
-}
-
-const UInventory* UQuickSlotManager::GetSlot() const
-{
-	return m_BeltSlots;
+	inven->RemoveItem(index,cnt);
 }

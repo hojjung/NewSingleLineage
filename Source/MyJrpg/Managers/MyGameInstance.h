@@ -8,7 +8,6 @@
 #include "CurrencyManager.h"
 #include "EnchantManager.h"
 #include "FriendKarmaManager.h"
-#include "ItemExecuteManager.h"
 #include "LevelMoveManager.h"
 #include "ParticleEffectManager.h"
 #include "PlayerStatusManager.h"
@@ -58,8 +57,6 @@ public:
 	
 	UPROPERTY()
 	UEquipManager* m_EquipManager;
-	UPROPERTY()
-	UItemExecuteManager* m_ItemExeManager;
 	UPROPERTY()
 	UCurrencyManager* m_CurrencyManager;
 	UPROPERTY()

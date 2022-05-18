@@ -1,6 +1,6 @@
 #include "MyLib.h"
 
-#include "Items/ItemExecuteBase.h"
+#include "Items/Item_Exe/ItemExecuteBase.h"
 #include "Managers/EquipManager.h"
 #include "Managers/MyGameInstance.h"
 #include "Pawns/MyPlayerPawn.h"
@@ -523,11 +523,6 @@ bool UMyLib::IsCollecItemEquip(const FName& collecID, int index)
 	const FName ItemKey = UItemCollectionTable::GetItemCollecTable->FindRow<FItemCollecRow>(collecID,"")->m_AryItems[index].m_Item.RowName;
 
 	return UMyLib::IsEquip(ItemKey);
-}
-
-TArray<UInventory*>& UMyLib::GetPlayerStorage()
-{
-	return UMyGameInstance::Get->GetStorages();
 }
 
 bool UMyLib::HasAxe(FName& outFoundAxe)

@@ -1,4 +1,5 @@
 #include "Inventory.h"
+#include "Item_Exe/ItemExecuteBase.h"
 #include "MyJrpg/MyLib.h"
 #include "MyJrpg/Managers/EquipManager.h"
 #include "MyJrpg/Managers/MyGameInstance.h"
@@ -37,7 +38,7 @@ int UInventory::GetInvenSize() const
 	return m_nInvenMaxSize;
 }
 
-bool UInventory::AddItem(FItemSpec addItem, bool newItem)
+bool UInventory::AddItem(FItemSpec addItem, bool newEquipItem)
 {
 	const FItemDataRow& ItemData = UMyLib::GetItemData(addItem.m_ID);
 	
@@ -53,11 +54,12 @@ bool UInventory::AddItem(FItemSpec addItem, bool newItem)
 		{
 			if (Item.m_ID.IsNone())
 			{
-				if(newItem)
+				if(newEquipItem)
 				{
 					addItem.m_nDurability = ItemData.m_nDurability;
 				}
-				m_AryTotalItems[Iter] = addItem;
+				NewAddItem(Iter,addItem);
+				AddItemKey(ItemData,addItem.m_ID,1);
 				UpdateInventory();
 				return true;
 			}
@@ -70,7 +72,8 @@ bool UInventory::AddItem(FItemSpec addItem, bool newItem)
 		{
 			if (Item.m_ID == addItem.m_ID || Item.m_ID.IsNone())
 			{
-				if (AddItemStack(Iter, addItem.m_nLvStack, addItem.m_ID, MaxStack))
+				AddItemStack(ItemData, Iter, addItem.m_nLvStack, addItem.m_ID, MaxStack);
+				if(addItem.m_nLvStack <= 0)
 				{
 					UpdateInventory();
 					return true;
@@ -84,12 +87,13 @@ bool UInventory::AddItem(FItemSpec addItem, bool newItem)
 	return false;
 }
 
-void UInventory::AddItem(int index, FItemSpec addItem)
+void UInventory::NewAddItem(int index, FItemSpec addItem)
 {
 	m_AryTotalItems[index] = addItem;
+	
 }
 
-bool UInventory::AddItemStack(int index, int& lvCnt, FName id, int maxStack)// = FItemSpec(id,0,0);
+void UInventory::AddItemStack(const FItemDataRow& itemData, int index, int& lvCnt, FName id, int maxStack)// = FItemSpec(id,0,0);
 {
 	if(m_AryTotalItems[index].m_ID.IsNone())
 	{
@@ -101,41 +105,87 @@ bool UInventory::AddItemStack(int index, int& lvCnt, FName id, int maxStack)// =
 	
 	if(AvailableCnt<=0)
 	{
-		return false;
+		return ;
 	}
 	if (AvailableCnt >= lvCnt)//10, 5
 	{
 		ItemSpecFound += lvCnt;
 		lvCnt = 0;
-		return true;
+		AddItemKey(itemData, id,lvCnt);
+		return ;
 	}
 	ItemSpecFound += AvailableCnt;
 	lvCnt -= AvailableCnt;
-	return false;
+	AddItemKey(itemData, id,AvailableCnt);
 }
 
-bool UInventory::RemoveItemStack(int index, int& stackCnt)
+void UInventory::RemoveItemStack(const FItemDataRow& itemData, int index, int& stackCnt)
 {
 	int& CrntStack = m_AryTotalItems[index].m_nLvStack;
 	
-	if(CrntStack < stackCnt)// 3 5
+	if(CrntStack <= stackCnt)// 3 5,라면,3은 클리어 당한다ㅡ 하지만 2만큼 다른곳에서 빼야함
 	{
 		stackCnt -= CrntStack;
-		ClearItem(index);
-		RemoveItem(m_AryTotalItems[index].m_ID, CrntStack);
-		return false;
+		RemoveItemKey(itemData, m_AryTotalItems[index].m_ID,index);
+		NewClearItem(index);
+		return;
 	}//5 3
 
 	CrntStack -= stackCnt;
-	RemoveItem(m_AryTotalItems[index].m_ID, stackCnt);
-	return true;
+	stackCnt = 0;
+	return;//제거 종료,아이템을 비우는게 목적이 아니라 차감이 목적,칸과 상관이 없다.
 }
 
-void UInventory::ClearItem(int index)
+void UInventory::NewClearItem(int index)
 {
 	m_AryTotalItems[index].m_ID = NAME_None;
 	m_AryTotalItems[index].m_nLvStack = 0;
 	m_AryTotalItems[index].m_nDurability = 0;
+}
+
+void UInventory::RegisterQuickItemExe(const FItemDataRow& itemData)
+{
+	if(!itemData.m_ClassExeItem->IsValidLowLevel())
+	{
+		return;
+	}
+	UMyGameInstance::Get->m_QuickManager->RegisterItem(itemData.m_ClassExeItem);
+}
+
+void UInventory::UnregisterQuickItemExe(const FItemDataRow& itemData)
+{
+	if(!itemData.m_ClassExeItem->IsValidLowLevel())
+	{
+		return;
+	}
+	UMyGameInstance::Get->m_QuickManager->UnregisterItem(itemData.m_ClassExeItem);
+}
+
+void UInventory::AddItemKey(const FItemDataRow& itemData,FName id, int index)
+{
+	TSet<int>* FoundIndexSets = m_MapItemKeyCount.Find(id);
+	if(FoundIndexSets)
+	{
+		FoundIndexSets->Add(index);//중복거르기 알아서
+		return;
+	}
+	TSet<int> NewIndexSet;
+	NewIndexSet.Add(index);
+	m_MapItemKeyCount.Emplace(id,NewIndexSet);
+	RegisterQuickItemExe(itemData);
+}
+
+void UInventory::RemoveItemKey(const FItemDataRow& itemData,FName id, int index)//인덱스가 존재하는 칸을 없애는거
+{
+	TSet<int>* FoundIndexSets = m_MapItemKeyCount.Find(id);
+	
+	FoundIndexSets->Remove(index);
+
+	if(FoundIndexSets->Num() < 1)
+	{
+		m_MapItemKeyCount.Remove(id);
+		UnregisterQuickItemExe(itemData);
+	}
 }
 
 bool UInventory::RemoveItem(FName itemID, int lvCnt)
@@ -152,7 +202,8 @@ bool UInventory::RemoveItem(FName itemID, int lvCnt)
 		{
 			if (ItemMap.m_ID == itemID && ItemMap.m_nLvStack == lvCnt)//장비템의경우,닉네임과 레벨이 일치할때제거
 			{
-				ClearItem(Iter);
+				RemoveItemKey(ItemData,itemID,Iter);
+				NewClearItem(Iter);
 				UpdateInventory();
 				return true;
 			}
@@ -165,7 +216,9 @@ bool UInventory::RemoveItem(FName itemID, int lvCnt)
 		{
 			if (ItemMap.m_ID == itemID)
 			{
-				if (RemoveItemStack(Iter, lvCnt))
+				RemoveItemStack(ItemData, Iter, lvCnt);
+				
+				if(lvCnt <= 0)
 				{
 					UpdateInventory();
 					return true;
@@ -179,9 +232,17 @@ bool UInventory::RemoveItem(FName itemID, int lvCnt)
 	return false;
 }
 
-void UInventory::RemoveItem(int index)
+void UInventory::RemoveItem(int index, int lvCnt)
 {
-	ClearItem(index);
+	m_AryTotalItems[index].m_nLvStack -= lvCnt;
+	
+	if(m_AryTotalItems[index].m_nLvStack <= 0)
+	{
+		const FItemDataRow& ItemData = UMyLib::GetItemData(m_AryTotalItems[index].m_ID);
+		RemoveItemKey(ItemData,m_AryTotalItems[index].m_ID,index);
+		NewClearItem(index);
+	}
+	UpdateInventory();
 }
 
 int UInventory::GetUsingSlotCount() const
@@ -217,7 +278,7 @@ void UInventory::ReduceDurability(int index, int dur)//Equip은따로있는데?
 	m_AryTotalItems[index].m_nDurability -= dur;
 	if(m_AryTotalItems[index].m_nDurability < 1)
 	{
-		ClearItem(index);
+		NewClearItem(index);
 	}
 	m_OnInvenChanged.Broadcast();
 	UMyGameInstance::Get->m_EquipManager->UpdateDur();
@@ -237,7 +298,7 @@ bool UInventory::MoveItem(int myIndex, UInventory* targetInvenToAdd)
 		return false;
 	}
 
-	RemoveItem(myIndex);
+	NewClearItem(myIndex);
 	
 	return true;
 }
@@ -248,10 +309,14 @@ void UInventory::OnDropItem(int myIndex, UInventory* other, int other_index)
 
 	FItemSpec MyItem = GetItemConstRef(myIndex);
 
+	const FItemDataRow& OtherItemData = UMyLib::GetItemData(OtherItem.m_ID);
+
 	if (MyItem.m_ID.IsNone()) //빈슬롯이면 그냥 진행
 	{
-		AddItem(myIndex, OtherItem);
-		other->RemoveItem(other_index);
+		NewAddItem(myIndex, OtherItem);
+		AddItemKey(OtherItemData,OtherItem.m_ID,myIndex);
+		other->NewClearItem(other_index);
+		other->RemoveItemKey(OtherItemData,OtherItem.m_ID,other_index);
 		UpdateInventory();
 		other->UpdateInventory();
 		return;
@@ -271,7 +336,8 @@ void UInventory::OnDropItem(int myIndex, UInventory* other, int other_index)
 			
 			SetStLv(myIndex, MyStack);
 
-			other->RemoveItem(other_index);
+			other->NewClearItem(other_index);
+			other->RemoveItemKey(OtherItemData,OtherItem.m_ID,other_index);
 		}
 		else
 		{
@@ -286,8 +352,10 @@ void UInventory::OnDropItem(int myIndex, UInventory* other, int other_index)
 	}
 	else
 	{
-		AddItem(myIndex, OtherItem);
-		other->AddItem(other_index, MyItem);
+		NewAddItem(myIndex, OtherItem);
+		AddItemKey(OtherItemData,OtherItem.m_ID,myIndex);
+		other->NewAddItem(other_index, MyItem);
+		other->RemoveItemKey(OtherItemData,OtherItem.m_ID,other_index);
 	}
 	UpdateInventory();
 	other->UpdateInventory();
@@ -306,4 +374,24 @@ int UInventory::GetStLv(int index)
 UInventory::FOnInvenChanged& UInventory::OnInvenChanged()
 {
 	return m_OnInvenChanged;
+}
+
+int UInventory::GetItemCount(FName id)
+{
+	TSet<int>* IndexSets = m_MapItemKeyCount.Find(id);
+	if(!IndexSets)
+	{
+		return 0;
+	}
+	bool IsEquip = UMyLib::IsEquip(id);
+	if(IsEquip)
+	{
+		return (*IndexSets).Num();
+	}
+	int Sum = 0;
+	for(int Index : (*IndexSets))
+	{
+		Sum += GetStLv(Index);
+	}
+	return Sum;
 }

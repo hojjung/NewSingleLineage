@@ -81,14 +81,16 @@ void UWidgetEquipInvenPanel::OnPlInvenFocuseConfirm(UWidgetBaseElement* ele, UIn
 {
 	const FItemSpec& Item = inven->GetItemConstRef(index);
 
-	switch (UMyLib::GetItemType(Item.m_ID))
+	const FItemDataRow ItemData = UMyLib::GetItemData(Item.m_ID);
+	
+	switch (UMyLib::GetItemType(ItemData))
 	{
 	case EItemType::None:
 	case EItemType::misc:
 		ele->SetMyUnFocus();
 		break;
 	case EItemType::Consume:
-		//use
+		UMyGameInstance::Get->m_QuickManager->ExeItem(ItemData.m_ClassExeItem,inven,index,1);
 		break;
 	case EItemType::Equip:
 		EEquipSlotType SlotT = UMyLib::GetEquipItemSlot(Item.m_ID);

@@ -9,12 +9,12 @@ void UQuestUseItem::RegisterQuest(FQuestSpec& spec)
 {
 	m_Spec = &spec;
 
-	m_QuestDeleHandle = UMyGameInstance::Get->m_ItemExeManager->m_OnItemUse.AddUObject(this,&UQuestUseItem::OnItemUse);		
+	//m_QuestDeleHandle = UMyGameInstance::Get->m_ItemExeManager->m_OnItemUse.AddUObject(this,&UQuestUseItem::OnItemUse);		
 }
 
 void UQuestUseItem::CompleteQuest()
 {
-	UMyGameInstance::Get->m_ItemExeManager->m_OnItemUse.Remove(m_QuestDeleHandle);
+	//UMyGameInstance::Get->m_ItemExeManager->m_OnItemUse.Remove(m_QuestDeleHandle);
 	
 	Super::CompleteQuest();
 }

@@ -7,41 +7,23 @@
 #include "UObject/NoExportTypes.h"
 #include "QuickSlotManager.generated.h"
 
+class UItemExecuteBase;
 /**
- * 칸개수가 줄었다가 늘었다가
- * 벨트를 장착했다가 탈착했다가
- * 벨트에 뭐가 잇으면 탈착이 안됨
- *
- * 벨트에 드래그 드랍된것은, 큇슬롯 위젯이 사용시켜줌
+ *한슬롯에 여러개가 존재한다면?
  */
+
 UCLASS()
 class MYJRPG_API UQuickSlotManager : public UObject
 {
 	GENERATED_BODY()
 
-public:
-	DECLARE_MULTICAST_DELEGATE(FOnInvenChanged);
-
-	FOnInvenChanged m_OnBagChanged;
-
-	FOnInvenChanged m_OnBeltChanged;
-	
 protected:
-	UPROPERTY()
-	UInventory* m_BagInven;
-	UPROPERTY()
-	UInventory* m_BeltSlots;
+	TMap<TSubclassOf<UItemExecuteBase>, TStrongObjectPtr<UItemExecuteBase>> m_MapItemExe;
 	
 public:
-	bool EquipQuickSlot(int cnt);
+	void RegisterItem(TSubclassOf<UItemExecuteBase> exe);
 
-	bool TryUnequipQuickSlot();
+	void UnregisterItem(TSubclassOf<UItemExecuteBase> exe);
 
-	bool EquipBag(int cnt);
-
-	bool TryUnequipBag();
-
-	const UInventory* GetInven() const;
-
-	const UInventory* GetSlot() const;
+	void ExeItem(TSubclassOf<UItemExecuteBase> exe,UInventory* inven, int index, int cnt);
 };

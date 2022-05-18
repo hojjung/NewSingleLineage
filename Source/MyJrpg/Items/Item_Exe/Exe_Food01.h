@@ -4,18 +4,14 @@
 
 #include "CoreMinimal.h"
 #include "ItemExecuteBase.h"
-#include "Exe_EnchantWeapon.generated.h"
+#include "Exe_Food01.generated.h"
 
 /**
  * 
  */
 UCLASS()
-class MYJRPG_API UExe_EnchantWeapon : public UItemExecuteBase
+class MYJRPG_API UExe_Food01 : public UItemExecuteBase
 {
 	GENERATED_BODY()
-
-protected:
-	virtual void Use(const FName& item,UInventory* inven) const override;
+	
 };
-
-

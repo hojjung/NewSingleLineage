@@ -78,7 +78,6 @@ void UMyGameInstance::Init()
 	m_PlayerStatManager = NewObject<UPlayerStatusManager>(this);
 	m_RewardManager = NewObject<URewardManager>(this);
 	m_EquipManager = NewObject<UEquipManager>(this);
-	m_ItemExeManager = NewObject<UItemExecuteManager>(this);
 	m_CurrencyManager= NewObject<UCurrencyManager>(this);
 	m_CraftManager = NewObject<UCraftManager>(this);
 	m_QuestManager = NewObject<UQuestManager>(this);
@@ -114,7 +113,6 @@ void UMyGameInstance::Init()
 	m_QuestManager->Init();
 	m_CurrencyManager->Init(0);
 	
-	m_ItemExeManager->Init();
 	m_PlayerStatManager->Init();
 	m_EquipManager->Init();
 	m_BadwordTable->Init();
@@ -127,16 +125,14 @@ void UMyGameInstance::Init()
 	m_Inven->AddItem(FItemSpec(TEXT("GoldCoin"), 20000));
 	m_Inven->AddItem(FItemSpec(TEXT("BeltLord"), 0));
 	m_Inven->AddItem(FItemSpec(TEXT("TorsoAdv"), 0) ,true);
-	m_Inven->AddItem(FItemSpec(TEXT("Axe01"), 0) ,true);
-	m_Inven->AddItem(FItemSpec(TEXT("Sword01"), 0) ,true);
-	m_Inven->AddItem(FItemSpec(TEXT("THSword01"), 0) ,true);
-	m_Inven->AddItem(FItemSpec(TEXT("Bow01"), 0) ,true);
-	m_Inven->AddItem(FItemSpec(TEXT("Dual01"), 0) ,true);
-	m_Inven->AddItem(FItemSpec(TEXT("Shield01"), 0) ,true);
-	m_Inven->AddItem(FItemSpec(TEXT("Spear01"), 0) ,true);
+	//m_Inven->AddItem(FItemSpec(TEXT("Axe01"), 0) ,true);
+	//m_Inven->AddItem(FItemSpec(TEXT("Bow01"), 0) ,true);
 	m_Inven->AddItem(FItemSpec(TEXT("Pistol01"), 0) ,true);
-	m_Inven->AddItem(FItemSpec(TEXT("Rifle01"), 0) ,true);
-	m_Inven->AddItem(FItemSpec(TEXT("Magic01"), 0) ,true);
+	m_Inven->AddItem(FItemSpec(TEXT("Food01"), 1) );
+	m_Inven->AddItem(FItemSpec(TEXT("Potion01"), 3));
+	m_Inven->AddItem(FItemSpec(TEXT("Potion01"), 1));
+	m_Inven->AddItem(FItemSpec(TEXT("EnchantArmor"), 1));
+	
 	
 	m_AryStorage.Reset();
 }

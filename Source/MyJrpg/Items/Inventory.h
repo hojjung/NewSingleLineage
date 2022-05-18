@@ -5,6 +5,7 @@
 #include "MyJrpg/MyJrpg.h"
 #include "Inventory.generated.h"
 
+struct FItemDataRow;
 /**
  * 
  */
@@ -49,14 +50,20 @@ protected://
 	
 	TArray<FItemSpec> m_AryTotalItems;
 
+	TMap<FName, TSet<int>> m_MapItemKeyCount;
+
 protected:
 	bool GetEmptyIndex(int& out) const;
 
-	bool AddItemStack(int index, int& lvCnt, FName id, int maxStack);
+	void AddItemStack(const FItemDataRow& itemData, int index, int& lvCnt, FName id, int maxStack);
 
-	bool RemoveItemStack(int index, int& stackCnt);
+	void RemoveItemStack(const FItemDataRow& itemData, int index, int& stackCnt);
+	
+	void RegisterQuickItemExe(const FItemDataRow& itemData);
 
-	void ClearItem(int index);
+	void UnregisterQuickItemExe(const FItemDataRow& itemData);
+
+
 	
 public:
 	FORCEINLINE const TArray<FItemSpec>& GetAryItems() const
@@ -80,13 +87,15 @@ public:
 	
 	void UpdateInventory();
 
-	bool AddItem(FItemSpec addItem, bool newItem = false);
+	bool AddItem(FItemSpec addItem, bool newEquipItem = false);
 
-	void AddItem(int index, FItemSpec addItem);
+	void NewAddItem(int index, FItemSpec addItem);
+	
+	void NewClearItem(int index);
 	
 	bool RemoveItem(FName itemID, int lvCnt);
 
-	void RemoveItem(int index);
+	void RemoveItem(int index, int lvCnt);
 
 	int GetUsingSlotCount() const;
 	
@@ -103,5 +112,11 @@ public:
 	int GetStLv(int index);
 
 	FOnInvenChanged& OnInvenChanged();
+
+	int GetItemCount(FName id);
+
+	void AddItemKey(const FItemDataRow& itemData,FName id, int index);
+
+	void RemoveItemKey(const FItemDataRow& itemData,FName id, int index);
 };
 
