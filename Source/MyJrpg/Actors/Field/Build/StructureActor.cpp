@@ -32,12 +32,6 @@ void AStructureActor::SetBuildData(const FBuildDataRow& data)
 		m_MeshComp->SetRelativeRotation(FRotator(0,m_BuildData->m_fRotYaw,0));
 	}
 
-	if(data.m_ClassInter->IsValidLowLevel())
-	{
-		m_BuildInteract = NewObject<UBuildInteractBase>(this, data.m_ClassInter);
-		
-		m_BuildInteract->Init();
-	}
 
 	GetComponents(m_AryMeshCompos);
 
@@ -116,6 +110,14 @@ void AStructureActor::ConfirmBuild()
 	SetMat(nullptr);
 
 	SetActorEnableCollision(true);
+	//
+	if(m_BuildData->m_ClassInter->IsValidLowLevel())
+	{
+		m_BuildInteract = NewObject<UBuildInteractBase>(this, m_BuildData->m_ClassInter);
+		
+		m_BuildInteract->Init();
+	}
+
 }
 
 void AStructureActor::ShowSelect(bool b)

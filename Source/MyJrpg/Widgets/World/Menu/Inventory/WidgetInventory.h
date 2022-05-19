@@ -8,6 +8,7 @@
 #include "Components/ScrollBox.h"
 #include "Components/WrapBox.h"
 #include "MyJrpg/Widgets/World/CommonElements/WidgetBaseElement.h"
+#include "MyJrpg/Widgets/World/CommonElements/WidgetBasePanel.h"
 #include "MyJrpg/Widgets/World/CommonElements/WidgetFilterBtns.h"
 
 #include "WidgetInventory.generated.h"
@@ -17,7 +18,7 @@ class UInventory;
 
 
 UCLASS()
-class MYJRPG_API UWidgetInventory : public UUserWidget
+class MYJRPG_API UWidgetInventory : public UUserWidget//일부러 패널안쓰는거임
 {
 	GENERATED_BODY()
 
@@ -62,9 +63,9 @@ protected:
 public:
 	void Init(UInventory* inven);
 
-	void OpenPanel();
-	
-	void ClosePanel();
+	void OpenPanel() ;
+
+	void ClosePanel() ;
 
 	void Clear();
 

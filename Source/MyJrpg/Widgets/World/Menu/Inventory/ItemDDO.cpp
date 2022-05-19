@@ -51,12 +51,12 @@ void UItemDDO::OnMyDrop(UDragDropOperation * meSelf)
 
 void UItemDDO::RemoveItemFromInven()
 {
-	m_FromInven->NewClearItem(m_nIndex);
+	m_FromInven->ClearSlot(m_nIndex);
 }
 
 void UItemDDO::AddItemToSlot(const FItemSpec& item_spec)
 {
-	m_FromInven->NewAddItem(m_nIndex,item_spec);
+	m_FromInven->AddSlot(m_nIndex,item_spec);
 }
 void UItemDDO::Clear()
 {

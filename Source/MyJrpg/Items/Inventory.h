@@ -89,9 +89,9 @@ public:
 
 	bool AddItem(FItemSpec addItem, bool newEquipItem = false);
 
-	void NewAddItem(int index, FItemSpec addItem);
+	void AddSlot(int index, FItemSpec addItem);
 	
-	void NewClearItem(int index);
+	void ClearSlot(int index);
 	
 	bool RemoveItem(FName itemID, int lvCnt);
 

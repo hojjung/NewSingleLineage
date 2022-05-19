@@ -315,6 +315,11 @@ UWidgetStorage* UWidgetCanvasWorld::GetStorageMenu()
 	return m_StoragePanel;
 }
 
+void UWidgetCanvasWorld::OpenItemConverter(UItemConvertInst* inst)
+{
+	m_ItemConvertPanel->ShowItemConvert(inst);
+}
+
 void UWidgetCanvasWorld::OnZoneMove(const FName& zoneID)
 {
 	if(zoneID == TEXT("PlayerHome"))

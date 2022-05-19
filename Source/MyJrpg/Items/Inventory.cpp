@@ -58,7 +58,7 @@ bool UInventory::AddItem(FItemSpec addItem, bool newEquipItem)
 				{
 					addItem.m_nDurability = ItemData.m_nDurability;
 				}
-				NewAddItem(Iter,addItem);
+				AddSlot(Iter,addItem);
 				AddItemKey(ItemData,addItem.m_ID,1);
 				UpdateInventory();
 				return true;
@@ -87,7 +87,7 @@ bool UInventory::AddItem(FItemSpec addItem, bool newEquipItem)
 	return false;
 }
 
-void UInventory::NewAddItem(int index, FItemSpec addItem)
+void UInventory::AddSlot(int index, FItemSpec addItem)
 {
 	m_AryTotalItems[index] = addItem;
 	
@@ -127,7 +127,7 @@ void UInventory::RemoveItemStack(const FItemDataRow& itemData, int index, int& s
 	{
 		stackCnt -= CrntStack;
 		RemoveItemKey(itemData, m_AryTotalItems[index].m_ID,index);
-		NewClearItem(index);
+		ClearSlot(index);
 		return;
 	}//5 3
 
@@ -136,7 +136,7 @@ void UInventory::RemoveItemStack(const FItemDataRow& itemData, int index, int& s
 	return;//제거 종료,아이템을 비우는게 목적이 아니라 차감이 목적,칸과 상관이 없다.
 }
 
-void UInventory::NewClearItem(int index)
+void UInventory::ClearSlot(int index)
 {
 	m_AryTotalItems[index].m_ID = NAME_None;
 	m_AryTotalItems[index].m_nLvStack = 0;
@@ -203,7 +203,7 @@ bool UInventory::RemoveItem(FName itemID, int lvCnt)
 			if (ItemMap.m_ID == itemID && ItemMap.m_nLvStack == lvCnt)//장비템의경우,닉네임과 레벨이 일치할때제거
 			{
 				RemoveItemKey(ItemData,itemID,Iter);
-				NewClearItem(Iter);
+				ClearSlot(Iter);
 				UpdateInventory();
 				return true;
 			}
@@ -240,7 +240,7 @@ void UInventory::RemoveItem(int index, int lvCnt)
 	{
 		const FItemDataRow& ItemData = UMyLib::GetItemData(m_AryTotalItems[index].m_ID);
 		RemoveItemKey(ItemData,m_AryTotalItems[index].m_ID,index);
-		NewClearItem(index);
+		ClearSlot(index);
 	}
 	UpdateInventory();
 }
@@ -278,7 +278,7 @@ void UInventory::ReduceDurability(int index, int dur)//Equip은따로있는데?
 	m_AryTotalItems[index].m_nDurability -= dur;
 	if(m_AryTotalItems[index].m_nDurability < 1)
 	{
-		NewClearItem(index);
+		ClearSlot(index);
 	}
 	m_OnInvenChanged.Broadcast();
 	UMyGameInstance::Get->m_EquipManager->UpdateDur();
@@ -298,7 +298,7 @@ bool UInventory::MoveItem(int myIndex, UInventory* targetInvenToAdd)
 		return false;
 	}
 
-	NewClearItem(myIndex);
+	ClearSlot(myIndex);
 	
 	return true;
 }
@@ -313,9 +313,9 @@ void UInventory::OnDropItem(int myIndex, UInventory* other, int other_index)
 
 	if (MyItem.m_ID.IsNone()) //빈슬롯이면 그냥 진행
 	{
-		NewAddItem(myIndex, OtherItem);
+		AddSlot(myIndex, OtherItem);
 		AddItemKey(OtherItemData,OtherItem.m_ID,myIndex);
-		other->NewClearItem(other_index);
+		other->ClearSlot(other_index);
 		other->RemoveItemKey(OtherItemData,OtherItem.m_ID,other_index);
 		UpdateInventory();
 		other->UpdateInventory();
@@ -336,7 +336,7 @@ void UInventory::OnDropItem(int myIndex, UInventory* other, int other_index)
 			
 			SetStLv(myIndex, MyStack);
 
-			other->NewClearItem(other_index);
+			other->ClearSlot(other_index);
 			other->RemoveItemKey(OtherItemData,OtherItem.m_ID,other_index);
 		}
 		else
@@ -352,9 +352,9 @@ void UInventory::OnDropItem(int myIndex, UInventory* other, int other_index)
 	}
 	else
 	{
-		NewAddItem(myIndex, OtherItem);
+		AddSlot(myIndex, OtherItem);
 		AddItemKey(OtherItemData,OtherItem.m_ID,myIndex);
-		other->NewAddItem(other_index, MyItem);
+		other->AddSlot(other_index, MyItem);
 		other->RemoveItemKey(OtherItemData,OtherItem.m_ID,other_index);
 	}
 	UpdateInventory();

@@ -84,7 +84,7 @@ void UMyGameInstance::Init()
 	m_ShopManager = NewObject<UShopManager>(this);
 	m_SkillManager = NewObject<USkillManager>(this);
 	m_Inven = NewObject<UInventory>(this);
-	m_PotionManager = NewObject<UPotionManager>(this);
+	m_ItemConvertManager = NewObject<UItemConvertManager>(this);
 	m_EnchantManager = NewObject<UEnchantManager>(this);
 	
 	m_BadwordTable =NewObject<UBadwordTable>(this);
@@ -107,7 +107,6 @@ void UMyGameInstance::Init()
 	m_BuildManager->Init();
 	m_ItemCollecManager->Init();
 	m_PetManager->Init();
-	m_PotionManager->Init();
 	m_SkillManager->Init();
 	m_Inven->Init(FGlobalVariable::INVEN_SIZE);
 	m_QuestManager->Init();
@@ -124,14 +123,9 @@ void UMyGameInstance::Init()
 
 	m_Inven->AddItem(FItemSpec(TEXT("GoldCoin"), 20000));
 	m_Inven->AddItem(FItemSpec(TEXT("BeltLord"), 0));
-	m_Inven->AddItem(FItemSpec(TEXT("TorsoAdv"), 0) ,true);
-	//m_Inven->AddItem(FItemSpec(TEXT("Axe01"), 0) ,true);
-	//m_Inven->AddItem(FItemSpec(TEXT("Bow01"), 0) ,true);
-	m_Inven->AddItem(FItemSpec(TEXT("Pistol01"), 0) ,true);
 	m_Inven->AddItem(FItemSpec(TEXT("Food01"), 1) );
-	m_Inven->AddItem(FItemSpec(TEXT("Potion01"), 3));
-	m_Inven->AddItem(FItemSpec(TEXT("Potion01"), 1));
 	m_Inven->AddItem(FItemSpec(TEXT("EnchantArmor"), 1));
+	m_Inven->AddItem(FItemSpec(TEXT("misc_wood01"), 4));
 	
 	
 	m_AryStorage.Reset();
@@ -162,7 +156,7 @@ void UMyGameInstance::Tick(float deltaTime)
 	m_SkillManager->Tick(deltaTime);
 	m_ChatManager->Tick(deltaTime);
 	m_SkillAuto->Tick(deltaTime);
-	m_PotionManager->Tick(deltaTime);
+	m_ItemConvertManager->Tick(deltaTime);
 }
 
 void UMyGameInstance::AddStorage(UInventory* inven)

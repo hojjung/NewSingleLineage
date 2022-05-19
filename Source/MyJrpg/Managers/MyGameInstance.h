@@ -8,6 +8,7 @@
 #include "CurrencyManager.h"
 #include "EnchantManager.h"
 #include "FriendKarmaManager.h"
+#include "ItemConvertManager.h"
 #include "LevelMoveManager.h"
 #include "ParticleEffectManager.h"
 #include "PlayerStatusManager.h"
@@ -76,8 +77,6 @@ public:
 	UPROPERTY()
 	UPlSkillAuto* m_SkillAuto;
 	UPROPERTY()
-	UPotionManager* m_PotionManager;
-	UPROPERTY()
 	UEnchantManager* m_EnchantManager;
 	UPROPERTY()
 	UCollectionManager* m_ItemCollecManager;
@@ -93,6 +92,8 @@ public:
 	UQuickSlotManager* m_QuickManager;
 	UPROPERTY()
 	UPreviewActorManager* m_PreviewActorManager;
+	UPROPERTY()
+	UItemConvertManager* m_ItemConvertManager;
 	
 public:
 	TWeakObjectPtr<AMyPlayerPawn> m_Player;

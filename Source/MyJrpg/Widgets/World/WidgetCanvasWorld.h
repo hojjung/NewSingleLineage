@@ -12,11 +12,13 @@
 #include "Menu/Collection/WidgetCollecPanelParent.h"
 #include "Menu/Dialogue/WidgetLogWindow.h"
 #include "Menu/Enchant/WidgetEnchantBase.h"
+#include "Menu/ItemInteract/WidgetItemConvert.h"
 #include "Menu/Pet/WidgetPetPanel.h"
 #include "Menu/Pickpocket/WidgetPickpocketPanel.h"
 #include "Menu/Quest/WidgetQuestAcceptPanel.h"
 #include "Menu/Quest/WidgetQuestPanel.h"
 #include "Menu/StackSelector/WidgetStackCalculator.h"
+#include "MyJrpg/Actors/Field/Build/BuildInteract/BI_ItemConverter.h"
 #include "MyJrpg/Pawns/CombatUnitPawn.h"
 #include "MyJrpg/Pawns/MonsterPawn.h"
 #include "WidgetCanvasWorld.generated.h"
@@ -132,6 +134,8 @@ protected:
 	UWidgetPetPanel* m_PetPanel;
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (BindWidget))
 	UWidgetBuildPanel* m_BuildPanel;
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (BindWidget))
+	UWidgetItemConvert* m_ItemConvertPanel;
 	//
 	bool m_bIsBuildable;
 protected:
@@ -204,5 +208,7 @@ public:
 	void ShowMainHUD(bool b);
 
 	UWidgetStorage* GetStorageMenu();
+	
+	void OpenItemConverter(UItemConvertInst* inst);
 };
 

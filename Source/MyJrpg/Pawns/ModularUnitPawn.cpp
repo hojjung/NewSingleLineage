@@ -119,11 +119,11 @@ void AModularUnitPawn::UpdateMorpthTarget()
 
 void AModularUnitPawn::TrySpawnBullets(const FItemDataRow& Itemdata)
 {
-	if(Itemdata.m_BulletEffect)
+	if(Itemdata.m_WeaponData.m_BulletEffect)
 	{
 		m_Pool = NewObject<UBulletPool>(this);
 		
-		m_Pool->InitPool(GetStat().m_Dmg,5,Itemdata.m_BulletEffect,this,Itemdata.m_fBulletScale);
+		m_Pool->InitPool(GetStat().m_Dmg,5,Itemdata.m_WeaponData.m_BulletEffect,this,Itemdata.m_WeaponData.m_fBulletScale);
 	}
 }
 

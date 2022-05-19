@@ -50,7 +50,7 @@ void UWidgetStorage::OnStorageInvenFocused(UWidgetBaseElement* ele, UInventory* 
 void UWidgetStorage::OnPlInvenFocuseConfirm(UWidgetBaseElement* ele, UInventory* inven, int index)
 {
 	FItemSpec Item = inven->GetItemConstRef(index);
-	inven->NewClearItem(index);
+	inven->ClearSlot(index);
 	m_StoragePanel->GetInven()->AddItem(Item);
 	inven->UpdateInventory();
 }
@@ -58,7 +58,7 @@ void UWidgetStorage::OnPlInvenFocuseConfirm(UWidgetBaseElement* ele, UInventory*
 void UWidgetStorage::OnStorageFocuseConfirm(UWidgetBaseElement* ele, UInventory* inven, int index)
 {
 	FItemSpec Item = inven->GetItemConstRef(index);
-	inven->NewClearItem(index);
+	inven->ClearSlot(index);
 	m_InvenPanel->GetInven()->AddItem(Item);
 	inven->UpdateInventory();
 }
