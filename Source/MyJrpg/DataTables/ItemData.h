@@ -189,6 +189,14 @@ public:
 	TSoftObjectPtr<UStaticMesh> m_MeshRight;
 	UPROPERTY(EditAnywhere)
 	TSoftObjectPtr<UStaticMesh> m_MeshLeft;
+	UPROPERTY(EditAnywhere)
+	float m_fRange = 300;
+	UPROPERTY(EditAnywhere)
+	bool m_bIsRange = false;
+	UPROPERTY(EditAnywhere, meta=(EditCondition = "m_bIsRange", EditConditionHides))
+	UParticleSystem* m_BulletEffect;
+	UPROPERTY(EditAnywhere, meta=(EditCondition = "m_BulletEffect != nullptr", EditConditionHides))
+	float m_fBulletScale = 1.f;
 };
 
 USTRUCT(BlueprintType)
@@ -212,8 +220,6 @@ public:
 	FColorDataHandle m_ColorHandle;
 	UPROPERTY(EditAnywhere, meta=(EditCondition = "m_ItemType != EEquipSlotType::None && m_ItemType != EEquipSlotType::Weapon", EditConditionHides))
 	TSoftObjectPtr<USkeletalMesh> m_ArmorMesh;
-	UPROPERTY(EditAnywhere, meta=(EditCondition = "m_ItemType != EEquipSlotType::None && m_ItemType == EEquipSlotType::Weapon", EditConditionHides))
-	bool m_bIsRange = false;
 	UPROPERTY(EditAnywhere, meta=(EditCondition = "m_ItemType != EEquipSlotType::None", EditConditionHides))
 	FStatGroup m_EquipStats;
 	UPROPERTY(EditAnywhere, meta=(EditCondition = "m_ItemType != EEquipSlotType::None", EditConditionHides))

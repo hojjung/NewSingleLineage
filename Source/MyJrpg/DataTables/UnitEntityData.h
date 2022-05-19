@@ -17,8 +17,6 @@ class MYJRPG_API UUnitEntityData : public UObject
 public:
 	UUnitEntityData();
 	
-	static UDataTable* GetPlayerUnitTable;
-	
 	static UDataTable* GetNpcUnitTable;
 };
 

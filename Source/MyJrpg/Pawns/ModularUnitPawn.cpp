@@ -117,6 +117,24 @@ void AModularUnitPawn::UpdateMorpthTarget()
 	m_BodyMesh->SetMorphTarget(TEXT("boot_high_equipped"), m_bIsBootHighEquipped ? 1.f : 0.f);
 }
 
+void AModularUnitPawn::TrySpawnBullets(const FItemDataRow& Itemdata)
+{
+	if(Itemdata.m_BulletEffect)
+	{
+		m_Pool = NewObject<UBulletPool>(this);
+		
+		m_Pool->InitPool(GetStat().m_Dmg,5,Itemdata.m_BulletEffect,this,Itemdata.m_fBulletScale);
+	}
+}
+
+void AModularUnitPawn::TryKillBullets()
+{
+	if(m_Pool)
+	{
+		m_Pool->KillAll();
+	}
+}
+
 void AModularUnitPawn::UpdateEquipActor()
 {
 	const FItemSpec* EquippedItems = UMyGameInstance::Get->m_EquipManager->GetEquipAry();
@@ -146,7 +164,11 @@ void AModularUnitPawn::UpdateEquipActor()
 		
 		SpawnEquipActor(Itemdata.m_WeaponData);
 
+		TrySpawnBullets(Itemdata);
+
 		ShowWeapon();
+
+		SetAttackRange(Itemdata.m_WeaponData.m_fRange);
 	}
 	else
 	{
@@ -155,6 +177,10 @@ void AModularUnitPawn::UpdateEquipActor()
 		m_CacheRightHand = nullptr;
 		m_Stance = EStanceType::None;
 		HideWeapon();
+		
+		TryKillBullets();
+
+		SetAttackRange(200);
 	}
 
 

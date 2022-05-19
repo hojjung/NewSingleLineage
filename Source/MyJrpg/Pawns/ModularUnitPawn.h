@@ -83,6 +83,8 @@ protected:
 	virtual void EndPlay(const EEndPlayReason::Type EndPlayReason) override;
 	
 	void UpdateMorpthTarget();
+	void TrySpawnBullets(const FItemDataRow& Itemdata);
+	void TryKillBullets();
 
 protected:
 	void SetDefaultMesh();
