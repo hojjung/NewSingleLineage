@@ -12,7 +12,7 @@ void USkill_TurnDemon::EndSkillAnim()
 {
 	Super::EndSkillAnim();
 	m_Player->GetSkMesh()->SetRelativeScale3D(FVector(m_SkillData->m_fRange));
-	m_Player->AddAtkRange(m_SkillData->m_fRange);
+	//m_Player->AddAtkRange(m_SkillData->m_fRange);
 	GetPlayerStatus()->AddMultiAtkDmg(m_SkillData->m_fDamage);
 	GetPlayerStatus()->SubMultiMoveSpeed(m_SkillData->m_fRadius);
 }
@@ -21,7 +21,7 @@ void USkill_TurnDemon::EndDuration()
 {
 	Super::EndDuration();
 	m_Player->GetSkMesh()->SetRelativeScale3D(FVector(0));
-	m_Player->SubAtkRange(m_SkillData->m_fRange);
+	//m_Player->SubAtkRange(m_SkillData->m_fRange);
 	GetPlayerStatus()->SubMultiAtkDmg(m_SkillData->m_fDamage);
 	GetPlayerStatus()->AddMultiMoveSpeed(m_SkillData->m_fRadius);//slower
 }

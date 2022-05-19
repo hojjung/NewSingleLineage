@@ -50,8 +50,6 @@ protected:
 	UPROPERTY()
 	AMyPlayerPawn* m_Pl;
 	
-	TScriptInterface<IFocusable> m_Focused;
-
 	bool m_bHasFocus;	
 
 protected:
@@ -72,7 +70,7 @@ protected:
 	void ShowDur(float per);
 
 	void OnEquipChanged();
-	
+
 public:
 	void ShowInteract(IFocusable* focus);
 	UFUNCTION()

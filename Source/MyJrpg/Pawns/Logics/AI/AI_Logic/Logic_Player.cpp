@@ -13,14 +13,6 @@ void ULogic_Player::Init(ACombatUnitPawn* pawnUnit)
 	m_CurrentState = EFSM::Idle;
 
 	AMyPlayerPawn* PlayerPawn = Cast<AMyPlayerPawn>(m_Owner);
-	
-	m_fMeleeRange = PlayerPawn->GetAttackRange();
-
-	m_fMeleeRangeSqr = m_fMeleeRange * m_fMeleeRange;
-	//
-	m_fRangeRange = PlayerPawn->GetRangeRange();
-
-	m_fRangeRangeSqr = m_fRangeRange * m_fRangeRange;
 	//
 	m_AryStateFunction[static_cast<int>(EFSM::Idle)] = &ULogic_Player::OnIdle;
 
@@ -129,17 +121,13 @@ void ULogic_Player::OnFocusHate()
 {
 	ACombatUnitPawn* NPCPawn = Cast<ACombatUnitPawn>( m_Owner->GetFocusedTarget());
 	
-	float Range = m_fMeleeRangeSqr;
+	float Range = m_Owner->GetAttackRangeSqr();
 
 	if (m_Owner->IsRangeMode())
 	{
 		if(!m_Owner->LineOfSightTo(NPCPawn))
 		{
 			Range = 100;	
-		}
-		else
-		{
-			Range = m_fRangeRangeSqr;
 		}
 	}
 

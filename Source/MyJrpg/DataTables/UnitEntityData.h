@@ -151,35 +151,3 @@ public://스텟과 보상
 	TArray<FDropRewardItem> m_AryDropItem;
 	
 };
-
-USTRUCT(BlueprintType)
-struct FPlayerSkillAnim
-{
-	GENERATED_BODY()
-
-public:
-	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly)
-	FName m_SkillID = TEXT("Same As Skill Table");
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
-	TSoftObjectPtr<UAnimMontage> m_SkillMotion = nullptr;
-};
-
-USTRUCT(BlueprintType)
-struct FPlayerUnitEntityRow : public FUnitEntityRow//모든 동료
-{
-	GENERATED_BODY()
-	
-public:
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
-	float m_fMeleeRange = 200;
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
-	float m_fRangeRange = 900;
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
-	TSoftObjectPtr<UAnimMontage> m_StanceSword;
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
-	TSoftObjectPtr<UAnimMontage> m_StanceMage;
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
-	TArray<FPlayerSkillAnim> m_ArySkillAnims;
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
-	FColorDataHandle m_Color;
-};

@@ -17,6 +17,7 @@
 #include "MyPlayerPawn.generated.h"
 
 
+class AMoveIndicator;
 class UPlSkillAuto;
 class UPlAttchActorManage;
 class UPlayerAnimInst;
@@ -26,15 +27,17 @@ UCLASS()
 class MYJRPG_API AMyPlayerPawn : public AModularUnitPawn
 {
 	GENERATED_BODY()
-
 public:
 	DECLARE_MULTICAST_DELEGATE_OneParam(FOnPlayerFocusTarget, IFocusable*);
 
 	FOnPlayerFocusTarget m_OnFocus;
+	
 public:
 	AMyPlayerPawn(const FObjectInitializer& objInit);
 
 protected:
+	UPROPERTY()
+	AMoveIndicator* m_FocusIndicator;
 	UPROPERTY(VisibleAnywhere)
 	UPointLightComponent* m_Light;
 	UPROPERTY(VisibleAnywhere)
@@ -54,10 +57,6 @@ protected:
 	UPROPERTY()
 	bool m_bIsInvincible;
 	UPROPERTY()
-	float m_fAddAtkRange;
-	UPROPERTY()
-	float m_fRangeAttackRange;
-	UPROPERTY()
 	FVector m_DeltaX;
 	UPROPERTY()
 	FVector m_DeltaY;
@@ -73,6 +72,8 @@ protected:
 	bool m_bIsInteracting;
 
 private:
+	void CreateFocusActor();
+	
 	void DealBaseMeleeAttack();
 
 	void ShootBaseRangeAttack();
@@ -82,6 +83,10 @@ private:
 	void MoveRight(float AxisValue);
 	
 	virtual void ShowPopupText(float nbr, ETextType t) override;
+	
+	void ShowIndicator(IFocusable* target);
+
+	bool CheckTargetRange();
 
 public:
 	virtual void SetFocusedTarget(IFocusable* target) override;
@@ -105,8 +110,6 @@ public://Combat
 
 	void SetAutoCombat(bool useAuto);
 
-	void SetPlayerAsset(FName keyId);
-
 	virtual void PlayTookHitMontage() override;
 
 public:
@@ -124,12 +127,6 @@ public:
 
 	virtual void OnNotifyTrigger(const FName& name) override;
 	
-	void AddAtkRange(float r);
-	
-	void SubAtkRange(float r);
-
-	virtual float GetAttackRange() override;
-
 	void TakeHeal(float v);
 	
 	void TakeInvincible(float d);
@@ -137,8 +134,6 @@ public:
 	void StopInvincible();
 	
 	float PlaySkillAnim(const FName& skillID);
-
-	float GetRangeRange();
 
 	virtual void OnDeathAnimEnd() override;
 

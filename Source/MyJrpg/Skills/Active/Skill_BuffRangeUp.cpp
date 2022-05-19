@@ -8,11 +8,11 @@
 void USkill_BuffRangeUp::OnSkillTriggered()
 {
 	Super::OnSkillTriggered();
-	m_Player->AddAtkRange(m_SkillData->m_fRange);
+	//m_Player->AddAtkRange(m_SkillData->m_fRange);
 }
 
 void USkill_BuffRangeUp::EndDuration()
 {
 	Super::EndDuration();
-	m_Player->SubAtkRange(m_SkillData->m_fRange);
+	//m_Player->SubAtkRange(m_SkillData->m_fRange);
 }

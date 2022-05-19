@@ -227,6 +227,10 @@ UInventory::FOnInvenChanged& UEquipManager::GetOnBeltChanged()
 
 void UEquipManager::ReduceDurability(EEquipSlotType t, int amount)
 {
+	if(GetEquipItem(t).m_ID.IsNone())
+	{
+		return;
+	}
 	GetEquipItem(t).m_nDurability -= amount;
 
 	UpdateDur();

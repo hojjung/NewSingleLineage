@@ -125,12 +125,9 @@ void UWidgetInteract::ShowInteract(IFocusable* focus)
 	}
 	m_bHasFocus = true;
 	
-	m_Focused.SetInterface(focus);
-	
 	AMonsterPawn* Monster = Cast<AMonsterPawn>(focus);
 	if(Monster)
 	{
-		m_Focused.SetObject(Monster);
 		ShowWidgetMonster(Monster);
 		return;
 	}
@@ -138,7 +135,6 @@ void UWidgetInteract::ShowInteract(IFocusable* focus)
 	AItemActor* Item = Cast<AItemActor>(focus);
 	if(Item)
 	{
-		m_Focused.SetObject(Item);
 		ShowWidgetItem(Item);
 		return;
 	}
@@ -146,7 +142,6 @@ void UWidgetInteract::ShowInteract(IFocusable* focus)
 	AActor* Prop = Cast<AActor>(focus);
 	if(Prop)
 	{
-		m_Focused.SetObject(Prop);
 		ShowWidgetProp();
 		return;
 	}
@@ -154,16 +149,9 @@ void UWidgetInteract::ShowInteract(IFocusable* focus)
 
 void UWidgetInteract::OnObtain()
 {
-	if(!m_Focused.GetObject())
-	{
-		return;
-	}
-	AItemActor* Item = Cast<AItemActor>(m_Focused.GetObject());
+	AItemActor* ItemActor = m_Pl->GetFocusedTarget<AItemActor>();
 	
-	Item->Obtain();
-
-	m_Focused.SetObject(nullptr);
-	m_Focused.SetInterface(nullptr);
+	ItemActor->Obtain();
 }
 
 void UWidgetInteract::OnSteal()
@@ -173,16 +161,16 @@ void UWidgetInteract::OnSteal()
 
 void UWidgetInteract::OnControl()
 {
-	IFocusable* Prop = Cast<IFocusable>(m_Focused.GetObject());
+	IFocusable* Prop = m_Pl->GetFocusedTarget<IFocusable>();
 	
 	Prop->OnInteract();
 }
 
 void UWidgetInteract::OnTalk()
 {
-	AMonsterPawn* Mob = Cast<AMonsterPawn>(m_Focused.GetObject());
+	AMonsterPawn* Prop = m_Pl->GetFocusedTarget<AMonsterPawn>();
 	
-	const FName& TalkID = Mob->GetTalkID();
+	const FName& TalkID = Prop->GetTalkID();
 
 	if (!TalkID.IsNone())
 		UMyLib::GetCanvas()->StartDialogue(TalkID);
@@ -190,16 +178,12 @@ void UWidgetInteract::OnTalk()
 
 void UWidgetInteract::OnAttack()
 {
-	AMonsterPawn* Mob = Cast<AMonsterPawn>(m_Focused.GetObject());
-	
-	m_Pl->SetFocusedTarget(Mob);
-	
 	m_Pl->TryAttack();
 }
 
 void UWidgetInteract::OnPickPocket()
 {
-	AMonsterPawn* Mob = Cast<AMonsterPawn>(m_Focused.GetObject());
+	AMonsterPawn* Mob = m_Pl->GetFocusedTarget<AMonsterPawn>();
 	
 	UMyLib::GetCanvas()->StartPickPocket(Mob);
 }

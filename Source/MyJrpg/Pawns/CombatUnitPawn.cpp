@@ -10,8 +10,12 @@ ACombatUnitPawn::ACombatUnitPawn(const FObjectInitializer& objInit):Super(objIni
 	m_fAttackCD=0;
    	m_fHitAnimCD = -1.f;
    	m_fAttackMinCD = 0.25f;
-   	m_fAttackRange = 200.f;
+	SetAttackRange(200);
+	m_fDeathAnimDurationMax = 0;
+	m_fDeathAnimDurationTimer = 0;
+	
 	m_bUseFsmTick=true;
+	m_bCanUseSkill = true;
 	//
 	m_ShadowMeshComp = CreateDefaultSubobject<UStaticMeshComponent>("StShadow");
 	static ConstructorHelpers::FObjectFinder<UStaticMesh> FoundSt(
@@ -26,7 +30,6 @@ ACombatUnitPawn::ACombatUnitPawn(const FObjectInitializer& objInit):Super(objIni
 	m_BulletTarget = CreateDefaultSubobject<USceneComponent>(TEXT("m_BulletTarget"));
 	m_BulletTarget->SetupAttachment(RootComponent);
 
-	m_bCanUseSkill = true;
 
 }
 
@@ -217,9 +220,21 @@ bool ACombatUnitPawn::IsAlive()
 	return m_StatGroup.m_Hp>0;
 }
 
+void ACombatUnitPawn::SetAttackRange(float range)
+{
+	m_fAttackRange = range;
+
+	m_fAttackRangeSqr = m_fAttackRange * m_fAttackRange;
+}
+
 float ACombatUnitPawn::GetAttackRange()
 {
 	return m_fAttackRange;
+}
+
+float ACombatUnitPawn::GetAttackRangeSqr()
+{
+	return m_fAttackRangeSqr;
 }
 
 FVector ACombatUnitPawn::GetFocusedActorLocation() const

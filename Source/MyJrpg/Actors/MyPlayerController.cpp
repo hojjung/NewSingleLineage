@@ -24,18 +24,9 @@ void AMyPlayerController::BeginPlay()
 
 	CreateIGWC(10);
 
-	FActorSpawnParameters Param;
-
-	Param.bNoFail = true;
-	
-	m_FocusActor = GetWorld()->SpawnActor<AMoveIndicator>(AMoveIndicator::StaticClass(),FVector(0,0,0),FRotator(0,0,0),Param);
-	m_FocusActor->SetActorHiddenInGame(true);
-
 	SetVirtualJoystickVisibility(true);
 
 	m_Joystick = CurrentTouchInterface;
-
-	GetPawn<AMyPlayerPawn>()->m_OnFocus.AddUObject(this, &AMyPlayerController::OnFocus);
 }
 
 void AMyPlayerController::CreateIGWC(int count)
@@ -92,31 +83,6 @@ bool AMyPlayerController::CheckInteract()
 	m_OnTouch.Broadcast(Hit);
 
 	return true;
-}
-
-void AMyPlayerController::OnFocus(IFocusable* focus)
-{
-	if(!focus)
-	{
-		m_FocusActor->SetActorHiddenInGame(true);
-		return;
-	}
-	
-	m_FocusActor->SetActorHiddenInGame(false);
-
-	AActor* FocusActor = Cast<AActor>(focus);
-
-	FVector Loc = FocusActor->GetActorLocation();
-	
-	float H =  focus->GetBoundHalfHeight();
-
-	Loc.Z -= H;
-	
-	FAttachmentTransformRules Rule(EAttachmentRule::KeepWorld,EAttachmentRule::KeepWorld,EAttachmentRule::KeepWorld,false);
-	
-	m_FocusActor->AttachToActor(FocusActor, Rule);
-
-	m_FocusActor->SetActorLocation(Loc);
 }
 
 void AMyPlayerController::ShowInGameWorldText(float number, ABaseUnitPawn* interactActor, ETextType dmgPopup)

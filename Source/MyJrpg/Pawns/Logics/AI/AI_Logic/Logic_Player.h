@@ -32,14 +32,6 @@ protected:
 
 	float m_fDeltaTime;
 
-	float m_fMeleeRange; //from startPos
-
-	float m_fMeleeRangeSqr; //from startPos
-
-	float m_fRangeRange; //from startPos
-
-	float m_fRangeRangeSqr; //from startPos
-
 	typedef void (ULogic_Player::*FPtrState)(void);
 
 	FPtrState m_AryStateFunction[static_cast<int>(EFSM::Length)];

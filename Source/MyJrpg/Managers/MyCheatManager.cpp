@@ -51,9 +51,3 @@ void UMyCheatManager::TryCompleteQuest(FName id)
 {
 	
 }
-
-void UMyCheatManager::SetPlayerAsset(FName id)
-{
-	UMyLib::GetPlayer()->SetPlayerAsset(id);
-}
-

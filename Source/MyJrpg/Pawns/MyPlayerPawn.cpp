@@ -7,6 +7,7 @@
 #include "MyJrpg/Animations/MyAnimInstance.h"
 #include "MyJrpg/Items/Inventory.h"
 #include "MyJrpg/Managers/EquipManager.h"
+#include "MyJrpg/Managers/MyAssetManager.h"
 #include "MyJrpg/Managers/MyGameInstance.h"
 #include "MyJrpg/Managers/RewardManager.h"
 #include "MyJrpg/Pawns/Components/MyMovement.h"
@@ -52,9 +53,15 @@ AMyPlayerPawn::AMyPlayerPawn(const FObjectInitializer& objInit):Super(objInit)
 
 	m_bIsInteracting = false;
 
-	m_fRangeAttackRange = 900;
-
 	m_fAttackRange = 300;
+}
+
+void AMyPlayerPawn::CreateFocusActor()
+{
+	FActorSpawnParameters Param;
+	Param.bNoFail = true;
+	m_FocusIndicator = GetWorld()->SpawnActor<AMoveIndicator>(AMoveIndicator::StaticClass(),FVector(0,0,0),FRotator(0,0,0),Param);
+	m_FocusIndicator->SetActorHiddenInGame(true);
 }
 
 void AMyPlayerPawn::BeginPlay()
@@ -68,10 +75,15 @@ void AMyPlayerPawn::BeginPlay()
 	m_DissolveCam->SetActive(true);
 
 	SetPlayerEntity();
+
+	CreateFocusActor();
 }
 
 void AMyPlayerPawn::SetPlayerEntity()
 {
+	//FPrimaryAssetId Id(TEXT("DefaultHuman"));
+	//m_EntityAsset =  UMyAssetManager::Get()->LoadPrimaryAsset(Id).Get();
+	
 	ULogic_Player* Player = NewObject<ULogic_Player>(this,ULogic_Player::StaticClass());
 
 	m_AiFsm = Player;
@@ -219,6 +231,30 @@ void AMyPlayerPawn::ShowPopupText(float nbr, ETextType t)
 	//not use
 }
 
+void AMyPlayerPawn::ShowIndicator(IFocusable* target)
+{
+	if(!target)
+	{
+		m_FocusIndicator->SetActorHiddenInGame(true);
+		return;
+	}
+	m_FocusIndicator->SetActorHiddenInGame(false);
+
+	AActor* FocusActor = Cast<AActor>(target);
+
+	FVector Loc = FocusActor->GetActorLocation();
+
+	float H =  target->GetBoundHalfHeight();
+
+	Loc.Z -= H;
+	
+	FAttachmentTransformRules Rule(EAttachmentRule::KeepWorld,EAttachmentRule::KeepWorld,EAttachmentRule::KeepWorld,false);
+	
+	m_FocusIndicator->AttachToActor(FocusActor, Rule);
+
+	m_FocusIndicator->SetActorLocation(Loc);
+}
+
 void AMyPlayerPawn::SetFocusedTarget(IFocusable* target)
 {
 	if(m_bIsInteracting)
@@ -227,14 +263,9 @@ void AMyPlayerPawn::SetFocusedTarget(IFocusable* target)
 	}
 	Super::SetFocusedTarget(target);
 
-	m_OnFocus.Broadcast(target);
-}
-
-void AMyPlayerPawn::SetPlayerAsset(FName keyId)
-{
-	const FPlayerUnitEntityRow* UnitRow = UUnitEntityData::GetPlayerUnitTable->FindRow<FPlayerUnitEntityRow>(keyId, "");
+	m_OnFocus.Broadcast(Cast<IFocusable>(m_FocusedTarget.GetObject()));
 	
-	LoadSetSkMeshAnim(UnitRow->m_UnitDataAsset);
+	ShowIndicator(target);
 }
 
 void AMyPlayerPawn::PlayTookHitMontage()
@@ -290,6 +321,8 @@ void AMyPlayerPawn::DealBaseMeleeAttack()
 	UMyGameInstance::Get->m_PlayerStatManager->OnAttack(this);
 
 	Pawn->TakeDmg(m_StatGroup.m_Dmg,this);
+
+	UMyGameInstance::Get->m_EquipManager->ReduceDurability(EEquipSlotType::Weapon,1);
 }
 
 void AMyPlayerPawn::ShootBaseRangeAttack()
@@ -327,6 +360,10 @@ void AMyPlayerPawn::OnNotifyTrigger(const FName& name)
 {
 	if(name == TEXT("BaseAttack"))
 	{
+		if(!CheckTargetRange())
+		{
+			return;
+		}
 		if (IsRangeMode())
 		{
 			ShootBaseRangeAttack();	
@@ -340,21 +377,6 @@ void AMyPlayerPawn::OnNotifyTrigger(const FName& name)
 	{
 		m_OnSkillTrigger.Broadcast(name);
 	}
-}
-
-void AMyPlayerPawn::AddAtkRange(float r)
-{
-	m_fAddAtkRange += r;
-}
-
-void AMyPlayerPawn::SubAtkRange(float r)
-{
-	m_fAddAtkRange -= r;
-}
-
-float AMyPlayerPawn::GetAttackRange()
-{
-	return m_fAttackRange + m_fAddAtkRange;
 }
 
 bool AMyPlayerPawn::TakeDmg(float amount, ACombatUnitPawn* attacker)
@@ -409,11 +431,6 @@ float AMyPlayerPawn::PlaySkillAnim(const FName& skillID)
 	return 0.f;//No skill
 }
 
-float AMyPlayerPawn::GetRangeRange()
-{
-	return m_fRangeAttackRange + m_fAddAtkRange;
-}
-
 void AMyPlayerPawn::OnDeathAnimEnd()
 {
 	Super::OnDeathAnimEnd();
@@ -450,3 +467,9 @@ bool AMyPlayerPawn::IsSneak() const
 	return m_bIsSneaking;
 }
 
+bool AMyPlayerPawn::CheckTargetRange()
+{
+	float DistSqr = FVector::DistSquared(GetActorLocation(), GetFocusedActorLocation());
+
+	return DistSqr <= GetAttackRangeSqr();
+}

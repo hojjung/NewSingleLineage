@@ -339,6 +339,7 @@ IFocusable* USpawnManager::GetNearTarget(FVector callerLoc, float range)
 	ACombatUnitPawn* Pawn = GetNearNpc(callerLoc, range);
 	
 	IFocusable* Prop = GetNearProp(callerLoc, range);
+	
 	AActor* FocusActor = Cast<AActor>(Prop);
 
 	if(Pawn && FocusActor)

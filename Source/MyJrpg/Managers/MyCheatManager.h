@@ -30,7 +30,4 @@ public:
 
 	UFUNCTION(Exec)
 	void TryCompleteQuest(FName id);
-
-	UFUNCTION(Exec)
-	void SetPlayerAsset(FName id);
 };

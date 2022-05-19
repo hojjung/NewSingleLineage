@@ -38,8 +38,6 @@ protected:
 	int m_CompUseIndex;
 	UPROPERTY()
 	UTouchInterface* m_Joystick;
-	UPROPERTY()
-	AMoveIndicator* m_FocusActor;
 	
 protected:
 	virtual void BeginPlay() override;
@@ -54,8 +52,6 @@ protected:
 
 	bool CheckInteract();
 
-	void OnFocus(IFocusable* focus);
-	
 public:
 	void ShowInGameWorldText(float number,ABaseUnitPawn* interactActor,ETextType dmgPopup); //target
 	

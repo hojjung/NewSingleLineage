@@ -33,22 +33,6 @@ protected:
 	UPROPERTY()
 	USensor_LogicBase* m_AiSensor;
 	UPROPERTY()
-	float m_fAttackCD;
-	UPROPERTY()
-	float m_fHitAnimCD;
-	UPROPERTY()
-	float m_fAttackMinCD;
-	UPROPERTY()
-	float m_fAttackRange;
-	UPROPERTY()
-	float m_fDeathAnimDurationMax;
-	UPROPERTY()
-	float m_fDeathAnimDurationTimer;
-	UPROPERTY()
-	bool m_bUseFsmTick;
-	UPROPERTY()
-	bool m_bCanUseSkill;
-	UPROPERTY()
 	UBulletPool* m_Pool;
 	
 	FTimerHandle m_DeathAnimTimer;
@@ -66,6 +50,16 @@ protected:
 	FStatGroup m_StatGroup;
 
 	FName m_TeamID;
+	
+	float m_fAttackCD;
+	float m_fHitAnimCD;
+	float m_fAttackMinCD;
+	float m_fAttackRange;
+	float m_fAttackRangeSqr;
+	float m_fDeathAnimDurationMax;
+	float m_fDeathAnimDurationTimer;
+	bool m_bUseFsmTick;
+	bool m_bCanUseSkill;
 
 private:
 	void CreateSetDeathCurve(float fullLength);
@@ -112,8 +106,12 @@ public:// try atk
 	
 public:// get
 	virtual bool IsAlive();
+
+	void SetAttackRange(float range);
 	
-	virtual float GetAttackRange();
+	float GetAttackRange();
+
+	float GetAttackRangeSqr();
 	
 	float GetHpPercent() const;
 
