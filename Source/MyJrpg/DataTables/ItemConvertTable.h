@@ -37,11 +37,11 @@ public:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
 	int m_nRightItemStLv = 0;
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
+	float m_fConvertingTime = 0;
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
 	FItemDataHandle m_CostItem;
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
 	int m_nCostItemStLv = 0;
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
-	float m_fConvertingTime = 0;
 };
 
 USTRUCT(BlueprintType)
@@ -52,6 +52,10 @@ struct FItemConvertRow : public FTableRowBase
 public:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
 	FText m_TextConverterName;
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
+	TArray<FItemDataHandle> m_FuelItem;
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
+	float m_fFuelDuration = 0;
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
 	TArray<FItemConvertSet> m_AryItems;
 };

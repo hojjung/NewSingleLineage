@@ -116,38 +116,8 @@ void UWidgetInventory::SetItem(UWidgetBaseElement* target, const FItemSpec& item
 	target->SetFocusable(true);
 	target->SetDragable(true);
 	target->SetHoldable(true);
-	
-	const FItemDataRow& Data = UMyLib::GetItemData(itemSpec.m_ID);
 
-	target->SetIcon(Data.m_Icon);
-	
-	target->SetGlowColor(Data.m_ColorHandle);
-
-	bool IsEquip = UMyLib::IsEquip(Data);
-
-	if(IsEquip)
-	{
-		if(itemSpec.m_nLvStack > 0)
-		{
-			FString Str = FString::Printf(TEXT("+%d"), itemSpec.m_nLvStack);
-			
-			target->SetTextStackLv(Str);
-		}
-		else
-		{
-			target->HideTextStackLv();
-		}
-
-		target->ShowDurBar((float)itemSpec.m_nDurability / (float)Data.m_nDurability);
-	}
-	else
-	{
-		FString Str = FString::Printf(TEXT("%d"), itemSpec.m_nLvStack);
-			
-		target->SetTextStackLv(Str);
-
-		target->HideDurBar();
-	}
+	target->SetItem(itemSpec);
 }
 
 void UWidgetInventory::UnFocusCurrent()

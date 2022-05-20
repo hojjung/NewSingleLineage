@@ -10,37 +10,48 @@
 #include "ItemConvertInst.generated.h"
 
 /**
- * 
+ *3 
  */
+
+
+
 UCLASS()
-class MYJRPG_API UItemConvertInst : public UObject
+class MYJRPG_API UItemConvertInst : public UInventory
 {
 	GENERATED_BODY()
 
 public:
-	DECLARE_MULTICAST_DELEGATE(FChanged);
+	enum EItemConvertIndex
+	{
+		Left,
+		Right,
+		Fuel,
+		Cost
+	};
 
-	FChanged m_OnChanged;
-	
 private:
 	const FItemConvertRow* m_ItemConvertRow;
 
 	const FItemConvertSet* m_SelectedConvertSet;
 	
-	FItemSpec m_LeftItem;
+	float m_fConvertTimer;
 
-	FItemSpec m_RightItem;
+	float m_fMaxConvertTimer;
 
-	FItemSpec m_CostItem;
+	float m_fFireTimer;
 
-	float m_fTimer;
-
+	float m_fMaxFireTimer;
+	
 private:
-	const FItemConvertSet* TryStartConvert();
+	virtual void Init(int size) override;
 
+	void OnInvenChanged();
+	
 	bool CheckLeftItemWithSet(const FItemConvertSet& set, const FItemSpec& item);
 
 	bool CheckCostItemWithSet(const FItemConvertSet& set, const FItemSpec& item);
+
+	bool CheckFuelItemWithSet(const FItemConvertSet& set, const FItemSpec& item);
 
 	bool CheckRightItemEmpty();
 
@@ -53,23 +64,23 @@ public:
 
 	const FItemSpec& GetRightItem() const;
 	
+	const FItemSpec& GetFuelItem() const;
+
 	const FItemSpec& GetCostItem() const;
 	
 	bool CheckLeftItemAvailable(const FItemSpec& item);
 
+	bool CheckFuelItemAvailable(const FItemSpec& item);
+
 	bool CheckCostItemAvailable(const FItemSpec& item);
-	
-	void SetLeftItem(UInventory* fromInven, int fromIndex);
-
-	void SetCostItem(UInventory* fromInven, int fromIndex);
-
-	void StartConvert();
 	
 	void Tick(float delta_time);
 	
 	bool IsEmpty();
-	
-	void OnDropItem(UInventory* get, int m_n_index);
+
+	float GetRemainTimePer();
+
+	float GetFireRemainTimePer();
 };
 
 

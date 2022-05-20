@@ -81,7 +81,7 @@ public:
 		return m_AryTotalItems[index];
 	}
 	
-	void Init(int size);
+	virtual void Init(int size);
 	
 	int GetInvenSize() const;
 	

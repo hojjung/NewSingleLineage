@@ -21,7 +21,7 @@ protected:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (BindWidget))
 	UWidgetBaseElement* m_LeftItem;
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (BindWidget))
-	UWidgetBaseElement* m_CostItem;
+	UWidgetBaseElement* m_FuelItem;
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (BindWidget))
 	UWidgetBaseElement* m_RightItem;
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (BindWidget))
@@ -32,6 +32,12 @@ protected:
 	UWidgetInventory* m_Bag;
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (BindWidget))
 	UWidgetInventory* m_Belt;
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (BindWidget))
+	UProgressBar* m_BarArrow;
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (BindWidget))
+	UTextBlock* m_TextRemainTime;
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (BindWidget))
+	UProgressBar* m_BarFireTime;
 
 	FDelegateHandle m_Dele;
 
@@ -42,17 +48,21 @@ protected:
 protected:
 	virtual void NativeOnInitialized() override;
 
+	void SetProgressBar(float v);
+	
+	void SetFireBar(float v);
+
 	virtual void ClosePanel() override;
 
 	void UpdatePanel();
 
 	void UpdateElement(UWidgetBaseElement* ele, const FItemSpec& item);
 
-	void OnFocused(UWidgetBaseElement* ele);
-
 	void OnDrag(UWidgetBaseElement* ele);
 
 	void OnDrop(UWidgetBaseElement* ele);
+
+	virtual void NativeTick(const FGeometry& MyGeometry, float InDeltaTime) override;
 
 public:
 	void ShowItemConvert(UItemConvertInst* inst);

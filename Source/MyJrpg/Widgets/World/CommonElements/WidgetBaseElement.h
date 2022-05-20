@@ -121,4 +121,6 @@ public:
 	void SetTextFocus(FText t);
 
 	void SetBoxSize(float x, float y);
+
+	void SetItem(const FItemSpec& itemSpec);
 };

@@ -133,31 +133,7 @@ void UWidgetEquipPanel::UpdateElement(UWidgetBaseElement* ele, const FItemSpec& 
 		ele->SetDragable(true);
 	}
 	
-	const FItemDataRow& Data = UMyLib::GetItemData(item.m_ID);
-
-	ele->SetIcon(Data.m_Icon);
-
-	ele->SetGlowColor(Data.m_ColorHandle);
-
-	if(UMyLib::IsEquip(Data))
-	{
-		ele->ShowDurBar((float)item.m_nDurability / (float)Data.m_nDurability);
-	}
-	else
-	{
-		ele->HideDurBar();
-	}
-
-	if (item.m_nLvStack > 0)
-	{
-		FString Str = FString::Printf(TEXT("+%d"), item.m_nLvStack);
-
-		ele->SetTextStackLv(Str);
-	}
-	else
-	{
-		ele->HideTextStackLv();
-	}
+	ele->SetItem(item);
 }
 
 bool UWidgetEquipPanel::TryUnequip(EEquipSlotType t)

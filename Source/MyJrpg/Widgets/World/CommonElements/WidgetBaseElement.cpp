@@ -262,3 +262,38 @@ bool UWidgetBaseElement::IsMyFocused() const
 {
 	return m_OverlayFocus->IsVisible();
 }
+
+void UWidgetBaseElement::SetItem(const FItemSpec& itemSpec)
+{
+	const FItemDataRow& Data = UMyLib::GetItemData(itemSpec.m_ID);
+
+	SetIcon(Data.m_Icon);
+	
+	SetGlowColor(Data.m_ColorHandle);
+
+	bool IsEquip = UMyLib::IsEquip(Data);
+
+	if(IsEquip)
+	{
+		if(itemSpec.m_nLvStack > 0)
+		{
+			FString Str = FString::Printf(TEXT("+%d"), itemSpec.m_nLvStack);
+			
+			SetTextStackLv(Str);
+		}
+		else
+		{
+			HideTextStackLv();
+		}
+
+		ShowDurBar((float)itemSpec.m_nDurability / (float)Data.m_nDurability);
+	}
+	else
+	{
+		FString Str = FString::Printf(TEXT("%d"), itemSpec.m_nLvStack);
+			
+		SetTextStackLv(Str);
+
+		HideDurBar();
+	}
+}

@@ -10,46 +10,71 @@ void UWidgetItemConvert::NativeOnInitialized()
 
 	m_Inven->Init(UMyLib::GetPlayerInven());
 
-	m_LeftItem->m_OnFocus.AddUObject(this,&UWidgetItemConvert::OnFocused);
 	m_LeftItem->m_OnDrag.AddUObject(this,&UWidgetItemConvert::OnDrag);
 	m_LeftItem->m_OnDrop.AddUObject(this,&UWidgetItemConvert::OnDrop);
-	m_RightItem->m_OnFocus.AddUObject(this,&UWidgetItemConvert::OnFocused);
 	m_RightItem->m_OnDrag.AddUObject(this,&UWidgetItemConvert::OnDrag);
 	m_RightItem->m_OnDrop.AddUObject(this,&UWidgetItemConvert::OnDrop);
-	m_CostItem->m_OnFocus.AddUObject(this,&UWidgetItemConvert::OnFocused);
-	m_CostItem->m_OnDrag.AddUObject(this,&UWidgetItemConvert::OnDrag);
-	m_CostItem->m_OnDrop.AddUObject(this,&UWidgetItemConvert::OnDrop);
+	m_FuelItem->m_OnDrag.AddUObject(this,&UWidgetItemConvert::OnDrag);
+	m_FuelItem->m_OnDrop.AddUObject(this,&UWidgetItemConvert::OnDrop);
 
 	m_LeftItem->SetIndex(0);
 	m_RightItem->SetIndex(1);
-	m_CostItem->SetIndex(2);
+	m_FuelItem->SetIndex(2);
 	
 	m_AryItems.Reset();
 	m_AryItems.Add(m_LeftItem);
 	m_AryItems.Add(m_RightItem);
-	m_AryItems.Add(m_CostItem);
+	m_AryItems.Add(m_FuelItem);
+
+	m_LeftItem->SetFocusable(false);
+	m_RightItem->SetFocusable(false);
+	m_FuelItem->SetFocusable(false);
+	
+	m_LeftItem->SetDragable(true);
+	m_RightItem->SetDragable(true);
+	m_FuelItem->SetDragable(true);
+
+	m_LeftItem->SetHoldable(false);
+	m_RightItem->SetHoldable(false);
+	m_FuelItem->SetHoldable(false);
+}
+
+void UWidgetItemConvert::SetProgressBar(float v)
+{
+	m_BarArrow->SetPercent(v);
+}
+
+void UWidgetItemConvert::SetFireBar(float v)
+{
+	m_BarFireTime->SetPercent(v);
 }
 
 void UWidgetItemConvert::ClosePanel()
 {
 	Super::ClosePanel();
-	m_ItemConvertInst->m_OnChanged.Remove(m_Dele);
+	m_ItemConvertInst->m_OnInvenChanged.Remove(m_Dele);
 	m_ItemConvertInst.Reset();
 }
 
 void UWidgetItemConvert::UpdatePanel()
 {
 	m_Inven->OpenPanel();
+
+	if(UMyGameInstance::Get->m_EquipManager->GetBag())
+	{
+		m_Bag->Init(UMyGameInstance::Get->m_EquipManager->GetBag());
+		m_Bag->OpenPanel();
+	}
+
+	if(UMyGameInstance::Get->m_EquipManager->GetBelt())
+	{
+		m_Belt->Init(UMyGameInstance::Get->m_EquipManager->GetBelt());
+		m_Belt->OpenPanel();
+	}
 	
-	// m_Bag->Init(UMyGameInstance::Get->m_EquipManager->GetBag());
-	// m_Bag->OpenPanel();
-	//
-	// m_Belt->Init(UMyGameInstance::Get->m_EquipManager->GetBelt());
-	// m_Belt->OpenPanel();
-	//
 	UpdateElement(m_LeftItem,m_ItemConvertInst->GetLeftItem());
 	UpdateElement(m_RightItem,m_ItemConvertInst->GetRightItem());
-	UpdateElement(m_CostItem,m_ItemConvertInst->GetCostItem());
+	UpdateElement(m_FuelItem,m_ItemConvertInst->GetFuelItem());
 }
 
 void UWidgetItemConvert::UpdateElement(UWidgetBaseElement* ele, const FItemSpec& item)
@@ -59,81 +84,71 @@ void UWidgetItemConvert::UpdateElement(UWidgetBaseElement* ele, const FItemSpec&
 		ele->Clear();
 		return ;
 	}
-	const FItemDataRow& Data = UMyLib::GetItemData(item.m_ID);
 
-	ele->SetIcon(Data.m_Icon);
-	
-	ele->SetGlowColor(Data.m_ColorHandle);
-}
-
-void UWidgetItemConvert::OnFocused(UWidgetBaseElement* ele)
-{
-	
+	ele->SetItem(item);
 }
 
 void UWidgetItemConvert::OnDrag(UWidgetBaseElement* ele)
 {
-	
+	UItemDDO::GetDDOInst->m_FromInven = m_ItemConvertInst;
+
+	UItemDDO::GetDDOInst->m_nIndex = ele->GetIndex();
 }
 
 void UWidgetItemConvert::OnDrop(UWidgetBaseElement* ele)
 {
-	// if(UItemDDO::GetDDOInst->m_FromInven.Get())
-	// {
-	// 	m_ItemConvertInst->OnDropItem(UItemDDO::GetDDOInst->m_FromInven.Get(),UItemDDO::GetDDOInst->m_nIndex);
-	//
-	// 	return;
-	// }
-	//
-	// if(UItemDDO::GetDDOInst->m_FromEquip.Get())
-	// {
-	// 	FItemSpec MyItem =  ele->GetIndex()
-	//
-	// 	FItemSpec OtherItem = UItemDDO::GetDDOInst->GetItem();
-	// 	
-	// 	if(MyItem.m_ID.IsNone())
-	// 	{
-	// 		int InvenIndex = ele->GetIndex();
-	// 		
-	// 		UMyLib::GetEquip()->Unequip((EEquipSlotType)UItemDDO::GetDDOInst->m_nIndex,m_CurrentInven.Get(),&InvenIndex);
-	// 		m_CurrentInven->UpdateInventory();
-	// 		return;
-	// 	}
-	// 	
-	//
-	// 	FItemDataRow A = UMyLib::GetItemData(MyItem.m_ID);
-	//
-	// 	FItemDataRow B = UMyLib::GetItemData(OtherItem.m_ID);
-	// 	
-	// 	if(A.m_ItemType != B.m_ItemType)
-	// 	{
-	// 		return;
-	// 	}
-	// 	UMyLib::GetEquip()->Equip((EEquipSlotType)UItemDDO::GetDDOInst->m_nIndex,m_CurrentInven.Get(),ele->GetIndex());
-	// 	m_CurrentInven->UpdateInventory();
-	// 	return;
-	// }
-	UInventory* Inven = UItemDDO::GetDDOInst->m_FromInven.Get();
-	
-	int FromInvenIndex = UItemDDO::GetDDOInst->m_nIndex;
-	
-	int Index = ele->GetIndex();
-
-	switch (Index)
+	if(UItemDDO::GetDDOInst->m_FromInven.Get())
 	{
-	case 0:
-		m_ItemConvertInst->SetLeftItem(Inven,FromInvenIndex);
-		break;
-	case 2:
-		m_ItemConvertInst->SetCostItem(Inven,FromInvenIndex);
-		break;
+		const FItemSpec& ItemSpec = UItemDDO::GetDDOInst->GetItem();
+		
+		switch (ele->GetIndex())
+		{
+		case 0:
+			if(!m_ItemConvertInst->CheckLeftItemAvailable(ItemSpec))
+			{
+				return;
+			}
+			break;
+		case 1:
+			return;//여기 드랍되면 아예안됨
+			break;
+		case 2:
+			if(!m_ItemConvertInst->CheckFuelItemAvailable(ItemSpec))
+			{
+				return;
+			}
+			break;
+		case 3:
+			if(!m_ItemConvertInst->CheckCostItemAvailable(ItemSpec))
+			{
+				return;
+			}
+			break;
+		}
+		
+		m_ItemConvertInst->OnDropItem(ele->GetIndex(),UItemDDO::GetDDOInst->m_FromInven.Get(),UItemDDO::GetDDOInst->m_nIndex);
 	}
+}
+
+void UWidgetItemConvert::NativeTick(const FGeometry& MyGeometry, float InDeltaTime)
+{
+	Super::NativeTick(MyGeometry, InDeltaTime);
+
+	float Per = m_ItemConvertInst->GetRemainTimePer();
+
+	SetProgressBar(Per);
 }
 
 void UWidgetItemConvert::ShowItemConvert(UItemConvertInst* inst)
 {
 	OpenPanel();
 	m_ItemConvertInst = inst;
-	m_Dele = m_ItemConvertInst->m_OnChanged.AddUObject(this, &UWidgetItemConvert::UpdatePanel);
+	m_Dele = m_ItemConvertInst->m_OnInvenChanged.AddUObject(this, &UWidgetItemConvert::UpdatePanel);
 	UpdatePanel();
+
+	const FText& ConvertText = m_ItemConvertInst->GetConvertRow().m_TextConverterName;
+	
+	m_TextConverter->SetText(ConvertText);
+
+	SetProgressBar(0);
 }
