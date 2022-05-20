@@ -21,12 +21,17 @@ class MYJRPG_API UItemConvertInst : public UInventory
 	GENERATED_BODY()
 
 public:
+	DECLARE_MULTICAST_DELEGATE(FOnInvenChanged);
+
+	FOnInvenChanged m_OnItemConvertInst;
+	
 	enum EItemConvertIndex
 	{
 		Left,
 		Right,
 		Fuel,
-		Cost
+		Cost,
+		Len
 	};
 
 private:
@@ -55,9 +60,14 @@ private:
 
 	bool CheckRightItemEmpty();
 
+	void ReceiveRightItem();
+	
 public:
 	void SetConvertData(const FItemConvertRow& convertRow);
-	
+	void TryUseFuelToFire();
+	void TrySelectItemConvertSet();
+	void TryStartConvert();
+
 	const FItemConvertRow& GetConvertRow() const;
 	
 	const FItemSpec& GetLeftItem() const;
@@ -73,7 +83,7 @@ public:
 	bool CheckFuelItemAvailable(const FItemSpec& item);
 
 	bool CheckCostItemAvailable(const FItemSpec& item);
-	
+
 	void Tick(float delta_time);
 	
 	bool IsEmpty();

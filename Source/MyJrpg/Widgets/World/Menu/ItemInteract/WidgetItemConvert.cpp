@@ -12,31 +12,41 @@ void UWidgetItemConvert::NativeOnInitialized()
 
 	m_LeftItem->m_OnDrag.AddUObject(this,&UWidgetItemConvert::OnDrag);
 	m_LeftItem->m_OnDrop.AddUObject(this,&UWidgetItemConvert::OnDrop);
+	
 	m_RightItem->m_OnDrag.AddUObject(this,&UWidgetItemConvert::OnDrag);
 	m_RightItem->m_OnDrop.AddUObject(this,&UWidgetItemConvert::OnDrop);
+	
 	m_FuelItem->m_OnDrag.AddUObject(this,&UWidgetItemConvert::OnDrag);
 	m_FuelItem->m_OnDrop.AddUObject(this,&UWidgetItemConvert::OnDrop);
+
+	m_CostItem->m_OnDrag.AddUObject(this,&UWidgetItemConvert::OnDrag);
+	m_CostItem->m_OnDrop.AddUObject(this,&UWidgetItemConvert::OnDrop);
 
 	m_LeftItem->SetIndex(0);
 	m_RightItem->SetIndex(1);
 	m_FuelItem->SetIndex(2);
+	m_CostItem->SetIndex(3);
 	
 	m_AryItems.Reset();
 	m_AryItems.Add(m_LeftItem);
 	m_AryItems.Add(m_RightItem);
 	m_AryItems.Add(m_FuelItem);
+	m_AryItems.Add(m_CostItem);
 
 	m_LeftItem->SetFocusable(false);
 	m_RightItem->SetFocusable(false);
 	m_FuelItem->SetFocusable(false);
+	m_CostItem->SetFocusable(false);
 	
 	m_LeftItem->SetDragable(true);
 	m_RightItem->SetDragable(true);
 	m_FuelItem->SetDragable(true);
+	m_CostItem->SetDragable(true);
 
 	m_LeftItem->SetHoldable(false);
 	m_RightItem->SetHoldable(false);
 	m_FuelItem->SetHoldable(false);
+	m_CostItem->SetHoldable(false);
 }
 
 void UWidgetItemConvert::SetProgressBar(float v)
@@ -52,7 +62,7 @@ void UWidgetItemConvert::SetFireBar(float v)
 void UWidgetItemConvert::ClosePanel()
 {
 	Super::ClosePanel();
-	m_ItemConvertInst->m_OnInvenChanged.Remove(m_Dele);
+	m_ItemConvertInst->m_OnItemConvertInst.Remove(m_Dele);
 	m_ItemConvertInst.Reset();
 }
 
@@ -75,6 +85,7 @@ void UWidgetItemConvert::UpdatePanel()
 	UpdateElement(m_LeftItem,m_ItemConvertInst->GetLeftItem());
 	UpdateElement(m_RightItem,m_ItemConvertInst->GetRightItem());
 	UpdateElement(m_FuelItem,m_ItemConvertInst->GetFuelItem());
+	UpdateElement(m_CostItem,m_ItemConvertInst->GetCostItem());
 }
 
 void UWidgetItemConvert::UpdateElement(UWidgetBaseElement* ele, const FItemSpec& item)
@@ -137,13 +148,17 @@ void UWidgetItemConvert::NativeTick(const FGeometry& MyGeometry, float InDeltaTi
 	float Per = m_ItemConvertInst->GetRemainTimePer();
 
 	SetProgressBar(Per);
+
+	float FirePer = m_ItemConvertInst->GetFireRemainTimePer();
+
+	SetFireBar(FirePer);
 }
 
 void UWidgetItemConvert::ShowItemConvert(UItemConvertInst* inst)
 {
 	OpenPanel();
 	m_ItemConvertInst = inst;
-	m_Dele = m_ItemConvertInst->m_OnInvenChanged.AddUObject(this, &UWidgetItemConvert::UpdatePanel);
+	m_Dele = m_ItemConvertInst->m_OnItemConvertInst.AddUObject(this, &UWidgetItemConvert::UpdatePanel);
 	UpdatePanel();
 
 	const FText& ConvertText = m_ItemConvertInst->GetConvertRow().m_TextConverterName;
