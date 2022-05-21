@@ -9,29 +9,69 @@ void UItemConvertInst::Init(int size)
 
 void UItemConvertInst::SetConvertData(const FItemConvertRow& convertRow)
 {
-	m_fConvertTimer = 0;
+	m_bIsFireWorking = false;
+	m_bIsConverting = false;
 	m_fFireTimer = 0;
-	m_fMaxConvertTimer = 0;
+	m_fMaxConvertTimer = -1;
 	m_fMaxFireTimer = 0;
 	m_SelectedConvertSet = nullptr;
 	m_ItemConvertRow = &convertRow;
+	m_bIsNeedFire = m_ItemConvertRow->m_FuelItem.Num() > 0 && m_fMaxFireTimer <= 0;
 	Init(EItemConvertIndex::Len);
 	m_OnInvenChanged.AddUObject(this, &UItemConvertInst::OnInvenChanged);
 	OnInvenChanged();
 }
 
+
+void UItemConvertInst::Tick(float delta_time)
+{
+	if(m_bIsFireWorking)
+	{
+		m_fFireTimer -= delta_time;
+		
+		if(m_fFireTimer<=0)
+		{
+			m_bIsFireWorking = false;
+			m_fFireTimer = 0;
+			m_fMaxFireTimer = 0;
+			TryUseFuelToFire();
+			m_OnConvertChanged.Broadcast();
+		}
+	}
+
+	if(m_bIsConverting)
+	{
+		if(m_bIsNeedFire && !m_bIsFireWorking)
+		{
+			return;//불이필요하면 불을 떼줘야함
+		}
+		m_fConvertTimer += delta_time;
+
+		if(m_fConvertTimer >= m_fMaxConvertTimer)
+		{
+			m_bIsConverting = false;
+			m_fConvertTimer = 0;
+			m_fMaxConvertTimer = 0;
+			ReceiveRightItem();
+		}
+	}
+}
+
 void UItemConvertInst::TryUseFuelToFire()
 {
-	if(!GetFuelItem().m_ID.IsNone() && m_fFireTimer <= 0)//연료가 들어왔고, 불이 안돌아간다면
+	if(!GetFuelItem().m_ID.IsNone() && !m_bIsFireWorking)//연료가 들어왔고, 불이 안돌아간다면
 	{
 		m_fMaxFireTimer = m_ItemConvertRow->m_fFuelDuration;
+		
 		m_fFireTimer = m_fMaxFireTimer; 
 
 		int& StackCnt = m_AryTotalItems[EItemConvertIndex::Fuel].m_nLvStack;
-		if(--StackCnt <= 0)
+		StackCnt--;
+		if(StackCnt <= 0)
 		{
 			ClearSlot(EItemConvertIndex::Fuel);
 		}
+		m_bIsFireWorking = true;
 	}
 }
 
@@ -51,16 +91,14 @@ void UItemConvertInst::TrySelectItemConvertSet()
 	else
 	{
 		m_SelectedConvertSet = nullptr;
-
-		m_fMaxConvertTimer = 0;
 	}
 }
 
 void UItemConvertInst::TryStartConvert()
 {
-	if(m_SelectedConvertSet)
+	if(m_SelectedConvertSet && !m_bIsConverting)
 	{
-		if(m_ItemConvertRow->m_FuelItem.Num() > 0 && m_fMaxFireTimer <= 0)
+		if(m_bIsNeedFire && !m_bIsFireWorking)
 		{
 			return;//불이필요한데 불이 안켜짐
 		}
@@ -83,7 +121,8 @@ void UItemConvertInst::TryStartConvert()
 		}
 		//이제 컨버팅 시작해도됨
 		int& LeftStack = m_AryTotalItems[EItemConvertIndex::Left].m_nLvStack;
-		if(--LeftStack <= 0)
+		LeftStack--;
+		if(LeftStack <= 0)
 		{
 			ClearSlot(EItemConvertIndex::Left);
 		}
@@ -91,6 +130,8 @@ void UItemConvertInst::TryStartConvert()
 		m_fMaxConvertTimer = m_SelectedConvertSet->m_fConvertingTime;
 
 		m_fConvertTimer = 0;
+
+		m_bIsConverting = true;
 	}
 }
 
@@ -102,7 +143,7 @@ void UItemConvertInst::OnInvenChanged()
 
 	TryStartConvert();
 
-	m_OnItemConvertInst.Broadcast();
+	m_OnConvertChanged.Broadcast();
 }	
 
 bool UItemConvertInst::CheckRightItemEmpty()//뭐가있더라 하더라도, 현재 컨버팅 세트에 지장이 없다면 그대로 해도됨
@@ -112,8 +153,6 @@ bool UItemConvertInst::CheckRightItemEmpty()//뭐가있더라 하더라도, 현�
 
 void UItemConvertInst::ReceiveRightItem()
 {
-	m_fConvertTimer = 0;
-	
 	if(m_AryTotalItems[EItemConvertIndex::Right].m_ID.IsNone())
 	{
 		AddSlot(EItemConvertIndex::Right,FItemSpec( m_SelectedConvertSet->m_RightItem.RowName,m_SelectedConvertSet->m_nRightItemStLv));
@@ -122,7 +161,6 @@ void UItemConvertInst::ReceiveRightItem()
 	{
 		m_AryTotalItems[EItemConvertIndex::Right].m_nLvStack += m_SelectedConvertSet->m_nRightItemStLv;
 	}
-	
 	OnInvenChanged();
 }
 
@@ -173,44 +211,48 @@ bool UItemConvertInst::CheckLeftItemAvailable(const FItemSpec& item)
 	return false;
 }
 
-void UItemConvertInst::Tick(float delta_time)
-{
-	// if(m_fMaxFireTimer <= 0)
-	// {
-	// 	return;
-	// }
-	m_fFireTimer -= delta_time;
-
-	if(m_fMaxConvertTimer <= 0)
-	{
-		return;
-	}
-	m_fConvertTimer += delta_time;
-
-	if(m_fConvertTimer >= m_fMaxConvertTimer)
-	{
-		ReceiveRightItem();
-	}
-}
 
 bool UItemConvertInst::IsEmpty()
 {
-	return GetFuelItem().m_ID.IsNone() && GetLeftItem().m_ID.IsNone() && GetRightItem().m_ID.IsNone();
+	return GetFuelItem().m_ID.IsNone() && GetLeftItem().m_ID.IsNone() && GetRightItem().m_ID.IsNone() && !m_bIsConverting;
 }
 
 float UItemConvertInst::GetRemainTimePer()
 {
+	if(m_fMaxConvertTimer <= 0.f)
+	{
+		return 0.f;
+	}
 	return m_fConvertTimer / m_fMaxConvertTimer;
 }
 
 float UItemConvertInst::GetFireRemainTimePer()
 {
+	if(m_fMaxFireTimer <= 0.f)
+	{
+		return 0.f;
+	}
 	return m_fFireTimer / m_fMaxFireTimer;
+}
+
+float UItemConvertInst::GetRemainTime() const
+{
+	return m_fMaxConvertTimer - m_fConvertTimer;
+}
+
+bool UItemConvertInst::IsFireWorking()
+{
+	return m_bIsFireWorking;
+}
+
+bool UItemConvertInst::IsConvertWorking()
+{
+	return m_bIsConverting;
 }
 
 bool UItemConvertInst::CheckFuelItemAvailable(const FItemSpec& item)
 {
-	if(m_ItemConvertRow->m_FuelItem.Num() <= 0)
+	if(!m_bIsNeedFire)
 	{
 		return false;//허용된 자원이 없으면 자원칸에 아무것도 들어갈수 없음
 	}

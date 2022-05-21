@@ -113,11 +113,11 @@ void UWidgetInventory::UpdateInventory()
 
 void UWidgetInventory::SetItem(UWidgetBaseElement* target, const FItemSpec& itemSpec)
 {
+	target->SetItem(itemSpec);
+	
 	target->SetFocusable(true);
 	target->SetDragable(true);
 	target->SetHoldable(true);
-
-	target->SetItem(itemSpec);
 }
 
 void UWidgetInventory::UnFocusCurrent()

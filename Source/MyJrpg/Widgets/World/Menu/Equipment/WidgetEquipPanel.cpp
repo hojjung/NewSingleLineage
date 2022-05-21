@@ -100,7 +100,6 @@ void UWidgetEquipPanel::UpdateSlots()
 		{
 			if(m_AryEquips[i])
 				m_AryEquips[i]->Clear();
-			
 			continue;
 		}
 		UpdateElement(m_AryEquips[i], EquippedItems[i]);
@@ -111,6 +110,8 @@ void UWidgetEquipPanel::UpdateSlots()
 
 void UWidgetEquipPanel::UpdateElement(UWidgetBaseElement* ele, const FItemSpec& item)
 {
+	ele->SetItem(item);
+	
 	ele->SetHoldable(true);
 
 	if (ele == m_Belt)
@@ -132,8 +133,6 @@ void UWidgetEquipPanel::UpdateElement(UWidgetBaseElement* ele, const FItemSpec& 
 		ele->SetFocusable(true);
 		ele->SetDragable(true);
 	}
-	
-	ele->SetItem(item);
 }
 
 bool UWidgetEquipPanel::TryUnequip(EEquipSlotType t)

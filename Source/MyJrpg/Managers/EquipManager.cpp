@@ -192,11 +192,19 @@ void UEquipManager::UnequipBelt()
 
 bool UEquipManager::IsBagUnequipable()
 {
+	if(!GetBag())
+	{
+		return true;
+	}
 	return m_BagInven->GetUsingSlotCount() <= 0;	
 }
 
 bool UEquipManager::IsBeltUnequipable()
 {
+	if(!GetBelt())
+	{
+		return true;
+	}
 	return m_BeltSlots->GetUsingSlotCount() <= 0;
 }
 

@@ -3,6 +3,7 @@
 #include "MyJrpg/Managers/EquipManager.h"
 #include "MyJrpg/Managers/MyGameInstance.h"
 #include "MyJrpg/Widgets/World/Menu/Inventory/ItemDDO.h"
+#include "ILocalizationServiceState.h"
 
 void UWidgetItemConvert::NativeOnInitialized()
 {
@@ -32,26 +33,19 @@ void UWidgetItemConvert::NativeOnInitialized()
 	m_AryItems.Add(m_RightItem);
 	m_AryItems.Add(m_FuelItem);
 	m_AryItems.Add(m_CostItem);
-
-	m_LeftItem->SetFocusable(false);
-	m_RightItem->SetFocusable(false);
-	m_FuelItem->SetFocusable(false);
-	m_CostItem->SetFocusable(false);
-	
-	m_LeftItem->SetDragable(true);
-	m_RightItem->SetDragable(true);
-	m_FuelItem->SetDragable(true);
-	m_CostItem->SetDragable(true);
-
-	m_LeftItem->SetHoldable(false);
-	m_RightItem->SetHoldable(false);
-	m_FuelItem->SetHoldable(false);
-	m_CostItem->SetHoldable(false);
 }
 
-void UWidgetItemConvert::SetProgressBar(float v)
+void UWidgetItemConvert::SetConvertBar(float v, float remainTime)
 {
 	m_BarArrow->SetPercent(v);
+
+	if(remainTime > 0)
+	{
+		FTimespan TimeSpan(0,0,remainTime);
+		const FString& CultName = FInternationalization::Get().GetCurrentCulture().Get().GetName();
+		FCulturePtr Culture = FInternationalization::Get().GetCulture(CultName);
+		m_TextRemainTime->SetText(FText::AsTimespan(TimeSpan,Culture));
+	}
 }
 
 void UWidgetItemConvert::SetFireBar(float v)
@@ -62,7 +56,7 @@ void UWidgetItemConvert::SetFireBar(float v)
 void UWidgetItemConvert::ClosePanel()
 {
 	Super::ClosePanel();
-	m_ItemConvertInst->m_OnItemConvertInst.Remove(m_Dele);
+	m_ItemConvertInst->m_OnConvertChanged.Remove(m_Dele);
 	m_ItemConvertInst.Reset();
 }
 
@@ -86,6 +80,26 @@ void UWidgetItemConvert::UpdatePanel()
 	UpdateElement(m_RightItem,m_ItemConvertInst->GetRightItem());
 	UpdateElement(m_FuelItem,m_ItemConvertInst->GetFuelItem());
 	UpdateElement(m_CostItem,m_ItemConvertInst->GetCostItem());
+
+	if(m_ItemConvertInst->IsFireWorking())
+	{
+		m_BarFireTime->SetIsEnabled(true);
+	}
+	else
+	{
+		SetFireBar(0);
+		m_BarFireTime->SetIsEnabled(false);
+	}
+
+	if(m_ItemConvertInst->IsConvertWorking())
+	{
+		m_TextRemainTime->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
+	}
+	else
+	{
+		SetConvertBar(0,0);
+		m_TextRemainTime->SetVisibility(ESlateVisibility::Collapsed);
+	}
 }
 
 void UWidgetItemConvert::UpdateElement(UWidgetBaseElement* ele, const FItemSpec& item)
@@ -97,6 +111,7 @@ void UWidgetItemConvert::UpdateElement(UWidgetBaseElement* ele, const FItemSpec&
 	}
 
 	ele->SetItem(item);
+	ele->SetDragable(true);
 }
 
 void UWidgetItemConvert::OnDrag(UWidgetBaseElement* ele)
@@ -147,7 +162,9 @@ void UWidgetItemConvert::NativeTick(const FGeometry& MyGeometry, float InDeltaTi
 
 	float Per = m_ItemConvertInst->GetRemainTimePer();
 
-	SetProgressBar(Per);
+	float RemainTime = m_ItemConvertInst->GetRemainTime();
+
+	SetConvertBar(Per,RemainTime);
 
 	float FirePer = m_ItemConvertInst->GetFireRemainTimePer();
 
@@ -158,12 +175,11 @@ void UWidgetItemConvert::ShowItemConvert(UItemConvertInst* inst)
 {
 	OpenPanel();
 	m_ItemConvertInst = inst;
-	m_Dele = m_ItemConvertInst->m_OnItemConvertInst.AddUObject(this, &UWidgetItemConvert::UpdatePanel);
-	UpdatePanel();
+	m_Dele = m_ItemConvertInst->m_OnConvertChanged.AddUObject(this, &UWidgetItemConvert::UpdatePanel);
 
 	const FText& ConvertText = m_ItemConvertInst->GetConvertRow().m_TextConverterName;
 	
 	m_TextConverter->SetText(ConvertText);
-
-	SetProgressBar(0);
+	
+	UpdatePanel();
 }

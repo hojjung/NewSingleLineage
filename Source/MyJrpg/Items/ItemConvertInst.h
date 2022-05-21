@@ -23,7 +23,7 @@ class MYJRPG_API UItemConvertInst : public UInventory
 public:
 	DECLARE_MULTICAST_DELEGATE(FOnInvenChanged);
 
-	FOnInvenChanged m_OnItemConvertInst;
+	FOnInvenChanged m_OnConvertChanged;
 	
 	enum EItemConvertIndex
 	{
@@ -38,7 +38,13 @@ private:
 	const FItemConvertRow* m_ItemConvertRow;
 
 	const FItemConvertSet* m_SelectedConvertSet;
-	
+
+	bool m_bIsFireWorking;
+
+	bool m_bIsConverting;
+
+	bool m_bIsNeedFire;
+
 	float m_fConvertTimer;
 
 	float m_fMaxConvertTimer;
@@ -46,6 +52,8 @@ private:
 	float m_fFireTimer;
 
 	float m_fMaxFireTimer;
+
+	FDateTime m_ConvertFinishTime;
 	
 private:
 	virtual void Init(int size) override;
@@ -91,6 +99,12 @@ public:
 	float GetRemainTimePer();
 
 	float GetFireRemainTimePer();
+
+	float GetRemainTime() const;
+
+	bool IsFireWorking();
+
+	bool IsConvertWorking();
 };
 
 

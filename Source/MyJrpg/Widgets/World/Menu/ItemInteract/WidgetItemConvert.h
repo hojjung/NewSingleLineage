@@ -50,7 +50,7 @@ protected:
 protected:
 	virtual void NativeOnInitialized() override;
 
-	void SetProgressBar(float v);
+	void SetConvertBar(float v,float remainTime);
 	
 	void SetFireBar(float v);
 
