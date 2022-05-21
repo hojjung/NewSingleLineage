@@ -86,7 +86,7 @@ void UItemConvertInst::TrySelectItemConvertSet()
 	{
 		for(const FItemConvertSet& SetIter : m_ItemConvertRow->m_AryItems)
 		{
-			if(SetIter.m_LeftItem.RowName == GetLeftItem().m_ID && SetIter.m_nLeftItemStLv <= GetLeftItem().m_nLvStack)
+			if(SetIter.m_LeftItem.RowName == GetLeftItem().m_ID)
 			{
 				m_SelectedConvertSet = &SetIter;
 				break;
@@ -248,7 +248,7 @@ bool UItemConvertInst::CheckLeftItemAvailable(const FItemSpec& item)
 {
 	for(const FItemConvertSet& ItemSet : m_ItemConvertRow->m_AryItems)
 	{
-		if(CheckLeftItemWithSet(ItemSet, item))
+		if(ItemSet.m_LeftItem.RowName == item.m_ID)
 		{
 			return true;
 		}
@@ -293,6 +293,16 @@ bool UItemConvertInst::IsFireWorking()
 bool UItemConvertInst::IsConvertWorking()
 {
 	return m_bIsConverting;
+}
+
+const FItemDataRow* UItemConvertInst::GetRightItemData()
+{
+	if(!m_SelectedConvertSet || !m_bAllMaterialAvailable)
+	{
+		return nullptr;
+	}
+
+	return m_SelectedConvertSet->m_RightItem.GetRow<FItemDataRow>("");
 }
 
 bool UItemConvertInst::CheckFuelItemAvailable(const FItemSpec& item)

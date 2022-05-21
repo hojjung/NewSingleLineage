@@ -100,6 +100,23 @@ void UWidgetItemConvert::UpdatePanel()
 		SetConvertBar(0,0);
 		m_TextRemainTime->SetVisibility(ESlateVisibility::Collapsed);
 	}
+
+	m_RightItem->GetImgIcon()->SetRenderOpacity(1.f);
+	
+	if(m_ItemConvertInst->GetRightItem().m_ID.IsNone())
+	{
+		const FItemDataRow* RightItemData = m_ItemConvertInst->GetRightItemData();
+
+		if(RightItemData)
+		{
+			m_RightItem->SetIcon(RightItemData->m_Icon);
+			m_RightItem->GetImgIcon()->SetRenderOpacity(0.5f);
+		}
+		else
+		{
+			m_RightItem->Clear();
+		}
+	}
 }
 
 void UWidgetItemConvert::UpdateElement(UWidgetBaseElement* ele, const FItemSpec& item)

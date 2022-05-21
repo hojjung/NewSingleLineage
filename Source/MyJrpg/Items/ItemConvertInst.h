@@ -111,6 +111,8 @@ public:
 	bool IsFireWorking();
 
 	bool IsConvertWorking();
+
+	const FItemDataRow* GetRightItemData();
 };
 
 
