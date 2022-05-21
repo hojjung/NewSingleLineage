@@ -267,9 +267,7 @@ void UWidgetBaseElement::SetItem(const FItemSpec& itemSpec)
 {
 	const FItemDataRow& Data = UMyLib::GetItemData(itemSpec.m_ID);
 
-	SetIcon(Data.m_Icon);
-	
-	SetGlowColor(Data.m_ColorHandle);
+	SetItemData(Data);
 
 	bool IsEquip = UMyLib::IsEquip(Data);
 
@@ -296,4 +294,11 @@ void UWidgetBaseElement::SetItem(const FItemSpec& itemSpec)
 
 		HideDurBar();
 	}
+}
+
+void UWidgetBaseElement::SetItemData(const FItemDataRow& itemData)
+{
+	SetIcon(itemData.m_Icon);
+	
+	SetGlowColor(itemData.m_ColorHandle);
 }

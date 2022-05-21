@@ -123,4 +123,6 @@ public:
 	void SetBoxSize(float x, float y);
 
 	void SetItem(const FItemSpec& itemSpec);
+
+	void SetItemData(const FItemDataRow& itemData);
 };

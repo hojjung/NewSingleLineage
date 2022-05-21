@@ -9,6 +9,10 @@ void UWidgetItemConvert::NativeOnInitialized()
 {
 	Super::NativeOnInitialized();
 
+	m_ReceiptPanel->SetVisibility(ESlateVisibility::Collapsed);
+
+	m_BtnShowReceipt->OnClicked.AddDynamic(this, &UWidgetItemConvert::ShowReceipt);
+
 	m_Inven->Init(UMyLib::GetPlayerInven());
 
 	m_LeftItem->m_OnDrag.AddUObject(this,&UWidgetItemConvert::OnDrag);
@@ -34,6 +38,60 @@ void UWidgetItemConvert::NativeOnInitialized()
 	m_AryItems.Add(m_FuelItem);
 	m_AryItems.Add(m_CostItem);
 }
+
+
+void UWidgetItemConvert::ShowItemConvert(UItemConvertInst* inst)
+{
+	OpenPanel();
+	
+	m_ItemConvertInst = inst;
+	
+	m_Dele = m_ItemConvertInst->m_OnConvertChanged.AddUObject(this, &UWidgetItemConvert::UpdatePanel);
+
+	const FText& ConvertText = m_ItemConvertInst->GetConvertRow().m_TextConverterName;
+	
+	m_TextConverter->SetText(ConvertText);
+
+	m_ReceiptPanel->SetReceipt(m_ItemConvertInst->GetConvertRow());
+
+	ChangeConvertElements();
+
+	SetReceiptCount();
+	
+	UpdatePanel();
+}
+
+void UWidgetItemConvert::ChangeConvertElements()
+{
+	if(m_ItemConvertInst->HasAnyCostItem())
+	{
+		m_CostItem->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
+	}
+	else
+	{
+		m_CostItem->SetVisibility(ESlateVisibility::Collapsed);
+	}
+	if(m_ItemConvertInst->HasAnyFuelItem())
+	{
+		m_FuelItem->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
+		m_BarFireTime->SetVisibility(ESlateVisibility::HitTestInvisible);
+	}
+	else
+	{
+		m_FuelItem->SetVisibility(ESlateVisibility::Collapsed);
+		m_BarFireTime->SetVisibility(ESlateVisibility::Collapsed);
+	}
+}
+
+void UWidgetItemConvert::SetReceiptCount()
+{
+	int Cnt = m_ItemConvertInst->GetConvertRow().m_AryItems.Num();
+
+	FString Str = FString::Printf(TEXT("(%d)"),Cnt);
+	
+	m_TextReceiptCnt->SetText(FText::FromString(Str));
+}
+
 
 void UWidgetItemConvert::SetConvertBar(float v, float remainTime)
 {
@@ -118,24 +176,7 @@ void UWidgetItemConvert::UpdatePanel()
 		}
 	}
 
-	if(m_ItemConvertInst->HasAnyCostItem())
-	{
-		m_CostItem->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
-	}
-	else
-	{
-		m_CostItem->SetVisibility(ESlateVisibility::Collapsed);
-	}
-	if(m_ItemConvertInst->HasAnyFuelItem())
-	{
-		m_FuelItem->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
-		m_BarFireTime->SetVisibility(ESlateVisibility::HitTestInvisible);
-	}
-	else
-	{
-		m_FuelItem->SetVisibility(ESlateVisibility::Collapsed);
-		m_BarFireTime->SetVisibility(ESlateVisibility::Collapsed);
-	}
+	
 }
 
 void UWidgetItemConvert::UpdateElement(UWidgetBaseElement* ele, const FItemSpec& item)
@@ -209,15 +250,9 @@ void UWidgetItemConvert::NativeTick(const FGeometry& MyGeometry, float InDeltaTi
 	SetFireBar(FirePer);
 }
 
-void UWidgetItemConvert::ShowItemConvert(UItemConvertInst* inst)
-{
-	OpenPanel();
-	m_ItemConvertInst = inst;
-	m_Dele = m_ItemConvertInst->m_OnConvertChanged.AddUObject(this, &UWidgetItemConvert::UpdatePanel);
 
-	const FText& ConvertText = m_ItemConvertInst->GetConvertRow().m_TextConverterName;
-	
-	m_TextConverter->SetText(ConvertText);
-	
-	UpdatePanel();
+
+void UWidgetItemConvert::ShowReceipt()
+{
+	m_ReceiptPanel->OpenPanel();
 }

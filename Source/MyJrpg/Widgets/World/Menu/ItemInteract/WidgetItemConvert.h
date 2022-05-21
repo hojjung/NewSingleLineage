@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "WidgetReceiptPanel.h"
 #include "Blueprint/UserWidget.h"
 #include "MyJrpg/Items/ItemConvertInst.h"
 #include "MyJrpg/Widgets/World/CommonElements/WidgetBaseElement.h"
@@ -40,6 +41,12 @@ protected:
 	UTextBlock* m_TextRemainTime;
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (BindWidget))
 	UProgressBar* m_BarFireTime;
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (BindWidget))
+	UButton* m_BtnShowReceipt;
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (BindWidget))
+	UTextBlock* m_TextReceiptCnt;
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (BindWidget))
+	UWidgetReceiptPanel* m_ReceiptPanel;
 
 	FDelegateHandle m_Dele;
 
@@ -49,6 +56,8 @@ protected:
 	
 protected:
 	virtual void NativeOnInitialized() override;
+	void ChangeConvertElements();
+	void SetReceiptCount();
 
 	void SetConvertBar(float v,float remainTime);
 	
@@ -68,4 +77,9 @@ protected:
 
 public:
 	void ShowItemConvert(UItemConvertInst* inst);
+
+	UFUNCTION()
+	void ShowReceipt();
 };
+
+
