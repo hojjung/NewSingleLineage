@@ -5,7 +5,6 @@
 #include "CoreMinimal.h"
 #include "Inventory.h"
 #include "MyJrpg/DataTables/ItemConvertTable.h"
-#include "MyJrpg/Widgets/World/Menu/Inventory/ItemDDO.h"
 #include "UObject/NoExportTypes.h"
 #include "ItemConvertInst.generated.h"
 
@@ -39,6 +38,8 @@ private:
 
 	const FItemConvertSet* m_SelectedConvertSet;
 
+	bool m_bAllMaterialAvailable;
+
 	bool m_bIsFireWorking;
 
 	bool m_bIsConverting;
@@ -70,11 +71,16 @@ private:
 
 	void ReceiveRightItem();
 	
+	void RemoveItemStack(EItemConvertIndex t, int amount);
+	
 public:
 	void SetConvertData(const FItemConvertRow& convertRow);
+	void EndFireWorks();
+	void EndConverts();
 	void TryUseFuelToFire();
 	void TrySelectItemConvertSet();
 	void TryStartConvert();
+	void CheckLeftOrCostAvailable();
 
 	const FItemConvertRow& GetConvertRow() const;
 	

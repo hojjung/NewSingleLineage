@@ -7,6 +7,7 @@
 #include "MyJrpg/Managers/EquipManager.h"
 #include "ItemDDO.generated.h"
 
+class UItemConvertInst;
 struct FItemSpec;
 class UInventory;
 class UWidgetBaseElement;
@@ -25,6 +26,8 @@ public:
 	TWeakObjectPtr<UInventory> m_FromInven;
 
 	TWeakObjectPtr<UEquipManager> m_FromEquip;
+
+	TWeakObjectPtr<UItemConvertInst> m_FromConverter;
 
 	int m_nIndex;
 public:

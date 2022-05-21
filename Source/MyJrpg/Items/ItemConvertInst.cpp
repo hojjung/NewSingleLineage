@@ -9,6 +9,7 @@ void UItemConvertInst::Init(int size)
 
 void UItemConvertInst::SetConvertData(const FItemConvertRow& convertRow)
 {
+	m_bAllMaterialAvailable = false;
 	m_bIsFireWorking = false;
 	m_bIsConverting = false;
 	m_fFireTimer = 0;
@@ -23,6 +24,20 @@ void UItemConvertInst::SetConvertData(const FItemConvertRow& convertRow)
 }
 
 
+void UItemConvertInst::EndFireWorks()
+{
+	m_bIsFireWorking = false;
+	m_fFireTimer = 0;
+	m_fMaxFireTimer = 0;
+}
+
+void UItemConvertInst::EndConverts()
+{
+	m_bIsConverting = false;
+	m_fConvertTimer = 0;
+	m_fMaxConvertTimer = 0;
+}
+
 void UItemConvertInst::Tick(float delta_time)
 {
 	if(m_bIsFireWorking)
@@ -31,9 +46,7 @@ void UItemConvertInst::Tick(float delta_time)
 		
 		if(m_fFireTimer<=0)
 		{
-			m_bIsFireWorking = false;
-			m_fFireTimer = 0;
-			m_fMaxFireTimer = 0;
+			EndFireWorks();
 			TryUseFuelToFire();
 			m_OnConvertChanged.Broadcast();
 		}
@@ -49,9 +62,7 @@ void UItemConvertInst::Tick(float delta_time)
 
 		if(m_fConvertTimer >= m_fMaxConvertTimer)
 		{
-			m_bIsConverting = false;
-			m_fConvertTimer = 0;
-			m_fMaxConvertTimer = 0;
+			EndConverts();
 			ReceiveRightItem();
 		}
 	}
@@ -63,14 +74,8 @@ void UItemConvertInst::TryUseFuelToFire()
 	{
 		m_fMaxFireTimer = m_ItemConvertRow->m_fFuelDuration;
 		
-		m_fFireTimer = m_fMaxFireTimer; 
-
-		int& StackCnt = m_AryTotalItems[EItemConvertIndex::Fuel].m_nLvStack;
-		StackCnt--;
-		if(StackCnt <= 0)
-		{
-			ClearSlot(EItemConvertIndex::Fuel);
-		}
+		m_fFireTimer = m_fMaxFireTimer;
+		RemoveItemStack(EItemConvertIndex::Fuel,1);
 		m_bIsFireWorking = true;
 	}
 }
@@ -91,18 +96,29 @@ void UItemConvertInst::TrySelectItemConvertSet()
 	else
 	{
 		m_SelectedConvertSet = nullptr;
+		EndConverts();
+	}
+}
+
+void UItemConvertInst::RemoveItemStack(EItemConvertIndex t, int amount)
+{
+	int& CostStack = m_AryTotalItems[t].m_nLvStack;
+	CostStack-=amount;
+	if(CostStack <= 0)
+	{
+		ClearSlot(t);
 	}
 }
 
 void UItemConvertInst::TryStartConvert()
 {
-	if(m_SelectedConvertSet && !m_bIsConverting)
+	if(m_SelectedConvertSet && !m_bIsConverting && m_bAllMaterialAvailable)
 	{
 		if(m_bIsNeedFire && !m_bIsFireWorking)
 		{
 			return;//불이필요한데 불이 안켜짐
 		}
-
+		//결과칸 비어있는지 확인
 		if(!GetRightItem().m_ID.IsNone())
 		{
 			if(m_SelectedConvertSet->m_RightItem.RowName != GetRightItem().m_ID)
@@ -119,14 +135,6 @@ void UItemConvertInst::TryStartConvert()
 				return;//중첩 가능한 결과값이 존재는 하는데 스택칸수가 꽉찼음
 			}
 		}
-		//이제 컨버팅 시작해도됨
-		int& LeftStack = m_AryTotalItems[EItemConvertIndex::Left].m_nLvStack;
-		LeftStack--;
-		if(LeftStack <= 0)
-		{
-			ClearSlot(EItemConvertIndex::Left);
-		}
-		
 		m_fMaxConvertTimer = m_SelectedConvertSet->m_fConvertingTime;
 
 		m_fConvertTimer = 0;
@@ -135,11 +143,40 @@ void UItemConvertInst::TryStartConvert()
 	}
 }
 
+void UItemConvertInst::CheckLeftOrCostAvailable()
+{
+	if(m_SelectedConvertSet)
+	{
+		if(!m_SelectedConvertSet->m_CostItem.RowName.IsNone())
+		{
+			if(!CheckCostItemWithSet(*m_SelectedConvertSet,GetCostItem()))
+			{
+				EndConverts();
+				m_bAllMaterialAvailable = false;
+				return;
+			}
+		}
+		if(!m_SelectedConvertSet->m_LeftItem.RowName.IsNone())
+		{
+			if(!CheckLeftItemWithSet(*m_SelectedConvertSet,GetLeftItem()))
+			{
+				EndConverts();
+				m_bAllMaterialAvailable = false;
+				return;
+			}
+		}
+
+		m_bAllMaterialAvailable = true;
+	}
+}
+
 void UItemConvertInst::OnInvenChanged()
 {	
 	TryUseFuelToFire();
 
 	TrySelectItemConvertSet();
+	
+	CheckLeftOrCostAvailable();
 
 	TryStartConvert();
 
@@ -153,9 +190,17 @@ bool UItemConvertInst::CheckRightItemEmpty()//뭐가있더라 하더라도, 현�
 
 void UItemConvertInst::ReceiveRightItem()
 {
+	RemoveItemStack(EItemConvertIndex::Left,m_SelectedConvertSet->m_nLeftItemStLv);
+	
+	RemoveItemStack(EItemConvertIndex::Cost,m_SelectedConvertSet->m_nCostItemStLv);
+	
 	if(m_AryTotalItems[EItemConvertIndex::Right].m_ID.IsNone())
 	{
-		AddSlot(EItemConvertIndex::Right,FItemSpec( m_SelectedConvertSet->m_RightItem.RowName,m_SelectedConvertSet->m_nRightItemStLv));
+		const FName& RightItem = m_SelectedConvertSet->m_RightItem.RowName;
+		
+		AddSlot(EItemConvertIndex::Right,FItemSpec(RightItem, m_SelectedConvertSet->m_nRightItemStLv));
+
+		AddItemKey(UMyLib::GetItemData(RightItem),RightItem,EItemConvertIndex::Right);
 	}
 	else
 	{
@@ -268,12 +313,15 @@ bool UItemConvertInst::CheckFuelItemAvailable(const FItemSpec& item)
 
 bool UItemConvertInst::CheckCostItemAvailable(const FItemSpec& item)
 {
-	for(const FItemConvertSet& ItemSet : m_ItemConvertRow->m_AryItems)
+	if(!m_SelectedConvertSet)
 	{
-		if(CheckCostItemWithSet(ItemSet, item))
-		{
-			return true;
-		}
+		return false;
 	}
+
+	if(m_SelectedConvertSet->m_CostItem.RowName == item.m_ID)
+	{
+		return true;
+	}
+	
 	return false;
 }

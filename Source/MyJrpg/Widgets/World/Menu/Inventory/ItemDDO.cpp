@@ -1,5 +1,6 @@
 #include "ItemDDO.h"
 
+#include "MyJrpg/Items/ItemConvertInst.h"
 #include "MyJrpg/Widgets/World/CommonElements/WidgetBaseElement.h"
 
 UItemDDO* UItemDDO::GetDDOInst = nullptr;
@@ -25,6 +26,10 @@ void UItemDDO::SetDDO(UWidgetBaseElement* ele)
 
 const FItemSpec& UItemDDO::GetItem()
 {
+	if(m_FromConverter.Get())
+	{
+		return m_FromConverter->GetItemRef(m_nIndex);
+	}
 	if(m_FromInven.Get())
 	{
 		return m_FromInven->GetItemConstRef(m_nIndex);

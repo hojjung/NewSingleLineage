@@ -116,6 +116,8 @@ void UWidgetItemConvert::UpdateElement(UWidgetBaseElement* ele, const FItemSpec&
 
 void UWidgetItemConvert::OnDrag(UWidgetBaseElement* ele)
 {
+	UItemDDO::GetDDOInst->m_FromConverter = m_ItemConvertInst;
+
 	UItemDDO::GetDDOInst->m_FromInven = m_ItemConvertInst;
 
 	UItemDDO::GetDDOInst->m_nIndex = ele->GetIndex();

@@ -354,8 +354,11 @@ void UInventory::OnDropItem(int myIndex, UInventory* other, int other_index)
 	{
 		AddSlot(myIndex, OtherItem);
 		AddItemKey(OtherItemData,OtherItem.m_ID,myIndex);
-		other->AddSlot(other_index, MyItem);
 		other->RemoveItemKey(OtherItemData,OtherItem.m_ID,other_index);
+		
+		other->AddSlot(other_index, MyItem);
+		other->AddItemKey(MyItemData, MyItem.m_ID, other_index);
+		RemoveItemKey(MyItemData,MyItem.m_ID,myIndex);
 	}
 	UpdateInventory();
 	other->UpdateInventory();

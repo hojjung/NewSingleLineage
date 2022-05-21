@@ -195,7 +195,6 @@ void UWidgetEquipPanel::OnDrop(UWidgetBaseElement* ele)
 	const FItemDataRow& ItemData = UMyLib::GetItemData(Item.m_ID);
 
 	EEquipSlotType t =  (EEquipSlotType)ele->GetIndex();
-
 	
 	if(!UMyLib::IsEquip(ItemData) || ItemData.m_ItemType != t)
 	{

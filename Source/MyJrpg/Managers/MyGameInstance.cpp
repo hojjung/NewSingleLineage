@@ -124,6 +124,7 @@ void UMyGameInstance::Init()
 	m_Inven->AddItem(FItemSpec(TEXT("GoldCoin"), 20000));
 	m_Inven->AddItem(FItemSpec(TEXT("BeltLord"), 0));
 	m_Inven->AddItem(FItemSpec(TEXT("Belt01"), 0));
+	m_Inven->AddItem(FItemSpec(TEXT("Belt01"), 0));
 	m_Inven->AddItem(FItemSpec(TEXT("Food01"), 1) );
 	m_Inven->AddItem(FItemSpec(TEXT("EnchantArmor"), 1));
 	m_Inven->AddItem(FItemSpec(TEXT("misc_wood01"), 3));

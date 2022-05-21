@@ -157,6 +157,31 @@ void UWidgetInventory::OnDrag(UWidgetBaseElement* ele)
 void UWidgetInventory::OnDrop(UWidgetBaseElement* ele)
 {
 	UnFocusCurrent();
+
+	if(UItemDDO::GetDDOInst->m_FromConverter.Get())//
+	{
+		FItemSpec MyItem = m_CurrentInven->GetItemConstRef(ele->GetIndex());
+
+		FItemSpec OtherItem = UItemDDO::GetDDOInst->GetItem();
+
+		if(MyItem.m_ID == OtherItem.m_ID || MyItem.m_ID.IsNone())
+		{
+			m_CurrentInven->OnDropItem(ele->GetIndex(), UItemDDO::GetDDOInst->m_FromConverter.Get(),UItemDDO::GetDDOInst->m_nIndex);
+			return;
+		}
+		// switch (UItemDDO::GetDDOInst->m_nIndex)
+		// {
+		// case UItemConvertInst::EItemConvertIndex::Left:
+		// 	break;
+		// case UItemConvertInst::EItemConvertIndex::Right:
+		// 	break;
+		// case UItemConvertInst::EItemConvertIndex::Fuel:
+		// 	break;
+		// case UItemConvertInst::EItemConvertIndex::Cost:
+		// 	break;
+		// }
+		return;
+	}
 	
 	if(UItemDDO::GetDDOInst->m_FromInven.Get())
 	{
@@ -193,6 +218,8 @@ void UWidgetInventory::OnDrop(UWidgetBaseElement* ele)
 		m_CurrentInven->UpdateInventory();
 		return;
 	}
+
+	
 }
 
 UInventory* UWidgetInventory::GetInven() const
