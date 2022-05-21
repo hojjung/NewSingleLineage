@@ -55,6 +55,8 @@ private:
 	float m_fMaxFireTimer;
 
 	FDateTime m_ConvertFinishTime;
+
+	bool m_bHasAnyCostItem;
 	
 private:
 	virtual void Init(int size) override;
@@ -113,6 +115,10 @@ public:
 	bool IsConvertWorking();
 
 	const FItemDataRow* GetRightItemData();
+
+	bool HasAnyCostItem();
+
+	bool HasAnyFuelItem();
 };
 
 

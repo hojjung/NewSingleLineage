@@ -117,6 +117,25 @@ void UWidgetItemConvert::UpdatePanel()
 			m_RightItem->Clear();
 		}
 	}
+
+	if(m_ItemConvertInst->HasAnyCostItem())
+	{
+		m_CostItem->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
+	}
+	else
+	{
+		m_CostItem->SetVisibility(ESlateVisibility::Collapsed);
+	}
+	if(m_ItemConvertInst->HasAnyFuelItem())
+	{
+		m_FuelItem->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
+		m_BarFireTime->SetVisibility(ESlateVisibility::HitTestInvisible);
+	}
+	else
+	{
+		m_FuelItem->SetVisibility(ESlateVisibility::Collapsed);
+		m_BarFireTime->SetVisibility(ESlateVisibility::Collapsed);
+	}
 }
 
 void UWidgetItemConvert::UpdateElement(UWidgetBaseElement* ele, const FItemSpec& item)

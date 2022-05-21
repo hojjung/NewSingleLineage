@@ -9,6 +9,7 @@ void UItemConvertInst::Init(int size)
 
 void UItemConvertInst::SetConvertData(const FItemConvertRow& convertRow)
 {
+
 	m_bAllMaterialAvailable = false;
 	m_bIsFireWorking = false;
 	m_bIsConverting = false;
@@ -19,6 +20,16 @@ void UItemConvertInst::SetConvertData(const FItemConvertRow& convertRow)
 	m_ItemConvertRow = &convertRow;
 	m_bIsNeedFire = m_ItemConvertRow->m_FuelItem.Num() > 0 && m_fMaxFireTimer <= 0;
 	Init(EItemConvertIndex::Len);
+
+	m_bHasAnyCostItem = false;
+	for(const FItemConvertSet& Set :m_ItemConvertRow->m_AryItems)
+	{
+		if(!Set.m_CostItem.RowName.IsNone())
+		{
+			m_bHasAnyCostItem = true;
+		}
+	}
+	
 	m_OnInvenChanged.AddUObject(this, &UItemConvertInst::OnInvenChanged);
 	OnInvenChanged();
 }
@@ -303,6 +314,16 @@ const FItemDataRow* UItemConvertInst::GetRightItemData()
 	}
 
 	return m_SelectedConvertSet->m_RightItem.GetRow<FItemDataRow>("");
+}
+
+bool UItemConvertInst::HasAnyCostItem()
+{
+	return m_bHasAnyCostItem;
+}
+
+bool UItemConvertInst::HasAnyFuelItem()
+{
+	return m_ItemConvertRow->m_FuelItem.Num() > 0;
 }
 
 bool UItemConvertInst::CheckFuelItemAvailable(const FItemSpec& item)
