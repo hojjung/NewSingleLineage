@@ -20,8 +20,6 @@ public:
 protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 	UBillboardComponent* m_BillboardIcon;
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
-	UStaticMeshComponent* m_ShadowMeshComp;
 	UPROPERTY(VisibleAnywhere)
 	UStaticMeshComponent* m_MeshItem;
 	FName m_OwnerID;

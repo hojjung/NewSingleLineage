@@ -207,7 +207,7 @@ float AMyPlayerPawn::TryAttack()
 	{
 		return 0;
 	}
-
+	HomingRotateToTarget(6);
 	return Super::TryAttack();
 }
 

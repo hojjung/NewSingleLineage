@@ -122,22 +122,16 @@ void UMyGameInstance::Init()
 	m_CraftManager->Init();
 
 	//m_Inven->AddItem(FItemSpec(TEXT("Food01"), 1) );
-	m_Inven->AddItem(FItemSpec(TEXT("EnchantArmor"), 1));
-	m_Inven->AddItem(FItemSpec(TEXT("misc_wood01"), 2));
-	m_Inven->AddItem(FItemSpec(TEXT("misc_wood01"), 2));
-	m_Inven->AddItem(FItemSpec(TEXT("misc_wood01"), 2));
-	m_Inven->AddItem(FItemSpec(TEXT("misc_wood01"), 2));
-	m_Inven->AddItem(FItemSpec(TEXT("misc_wood01"), 2));
-	m_Inven->AddItem(FItemSpec(TEXT("misc_wood01"), 2));
-	m_Inven->AddItem(FItemSpec(TEXT("misc_wood01"), 2));
-	m_Inven->AddItem(FItemSpec(TEXT("misc_wood01"), 2));
-	m_Inven->AddItem(FItemSpec(TEXT("misc_wood01"), 2));
-	m_Inven->AddItem(FItemSpec(TEXT("misc_wood01"), 2));
-	m_Inven->AddItem(FItemSpec(TEXT("misc_wood01"), 2));
-	m_Inven->AddItem(FItemSpec(TEXT("misc_wood01"), 1));
 	m_Inven->AddItem(FItemSpec(TEXT("Belt01"), 0));
 	
 	m_AryStorage.Reset();
+}
+
+void UMyGameInstance::StartGame()
+{	//이런식으로 로드가 추가되면 됨
+	UKismetSystemLibrary::ControlScreensaver(false);
+	
+	m_LevelMoveManager->StartGame();
 }
 
 void UMyGameInstance::LoadComplete(const float LoadTime, const FString& MapName)
@@ -148,12 +142,6 @@ void UMyGameInstance::LoadComplete(const float LoadTime, const FString& MapName)
 	}
 }
 
-void UMyGameInstance::StartGame()
-{	//이런식으로 로드가 추가되면 됨
-	m_LevelMoveManager->StartGame();
-
-	UKismetSystemLibrary::ControlScreensaver(false);
-}
 
 FString UMyGameInstance::GetPlayerName()
 {

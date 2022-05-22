@@ -65,6 +65,10 @@ EKarma UFriendKarmaManager::GetUnitKarma(const FName& id)
 
 void UFriendKarmaManager::IncreaseKarma(const FName& id, int v)
 {
+	if(id.IsNone())
+	{
+		return;
+	}
 	int& KarmaValue = m_MapKarma[id];
 
 	KarmaValue += v;
@@ -74,6 +78,10 @@ void UFriendKarmaManager::IncreaseKarma(const FName& id, int v)
 
 void UFriendKarmaManager::DecreaseKarma(const FName& id, int v)
 {
+	if(id.IsNone())
+	{
+		return;
+	}
 	int& KarmaValue = m_MapKarma[id];
 
 	KarmaValue -= v;

@@ -19,15 +19,6 @@ AItemActor::AItemActor()
 	m_BillboardIcon->SetRelativeScale3D(FVector(2));
 	m_BillboardIcon->SetRelativeLocation(FVector(0,0,-56));
 	//
-	m_ShadowMeshComp = CreateDefaultSubobject<UStaticMeshComponent>("StShadow");
-	static ConstructorHelpers::FObjectFinder<UStaticMesh> FoundSt(TEXT("StaticMesh'/Game/03_VisualEffect/FX/Effects/FX_Meshes/SM_CharM_Shadow.SM_CharM_Shadow'"));
-	m_ShadowMeshComp->SetStaticMesh(FoundSt.Object);
-	m_ShadowMeshComp->SetupAttachment(RootComponent);
-	m_ShadowMeshComp->SetRelativeScale3D(FVector(7));
-	m_ShadowMeshComp->SetCollisionEnabled(ECollisionEnabled::NoCollision);
-	m_ShadowMeshComp->SetCanEverAffectNavigation(false);
-	m_ShadowMeshComp->SetRelativeLocation(FVector(0,0,-88));
-	//
 	m_MeshItem = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("m_MeshTree"));
 	m_MeshItem->CanCharacterStepUpOn = ECB_No;
 	m_MeshItem->SetCanEverAffectNavigation(false);
