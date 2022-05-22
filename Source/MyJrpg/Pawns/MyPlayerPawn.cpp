@@ -471,6 +471,10 @@ bool AMyPlayerPawn::IsSneak() const
 
 bool AMyPlayerPawn::CheckTargetRange()
 {
+	if(!GetFocusedTarget<>())
+	{
+		return false; 
+	}
 	float DistSqr = FVector::DistSquared(GetActorLocation(), GetFocusedActorLocation());
 
 	return DistSqr <= GetAttackRangeSqr();

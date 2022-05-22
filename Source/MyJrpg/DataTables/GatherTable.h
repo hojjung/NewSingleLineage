@@ -67,4 +67,8 @@ public:
 	float m_fBtmMeshScale = 1.f;
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
 	bool m_bUsePhysics = true;
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
+	FItemDataHandle m_ItemGather;
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
+	int m_nItemGatherCount = 1;
 };

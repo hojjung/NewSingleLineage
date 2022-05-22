@@ -121,14 +121,21 @@ void UMyGameInstance::Init()
 
 	m_CraftManager->Init();
 
-	m_Inven->AddItem(FItemSpec(TEXT("GoldCoin"), 20000));
-	m_Inven->AddItem(FItemSpec(TEXT("BeltLord"), 0));
-	m_Inven->AddItem(FItemSpec(TEXT("Belt01"), 0));
-	m_Inven->AddItem(FItemSpec(TEXT("Belt01"), 0));
-	m_Inven->AddItem(FItemSpec(TEXT("Food01"), 1) );
+	//m_Inven->AddItem(FItemSpec(TEXT("Food01"), 1) );
 	m_Inven->AddItem(FItemSpec(TEXT("EnchantArmor"), 1));
-	m_Inven->AddItem(FItemSpec(TEXT("misc_wood01"), 3));
-	
+	m_Inven->AddItem(FItemSpec(TEXT("misc_wood01"), 2));
+	m_Inven->AddItem(FItemSpec(TEXT("misc_wood01"), 2));
+	m_Inven->AddItem(FItemSpec(TEXT("misc_wood01"), 2));
+	m_Inven->AddItem(FItemSpec(TEXT("misc_wood01"), 2));
+	m_Inven->AddItem(FItemSpec(TEXT("misc_wood01"), 2));
+	m_Inven->AddItem(FItemSpec(TEXT("misc_wood01"), 2));
+	m_Inven->AddItem(FItemSpec(TEXT("misc_wood01"), 2));
+	m_Inven->AddItem(FItemSpec(TEXT("misc_wood01"), 2));
+	m_Inven->AddItem(FItemSpec(TEXT("misc_wood01"), 2));
+	m_Inven->AddItem(FItemSpec(TEXT("misc_wood01"), 2));
+	m_Inven->AddItem(FItemSpec(TEXT("misc_wood01"), 2));
+	m_Inven->AddItem(FItemSpec(TEXT("misc_wood01"), 1));
+	m_Inven->AddItem(FItemSpec(TEXT("Belt01"), 0));
 	
 	m_AryStorage.Reset();
 }

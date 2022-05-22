@@ -26,7 +26,7 @@ public class MyJrpg : ModuleRules
 			"Slate", "SlateCore",
 			"CustomSlates","NPCPalette","BUITween","DialoguePlugin","DBTween","GameplayCameras",
 			"MoviePlayer", "Http","Json", "JsonUtilities", "OnlineSubsystem", "OnlineSubsystemUtils",
-			"PlayFabCommon", "PlayFabCpp" , "PlayFab", "LocalizationService"
+			"PlayFabCommon", "PlayFabCpp" , "PlayFab"
 		});
 
 		if (Target.Platform == UnrealTargetPlatform.IOS)

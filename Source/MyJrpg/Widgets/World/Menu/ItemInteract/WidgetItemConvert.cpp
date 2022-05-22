@@ -3,7 +3,6 @@
 #include "MyJrpg/Managers/EquipManager.h"
 #include "MyJrpg/Managers/MyGameInstance.h"
 #include "MyJrpg/Widgets/World/Menu/Inventory/ItemDDO.h"
-#include "ILocalizationServiceState.h"
 
 void UWidgetItemConvert::NativeOnInitialized()
 {
@@ -14,6 +13,7 @@ void UWidgetItemConvert::NativeOnInitialized()
 	m_BtnShowReceipt->OnClicked.AddDynamic(this, &UWidgetItemConvert::ShowReceipt);
 
 	m_Inven->Init(UMyLib::GetPlayerInven());
+	m_Inven->m_OnFocus.AddUObject(this, &UWidgetItemConvert::OnPlInvenFocused);
 
 	m_LeftItem->m_OnDrag.AddUObject(this,&UWidgetItemConvert::OnDrag);
 	m_LeftItem->m_OnDrop.AddUObject(this,&UWidgetItemConvert::OnDrop);
@@ -250,9 +250,12 @@ void UWidgetItemConvert::NativeTick(const FGeometry& MyGeometry, float InDeltaTi
 	SetFireBar(FirePer);
 }
 
-
-
 void UWidgetItemConvert::ShowReceipt()
 {
 	m_ReceiptPanel->OpenPanel();
+}
+
+void UWidgetItemConvert::OnPlInvenFocused(UWidgetBaseElement* ele, UInventory* inven, int index)
+{
+	ele->SetMyUnFocus();
 }

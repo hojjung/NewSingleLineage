@@ -17,10 +17,10 @@ class MYJRPG_API ATreeBase : public AActor, public IFocusable
 public:
 	ATreeBase();
 
-protected:
-	UPROPERTY(VisibleAnywhere,BlueprintReadWrite,Category=Character)
+private:
+	UPROPERTY(VisibleAnywhere)
 	UCapsuleComponent* m_Capsule;
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+	UPROPERTY(VisibleAnywhere)
 	UStaticMeshComponent* m_ShadowMeshComp;
 	UPROPERTY(VisibleAnywhere)
 	UStaticMeshComponent* m_MeshTree;
@@ -36,6 +36,8 @@ protected:
 	bool m_bUsePhysics;
 
 private:
+	const FGatherDataRow* m_DataRow;
+	
 	FFloatCurve m_CurveDeathAnim;
 
 	float m_fDeathAnimDurationMax;

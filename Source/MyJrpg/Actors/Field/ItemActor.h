@@ -20,10 +20,16 @@ public:
 protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 	UBillboardComponent* m_BillboardIcon;
-	
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+	UStaticMeshComponent* m_ShadowMeshComp;
+	UPROPERTY(VisibleAnywhere)
+	UStaticMeshComponent* m_MeshItem;
 	FName m_OwnerID;
 
 	FItemSpec m_ItemSpec;
+
+protected:
+	virtual void EndPlay(const EEndPlayReason::Type EndPlayReason) override;
 	
 public:
 	void Init(FName itemID, int countOrLevel);//그럼 어떻게 스택 아이템 처리?

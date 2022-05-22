@@ -56,7 +56,9 @@ protected:
 	
 protected:
 	virtual void NativeOnInitialized() override;
+	
 	void ChangeConvertElements();
+	
 	void SetReceiptCount();
 
 	void SetConvertBar(float v,float remainTime);
@@ -74,6 +76,8 @@ protected:
 	void OnDrop(UWidgetBaseElement* ele);
 
 	virtual void NativeTick(const FGeometry& MyGeometry, float InDeltaTime) override;
+
+	void OnPlInvenFocused(UWidgetBaseElement* ele, UInventory* inven, int index);
 
 public:
 	void ShowItemConvert(UItemConvertInst* inst);

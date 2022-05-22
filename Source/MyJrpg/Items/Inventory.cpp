@@ -33,12 +33,17 @@ void UInventory::UpdateInventory()
 	m_OnInvenChanged.Broadcast();
 }
 
+bool UInventory::AddItem(FItemSpec&& addItem, bool newEquipItem)
+{
+	return AddItem(addItem,newEquipItem);
+}
+
 int UInventory::GetInvenSize() const
 {
 	return m_nInvenMaxSize;
 }
 
-bool UInventory::AddItem(FItemSpec addItem, bool newEquipItem)
+bool UInventory::AddItem(FItemSpec& addItem, bool newEquipItem)
 {
 	const FItemDataRow& ItemData = UMyLib::GetItemData(addItem.m_ID);
 	
@@ -59,7 +64,7 @@ bool UInventory::AddItem(FItemSpec addItem, bool newEquipItem)
 					addItem.m_nDurability = ItemData.m_nDurability;
 				}
 				AddSlot(Iter,addItem);
-				AddItemKey(ItemData,addItem.m_ID,1);
+				AddItemKey(ItemData,addItem.m_ID,Iter);
 				UpdateInventory();
 				return true;
 			}
@@ -67,7 +72,36 @@ bool UInventory::AddItem(FItemSpec addItem, bool newEquipItem)
 		}
 	}
 	else
-	{
+	{	//이미 있을수도있으니까 찾아서 넣어줌
+		TSet<int>* FoundSet = m_MapItemKeyCount.Find(addItem.m_ID);
+		if(FoundSet)
+		{
+			for(int Index : *FoundSet)
+			{
+				int RemainStack = MaxStack - m_AryTotalItems[Index].m_nLvStack;//넣을수있는거
+
+				if(RemainStack > 0)//넣을수있는공간이 0보다 크다면
+				{
+					if(RemainStack > addItem.m_nLvStack)//남은공간 3, 넣을것 1개
+					{
+						m_AryTotalItems[Index].m_nLvStack += addItem.m_nLvStack;
+						UpdateInventory();
+						return true;//다넣었음
+					}
+					else//남은공간 1개 넣을것 3개,남은거 3개 넣을것 3개
+					{
+						m_AryTotalItems[Index].m_nLvStack += RemainStack;
+						addItem.m_nLvStack -= RemainStack;
+						if(addItem.m_nLvStack <= 0)
+						{
+							UpdateInventory();
+							return true;
+						}
+					}
+				}
+			}
+		}
+		
 		for (const FItemSpec& Item : m_AryTotalItems)
 		{
 			if (Item.m_ID == addItem.m_ID || Item.m_ID.IsNone())
@@ -90,7 +124,31 @@ bool UInventory::AddItem(FItemSpec addItem, bool newEquipItem)
 void UInventory::AddSlot(int index, FItemSpec addItem)
 {
 	m_AryTotalItems[index] = addItem;
-	
+}
+
+bool UInventory::HasSpace(FItemSpec& addItem)
+{
+	TSet<int>* FoundSet = m_MapItemKeyCount.Find(addItem.m_ID);
+
+	if(FoundSet)
+	{
+		int MaxStack = UMyLib::GetItemData(addItem.m_ID).m_nMaxStack;
+		for(int Index : *FoundSet)
+		{
+			int RemainStack = MaxStack - m_AryTotalItems[Index].m_nLvStack;
+
+			addItem.m_nLvStack -= RemainStack;
+
+			if(addItem.m_nLvStack <= 0)
+			{
+				return true;
+			}
+		}
+
+		return false;
+	}
+
+	return EmptySlotCount() > 0;
 }
 
 void UInventory::AddItemStack(const FItemDataRow& itemData, int index, int& lvCnt, FName id, int maxStack)// = FItemSpec(id,0,0);
@@ -111,12 +169,12 @@ void UInventory::AddItemStack(const FItemDataRow& itemData, int index, int& lvCn
 	{
 		ItemSpecFound += lvCnt;
 		lvCnt = 0;
-		AddItemKey(itemData, id,lvCnt);
+		AddItemKey(itemData, id,index);
 		return ;
 	}
 	ItemSpecFound += AvailableCnt;
 	lvCnt -= AvailableCnt;
-	AddItemKey(itemData, id,AvailableCnt);
+	AddItemKey(itemData, id,index);
 }
 
 void UInventory::RemoveItemStack(const FItemDataRow& itemData, int index, int& stackCnt)
@@ -186,6 +244,11 @@ void UInventory::RemoveItemKey(const FItemDataRow& itemData,FName id, int index)
 		m_MapItemKeyCount.Remove(id);
 		UnregisterQuickItemExe(itemData);
 	}
+}
+
+int UInventory::EmptySlotCount()
+{
+	return m_nInvenMaxSize - GetUsingSlotCount();
 }
 
 bool UInventory::RemoveItem(FName itemID, int lvCnt)
@@ -374,7 +437,7 @@ int UInventory::GetStLv(int index)
 	return m_AryTotalItems[index].m_nLvStack;
 }
 
-UInventory::FOnInvenChanged& UInventory::OnInvenChanged()
+UInventory::FOnInvenChanged& UInventory::GetOnInvenChanged()
 {
 	return m_OnInvenChanged;
 }

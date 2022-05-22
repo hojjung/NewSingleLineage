@@ -63,8 +63,6 @@ protected:
 
 	void UnregisterQuickItemExe(const FItemDataRow& itemData);
 
-
-	
 public:
 	FORCEINLINE const TArray<FItemSpec>& GetAryItems() const
 	{
@@ -87,9 +85,13 @@ public:
 	
 	void UpdateInventory();
 
-	bool AddItem(FItemSpec addItem, bool newEquipItem = false);
+	bool AddItem(FItemSpec&& addItem, bool newEquipItem = false);
+
+	bool AddItem(FItemSpec& addItem, bool newEquipItem = false);
 
 	void AddSlot(int index, FItemSpec addItem);
+
+	bool HasSpace(FItemSpec& addItem);
 	
 	void ClearSlot(int index);
 	
@@ -111,12 +113,14 @@ public:
 
 	int GetStLv(int index);
 
-	FOnInvenChanged& OnInvenChanged();
+	FOnInvenChanged& GetOnInvenChanged();
 
 	int GetItemCount(FName id);
 
 	void AddItemKey(const FItemDataRow& itemData,FName id, int index);
 
 	void RemoveItemKey(const FItemDataRow& itemData,FName id, int index);
+
+	int EmptySlotCount();
 };
 

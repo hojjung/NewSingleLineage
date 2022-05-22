@@ -5,6 +5,7 @@
 
 #include "MyJrpg/MyLib.h"
 #include "MyJrpg/DataTables/GatherTable.h"
+#include "MyJrpg/Managers/EquipManager.h"
 #include "MyJrpg/Managers/MyAssetManager.h"
 #include "MyJrpg/Managers/MyGameInstance.h"
 
@@ -64,7 +65,9 @@ ATreeBase::ATreeBase()
 //
 void ATreeBase::SetEntity(const FGatherDataRow& data, AMyPlayerPawn* pl)
 {
-	m_nTreeHp = data.m_nTreeHp;
+	m_DataRow = &data;
+	
+	m_nTreeHp = m_DataRow->m_nTreeHp;
 	
 	m_Player = pl;
 
@@ -72,19 +75,19 @@ void ATreeBase::SetEntity(const FGatherDataRow& data, AMyPlayerPawn* pl)
 	m_MeshTree->SetRelativeLocation(FVector(0,0,H));
 	m_MeshTrunk->SetRelativeLocation(FVector(0,0,H));
 	
-	m_GatherAsset = UMyAssetManager::Get()->LoadGatherAsset(data.m_GatherAsset);
+	m_GatherAsset = UMyAssetManager::Get()->LoadGatherAsset(m_DataRow->m_GatherAsset);
 
 	m_MeshTree->SetStaticMesh(m_GatherAsset->m_TopMesh);
 
 	m_MeshTrunk->SetStaticMesh(m_GatherAsset->m_BtmMesh);
 
-	StartDeathEffectMaterial(data.m_fDisappearDelay);
+	StartDeathEffectMaterial(m_DataRow->m_fDisappearDelay);
 
-	m_MeshTree->SetRelativeScale3D(FVector(data.m_fTopMeshScale));
+	m_MeshTree->SetRelativeScale3D(FVector(m_DataRow->m_fTopMeshScale));
 	
-	m_MeshTrunk->SetRelativeScale3D(FVector(data.m_fBtmMeshScale));
+	m_MeshTrunk->SetRelativeScale3D(FVector(m_DataRow->m_fBtmMeshScale));
 
-	m_bUsePhysics = data.m_bUsePhysics;
+	m_bUsePhysics = m_DataRow->m_bUsePhysics;
 }
 
 void ATreeBase::SetActorFeetLoc(FVector loc)
@@ -95,17 +98,6 @@ void ATreeBase::SetActorFeetLoc(FVector loc)
 		
 	SetActorLocation(NewLoc);
 }
-//
-// void UMyMovement::SnapToNav()
-// {
-// 	FVector ActorLoc = GetActorLocation();
-// 	FNavLocation Loc;
-// 	if(!UMyLib::GetNavSys()->ProjectPointToNavigation(ActorLoc,Loc))
-// 	{
-// 		UMyLib::GetNavSys()->GetRandomPointInNavigableRadius(ActorLoc,1000,Loc);
-// 	}
-// 	m_Owner->SetActorFeetLocation(Loc.Location);
-// }
 
 void ATreeBase::OnInteract()
 {
@@ -178,6 +170,8 @@ void ATreeBase::OnGatherDone()
 	m_MeshTree->SetCollisionEnabled(ECollisionEnabled::PhysicsOnly);
 	if(m_bUsePhysics)
 		m_MeshTree->SetSimulatePhysics(true);
+
+	UMyLib::GetEquip()->AddItem(FItemSpec(m_DataRow->m_ItemGather.RowName,m_DataRow->m_nItemGatherCount));
 }
 
 void ATreeBase::OnHarvestMotionDone()

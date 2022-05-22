@@ -225,12 +225,12 @@ UInventory** UEquipManager::GetBeltHolder()
 
 UInventory::FOnInvenChanged& UEquipManager::GetOnBagChanged()
 {
-	return GetBag()->OnInvenChanged();
+	return GetBag()->GetOnInvenChanged();
 }
 
 UInventory::FOnInvenChanged& UEquipManager::GetOnBeltChanged()
 {
-	return GetBelt()->OnInvenChanged();
+	return GetBelt()->GetOnInvenChanged();
 }
 
 void UEquipManager::ReduceDurability(EEquipSlotType t, int amount)
@@ -252,4 +252,75 @@ void UEquipManager::ReduceDurability(EEquipSlotType t, int amount)
 void UEquipManager::UpdateDur()
 {
 	m_OnDurChanged.Broadcast();
+}
+
+bool UEquipManager::HasSpace(FItemSpec& addItem)
+{
+	bool IsEquip = UMyLib::IsEquip(addItem.m_ID);
+
+	if(IsEquip)
+	{
+		if(UMyLib::GetPlayerInven()->EmptySlotCount() > 0)
+		{
+			return true;
+		}
+		if(GetBag() && GetBag()->EmptySlotCount() > 0)
+		{
+			return true;
+		}
+		if(GetBelt() && GetBelt()->EmptySlotCount() > 0)
+		{
+			return true;
+		}
+		return false;
+	}
+
+	if(UMyLib::GetPlayerInven()->HasSpace(addItem))
+	{
+		return true;
+	}
+	if(GetBag() && GetBag()->HasSpace(addItem))
+	{
+		return true;
+	}
+	if(GetBelt() && GetBelt()->HasSpace(addItem))
+	{
+		return true;
+	}
+	
+	return false;
+}
+
+bool UEquipManager::HasSpace(FItemSpec&& addItem)
+{
+	return HasSpace(addItem);
+}
+
+bool UEquipManager::AddItem(FItemSpec& addItem, bool newEquipItem)
+{
+	if(UMyLib::GetPlayerInven()->AddItem(addItem,newEquipItem))
+	{
+		return true;
+	}
+	else
+	{
+		if(GetBag() && GetBag()->AddItem(addItem,newEquipItem))
+		{
+			return true;
+		}
+		else
+		{
+			if(GetBelt() && GetBelt()->AddItem(addItem,newEquipItem))
+			{
+				return true;
+			}	
+		}
+	}
+	
+	return false;
+}
+
+bool UEquipManager::AddItem(FItemSpec&& addItem, bool newEquipItem)
+{
+	return  AddItem(addItem, newEquipItem);
 }

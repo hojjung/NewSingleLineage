@@ -1,6 +1,7 @@
 #include "ItemActor.h"
 #include "Components/BillboardComponent.h"
 #include "MyJrpg/MyLib.h"
+#include "MyJrpg/Managers/EquipManager.h"
 #include "MyJrpg/Managers/MyAssetManager.h"
 #include "MyJrpg/Managers/MyGameInstance.h"
 #include "MyJrpg/Widgets/WidgetComponents/WidgetSpeechBubble.h"
@@ -16,6 +17,30 @@ AItemActor::AItemActor()
 	m_BillboardIcon->SetHiddenInGame(false);
 	m_BillboardIcon->SetupAttachment(RootComponent);//-70
 	m_BillboardIcon->SetRelativeScale3D(FVector(2));
+	m_BillboardIcon->SetRelativeLocation(FVector(0,0,-56));
+	//
+	m_ShadowMeshComp = CreateDefaultSubobject<UStaticMeshComponent>("StShadow");
+	static ConstructorHelpers::FObjectFinder<UStaticMesh> FoundSt(TEXT("StaticMesh'/Game/03_VisualEffect/FX/Effects/FX_Meshes/SM_CharM_Shadow.SM_CharM_Shadow'"));
+	m_ShadowMeshComp->SetStaticMesh(FoundSt.Object);
+	m_ShadowMeshComp->SetupAttachment(RootComponent);
+	m_ShadowMeshComp->SetRelativeScale3D(FVector(7));
+	m_ShadowMeshComp->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+	m_ShadowMeshComp->SetCanEverAffectNavigation(false);
+	m_ShadowMeshComp->SetRelativeLocation(FVector(0,0,-88));
+	//
+	m_MeshItem = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("m_MeshTree"));
+	m_MeshItem->CanCharacterStepUpOn = ECB_No;
+	m_MeshItem->SetCanEverAffectNavigation(false);
+	m_MeshItem->SetupAttachment(RootComponent);
+	m_MeshItem->bReceivesDecals = false;
+	m_MeshItem->SetRelativeLocation(FVector(0,0,-88));
+	m_MeshItem->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+}
+
+void AItemActor::EndPlay(const EEndPlayReason::Type EndPlayReason)
+{
+	Super::EndPlay(EndPlayReason);
+	m_MeshItem->SetStaticMesh(nullptr);
 }
 
 void AItemActor::Init(FName itemID, int countOrLevel)
@@ -26,9 +51,21 @@ void AItemActor::Init(FName itemID, int countOrLevel)
 	
 	const FItemDataRow& ItemData = UMyLib::GetItemData(m_ItemSpec.m_ID);
 
-	UTexture2D* t = UMyAssetManager::Get()->LoadTexture(ItemData.m_Icon);
+	if(ItemData.m_ItemDropMesh.ToSoftObjectPath().IsValid())
+	{
+		m_BillboardIcon->SetHiddenInGame(true);
+		
+		m_MeshItem->SetStaticMesh(ItemData.m_ItemDropMesh.LoadSynchronous());
+		m_MeshItem->SetRelativeScale3D(FVector(ItemData.m_fItemDropMeshScale));
+	}
+	else
+	{
+		m_MeshItem->SetHiddenInGame(true);
+		
+		UTexture2D* t = UMyAssetManager::Get()->LoadTexture(ItemData.m_Icon);
 
-	m_BillboardIcon->SetSprite(t);
+		m_BillboardIcon->SetSprite(t);
+	}
 }
 
 void AItemActor::Obtain()//주변에서 누가 보고있으면
@@ -45,8 +82,8 @@ void AItemActor::Obtain()//주변에서 누가 보고있으면
 			break;
 		}
 	}
-
-	if(UMyGameInstance::Get->m_Inven->AddItem(m_ItemSpec))
+	
+	if(UMyLib::GetEquip()->AddItem(m_ItemSpec))
 	{
 		UMyGameInstance::Get->m_SpawnManager->RemoveFocusActor(this);
 		Destroy();

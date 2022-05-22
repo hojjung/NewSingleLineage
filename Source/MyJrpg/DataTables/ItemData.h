@@ -218,6 +218,10 @@ public:
     int m_nPlayerSpentGoldBuy = 50;
 	UPROPERTY(EditDefaultsOnly)
 	FColorDataHandle m_ColorHandle;
+	UPROPERTY(EditAnywhere, meta=(EditCondition = "m_ItemType == EEquipSlotType::None", EditConditionHides))
+	TSoftObjectPtr<UStaticMesh> m_ItemDropMesh;
+	UPROPERTY(EditAnywhere, meta=(EditCondition = "m_ItemDropMesh.IsValidLowLevel()", EditConditionHides))
+	float m_fItemDropMeshScale = 1.f;
 	UPROPERTY(EditAnywhere, meta=(EditCondition = "m_ItemType != EEquipSlotType::None && m_ItemType != EEquipSlotType::Weapon", EditConditionHides))
 	TSoftObjectPtr<USkeletalMesh> m_ArmorMesh;
 	UPROPERTY(EditAnywhere, meta=(EditCondition = "m_ItemType != EEquipSlotType::None", EditConditionHides))

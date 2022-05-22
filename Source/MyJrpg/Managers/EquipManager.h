@@ -99,4 +99,13 @@ public:
 	void ReduceDurability(EEquipSlotType t, int amount);
 
 	void UpdateDur();
+	
+public:
+	bool HasSpace(FItemSpec& addItem);
+
+	bool HasSpace(FItemSpec&& addItem);
+
+	bool AddItem(FItemSpec& addItem, bool newEquipItem = false);
+
+	bool AddItem(FItemSpec&& addItem, bool newEquipItem = false);
 };
