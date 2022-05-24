@@ -65,7 +65,6 @@ void UMyGameInstance::IterateItemTableToRegister()
 }
 
 
-
 void UMyGameInstance::Init()
 {
 	Super::Init();
@@ -120,11 +119,23 @@ void UMyGameInstance::Init()
 	IterateItemTableToRegister();
 
 	m_CraftManager->Init();
-
-	//m_Inven->AddItem(FItemSpec(TEXT("Food01"), 1) );
-	m_Inven->AddItem(FItemSpec(TEXT("Belt01"), 0));
 	
 	m_AryStorage.Reset();
+
+	if(UMyLib::IsTestMode())
+	{
+		PRINTF("TestMode: True");
+		TestModeSetting();
+	}
+	else
+	{
+		PRINTF("TestMode: False");
+	}
+}
+
+void UMyGameInstance::TestModeSetting()
+{
+	m_Inven->AddItem(FItemSpec(TEXT("Belt01"), 0));
 }
 
 void UMyGameInstance::StartGame()

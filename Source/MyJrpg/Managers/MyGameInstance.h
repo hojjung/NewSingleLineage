@@ -39,7 +39,7 @@ class MYJRPG_API UMyGameInstance : public UGameInstance
 	GENERATED_BODY()
 public:
 	static UMyGameInstance* Get;
-
+	
 protected:
 	UPROPERTY()
 	TArray<UInventory*> m_AryStorage;
@@ -104,6 +104,8 @@ protected:
 	virtual void BeginDestroy() override;
 	
 	void IterateItemTableToRegister();
+
+	void TestModeSetting();
 	
 public:
 	virtual void Init() override;

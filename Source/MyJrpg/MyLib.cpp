@@ -635,3 +635,15 @@ void UMyLib::ReduceDurability(FName idwant, int amount)
 		UMyLib::GetPlayerInven()->ReduceDurability(Index,amount);
 	}
 }
+
+bool UMyLib::IsTestMode()
+{
+	bool IsTestMode = false;
+	GConfig->GetBool(
+		TEXT("/Script/MyJrpgEditor.MyDeveloperSettings"),
+		TEXT("m_bIsTestMode"),
+		IsTestMode,
+		GGameIni
+	);
+	return IsTestMode;
+}

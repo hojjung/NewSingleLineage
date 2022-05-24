@@ -121,4 +121,6 @@ public:
 	static FItemSpec* FindItemAllInven(FName idwant);
 
 	static void ReduceDurability(FName idwant, int amount = 1);
+
+	static bool IsTestMode();
 };

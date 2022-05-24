@@ -47,9 +47,17 @@ FReply UWidgetBaseElement::NativeOnTouchMoved(const FGeometry& InGeometry, const
 	{
 		EndHolding();
 
-		if(!UItemDDO::GetDDOInst &&  m_bIsDragable)
+		if (m_bIsDragable)
 		{
-			return UWidgetBlueprintLibrary::DetectDragIfPressed(InGestureEvent,this,EKeys::LeftMouseButton).NativeReply;
+			if (!UItemDDO::GetDDOInst)
+			{
+				return UWidgetBlueprintLibrary::DetectDragIfPressed(InGestureEvent, this, EKeys::LeftMouseButton).
+					NativeReply;
+			}
+		}
+		else
+		{
+			return FReply::Unhandled();		
 		}
 	}
 
