@@ -59,10 +59,6 @@ APreviewActor::APreviewActor()
 	//
 	m_bTouched = false;
 	//
-	static ConstructorHelpers::FObjectFinder<UAnimSequence> Anim(TEXT("AnimSequence'/Game/14_ModularArmor/Anims/Spear/Frank_RPG_Spear_Unequip_Idle.Frank_RPG_Spear_Unequip_Idle'"));
-
-	m_AnimIdle = Anim.Object;
-	//
 	m_MeshLeftHand = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("m_MeshLeftHand"));
 	m_MeshLeftHand->SetupAttachment(m_MeshBody);
 	m_MeshLeftHand->SetCollisionEnabled(ECollisionEnabled::NoCollision);
@@ -78,10 +74,6 @@ APreviewActor::APreviewActor()
 	m_MeshRightHand->bAffectDynamicIndirectLighting = true;
 	m_MeshRightHand->PrimaryComponentTick.TickGroup = TG_PrePhysics;
 	m_MeshRightHand->CanCharacterStepUpOn = ECanBeCharacterBase::ECB_No;
-
-	static ConstructorHelpers::FObjectFinder<USkeletalMesh> FoundBody(TEXT(
-		"SkeletalMesh'/Game/14_ModularArmor/MedievalArmour/CharacterParts/Meshes/Basebody/SKEL_FullBody.SKEL_FullBody'"));
-	m_DefaultSkMesh = FoundBody.Object;
 }
 
 void APreviewActor::BeginPlay()
@@ -167,17 +159,16 @@ void APreviewActor::RotatePawn(float delta_x)
 	m_MeshBody->AddLocalRotation(Rot);
 }
 
-void APreviewActor::SetAnimation(UAnimSequence* anim_sequence)
-{
-	m_MeshBody->SetAnimationMode(EAnimationMode::AnimationSingleNode);
-	m_MeshBody->SetAnimation(anim_sequence);
-}
-
 void APreviewActor::SetupPlayerPreview()
 {
-	m_MeshBody->SetSkeletalMesh(m_DefaultSkMesh);
-	SetAnimation(m_AnimIdle);
+	UHumanAsset* Asset = UMyGameInstance::Get->m_PlayerStatManager->GetUnitAsset().Get();
+	
+	m_MeshBody->SetSkeletalMesh(Asset->m_BodyMesh);
+	m_MeshBody->SetAnimationMode(EAnimationMode::AnimationBlueprint);
+	m_MeshBody->SetAnimInstanceClass(Asset->m_AnimBP);
+	
 	FAttachmentTransformRules Rules(EAttachmentRule::KeepRelative, true);
+	
 	m_MeshLeftHand->AttachToComponent(m_MeshBody, Rules, TEXT("LeftHandSocket"));
 	m_MeshRightHand->AttachToComponent(m_MeshBody, Rules, TEXT("RightHandSocket"));
 }

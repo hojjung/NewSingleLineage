@@ -37,8 +37,9 @@ public:
 	UPROPERTY(Transient,VisibleAnywhere,BlueprintReadWrite)
 	bool m_bIsMoving;
 	UPROPERTY(Transient,VisibleAnywhere,BlueprintReadWrite)
-	bool m_bIsRange;
-	
+	bool m_bIsSneaking;
+	UPROPERTY(Transient,VisibleAnywhere,BlueprintReadWrite)
+	EStanceType m_Stance;	
 public:
 	virtual void NativeBeginPlay() override;
 
@@ -52,31 +53,7 @@ public:
 	virtual void DestroyAnimInstanceProxy(FAnimInstanceProxy* InProxy) override {}
 
 	virtual void UpdateMoveFlag();
-};
 
-
-UCLASS()
-class MYJRPG_API UPlayerAnimInstance : public UMyAnimInstance
-{
-	GENERATED_BODY()
-	
-public:
-	UPROPERTY(Transient,VisibleAnywhere,BlueprintReadWrite)
-	bool m_bIsSneaking;
-	UPROPERTY(Transient,VisibleAnywhere,BlueprintReadWrite)
-	EStanceType m_Stance;
-	UPROPERTY()
-	AMyPlayerPawn* m_PlOwner;
-	
-protected:
-	virtual void NativeBeginPlay() override;
-
-	virtual void NativeInitializeAnimation() override;
-	
-public:
-	virtual void UpdateMoveFlag() override;
-
-public:
 	UFUNCTION(BlueprintCallable, Category = "My Stance",meta = (BlueprintThreadSafe))
 	bool IsStance(EStanceType t) const;
 	UFUNCTION(BlueprintCallable, Category = "My Stance",meta = (BlueprintThreadSafe))

@@ -35,7 +35,7 @@ class MYJRPG_API AModularUnitPawn : public ACombatUnitPawn
 
 public:
 	AModularUnitPawn(const FObjectInitializer& objInit);
-	void AttachWeapons();
+	
 
 protected:
 	UPROPERTY(VisibleAnywhere)
@@ -44,13 +44,6 @@ protected:
 	UStaticMeshComponent* m_MeshRightHand;
 	
 	FSkeletalMeshMergeParams m_MergeParam;
-protected:
-	UPROPERTY()
-	APetPawn* m_Pet;
-	UPROPERTY()
-	USkeletalMesh* m_CachedMeshBody;
-	UPROPERTY()
-	TSubclassOf<UAnimInstance> m_ClassAnimBP;
 	
 protected:
 	bool m_bIsHatEquipped;
@@ -59,15 +52,7 @@ protected:
 
 	bool m_bIsBootHighEquipped;
 
-	EStanceType m_Stance;
-	
 protected:
-	UPROPERTY()
-	TArray<UAnimMontage*> m_BaseAttack;
-	UPROPERTY()
-	USkeletalMesh* m_DefaultHead;
-	UPROPERTY()
-	USkeletalMesh* m_DefaultBody;
 	UPROPERTY()
 	UStaticMesh* m_CacheLeftHand;
 	UPROPERTY()
@@ -78,27 +63,24 @@ protected:
 	UStaticMesh* m_Axe;
 	
 protected:
-	virtual void BeginPlay() override;
-
 	virtual void EndPlay(const EEndPlayReason::Type EndPlayReason) override;
 	
 	void UpdateMorpthTarget();
+	
 	void TrySpawnBullets(const FItemDataRow& Itemdata);
+	
 	void TryKillBullets();
 
-protected:
-	void SetDefaultMesh();
+	void AttachWeapons();
+
+	virtual void LoadSetSkMeshAnim(TSoftObjectPtr<UUnitEntityAsset> asset) override;
 	
+protected:
 	void UpdateEquipActor();
 
 	void SpawnEquipActor(const FWeaponData& weaponData);
 
 	virtual UAnimMontage* GetBaseAttackMontage() override;
-
-public:
-	void SetPet(const FPetRow& pet_row);
-	
-	void UnEquipPet();
 
 public:
 	void ShowWeapon();
@@ -108,8 +90,6 @@ public:
 	FName TryShowPickAxe();
 
 	FName TryShowAxe();
-
-	EStanceType GetStance();
 
 	UStaticMeshComponent* GetLeftWeaponMesh() const;
 	

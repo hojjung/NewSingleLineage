@@ -30,10 +30,6 @@ protected:
 	USpringArmComponent* m_Spring;
 	UPROPERTY(VisibleAnywhere)
 	UPointLightComponent* m_Light;
-	UPROPERTY()
-	UAnimSequence* m_AnimIdle;
-	UPROPERTY()
-	USkeletalMesh* m_DefaultSkMesh;
 protected:
 	UPROPERTY(VisibleAnywhere)
 	UStaticMeshComponent* m_MeshLeftHand;
@@ -75,7 +71,5 @@ public:
 	
 	void RotatePawn(float delta_x);
 	
-	void SetAnimation(UAnimSequence* anim_sequence);
-
 	void SetupPlayerPreview();
 };

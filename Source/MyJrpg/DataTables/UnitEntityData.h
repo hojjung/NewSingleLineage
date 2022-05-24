@@ -56,14 +56,16 @@ public://Visual
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
 	UAnimMontage* m_TookHitMontage;
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
-	TArray<UAnimMontage*> m_AryAdditionalAnims;
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
 	TArray<FAttach> m_AryAttaches; 
 
 	virtual FPrimaryAssetId GetPrimaryAssetId() const override
 	{
 		return FPrimaryAssetId("Unit", GetFName());
 	}
+
+	virtual USkeletalMesh* GetSkMesh() const;
+
+	virtual UAnimMontage* GetBaseAtkAnim() const;
 };
 
 USTRUCT(BlueprintType)

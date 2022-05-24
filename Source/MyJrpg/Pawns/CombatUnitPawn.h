@@ -61,6 +61,8 @@ protected:
 	bool m_bUseFsmTick;
 	bool m_bCanUseSkill;
 
+	EStanceType m_Stance;
+	
 private:
 	void CreateSetDeathCurve(float fullLength);
 	
@@ -161,4 +163,6 @@ public:
 	EPathFollowingRequestResult::Type ChaseTarget();
 
 	virtual float GetBoundHalfHeight() override;
+	
+	virtual EStanceType GetStance();
 };

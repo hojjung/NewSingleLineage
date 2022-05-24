@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "MyJrpg/DataTables/HumanAsset.h"
 
 #include "MyJrpg/DataTables/UnitEntityData.h"
 #include "MyJrpg/Pawns/BaseUnitPawn.h"
@@ -75,7 +76,10 @@ protected://버프 아이템은 따로 뭔갈 안가질거임,남는시간?
 	UPROPERTY()
 	TArray<USkill_BuffBase*> m_AryBuff;//for gc
 
+	TSoftObjectPtr<UHumanAsset> m_BaseBodyWhite;
 
+	TSoftObjectPtr<UHumanAsset> m_BaseBodyBlack;
+	
 public:
 	void Init();
 	
@@ -141,5 +145,7 @@ public:
 
 public:
 	void OnPlayerDead(const ACombatUnitPawn* killer);
+	
+	const TSoftObjectPtr<UHumanAsset>& GetUnitAsset() const;
 };
 

@@ -1,4 +1,6 @@
 #include "PlayerStatusManager.h"
+
+#include "MyAssetManager.h"
 #include "MyJrpg/MyLib.h"
 #include "MyJrpg/Skills/Skill_BuffBase.h"
 
@@ -17,6 +19,9 @@ void UPlayerStatusManager::Init()
 
 	m_MultipleStatGroup = FStatGroup(1);
 
+	m_BaseBodyWhite = TSoftObjectPtr<UHumanAsset>(FSoftObjectPath(TEXT("HumanAsset'/Game/01_DataAssets/Humans/DefaultWhite.DefaultWhite'")));
+	
+	m_BaseBodyBlack = TSoftObjectPtr<UHumanAsset>(FSoftObjectPath(TEXT("HumanAsset'/Game/01_DataAssets/Humans/DefaultBlack.DefaultBlack'")));
 
 	UpdateStat();
 }
@@ -252,4 +257,9 @@ void UPlayerStatusManager::OnPlayerDead(const ACombatUnitPawn* killer)
 {
 	m_OnPlayerKilled.Broadcast(killer);
 	
+}
+
+const TSoftObjectPtr<UHumanAsset>& UPlayerStatusManager::GetUnitAsset() const
+{
+	return m_BaseBodyWhite;
 }

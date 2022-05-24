@@ -37,43 +37,16 @@ void UMyAnimInstance::UpdateMoveFlag()
 	}
 //#endif
 	m_bIsMoving=m_Owner->IsMoving();
-	m_bIsRange=m_Owner->IsRange();
-	
+	m_bIsSneaking=m_Owner->IsSneak();
+	m_Stance=m_Owner->GetStance();
 }
 
-void UPlayerAnimInstance::NativeBeginPlay()
-{
-	Super::NativeBeginPlay();
-
-	m_PlOwner=Cast<AMyPlayerPawn>( TryGetPawnOwner());
-}
-
-void UPlayerAnimInstance::NativeInitializeAnimation() 
-{
-	Super::NativeInitializeAnimation();
-	m_PlOwner=Cast<AMyPlayerPawn>( TryGetPawnOwner());
-}
-
-void UPlayerAnimInstance::UpdateMoveFlag()
-{
-	//#if WITH_EDITOR
-	if(!m_PlOwner)
-	{
-		return;
-	}
-	//#endif
-	m_bIsMoving=m_PlOwner->IsMoving();
-	m_bIsRange=m_PlOwner->IsRange();
-	m_bIsSneaking=m_PlOwner->IsSneak();
-	m_Stance=m_PlOwner->GetStance();
-}
-
-bool UPlayerAnimInstance::IsStance(EStanceType t) const
+bool UMyAnimInstance::IsStance(EStanceType t) const
 {
 	return m_Stance == t;
 }
 
-bool UPlayerAnimInstance::IsNotStance(EStanceType t) const
+bool UMyAnimInstance::IsNotStance(EStanceType t) const
 {
 	return m_Stance != t;
 }

@@ -81,8 +81,8 @@ void AMyPlayerPawn::BeginPlay()
 
 void AMyPlayerPawn::SetPlayerEntity()
 {
-	//FPrimaryAssetId Id(TEXT("DefaultHuman"));
-	//m_EntityAsset =  UMyAssetManager::Get()->LoadPrimaryAsset(Id).Get();
+	const TSoftObjectPtr<UHumanAsset>& HumanAsset = UMyGameInstance::Get->m_PlayerStatManager->GetUnitAsset();
+	LoadSetSkMeshAnim(HumanAsset);
 	
 	ULogic_Player* Player = NewObject<ULogic_Player>(this,ULogic_Player::StaticClass());
 
@@ -100,13 +100,6 @@ void AMyPlayerPawn::SetPlayerEntity()
 	UMyGameInstance::Get->m_PlayerStatManager->SetBaseStat(DefaultStat);
 	UMyGameInstance::Get->m_PlayerStatManager->UpdateStat();
 	m_StatGroup.m_Hp = m_StatGroup.m_MaxHp;
-
-	const FPetRow* PetRow = UMyGameInstance::Get->m_PetManager->GetCrntPet();
-
-	if(PetRow)
-	{
-		SetPet(*PetRow);
-	}
 }
 
 void AMyPlayerPawn::MoveForward(float AxisValue)

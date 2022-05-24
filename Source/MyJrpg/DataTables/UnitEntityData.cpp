@@ -12,6 +12,16 @@ UUnitEntityData::UUnitEntityData()
 	GetNpcUnitTable = FoundTable03.Object;
 }
 
+USkeletalMesh* UUnitEntityAsset::GetSkMesh() const
+{
+	return m_BodyMesh;
+}
+
+UAnimMontage* UUnitEntityAsset::GetBaseAtkAnim() const
+{
+	return m_BaseAttackAnim;
+}
+
 FNpcUnitEntityRow::FNpcUnitEntityRow()
 {
 	m_ClassActor = AMonsterPawn::StaticClass();

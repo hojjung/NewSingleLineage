@@ -11,15 +11,6 @@
 
 AModularUnitPawn::AModularUnitPawn(const FObjectInitializer& objInit): Super(objInit)
 {
-	static ConstructorHelpers::FObjectFinder<USkeletalMesh> FoundBody(TEXT(
-		"SkeletalMesh'/Game/14_ModularArmor/MedievalArmour/CharacterParts/Meshes/Basebody/SKEL_FullBody.SKEL_FullBody'"));
-	//AnimBlueprint'/Game/14_ModularArmor/Anims/ABP_Default.ABP_Default'
-	m_CachedMeshBody = FoundBody.Object;
-
-	static ConstructorHelpers::FClassFinder<UAnimInstance> FoundAnim(
-		TEXT("AnimBlueprint'/Game/14_ModularArmor/Anims/ABP_Default.ABP_Default_C'"));
-	m_ClassAnimBP = FoundAnim.Class;
-	//
 	m_MeshLeftHand = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("m_MeshLeftHand"));
 	m_MeshLeftHand->SetupAttachment(m_BodyMesh);
 	m_MeshLeftHand->SetCollisionEnabled(ECollisionEnabled::NoCollision);
@@ -41,28 +32,6 @@ AModularUnitPawn::AModularUnitPawn(const FObjectInitializer& objInit): Super(obj
 
 	m_Axe = FoundSm01.Object;
 	m_Pickaxe = FoundSm02.Object;
-	//
-	static ConstructorHelpers::FObjectFinder<UAnimMontage> Attack01(TEXT("AnimMontage'/Game/14_ModularArmor/Anims/BareHand/AM_Punch.AM_Punch'"));
-	static ConstructorHelpers::FObjectFinder<UAnimMontage> Attack02(TEXT("AnimMontage'/Game/14_ModularArmor/Anims/OneHand/AM_OH.AM_OH'"));
-	static ConstructorHelpers::FObjectFinder<UAnimMontage> Attack03(TEXT("AnimMontage'/Game/14_ModularArmor/Anims/Shield/AM_Shield.AM_Shield'"));
-	static ConstructorHelpers::FObjectFinder<UAnimMontage> Attack04(TEXT("AnimMontage'/Game/14_ModularArmor/Anims/Twohand/AM_TH.AM_TH'"));
-	static ConstructorHelpers::FObjectFinder<UAnimMontage> Attack05(TEXT("AAnimMontage'/Game/14_ModularArmor/Anims/Spear/AM_Spear.AM_Spear'"));
-	static ConstructorHelpers::FObjectFinder<UAnimMontage> Attack06(TEXT("AnimMontage'/Game/14_ModularArmor/Anims/Bow/AM_Bow.AM_Bow'"));
-	static ConstructorHelpers::FObjectFinder<UAnimMontage> Attack07(TEXT("AnimMontage'/Game/14_ModularArmor/Anims/Pistol/AM_Pistol.AM_Pistol'"));
-	static ConstructorHelpers::FObjectFinder<UAnimMontage> Attack08(TEXT("AnimMontage'/Game/14_ModularArmor/Anims/Rifle/AM_Rifle.AM_Rifle'"));
-	static ConstructorHelpers::FObjectFinder<UAnimMontage> Attack09(TEXT("AnimMontage'/Game/14_ModularArmor/Anims/MagicOne/AM_Magic01.AM_Magic01'"));
-	static ConstructorHelpers::FObjectFinder<UAnimMontage> Attack11(TEXT("AnimMontage'/Game/14_ModularArmor/Anims/Dual/AM_Dual.AM_Dual'"));
-	m_BaseAttack.Init(nullptr,(int)EStanceType::Length);
-	m_BaseAttack[(int)EStanceType::None] = Attack01.Object;
-	m_BaseAttack[(int)EStanceType::OneSword] = Attack02.Object;
-	m_BaseAttack[(int)EStanceType::SwordShield] = Attack03.Object;
-	m_BaseAttack[(int)EStanceType::TwoSword] = Attack04.Object;
-	m_BaseAttack[(int)EStanceType::Spear] = Attack05.Object;
-	m_BaseAttack[(int)EStanceType::Bow] = Attack06.Object;
-	m_BaseAttack[(int)EStanceType::Pistol] = Attack07.Object;
-	m_BaseAttack[(int)EStanceType::Rifle] = Attack08.Object;
-	m_BaseAttack[(int)EStanceType::OneMagic] = Attack09.Object;
-	m_BaseAttack[(int)EStanceType::Dual] = Attack11.Object;
 }
 
 void AModularUnitPawn::AttachWeapons()
@@ -72,27 +41,21 @@ void AModularUnitPawn::AttachWeapons()
 	m_MeshRightHand->AttachToComponent(m_BodyMesh, Rules, TEXT("RightHandSocket"));
 }
 
-void AModularUnitPawn::BeginPlay()
+void AModularUnitPawn::LoadSetSkMeshAnim(TSoftObjectPtr<UUnitEntityAsset> asset)
 {
-	Super::BeginPlay();
-	SetDefaultMesh();
+	Super::LoadSetSkMeshAnim(asset);
+	
 	UpdateMorpthTarget();
+	
 	AttachWeapons();
-	m_MergeParam.Skeleton = m_CachedMeshBody->GetSkeleton();
+	
+	m_MergeParam.Skeleton = m_EntityAsset->m_BodyMesh->GetSkeleton();
 	m_MergeParam.MeshesToMerge.Init(nullptr,(int)EBodyIndex::Len + 1);
-	m_MergeParam.MeshesToMerge[(int)EBodyIndex::Len] = m_CachedMeshBody;
+	m_MergeParam.MeshesToMerge[(int)EBodyIndex::Len] = m_EntityAsset->m_BodyMesh;
 
 	UMyGameInstance::Get->m_EquipManager->m_OnEquipChanged.AddUObject(this, &AModularUnitPawn::UpdateEquipActor);
-;
 	UMyGameInstance::Get->m_PreviewActorManager->CreatePreviewActor();
 	UpdateEquipActor();
-}
-
-void AModularUnitPawn::SetDefaultMesh()
-{
-	//GetModuleSkMesh(EBodyIndex::Head)->SetSkeletalMesh(m_CachedMeshHead);
-	m_BodyMesh->SetSkeletalMesh(m_CachedMeshBody);
-	m_BodyMesh->SetAnimClass(m_ClassAnimBP);
 }
 
 void AModularUnitPawn::EndPlay(const EEndPlayReason::Type EndPlayReason)
@@ -154,6 +117,18 @@ void AModularUnitPawn::UpdateEquipActor()
 		{
 			m_MergeParam.MeshesToMerge[Iter] = nullptr;
 		}
+		switch ((EBodyIndex)Iter)
+		{
+		case EBodyIndex::Hat:
+			m_bIsHatEquipped = m_MergeParam.MeshesToMerge[Iter] != nullptr;
+			break;
+		case EBodyIndex::Gloves:
+			m_bIsGloveEquipped = m_MergeParam.MeshesToMerge[Iter] != nullptr;
+			break;
+		case EBodyIndex::Legs:
+			m_bIsBootHighEquipped = m_MergeParam.MeshesToMerge[Iter] != nullptr;
+			break;
+		}
 	}
 	
 	FName WeaponID = EquippedItems[(int)EEquipSlotType::Weapon].m_ID;
@@ -189,6 +164,7 @@ void AModularUnitPawn::UpdateEquipActor()
 	m_BodyMesh->SetSkeletalMesh(SkMeshMerged,false);
 	
 	UMyGameInstance::Get->m_PreviewActorManager->Update(this);
+	UpdateMorpthTarget();
 }
 
 void AModularUnitPawn::SpawnEquipActor(const FWeaponData& weaponData)
@@ -202,7 +178,9 @@ void AModularUnitPawn::SpawnEquipActor(const FWeaponData& weaponData)
 
 UAnimMontage* AModularUnitPawn::GetBaseAttackMontage()
 {
-	return m_BaseAttack[(int)m_Stance];
+	UHumanAsset* HumanAsset = Cast<UHumanAsset>(m_EntityAsset.Get());
+	
+	return HumanAsset->GetStanceAnim(m_Stance);
 }
 
 void AModularUnitPawn::ShowWeapon()
@@ -245,11 +223,6 @@ FName AModularUnitPawn::TryShowAxe()
 	return Id;
 }
 
-EStanceType AModularUnitPawn::GetStance()
-{
-	return m_Stance;
-}
-
 UStaticMeshComponent* AModularUnitPawn::GetLeftWeaponMesh() const
 {
 	return m_MeshLeftHand;
@@ -258,27 +231,4 @@ UStaticMeshComponent* AModularUnitPawn::GetLeftWeaponMesh() const
 UStaticMeshComponent* AModularUnitPawn::GetRightWeaponMesh() const
 {
 	return m_MeshRightHand;
-}
-
-void AModularUnitPawn::SetPet(const FPetRow& pet_row)
-{
-	UnEquipPet();
-
-	FActorSpawnParameters Param;
-
-	Param.bNoFail = true;
-
-	FVector Loc = UMyLib::GetNavSys()->GetRandomReachablePointInRadius(GetWorld(), GetActorLocation(), 400);
-
-	m_Pet = GetWorld()->SpawnActor<APetPawn>(APetPawn::StaticClass(), Loc, FRotator(0), Param);
-
-	m_Pet->SetPetEntity(pet_row);
-}
-
-void AModularUnitPawn::UnEquipPet()
-{
-	if (m_Pet)
-	{
-		m_Pet->Destroy();
-	}
 }

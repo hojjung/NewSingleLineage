@@ -4,6 +4,7 @@
 #include "Logics/AI/AI_Logic/AI_LogicBase.h"
 #include "Logics/AI/AI_Sensor/Sensor_LogicBase.h"
 #include "MyJrpg/MyLib.h"
+#include "MyJrpg/DataTables/HumanAsset.h"
 
 ACombatUnitPawn::ACombatUnitPawn(const FObjectInitializer& objInit):Super(objInit)
 {
@@ -114,7 +115,7 @@ float ACombatUnitPawn::PlayBaseAttackAnim()
 
 UAnimMontage* ACombatUnitPawn::GetBaseAttackMontage()
 {
-	return m_EntityAsset->m_BaseAttackAnim;
+	return m_EntityAsset->GetBaseAtkAnim();
 }
 
 void ACombatUnitPawn::ShowPopupText(float nbr, ETextType t)
@@ -148,6 +149,13 @@ void ACombatUnitPawn::SetEntity(const FName& id, const FNpcUnitEntityRow& unitEn
 	m_Movement->MaxSpeed = m_StatGroup.m_MoveSpeed;
 
 	m_TeamID = unitEntityRow.m_FriendTeamID;
+
+	UHumanAsset* HumanAsset = Cast<UHumanAsset>(unitEntityRow.m_UnitDataAsset.Get());
+	if(HumanAsset)
+	{
+		m_Stance = HumanAsset->m_StanceType;;
+	}
+		
 }
 
 void ACombatUnitPawn::Tick(float DeltaSeconds)
@@ -348,6 +356,11 @@ EPathFollowingRequestResult::Type ACombatUnitPawn::ChaseTarget()
 float ACombatUnitPawn::GetBoundHalfHeight()
 {
 	return GetCapsule()->GetScaledCapsuleHalfHeight();
+}
+
+EStanceType ACombatUnitPawn::GetStance()
+{
+	return m_Stance; 
 }
 
 void ACombatUnitPawn::Dead()

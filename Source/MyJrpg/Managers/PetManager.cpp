@@ -35,7 +35,7 @@ void UPetManager::EquipPet(const FPetRow& selected)
 {
 	m_CrntPet = &selected;
 
-	UMyLib::GetPlayer()->SetPet(*m_CrntPet);
+	//UMyLib::GetPlayer()->SetPet(*m_CrntPet);
 	
 	ShowPreviewPet(*m_CrntPet);
 
@@ -46,7 +46,7 @@ void UPetManager::UnEquip()
 {
 	m_CrntPet = nullptr;
 	
-	UMyLib::GetPlayer()->UnEquipPet();
+	//UMyLib::GetPlayer()->UnEquipPet();
 
 	m_OnPetChanged.Broadcast();
 }
