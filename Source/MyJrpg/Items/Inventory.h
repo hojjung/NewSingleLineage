@@ -101,9 +101,11 @@ public:
 
 	int GetUsingSlotCount() const;
 	
-	int FindItem(FName itemID);
+	FItemSpec* FindItem(FName itemID, int stlv);
 
-	void ReduceDurability(int index, int dur = 1);
+	bool ReduceDurability(const FItemSpec& item, int dur = 1);
+
+	void ReduceDurability(int index, int dur);
 
 	bool MoveItem(int myIndex, UInventory* targetInvenToAdd);
 	
@@ -115,7 +117,7 @@ public:
 
 	FOnInvenChanged& GetOnInvenChanged();
 
-	int GetItemCount(FName id);
+	int GetItemCount(FName id, int stlv = 0);
 
 	void AddItemKey(const FItemDataRow& itemData,FName id, int index);
 

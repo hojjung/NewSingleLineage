@@ -265,7 +265,7 @@ void UEnchantManager::DoEnchant()
 	
 	m_InvenMat.Get()->RemoveItem(GetCrntMat(), 1);
 
-	if(!m_InvenMat.Get()->FindItem(MatID))
+	if(!m_InvenMat.Get()->FindItem(MatID, 1))
 	{
 		m_CrntMat = INDEX_NONE;
 	}

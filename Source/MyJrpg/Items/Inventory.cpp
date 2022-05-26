@@ -128,6 +128,10 @@ void UInventory::AddSlot(int index, FItemSpec addItem)
 
 bool UInventory::HasSpace(FItemSpec& addItem)
 {
+	if(UMyLib::IsEquip(addItem.m_ID))
+	{
+		return EmptySlotCount() > 0;
+	}
 	TSet<int>* FoundSet = m_MapItemKeyCount.Find(addItem.m_ID);
 
 	if(FoundSet)
@@ -322,18 +326,53 @@ int UInventory::GetUsingSlotCount() const
 	return UsingSlotCnt;
 }
 
-int UInventory::FindItem(FName itemID)
+FItemSpec* UInventory::FindItem(FName itemID, int stlv)
 {
-	int Iter = -1;
-	while (++Iter < m_AryTotalItems.Num())
+	TSet<int>* IndexSets = m_MapItemKeyCount.Find(itemID);
+	if(!IndexSets)
 	{
-		if(m_AryTotalItems[Iter].m_ID == itemID)
+		return nullptr;
+	}
+	bool IsEquip = UMyLib::IsEquip(itemID);
+	if(IsEquip)
+	{
+		for(int Index : *IndexSets)
 		{
-			return Iter;
+			if(GetItemRef(Index).m_nLvStack == stlv)
+			{
+				return &GetItemRef(Index);
+			}
+		}
+		return nullptr;
+	}
+	int Sum = 0;
+	for(int Index : (*IndexSets))
+	{
+		Sum += GetStLv(Index);
+		if(Sum >= stlv)
+		{
+			return &GetItemRef(Index);
 		}
 	}
+	return nullptr;
+}
 
-	return INDEX_NONE;
+bool UInventory::ReduceDurability(const FItemSpec& item, int dur)
+{
+	TSet<int>* IndexSets = m_MapItemKeyCount.Find(item.m_ID);
+	if(!IndexSets)
+	{
+		return false;
+	}
+	for(int Index : *IndexSets)
+	{
+		if(&m_AryTotalItems[Index] == &item)
+		{
+			ReduceDurability(Index, dur);
+			return true;
+		}
+	}
+	return false;
 }
 
 void UInventory::ReduceDurability(int index, int dur)//Equip은따로있는데?
@@ -442,8 +481,9 @@ UInventory::FOnInvenChanged& UInventory::GetOnInvenChanged()
 	return m_OnInvenChanged;
 }
 
-int UInventory::GetItemCount(FName id)
+int UInventory::GetItemCount(FName id, int stlv)
 {
+	int Sum = 0;
 	TSet<int>* IndexSets = m_MapItemKeyCount.Find(id);
 	if(!IndexSets)
 	{
@@ -452,9 +492,15 @@ int UInventory::GetItemCount(FName id)
 	bool IsEquip = UMyLib::IsEquip(id);
 	if(IsEquip)
 	{
-		return (*IndexSets).Num();
+		for(int Index : (*IndexSets))
+		{
+			if(GetStLv(Index) == stlv)
+			{
+				Sum	++;
+			}
+		}
+		return Sum;
 	}
-	int Sum = 0;
 	for(int Index : (*IndexSets))
 	{
 		Sum += GetStLv(Index);

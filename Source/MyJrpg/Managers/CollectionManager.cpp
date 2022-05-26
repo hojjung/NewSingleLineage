@@ -190,13 +190,13 @@ void UCollectionManager::AddItem(FName collectionID, int indexItem)
 	{
 		const FName* FoundItem = nullptr;
 		
-		InvenFrom = UMyLib::FindEquipItem(WantAdd.m_Item.RowName, WantAdd.m_nEnchantLv,&FoundItem);
+		//InvenFrom = UMyLib::FindEquipItem(WantAdd.m_Item.RowName, WantAdd.m_nEnchantLv,&FoundItem);
 		
 		//InvenFrom->RemoveEquipItem(*FoundItem);
 	}
 	else
 	{
-		InvenFrom = UMyLib::FindMiscItem(WantAdd.m_Item.RowName);
+		//InvenFrom = UMyLib::FindMiscItem(WantAdd.m_Item.RowName);
 		InvenFrom->RemoveItem(WantAdd.m_Item.RowName, 1);
 	}
 	//

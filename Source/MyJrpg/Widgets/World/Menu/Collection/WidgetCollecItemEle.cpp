@@ -53,41 +53,41 @@ void UWidgetCollecItemEle::OnHoldComplete()
 
 void UWidgetCollecItemEle::UpdateEquipItem()
 {
-	if(UMyLib::FindEquipItem(m_ItemID) != nullptr)
-	{
-		m_ImgLock->SetVisibility(ESlateVisibility::Collapsed);
-		
-		if(UMyLib::FindEquipItem(m_ItemID,m_nEnchantLv) != nullptr)
-		{
-			m_TextEnchantLevel->SetColorAndOpacity(FLinearColor::White);
-
-			m_bRegisterable = true;
-		}
-		else
-		{
-			m_TextEnchantLevel->SetColorAndOpacity(FLinearColor::Red);
-		}
-	}
-	else
-	{
-		m_TextEnchantLevel->SetColorAndOpacity(FLinearColor::White);
-
-		m_ImgLock->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
-	}
+	// if(UMyLib::FindEquipItem(m_ItemID) != nullptr)
+	// {
+	// 	m_ImgLock->SetVisibility(ESlateVisibility::Collapsed);
+	// 	
+	// 	if(UMyLib::FindEquipItem(m_ItemID,m_nEnchantLv) != nullptr)
+	// 	{
+	// 		m_TextEnchantLevel->SetColorAndOpacity(FLinearColor::White);
+	//
+	// 		m_bRegisterable = true;
+	// 	}
+	// 	else
+	// 	{
+	// 		m_TextEnchantLevel->SetColorAndOpacity(FLinearColor::Red);
+	// 	}
+	// }
+	// else
+	// {
+	// 	m_TextEnchantLevel->SetColorAndOpacity(FLinearColor::White);
+	//
+	// 	m_ImgLock->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
+	// }
 }
 
 void UWidgetCollecItemEle::UpdateMiscItem()
 {
-	if(UMyLib::FindMiscItem(m_ItemID) != nullptr)
-	{
-		m_ImgLock->SetVisibility(ESlateVisibility::Collapsed);
-		
-		m_bRegisterable = true;
-	}
-	else
-	{
-		m_ImgLock->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
-	}
+	// if(UMyLib::FindMiscItem(m_ItemID) != nullptr)
+	// {
+	// 	m_ImgLock->SetVisibility(ESlateVisibility::Collapsed);
+	// 	
+	// 	m_bRegisterable = true;
+	// }
+	// else
+	// {
+	// 	m_ImgLock->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
+	// }
 }
 
 void UWidgetCollecItemEle::Update()//포커싱이 되야지 등록을하잔아

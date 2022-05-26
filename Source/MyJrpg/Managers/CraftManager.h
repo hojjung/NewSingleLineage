@@ -64,10 +64,6 @@ protected:
 
 	void ReceiveItem();
 
-	int GetCraftAvailableCountWithMaterial();
-
-	int GetCraftAvailableCountWithStackSize();
-	
 public:
 	void Init();
 	

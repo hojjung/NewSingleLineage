@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "NavigationSystem.h"
 #include "Actors/MyPlayerController.h"
+#include "Actors/Field/Gather/TreeBase.h"
 #include "DataTables/ItemData.h"
 #include "DataTables/SkillData.h"
 #include "Kismet/BlueprintFunctionLibrary.h"
@@ -51,8 +52,6 @@ public:
 
 	static const FItemDataRow& GetItemData(const FName& specID);
 
-	static FStatGroup GetItemStatData(const FName& specID);
-
 	static const FSkillDataRow& GetSkillData(const FName& specID);
 
 	static EItemType GetItemType(FName itemKey);
@@ -92,35 +91,17 @@ public:
 
 	static void SetBtnTint(UButton* btn, FLinearColor colrWant);
 
-	static UInventory* FindEquipItem(const FName& id);
-
-	static UInventory* FindEquipItem(const FName& id,const FName** gidItem);
-
-	static UInventory* FindEquipItem(const FName& id, int lv,const FName** gidItem);
-	
-	static UInventory* FindEquipItem(const FName& id, int lv);
-	
-	static UInventory* FindMiscItem(const FName& id);
-
-	static bool FindMiscItem(const FName& id, int count);
-
-	static int GetMiscTotalCount(const FName& id);
-
-	static int GetEquipTotalCount(const FName& oID, int level);
-
-	static void RemoveMiscItem(const FName& id, int count);
-
 	static int GetRequireCollecLevel(const FName& collecID, int index);
 
 	static bool IsCollecItemEquip(const FName& collecID, int index);
 	
 	static bool HasAxe(FName& outFoundAxe);
 
+	static FItemSpec* FindItemAllInven(const FName& id, int stlv);
+	
 	static bool HasPickaxe(FName& outFoundPickaxe);
 
-	static FItemSpec* FindItemAllInven(FName idwant);
-
-	static void ReduceDurability(FName idwant, int amount = 1);
-
 	static bool IsTestMode();
+	
+	static void ReduceDurability(FItemSpec& item_spec, int amount);
 };

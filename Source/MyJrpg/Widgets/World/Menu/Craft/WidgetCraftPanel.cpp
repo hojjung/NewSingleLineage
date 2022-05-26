@@ -33,6 +33,11 @@ void UWidgetCraftPanel::OnSelectCraftItem(int index)
 {
 	UMyGameInstance::Get->m_CraftManager->SetCraftItem(index);
 
+	OnUpdateItems();
+}
+
+void UWidgetCraftPanel::OnUpdateItems()
+{
 	m_Selected->SelectCraft(*UMyGameInstance::Get->m_CraftManager->GetCrntItemRow());
 }
 
@@ -51,5 +56,5 @@ void UWidgetCraftPanel::OpenPanel()
 {
 	Super::OpenPanel();
 
-	//m_DeleUpdate = UMyGameInstance::Get->m_Inven->m_OnInvenChanged.AddUObject(this,&UWidgetCraftPanel::UpdateCraftCostPanel);
+	m_DeleUpdate = UMyGameInstance::Get->m_Inven->m_OnInvenChanged.AddUObject(this,&UWidgetCraftPanel::OnUpdateItems);
 }

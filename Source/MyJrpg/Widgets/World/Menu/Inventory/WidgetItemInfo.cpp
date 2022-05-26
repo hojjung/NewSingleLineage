@@ -138,12 +138,12 @@ void UWidgetItemInfo::UpdateEnchantBtn()//가지고있으면 해당 인벤으로
 {
  	m_BtnEnchant->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
 
-	if (!UMyLib::IsEquip(m_ItemKey) || !UMyLib::FindEquipItem(m_ItemKey))
-	{
-		m_BtnEnchant->SetIsEnabled(false);
-
-		return ;
-	}
+	// if (!UMyLib::IsEquip(m_ItemKey) || !UMyLib::FindEquipItem(m_ItemKey))
+	// {
+	// 	m_BtnEnchant->SetIsEnabled(false);
+	//
+	// 	return ;
+	// }
 
 	m_BtnEnchant->SetIsEnabled(true);
 }
@@ -169,11 +169,11 @@ void UWidgetItemInfo::UpdateRegisterBtn()
 	{
 		int RequireLevel = UMyLib::GetRequireCollecLevel(m_CollecID,m_nCollecIndex);
 		
-		HasItem = UMyLib::FindEquipItem(m_ItemKey,RequireLevel) != nullptr;
+		//HasItem = UMyLib::FindEquipItem(m_ItemKey,RequireLevel) != nullptr;
 	}
 	else
 	{
-		HasItem = UMyLib::FindMiscItem(m_ItemKey) != nullptr;
+		//HasItem = UMyLib::FindMiscItem(m_ItemKey) != nullptr;
 	}
 	m_BtnRegister->SetIsEnabled(HasItem);
 }
@@ -190,9 +190,9 @@ void UWidgetItemInfo::OnEnchant()//강화가 두개의 상황이 존재함.그�
 		return;
 	}
 
-	const FName *FoundItem;
+	//const FName *FoundItem;
 
-	UInventory* Inven = UMyLib::FindEquipItem(m_ItemKey, &FoundItem);
+	//UInventory* Inven = UMyLib::FindEquipItem(m_ItemKey, &FoundItem);
 	
 	//UMyGameInstance::Get->m_EnchantManager->SetTargetEquip(*FoundItem,Inven);
 

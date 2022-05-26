@@ -43,7 +43,8 @@ protected:
 	void CreateAllCraftWidget(const TArray<FCraftDataInfo>& ary);
 
 	void OnSelectCraftItem(int index);
-	
+
+	void OnUpdateItems();
 public:
 	virtual void ClosePanel() override;
 

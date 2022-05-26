@@ -54,7 +54,7 @@ ATreeBase::ATreeBase()
 	static ConstructorHelpers::FObjectFinder<UStaticMesh> FoundSt(TEXT("StaticMesh'/Game/03_VisualEffect/FX/Effects/FX_Meshes/SM_CharM_Shadow.SM_CharM_Shadow'"));
 	m_ShadowMeshComp->SetStaticMesh(FoundSt.Object);
 	m_ShadowMeshComp->SetupAttachment(RootComponent);
-	m_ShadowMeshComp->SetRelativeScale3D(FVector(10));
+	m_ShadowMeshComp->SetRelativeScale3D(FVector(6.5f));
 	m_ShadowMeshComp->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 	m_ShadowMeshComp->SetCanEverAffectNavigation(false);
 	m_ShadowMeshComp->SetRelativeLocation(FVector(0,0,-40));
@@ -126,11 +126,11 @@ void ATreeBase::OnInteract()
 
 void ATreeBase::OnTakeChopping()
 {
-	if(!m_CrntToolID.IsNone())
+	if(m_CrntToolID)
 	{
 		if(m_GatherAsset->m_bIsAxe)
 		{
-			if(m_CrntToolID == TEXT("Axe01"))
+			if(m_CrntToolID->m_ID == TEXT("Axe01"))
 			{
 				m_nTreeHp -= 3;
 			}
@@ -141,7 +141,7 @@ void ATreeBase::OnTakeChopping()
 		}
 		else
 		{
-			if(m_CrntToolID == TEXT("Pickaxe01"))
+			if(m_CrntToolID->m_ID == TEXT("Pickaxe01"))
 			{
 				m_nTreeHp -= 3;
 			}
@@ -151,7 +151,7 @@ void ATreeBase::OnTakeChopping()
 			}
 		}
 
-		UMyLib::ReduceDurability(m_CrntToolID);
+		UMyLib::ReduceDurability(*m_CrntToolID, 1);
 	}
 	else
 	{
@@ -178,7 +178,7 @@ void ATreeBase::OnHarvestMotionDone()
 {
 	m_Player->SetInteracting(false);
 	
-	m_CrntToolID = NAME_None;
+	m_CrntToolID = nullptr;
 	
 	m_Player->ShowWeapon();
 }

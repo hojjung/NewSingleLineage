@@ -35,30 +35,22 @@ void UWidgetCraftCostElement::UpdateCostAmount()
 {
 	FString FormatAmount;
 
-	bool IsAvailable = false;
+	int Stack = UMyLib::GetPlayerInven()->GetItemCount(m_CraftData->m_ItemDataRowHandle.RowName,m_CraftData->m_nStackOrLevel);
 
 	if(UMyLib::IsEquip(m_CraftData->m_ItemDataRowHandle.RowName))
 	{
-		IsAvailable = UMyLib::GetEquipTotalCount(m_CraftData->m_ItemDataRowHandle.RowName,m_CraftData->m_nStackOrLevel) > 0;
-
-		FormatAmount = FString::Printf(TEXT("Lv.%d"),m_CraftData->m_nStackOrLevel);
+		FormatAmount = FString::Printf(TEXT("Lv.+%d : %d/1"),m_CraftData->m_nStackOrLevel, Stack);
 	}
 	else
 	{
-		int AmountCurrent = UMyLib::GetMiscTotalCount(m_CraftData->m_ItemDataRowHandle.RowName);
-
-		int AmountCost = m_CraftData->m_nStackOrLevel ;//* UMyGameInstance::Get->m_CraftManager->GetAmount();
-
-		FormatAmount = FString::Printf(TEXT("%d/%d"),AmountCurrent,AmountCost);
-		
-		IsAvailable = AmountCurrent >= AmountCost; 
+		FormatAmount = FString::Printf(TEXT("%d/%d"),Stack,m_CraftData->m_nStackOrLevel);
 	}
 	
 	FText TextWant = FText::FromString(FormatAmount); 
 	
 	m_TextCostAmount->SetText(TextWant);
 	
-	if(IsAvailable)
+	if(Stack > 0)
 	{
 		m_TextCostAmount->SetColorAndOpacity(FLinearColor::White);
 	}

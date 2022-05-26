@@ -16,6 +16,7 @@ Preview
 */
 
 
+struct FItemSpec;
 struct FPetRow;
 class APetPawn;
 UENUM()
@@ -87,9 +88,9 @@ public:
 
 	void HideWeapon();
 
-	FName TryShowPickAxe();
+	FItemSpec* TryShowPickAxe();
 
-	FName TryShowAxe();
+	FItemSpec* TryShowAxe();
 
 	UStaticMeshComponent* GetLeftWeaponMesh() const;
 	

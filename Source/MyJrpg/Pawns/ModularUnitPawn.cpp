@@ -197,30 +197,50 @@ void AModularUnitPawn::HideWeapon()
 	m_MeshRightHand->SetStaticMesh(nullptr);
 }
 
-FName AModularUnitPawn::TryShowPickAxe()
+FItemSpec* AModularUnitPawn::TryShowPickAxe()
 {
-	FName Id;
-	
-	if(UMyLib::HasPickaxe(Id))
+	FItemSpec* itemSpec = nullptr;
+
+	itemSpec = UMyLib::FindItemAllInven(TEXT("Pickaxe01"), 0);
+	if(itemSpec)
 	{
 		HideWeapon();
 		
 		m_MeshRightHand->SetStaticMesh(m_Pickaxe);
+
+		return itemSpec;
 	}
-	return Id;
+	itemSpec = UMyLib::FindItemAllInven(TEXT("Pickaxe02"), 0);
+	if(itemSpec)
+	{
+		HideWeapon();
+	
+		m_MeshRightHand->SetStaticMesh(m_Pickaxe);
+	}
+	return itemSpec;
 }
 
-FName AModularUnitPawn::TryShowAxe()
+FItemSpec* AModularUnitPawn::TryShowAxe()
 {
-	FName Id;
-	
-	if(UMyLib::HasAxe(Id))
+	FItemSpec* itemSpec = nullptr;
+
+	itemSpec = UMyLib::FindItemAllInven(TEXT("Axe01"), 0);
+	if(itemSpec)
 	{
 		HideWeapon();
 		
 		m_MeshRightHand->SetStaticMesh(m_Axe);
+
+		return itemSpec;
 	}
-	return Id;
+	itemSpec = UMyLib::FindItemAllInven(TEXT("Axe02"), 0);
+	if(itemSpec)
+	{
+		HideWeapon();
+	
+		m_MeshRightHand->SetStaticMesh(m_Axe);
+	}
+	return itemSpec;
 }
 
 UStaticMeshComponent* AModularUnitPawn::GetLeftWeaponMesh() const
