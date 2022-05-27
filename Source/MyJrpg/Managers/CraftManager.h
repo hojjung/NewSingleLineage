@@ -70,8 +70,10 @@ public:
 	void SetCraftItem(int index);
 
 	void Clear();
+
+	bool CheckCraftable();
 	
-	bool TryCraft();
+	void Craft();
 
 	const FCraftDataInfo* GetCrntItemRow() const;
 

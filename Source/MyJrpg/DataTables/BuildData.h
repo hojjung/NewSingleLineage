@@ -36,6 +36,8 @@ public:
 
 public:
 	UPROPERTY(EditDefaultsOnly,BlueprintReadOnly)
+	FName m_RowID = TEXT("Same As Key");
+	UPROPERTY(EditDefaultsOnly,BlueprintReadOnly)
 	EBuildType m_BuildType;
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	TSubclassOf<UBuildInteractBase> m_ClassInter = nullptr;
@@ -51,4 +53,6 @@ public:
 	float m_fRotYaw = 0.f;
 	UPROPERTY(EditDefaultsOnly,BlueprintReadOnly)
 	FName m_NextUpgradeActorID;
+	UPROPERTY(EditDefaultsOnly,BlueprintReadOnly)
+	int m_nMaxOwnedCount = 0; 
 };

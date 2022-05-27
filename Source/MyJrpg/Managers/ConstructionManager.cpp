@@ -315,7 +315,9 @@ void UConstructionManager::SpawnPreviewActor(FVector loc, const FBuildDataRow* d
 	if(!dataRow)
 	{
 		if(m_PreviewActor.Get())
+		{
 			dataRow = &m_PreviewActor->GetBuildData();
+		}
 		else
 			return;
 	}
@@ -660,7 +662,10 @@ void UConstructionManager::ConfirmBuild()
 	}
 	
 	const FBuildDataRow& BuildRow = m_PreviewActor->GetBuildData();
-	
+	if(BuildRow.m_BuildType == EBuildType::Furniture)
+	{
+		RemoveFurniture(m_PreviewActor->GetBuildData().m_RowID);
+	}
 	m_PreviewActor->ConfirmBuild();
 
 	IFocusable* Focus = Cast<IFocusable>(m_PreviewActor.Get());
@@ -679,7 +684,6 @@ void UConstructionManager::ConfirmBuild()
 
 void UConstructionManager::Rotate()
 {
-	//float Yaw = FMath::RoundToFloat(m_PreviewActor->GetActorRotation().GetDenormalized().Yaw);
 	if(m_PreviewActor.Get())
 	{
 		m_PreviewActor->AddActorLocalRotation(FRotator(0,90,0));
@@ -722,7 +726,7 @@ void UConstructionManager::Erase(AStructureActor* buildActor)
 	}
 	else if (buildActor->GetBuildData().m_BuildType == EBuildType::Furniture)
 	{
-		
+		AddFurniture(buildActor->GetBuildData().m_RowID);
 	}
 	TryEraseActor(*Holder);
 }
@@ -781,22 +785,59 @@ void UConstructionManager::GetStructureHolder(AStructureActor* want, TWeakObject
 
 void UConstructionManager::AddFurniture(const FName& id)
 {
-	int* Count = m_InvenFurniture.Find(id);
+	int* Count = m_MapInvenFurniture.Find(id);
 	if(Count)
 	{
 		(*Count)++;
 	}
 	else
 	{
-		m_InvenFurniture.Add(id, 1);
+		m_MapInvenFurniture.Add(id, 1);
 	}
 
 	m_OnChanged.Broadcast();
 }
 
+void UConstructionManager::RemoveFurniture(const FName& id, int amount)
+{
+	int* Count = m_MapInvenFurniture.Find(id);
+	if(Count)
+	{
+		(*Count)-=amount;
+		if((*Count) < 1)
+		{
+			m_MapInvenFurniture.Remove(id);
+		}
+	}
+	m_OnChanged.Broadcast();
+}
+
 const TMap<FName, int>& UConstructionManager::GetInvenFurniture() const
 {
-	return m_InvenFurniture;
+	return m_MapInvenFurniture;
+}
+
+bool UConstructionManager::HasFurnitureEmptySpace(FName id)
+{
+	int* pCnt = m_MapInvenFurniture.Find(id);
+	if(!pCnt)
+	{
+		return true;
+	}
+	int Max = GetFurnitureMaxOwnCnt(id);
+
+	if(Max == 0 || Max > *pCnt)
+	{
+		return true;
+	}
+	return false;
+}
+
+int UConstructionManager::GetFurnitureMaxOwnCnt(FName id)
+{
+	const FBuildDataRow* BuildData = UBuildData::GetBuildTable->FindRow<FBuildDataRow>(id, "UConstructionManager::GetFurnitureMaxOwnCnt No ID?");
+
+	return BuildData->m_nMaxOwnedCount;	
 }
 
 void UConstructionManager::Cancel()

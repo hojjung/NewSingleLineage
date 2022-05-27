@@ -21,6 +21,12 @@ void UWidgetCraftSelected::NativeOnInitialized()
 	m_BtnCancel->OnClicked.AddDynamic(this, &UWidgetCraftSelected::Cancel);
 	
 	m_OverlayLimit->SetVisibility(ESlateVisibility::Collapsed);
+
+	m_CancelHoldingBar->SetVisibility(ESlateVisibility::Collapsed);
+	
+	m_fCancelTimer = 0;
+
+	m_bStartCraft = false;
 }
 
 void UWidgetCraftSelected::SelectCraft(const FCraftDataInfo& data)
@@ -61,12 +67,24 @@ void UWidgetCraftSelected::Close()
 
 void UWidgetCraftSelected::Craft()
 {
-	UMyGameInstance::Get->m_CraftManager->TryCraft();
+	if(!UMyGameInstance::Get->m_CraftManager->CheckCraftable())
+	{
+		return;
+	}
+	m_BtnCancel->SetVisibility(ESlateVisibility::Visible);
+	
+	m_bStartCraft = true;
+
+	m_fCancelTimer = 0;
 }
 
 void UWidgetCraftSelected::Cancel()
 {
-	
+	m_bStartCraft = false;
+
+	m_fCancelTimer = 0;
+
+	m_BtnCancel->SetVisibility(ESlateVisibility::Collapsed);
 }
 
 void UWidgetCraftSelected::UpdateCraftCostPanel()
@@ -84,29 +102,65 @@ void UWidgetCraftSelected::UpdateCraftCostPanel()
 void UWidgetCraftSelected::SetLimitLevel(const FCraftDataInfo& data)
 {
 	int Level = data.m_ItemData->m_nCraftLevelLimit;
-
-	FTextFormat FormatT = FTextFormat::FromString(TEXT("{0} {1} {2}"));
-
-	FFormatOrderedArguments Args;
-
-	Args.Add(NSLOCTEXT("UWidgetCraftSelected","Level","레벨"));
-
-	Args.Add(Level);
-
-	Args.Add(NSLOCTEXT("UWidgetCraftSelected","Needs","필요"));
-
-	m_TextLevelLimit->SetText(FText::Format(FormatT,Args));
-
+	
 	bool IsLevelAble = UMyGameInstance::Get->m_PlayerStatManager->GetLevel() >= Level;
 
-	if(IsLevelAble)
+	bool IsCountEnough = UMyGameInstance::Get->m_BuildManager->HasFurnitureEmptySpace(data.m_ID);
+
+	if(IsLevelAble && IsCountEnough)
 	{
 		m_OverlayLimit->SetVisibility(ESlateVisibility::Collapsed);
+		
 		m_BtnCraft->SetVisibility(ESlateVisibility::Visible);
 	}
 	else
 	{
-		m_OverlayLimit->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
 		m_BtnCraft->SetVisibility(ESlateVisibility::Collapsed);
+		
+		m_OverlayLimit->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
+
+		if(!IsLevelAble)
+		{
+			m_TextCountLimit->SetVisibility(ESlateVisibility::Collapsed);
+			m_TextLevelLimit->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
+			
+			FTextFormat FormatT = FTextFormat::FromString(TEXT("{0} {1} {2}"));
+			FFormatOrderedArguments Args;
+			Args.Add(NSLOCTEXT("UWidgetCraftSelected","Level","레벨"));
+			Args.Add(Level);
+			Args.Add(NSLOCTEXT("UWidgetCraftSelected","Needs","필요"));
+			m_TextLevelLimit->SetText(FText::Format(FormatT,Args));
+		}
+		else if (!IsCountEnough)
+		{
+			m_TextLevelLimit->SetVisibility(ESlateVisibility::Collapsed);
+			m_TextCountLimit->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
+
+			int MaxCnt = UMyGameInstance::Get->m_BuildManager->GetFurnitureMaxOwnCnt(data.m_ID);
+			FTextFormat FormatT = FTextFormat::FromString(TEXT("{0}{1}"));
+			FFormatOrderedArguments Args;
+			Args.Add(NSLOCTEXT("UWidgetCraftSelected","MaxOwnedCnt","최대 보유 개수:"));
+			Args.Add(MaxCnt);
+			m_TextCountLimit->SetText(FText::Format(FormatT, Args));
+		}
+	}
+}
+
+void UWidgetCraftSelected::NativeTick(const FGeometry& MyGeometry, float InDeltaTime)
+{
+	Super::NativeTick(MyGeometry, InDeltaTime);
+
+	if(!m_bStartCraft)
+	{
+		return;
+	}
+	m_fCancelTimer += InDeltaTime;
+
+	m_CancelHoldingBar->SetPercent(m_fCancelTimer / 3.f);
+
+	if(m_fCancelTimer > 3.f)
+	{
+		Cancel();
+		UMyGameInstance::Get->m_CraftManager->Craft();
 	}
 }

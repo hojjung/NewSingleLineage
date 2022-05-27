@@ -1,6 +1,4 @@
 #include "MyGameInstance.h"
-#include "MyGameInstance.h"
-
 #include "ConstructionManager.h"
 #include "EquipManager.h"
 #include "MyAssetManager.h"

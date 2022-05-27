@@ -31,7 +31,29 @@ void UCraftManager::SetCraftItem(int index)
 	m_CrntItemData = &m_AryCraftables[index];
 }
 
-bool UCraftManager::TryCraft()
+void UCraftManager::Craft()
+{
+	PurchaseItemForCraft();
+		
+	ReceiveItem();
+}
+
+const FCraftDataInfo* UCraftManager::GetCrntItemRow() const
+{
+	return m_CrntItemData;
+}
+
+const TArray<FCraftDataInfo>& UCraftManager::GetAryCraftables() const
+{
+	return m_AryCraftables;
+}
+
+void UCraftManager::Clear()
+{
+	m_CrntItemData = nullptr;
+}
+
+bool UCraftManager::CheckCraftable()
 {
 	if(!m_CrntItemData)
 	{
@@ -53,27 +75,7 @@ bool UCraftManager::TryCraft()
 		PRINTF("UCraftManager::No InvenSpace");
 		return false;
 	}
-	
-	PurchaseItemForCraft();
-		
-	ReceiveItem();
-
 	return true;
-}
-
-const FCraftDataInfo* UCraftManager::GetCrntItemRow() const
-{
-	return m_CrntItemData;
-}
-
-const TArray<FCraftDataInfo>& UCraftManager::GetAryCraftables() const
-{
-	return m_AryCraftables;
-}
-
-void UCraftManager::Clear()
-{
-	m_CrntItemData = nullptr;
 }
 
 bool UCraftManager::IsInvenHasSpace()

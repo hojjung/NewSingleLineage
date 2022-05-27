@@ -90,7 +90,7 @@ private:
 	UPROPERTY()
 	TArray<FWallAry> m_WallVertical; //[FGlobalVariable::GRID_COUNT + 2][FGlobalVariable::GRID_COUNT + 1];
 
-	TMap<FName,int> m_InvenFurniture;
+	TMap<FName,int> m_MapInvenFurniture;
 
 private:
 	FVector GetWorldPos(int x, int y);
@@ -167,7 +167,11 @@ public:
 	
 	void AddFurniture(const FName& id);
 
+	void RemoveFurniture(const FName& id, int amount = 1);
+
 	const TMap<FName,int>& GetInvenFurniture() const;
+
+	bool HasFurnitureEmptySpace(FName id);
+
+	int GetFurnitureMaxOwnCnt(FName id);
 };
-
-

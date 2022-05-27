@@ -120,7 +120,6 @@ void UWidgetBuildPanel::OnCancel()
 		m_Focused->MyUnFocus();
 		m_Focused = nullptr;
 	}
-	
 }
 
 void UWidgetBuildPanel::UpdateFurnitureTab()
@@ -129,6 +128,11 @@ void UWidgetBuildPanel::UpdateFurnitureTab()
 	
 	for(auto& Furniture : UMyLib::GetBuildManager()->GetInvenFurniture())
 	{
+		if(Furniture.Value < 1)
+		{
+			continue;
+		}
+		
 		UWidgetBuildElement* SelectButton = CreateWidget<UWidgetBuildElement>(this,m_ClassBuildEle);
 		
 		const FBuildDataRow* Data = UBuildData::GetBuildTable->FindRow<FBuildDataRow>(Furniture.Key, "");

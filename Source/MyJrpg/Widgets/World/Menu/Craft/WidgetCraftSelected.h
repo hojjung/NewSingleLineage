@@ -36,12 +36,17 @@ protected:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (BindWidget))
 	UTextBlock* m_TextLevelLimit;
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (BindWidget))
+	UTextBlock* m_TextCountLimit;
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (BindWidget))
 	UProgressBar* m_CancelHoldingBar;
 	UPROPERTY()
 	TArray<UWidgetCraftCostElement*> m_AryEle;
 
 	FDelegateHandle m_Dele;
 
+	float m_fCancelTimer;
+
+	bool m_bStartCraft;
 	
 protected:
 	virtual void NativeOnInitialized() override;
@@ -49,6 +54,8 @@ protected:
 	void UpdateCraftCostPanel();
 
 	void SetLimitLevel(const FCraftDataInfo& data);
+
+	virtual void NativeTick(const FGeometry& MyGeometry, float InDeltaTime) override;
 	
 public:
 	void SelectCraft(const FCraftDataInfo& data);
