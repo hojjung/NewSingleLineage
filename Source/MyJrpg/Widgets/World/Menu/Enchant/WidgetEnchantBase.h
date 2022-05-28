@@ -38,9 +38,11 @@ protected:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (BindWidget))
 	UTextBlock* m_TextInfo;
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (BindWidget))
-	UWidgetInventory* m_Inven; 
+	UWidgetInventory* m_InvenPanel;
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (BindWidget))
-	UWidgetImageText* m_TextEnchantCost;
+	UWidgetInventory* m_BagPanel;
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (BindWidget))
+	UWidgetInventory* m_BeltPanel;
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (BindWidget))
 	UScrollBox* m_ScrollInfo;
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (BindWidget))
@@ -52,14 +54,16 @@ protected:
 	
 protected:
 	virtual void NativeOnInitialized() override;
+	
+	void UpdateInvens();
 
 	void Update();
 	
-	void UpdateIcons(const FName& target, const FName& mat, int level);
+	void UpdateIcons(const FItemSpec* target, const FItemSpec* mat);
 	
-	void UpdateInfoTexts(const UEnchantManager* Enchant, const FName& target, const FName& mat, int level);
+	void UpdateInfoTexts(const UEnchantManager* Enchant, const FItemSpec* target, const FItemSpec* mat, int level);
 	
-	void UpdateBeforeAfter(const FName& target, int level);
+	void UpdateBeforeAfter(const FItemSpec* target, int level);
 	
 	void UpdateEnchantBtn(const UEnchantManager* Enchant);
 
@@ -70,9 +74,9 @@ protected:
 public:
 	void Open();
 	
-	void SetEnchantEquipTarget(const FName& target, UInventory* inven);
+	void SetEnchantEquipTarget(FItemSpec& target, UInventory* inven);
 
-	void SetEnchantEquipMaterial(const FName& mat, UInventory* inven);
+	void SetEnchantEquipMaterial(FItemSpec& mat, UInventory* inven);
 
 	UFUNCTION()
 	void OnClose();

@@ -247,9 +247,9 @@ UWidgetConfirmPanel* UWidgetCanvasWorld::GetConfirmPanel()
 	return m_ConfirmPanel;
 }
 
-void UWidgetCanvasWorld::OpenItemInfo(FItemSpec& item)
+void UWidgetCanvasWorld::OpenItemInfo(FItemSpec& item, UInventory* inven)
 {
-	m_ItemInfo->SetItemInfo(item);
+	m_ItemInfo->SetItemInfo(item,inven);
 }
 
 void UWidgetCanvasWorld::HideHUD()

@@ -2,6 +2,7 @@
 
 #include "CoreMinimal.h"
 #include "MyJrpg/DataTables/ItemData.h"
+#include "MyJrpg/Items/Inventory.h"
 #include "UObject/NoExportTypes.h"
 #include "EnchantManager.generated.h"
 
@@ -30,12 +31,10 @@ protected:
 
 	TWeakObjectPtr<UInventory> m_InvenMat;
 	
-	int m_nCrntLevel;
+	FItemSpec* m_TargetItem;
+
+	FItemSpec* m_TargetMat;
 	
-	int m_CrntTarget;
-
-	int m_CrntMat;
-
 protected:
 	void EnchantSuccess(bool isSpecial);
 
@@ -44,23 +43,21 @@ protected:
 	bool TryEnchant();
 
 public:
-	int GetEnchantCost() const;
-
 	int GetCrntLevel() const;
 
 	float GetEnchantPercent() const;
 	
-	void SetTargetEquip(int target, UInventory* inven);
+	void SetTargetEquip(FItemSpec& target, UInventory* inven);
 
-	void SetMaterialEquip(int mat, UInventory* inven);
+	void SetMaterialEquip(FItemSpec& mat, UInventory* inven);
 
-	const FName& GetCrntTarget() const;
+	const FItemSpec* GetTargetItem() const;
 
-	const FName& GetCrntMat() const;
+	const FItemSpec* GetTargetMat() const;
 
-	bool IsAbleTarget(const FName& target);
+	bool IsAbleTarget(const FItemSpec& target);
 
-	bool IsAbleMaterial(const FName& material);
+	bool IsAbleMaterial(const FItemSpec& material);
 
 	void Clear();
 	

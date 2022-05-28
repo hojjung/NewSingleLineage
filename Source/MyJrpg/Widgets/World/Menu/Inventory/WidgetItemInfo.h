@@ -82,7 +82,7 @@ protected:
 	void EraseConfirm();
 	
 public:
-	void SetItemInfo(FItemSpec& item);
+	void SetItemInfo(FItemSpec& item, UInventory* inven);
 
 	void SetInfoItemData(const FItemDataRow& data_row);
 

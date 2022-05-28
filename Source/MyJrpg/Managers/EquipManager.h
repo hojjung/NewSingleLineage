@@ -63,6 +63,8 @@ public:
 
 	bool IsItemEquipped(EEquipSlotType wantSlot);
 
+	bool IsItemEquipped(const FItemSpec& itemWant);
+
 	FItemSpec& GetEquipItem(int slotIndex);
 
 	FItemSpec& GetEquipItem(EEquipSlotType t);

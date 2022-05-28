@@ -163,7 +163,7 @@ public:
 
 	UWidgetConfirmPanel* GetConfirmPanel();
 
-	void OpenItemInfo(FItemSpec& item);
+	void OpenItemInfo(FItemSpec& item, UInventory* inven);
 
 	UFUNCTION()
 	void ToggleMenu();

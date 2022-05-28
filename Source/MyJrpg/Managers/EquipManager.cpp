@@ -112,6 +112,23 @@ bool UEquipManager::IsItemEquipped(EEquipSlotType wantSlot)
 	return !GetEquipItem((int)wantSlot).m_ID.IsNone();
 }
 
+bool UEquipManager::IsItemEquipped(const FItemSpec& itemWant)
+{
+	const FItemDataRow& Data = UMyLib::GetItemData(itemWant.m_ID);
+	
+	if(!UMyLib::IsEquip(Data))
+	{
+		return false;
+	}
+	
+	if(!IsItemEquipped(Data.m_ItemType))
+	{
+		return false;
+	}
+
+	return &GetEquipItem(Data.m_ItemType) == &itemWant;
+}
+
 FItemSpec& UEquipManager::GetEquipItem(int slotIndex)
 {
 	return m_AryEqupSlots[slotIndex];

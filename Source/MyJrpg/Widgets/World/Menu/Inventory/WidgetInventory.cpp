@@ -214,7 +214,7 @@ void UWidgetInventory::OnHold(UWidgetBaseElement* ele)
 {
 	FItemSpec& ItemSpec = GetInven()->GetItemRef(ele->GetIndex());
 	
-	UMyLib::GetCanvas()->OpenItemInfo(ItemSpec);
+	UMyLib::GetCanvas()->OpenItemInfo(ItemSpec,m_CurrentInven.Get());
 
 	ele->SetMyUnFocus();
 }

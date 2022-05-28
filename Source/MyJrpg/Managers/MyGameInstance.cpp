@@ -134,7 +134,14 @@ void UMyGameInstance::Init()
 void UMyGameInstance::TestModeSetting()
 {
 	m_Inven->AddItem(FItemSpec(TEXT("Belt01"), 0));
-	m_Inven->AddItem(FItemSpec(TEXT("misc_wood01"), 99));
+	m_Inven->AddItem(FItemSpec(TEXT("Sword01"), 0));
+	m_Inven->AddItem(FItemSpec(TEXT("TorsoHunter"), 0));
+	m_Inven->AddItem(FItemSpec(TEXT("misc_wood01"), 10));
+	m_Inven->AddItem(FItemSpec(TEXT("EnchantWeapon"), 10));
+	m_Inven->AddItem(FItemSpec(TEXT("EnchantArmor"), 10));
+	m_Inven->AddItem(FItemSpec(TEXT("EnchantRing"), 10));
+
+	
 }
 
 void UMyGameInstance::StartGame()

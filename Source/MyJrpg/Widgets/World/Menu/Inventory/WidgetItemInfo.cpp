@@ -53,7 +53,7 @@ void UWidgetItemInfo::OnErase()
 
 void UWidgetItemInfo::EraseConfirm()
 {
-	UMyLib::GetPlayerInven()->RemoveItem(*m_ItemSpec);
+	m_Inven->RemoveItem(*m_ItemSpec);
 	OnClose();
 }
 
@@ -80,7 +80,6 @@ void UWidgetItemInfo::SplitConfirm(int am)
 	
 	UMyLib::GetPlayerInven()->UpdateInventory();
 }
-
 
 
 void UWidgetItemInfo::UpdateEnchantBtn()//가지고있으면 해당 인벤으로
@@ -114,7 +113,7 @@ void UWidgetItemInfo::UpdateSplitBtn()
 	}
 	m_BtnSplit->SetVisibility(ESlateVisibility::Visible);
 	
-	if (UMyLib::GetPlayerInven()->EmptySlotCount() < 1 || m_ItemSpec->m_nLvStack < 2)
+	if (m_Inven->EmptySlotCount() < 1 || m_ItemSpec->m_nLvStack < 2)
 	{
 		m_BtnSplit->SetIsEnabled(false);
 		return ;
@@ -123,9 +122,11 @@ void UWidgetItemInfo::UpdateSplitBtn()
 }
 
 
-void UWidgetItemInfo::SetItemInfo(FItemSpec& item)
+void UWidgetItemInfo::SetItemInfo(FItemSpec& item, UInventory* inven)
 {
 	m_ItemSpec = &item;
+
+	m_Inven = inven;
 	
 	const FItemDataRow& ItemData = UMyLib::GetItemData(m_ItemSpec->m_ID);
 	
@@ -199,19 +200,11 @@ void UWidgetItemInfo::OnEnchant()//강화가 두개의 상황이 존재함.그�
 
 	if(m_Inven.Get())
 	{
-		//UMyGameInstance::Get->m_EnchantManager->SetTargetEquip(m_ItemKey,m_Inven.Get());
+		UMyGameInstance::Get->m_EnchantManager->SetTargetEquip(*m_ItemSpec,m_Inven.Get());
 
 		OnClose();
 		return;
 	}
-
-	//const FName *FoundItem;
-
-	//UInventory* Inven = UMyLib::FindEquipItem(m_ItemKey, &FoundItem);
-	
-	//UMyGameInstance::Get->m_EnchantManager->SetTargetEquip(*FoundItem,Inven);
-
-	OnClose();
 }
 
 void UWidgetItemInfo::OnRegister()

@@ -1,5 +1,6 @@
 #include "WidgetEnchantBase.h"
 
+#include "MyJrpg/Managers/EquipManager.h"
 #include "MyJrpg/Managers/MyGameInstance.h"
 #include "MyJrpg/Widgets/World/Menu/Equipment/WidgetEquipInvenPanel.h"
 
@@ -12,32 +13,65 @@ void UWidgetEnchantBase::NativeOnInitialized()
 	m_BtnEnchant->OnClicked.AddDynamic(this, &UWidgetEnchantBase::DoEnchant);
 
 	UMyGameInstance::Get->m_EnchantManager->m_OnEnchantChanged.AddUObject(this,&UWidgetEnchantBase::Update);
+
+	m_InvenPanel->Init(UMyLib::GetPlayerInven());
+
+	m_TargetItem->SetVisibility(ESlateVisibility::HitTestInvisible);
+
+	m_TargetMaterial->SetVisibility(ESlateVisibility::HitTestInvisible);
+}
+
+void UWidgetEnchantBase::UpdateInvens()
+{
+	m_InvenPanel->OpenPanel();
+	//
+	if(!UMyGameInstance::Get->m_EquipManager->GetBag())
+	{
+		m_BagPanel->Clear();
+	}
+	else
+	{
+		m_BagPanel->Init(UMyGameInstance::Get->m_EquipManager->GetBag());
+		m_BagPanel->OpenPanel();
+	}
+
+	if(!UMyGameInstance::Get->m_EquipManager->GetBelt())
+	{
+		m_BeltPanel->Clear();
+	}
+	else
+	{
+		m_BeltPanel->Init(UMyGameInstance::Get->m_EquipManager->GetBelt());
+		m_BeltPanel->OpenPanel();
+	}
 }
 
 void UWidgetEnchantBase::Open()
 {
 	SetVisibility(ESlateVisibility::SelfHitTestInvisible);
 
-	m_Inven->OpenPanel();
-
-	//Update();
+	Update();
 }
 
-void UWidgetEnchantBase::SetEnchantEquipTarget(const FName& target, UInventory* inven)
+void UWidgetEnchantBase::SetEnchantEquipTarget(FItemSpec& target, UInventory* inven)
 {
-	//UMyGameInstance::Get->m_EnchantManager->SetTargetEquip(target, inven);
+	UMyGameInstance::Get->m_EnchantManager->SetTargetEquip(target, inven);
 }
 
-void UWidgetEnchantBase::SetEnchantEquipMaterial(const FName& mat, UInventory* inven)
+void UWidgetEnchantBase::SetEnchantEquipMaterial(FItemSpec& mat, UInventory* inven)
 {
-	//UMyGameInstance::Get->m_EnchantManager->SetMaterialEquip(mat, inven);
+	UMyGameInstance::Get->m_EnchantManager->SetMaterialEquip(mat, inven);
 }
 
 void UWidgetEnchantBase::OnClose()
 {
 	SetVisibility(ESlateVisibility::Collapsed);
 
-	m_Inven->ClosePanel();
+	m_InvenPanel->ClosePanel();
+
+	m_BagPanel->ClosePanel();
+
+	m_BeltPanel->ClosePanel();
 
 	UMyGameInstance::Get->m_EnchantManager->Clear();
 }
@@ -47,20 +81,20 @@ void UWidgetEnchantBase::DoEnchant()
 	UMyGameInstance::Get->m_EnchantManager->DoEnchant();
 }
 
-void UWidgetEnchantBase::UpdateIcons(const FName& target, const FName& mat, int level)
+void UWidgetEnchantBase::UpdateIcons(const FItemSpec* target, const FItemSpec* mat)
 {
-	if (!target.IsNone())
+	if (target)
 	{
-		//m_TargetItem->UpdateElement(target);
+		m_TargetItem->SetItem(*target);
 	}
 	else
 	{
 		m_TargetItem->Clear();
 	}
 
-	if (!mat.IsNone())
+	if (mat)
 	{
-		//m_TargetMaterial->UpdateElement(mat);
+		m_TargetMaterial->SetItem(*mat);
 	}
 	else
 	{
@@ -68,19 +102,19 @@ void UWidgetEnchantBase::UpdateIcons(const FName& target, const FName& mat, int 
 	}
 }
 
-void UWidgetEnchantBase::UpdateInfoTexts(const UEnchantManager* Enchant, const FName& target, const FName& mat, int level)
+void UWidgetEnchantBase::UpdateInfoTexts(const UEnchantManager* Enchant, const FItemSpec* target, const FItemSpec* mat, int level)
 {
 	FString AfterLevelStr  = FString::Printf(TEXT("+%d"),level + 1);
 	
 	m_TextLevel->SetText(FText::FromString(AfterLevelStr));
 	
-	if (target.IsNone() || mat.IsNone())
+	if (!target || !mat)
 	{
 		m_BarEnchantLevel->SetPercent(0);
 		
 		m_TextInfo->SetVisibility(ESlateVisibility::Hidden);
 
-		if (target.IsNone())
+		if (!target)
 			m_TextLevel->SetVisibility(ESlateVisibility::Hidden);
 		else
 			m_TextLevel->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
@@ -111,7 +145,7 @@ void UWidgetEnchantBase::UpdateInfoTexts(const UEnchantManager* Enchant, const F
 	m_TextInfo->SetText(FText::FromString(InfoStr));
 }
 
-void UWidgetEnchantBase::UpdateBeforeAfter(const FName& target, int level)
+void UWidgetEnchantBase::UpdateBeforeAfter(const FItemSpec* target, int level)
 {
 	for(UWidgetEnchantOption* Op : m_AryOptions)
 	{
@@ -120,7 +154,7 @@ void UWidgetEnchantBase::UpdateBeforeAfter(const FName& target, int level)
 	
 	m_AryOptions.Reset();
 	
-	if(target.IsNone())
+	if(!target)
 	{
 		m_StatLevel->SetVisibility(ESlateVisibility::Hidden);
 		
@@ -131,7 +165,7 @@ void UWidgetEnchantBase::UpdateBeforeAfter(const FName& target, int level)
 	
 	m_StatLevel->SetBeforeAfter(TEXT("강화레벨"),TEXT("{0}"),level, level + 1);
 
-	const FItemDataRow& ItemData = UMyLib::GetItemData(target);
+	const FItemDataRow& ItemData = UMyLib::GetItemData(target->m_ID);
 	
 	const auto& EnchantStat = ItemData.m_EnchantStats;
 
@@ -180,10 +214,6 @@ void UWidgetEnchantBase::UpdateBeforeAfter(const FName& target, int level)
 void UWidgetEnchantBase::UpdateEnchantBtn(const UEnchantManager* Enchant)
 {
 	m_BtnEnchant->SetIsEnabled(Enchant->IsEnchantAvailable());
-
-	int Cost = Enchant->GetEnchantCost();
-
-	m_TextEnchantCost->SetText(FText::AsNumber(Cost));
 }
 
 void UWidgetEnchantBase::CreateOption(const FString&& infoText, const FString&& formatText, int beforeValue, int afterValue)
@@ -208,18 +238,20 @@ void UWidgetEnchantBase::Update()
 {
 	UEnchantManager* Enchant = UMyGameInstance::Get->m_EnchantManager;
 
-	const FName& Target = Enchant->GetCrntTarget();
+	const FItemSpec* Target = Enchant->GetTargetItem();
 
-	const FName& Mat = Enchant->GetCrntMat();
+	const FItemSpec* Mat = Enchant->GetTargetMat();
 
 	int Level = Enchant->GetCrntLevel();
 	
-	UpdateIcons(Target,Mat,Level);
+	UpdateIcons(Target,Mat);
 	//
 	UpdateInfoTexts(Enchant,Target,Mat,Level);
 	//
 	UpdateBeforeAfter(Target,Level);
 	//
 	UpdateEnchantBtn(Enchant);
+	
+	UpdateInvens();
 }
 
