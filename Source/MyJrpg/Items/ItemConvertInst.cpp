@@ -18,7 +18,7 @@ void UItemConvertInst::SetConvertData(const FItemConvertRow& convertRow)
 	m_fMaxFireTimer = 0;
 	m_SelectedConvertSet = nullptr;
 	m_ItemConvertRow = &convertRow;
-	m_bIsNeedFire = m_ItemConvertRow->m_FuelItem.Num() > 0 && m_fMaxFireTimer <= 0;
+	m_bIsNeedFire = m_ItemConvertRow->m_AryFuelItems.Num() > 0 && m_fMaxFireTimer <= 0;
 	Init(EItemConvertIndex::Len);
 
 	m_bHasAnyCostItem = false;
@@ -83,8 +83,14 @@ void UItemConvertInst::TryUseFuelToFire()
 {
 	if(!GetFuelItem().m_ID.IsNone() && !m_bIsFireWorking)//연료가 들어왔고, 불이 안돌아간다면
 	{
-		m_fMaxFireTimer = m_ItemConvertRow->m_fFuelDuration;
-		
+		for(const FFuelData& FuelD : m_ItemConvertRow->m_AryFuelItems)
+		{
+			if(FuelD.m_FuelItem.RowName == GetFuelItem().m_ID)
+			{
+				m_fMaxFireTimer = FuelD.m_fFuelDuration;
+				break;
+			}
+		}
 		m_fFireTimer = m_fMaxFireTimer;
 		RemoveItemStack(EItemConvertIndex::Fuel,1);
 		m_bIsFireWorking = true;
@@ -323,7 +329,7 @@ bool UItemConvertInst::HasAnyCostItem()
 
 bool UItemConvertInst::HasAnyFuelItem()
 {
-	return m_ItemConvertRow->m_FuelItem.Num() > 0;
+	return m_ItemConvertRow->m_AryFuelItems.Num() > 0;
 }
 
 bool UItemConvertInst::CheckFuelItemAvailable(const FItemSpec& item)
@@ -332,9 +338,9 @@ bool UItemConvertInst::CheckFuelItemAvailable(const FItemSpec& item)
 	{
 		return false;//허용된 자원이 없으면 자원칸에 아무것도 들어갈수 없음
 	}
-	for(const FItemDataHandle& FuelItem : m_ItemConvertRow->m_FuelItem)
+	for(const FFuelData& FuelItem : m_ItemConvertRow->m_AryFuelItems)
 	{
-		if(FuelItem.RowName == item.m_ID)
+		if(FuelItem.m_FuelItem.RowName == item.m_ID)
 		{
 			return true;
 		}

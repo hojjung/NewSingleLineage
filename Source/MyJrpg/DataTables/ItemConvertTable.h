@@ -45,6 +45,18 @@ public:
 };
 
 USTRUCT(BlueprintType)
+struct FFuelData
+{
+	GENERATED_BODY()
+
+public:
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
+	FItemDataHandle m_FuelItem;
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
+	float m_fFuelDuration = 0;
+};
+
+USTRUCT(BlueprintType)
 struct FItemConvertRow : public FTableRowBase
 {
 	GENERATED_BODY()
@@ -53,9 +65,7 @@ public:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
 	FText m_TextConverterName;
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
-	TArray<FItemDataHandle> m_FuelItem;
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
-	float m_fFuelDuration = 0;
+	TArray<FFuelData> m_AryFuelItems;
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
 	TArray<FItemConvertSet> m_AryItems;
 };

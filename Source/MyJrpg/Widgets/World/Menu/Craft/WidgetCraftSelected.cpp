@@ -22,8 +22,6 @@ void UWidgetCraftSelected::NativeOnInitialized()
 	
 	m_OverlayLimit->SetVisibility(ESlateVisibility::Collapsed);
 
-	m_CancelHoldingBar->SetVisibility(ESlateVisibility::Collapsed);
-	
 	m_fCancelTimer = 0;
 
 	m_bStartCraft = false;

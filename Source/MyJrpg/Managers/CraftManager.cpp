@@ -33,7 +33,10 @@ void UCraftManager::SetCraftItem(int index)
 
 void UCraftManager::Craft()
 {
-	PurchaseItemForCraft();
+	if(!UMyLib::IsTestMode())
+	{
+		PurchaseItemForCraft();
+	}
 		
 	ReceiveItem();
 }
@@ -58,6 +61,10 @@ bool UCraftManager::CheckCraftable()
 	if(!m_CrntItemData)
 	{
 		return false;
+	}
+	if(UMyLib::IsTestMode())
+	{
+		return true;
 	}
 	//재료 체크
 	bool IsMatrialEnough = IsMaterialEnough();
