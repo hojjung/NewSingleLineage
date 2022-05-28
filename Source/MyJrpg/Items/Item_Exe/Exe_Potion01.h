@@ -15,5 +15,5 @@ class MYJRPG_API UExe_Potion01 : public UItemExecuteBase
 	GENERATED_BODY()
 
 public:
-	virtual void Use() const override;
+	virtual void Use(FItemSpec& item,UInventory* inven) const override;
 };

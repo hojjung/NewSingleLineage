@@ -9,6 +9,8 @@ void UWidgetCollecItemEle::Init(const FName& collecID, int index, bool is_equip,
 	m_ImgLock->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
 	
 	m_IconEle->SetHoldable(true);
+	m_IconEle->SetDragable(false);
+	m_IconEle->SetFocusable(false);
 	
 	m_IconEle->m_OnHold.AddUObject(this,&UWidgetCollecItemEle::OnHoldComplete);
 	
@@ -48,19 +50,16 @@ void UWidgetCollecItemEle::Init(const FName& collecID, int index, bool is_equip,
 
 void UWidgetCollecItemEle::OnHoldComplete(UWidgetBaseElement* ele)
 {
-	FItemSpec NewSpec;
-	NewSpec.m_ID = m_ItemID;
-	NewSpec.m_nLvStack = m_nEnchantLv;
-	UMyLib::GetCanvas()->OpenItemInfo(NewSpec,nullptr);
+	UMyLib::GetCanvas()->OpenItemInfoCollec(m_CollecID,m_nIndex,m_ItemID);
 }
 
 void UWidgetCollecItemEle::UpdateEquipItem()
 {
-	if(UMyLib::FindEquipItem(m_ItemID) != nullptr)
+	if(UMyLib::FindItemAllInven(m_ItemID,-1) != nullptr)
 	{
 		m_ImgLock->SetVisibility(ESlateVisibility::Collapsed);
 		
-		if(UMyLib::FindEquipItem(m_ItemID,m_nEnchantLv) != nullptr)
+		if(UMyLib::FindItemAllInven(m_ItemID,m_nEnchantLv) != nullptr)
 		{
 			m_TextEnchantLevel->SetColorAndOpacity(FLinearColor::White);
 	
@@ -81,7 +80,7 @@ void UWidgetCollecItemEle::UpdateEquipItem()
 
 void UWidgetCollecItemEle::UpdateMiscItem()
 {
-	if(UMyLib::FindMiscItem(m_ItemID) != nullptr)
+	if(UMyLib::FindItemAllInven(m_ItemID,0) != nullptr)
 	{
 		m_ImgLock->SetVisibility(ESlateVisibility::Collapsed);
 		
@@ -101,23 +100,17 @@ void UWidgetCollecItemEle::Update()//포커싱이 되야지 등록을하잔아
 	}
 	if (UMyGameInstance::Get->m_ItemCollecManager->IsItemRegistered(m_CollecID,m_nIndex))
 	{
-		m_IconEle->SetFocusable(false);
-
 		m_IconEle->SetHoldable(false);
 
 		m_Checkbox->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
 
 		m_bIsRegistered = true;
 
-		SetMyUnfocus();
-
 		m_ImgLock->SetVisibility(ESlateVisibility::HitTestInvisible);
 		
 		return;
 	}
 	m_bIsRegistered = false;
-
-	m_IconEle->SetFocusable(true);
 
 	m_bRegisterable = false;
 
@@ -149,16 +142,6 @@ const FName& UWidgetCollecItemEle::GetCollecID() const
 int UWidgetCollecItemEle::GetItemIndex() const
 {
 	return m_nIndex;
-}
-
-void UWidgetCollecItemEle::SetMyUnfocus()
-{
-	m_IconEle->SetMyUnFocus();
-}
-
-void UWidgetCollecItemEle::SetMyFocus()
-{
-	m_IconEle->SetMyFocus();
 }
 
 void UWidgetCollecItemEle::OnClicked(UWidgetBaseElement* ele)

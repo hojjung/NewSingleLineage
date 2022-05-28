@@ -98,6 +98,8 @@ public:
 	static bool HasAxe(FName& outFoundAxe);
 
 	static FItemSpec* FindItemAllInven(const FName& id, int stlv);
+
+	static FItemSpec* FindItemAllInven(const FName& id, int stlv,UInventory*& outInven);
 	
 	static bool HasPickaxe(FName& outFoundPickaxe);
 

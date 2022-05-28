@@ -27,7 +27,7 @@ void UQuickSlotManager::ExeItem(TSubclassOf<UItemExecuteBase> exe,UInventory* in
 	int Iter = -1;
 	while (++Iter < cnt)
 	{
-		ItemInst->Use();
+		ItemInst->Use(inven->GetItemRef(index),inven);
 	}
 	inven->RemoveItem(index,cnt);
 }

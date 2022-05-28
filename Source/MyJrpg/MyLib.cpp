@@ -373,7 +373,20 @@ bool UMyLib::HasAxe(FName& outFoundAxe)
 
 FItemSpec* UMyLib::FindItemAllInven(const FName& id, int stlv)
 {
+	UInventory* outInven;
+	return FindItemAllInven(id,stlv,outInven);
+}
+
+FItemSpec* UMyLib::FindItemAllInven(const FName& id, int stlv, UInventory*& outInven)
+{
 	FItemSpec* ItemFound = nullptr;
+
+	ItemFound = UMyLib::GetPlayerInven()->FindItem(id, stlv);
+	if(ItemFound)
+	{
+		outInven =  UMyLib::GetPlayerInven();
+		return  ItemFound;
+	}
 	
 	UEquipManager* Equip = UMyGameInstance::Get->m_EquipManager;
 	
@@ -382,6 +395,7 @@ FItemSpec* UMyLib::FindItemAllInven(const FName& id, int stlv)
 		ItemFound = Equip->GetBag()->FindItem(id, stlv);
 		if(ItemFound)
 		{
+			outInven =  Equip->GetBag();
 			return ItemFound;
 		}
 	}
@@ -390,14 +404,11 @@ FItemSpec* UMyLib::FindItemAllInven(const FName& id, int stlv)
 		ItemFound = Equip->GetBelt()->FindItem(id, stlv);
 		if(ItemFound)
 		{
+			outInven =  Equip->GetBelt();
 			return ItemFound;
 		}
 	}
-	ItemFound = UMyLib::GetPlayerInven()->FindItem(id, stlv);
-	if(ItemFound)
-	{
-		return  ItemFound;
-	}
+	
 	return nullptr;
 }
 

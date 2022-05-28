@@ -2,6 +2,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "MyJrpg/Items/Inventory.h"
 
 #include "UObject/NoExportTypes.h"
 #include "ItemExecuteBase.generated.h"
@@ -15,5 +16,5 @@ class MYJRPG_API UItemExecuteBase : public UObject
 {
 	GENERATED_BODY()
 public:
-	virtual void Use() const {};
+	virtual void Use(FItemSpec& item,UInventory* inven) const {};
 };

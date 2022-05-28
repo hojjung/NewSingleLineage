@@ -15,5 +15,5 @@ class MYJRPG_API UExe_EnchantArmor : public UItemExecuteBase
 	GENERATED_BODY()
 	
 protected:
-	virtual void Use() const override;
+	virtual void Use(FItemSpec& item,UInventory* inven) const override;
 };

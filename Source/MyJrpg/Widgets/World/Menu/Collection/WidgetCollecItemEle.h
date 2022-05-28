@@ -66,8 +66,4 @@ public:
 	const FName& GetCollecID() const;
 
 	int GetItemIndex() const;
-	
-	void SetMyUnfocus();
-	
-	void SetMyFocus();
 };

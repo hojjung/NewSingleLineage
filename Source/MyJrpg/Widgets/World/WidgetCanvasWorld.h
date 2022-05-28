@@ -165,6 +165,8 @@ public:
 
 	void OpenItemInfo(FItemSpec& item, UInventory* inven);
 
+	void OpenItemInfoCollec(const FName& collecId, int collecIndex, const FName& itemID);
+
 	UFUNCTION()
 	void ToggleMenu();
 	UFUNCTION()

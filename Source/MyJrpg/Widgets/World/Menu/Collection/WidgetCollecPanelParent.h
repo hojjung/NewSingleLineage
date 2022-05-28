@@ -25,12 +25,9 @@ protected:
 	UWidgetCollecStatParent* m_TotalStat;
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (BindWidget))
 	UScrollBox* m_Scroll;
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (BindWidget))
-	UWidgetItemInfo* m_ItemInfo;
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
 	TSubclassOf<UWidgetCollecPanelChild> m_ClassChild;
-	UPROPERTY()
-	UWidgetCollecItemEle* m_CurrentFocused;
+	
 	FDelegateHandle m_UpdateElements;
 	
 	TArray<FDelegateHandle> m_AryUpdateElements;
@@ -42,7 +39,6 @@ protected:
 
 	void UpdateElements();
 
-	void OnSelected(UWidgetCollecItemEle* ele);
 
 public:
 	void Open();

@@ -5,8 +5,8 @@
 
 #include "MyJrpg/Managers/MyGameInstance.h"
 
-void UExe_EnchantArmor::Use() const
+void UExe_EnchantArmor::Use(FItemSpec& item,UInventory* inven) const
 {
 	UMyLib::GetCanvas()->OpenEnchant();
-	//UMyGameInstance::Get->m_EnchantManager->SetMaterialEquip(item,inven);
+	UMyGameInstance::Get->m_EnchantManager->SetMaterialEquip( item,inven);
 }

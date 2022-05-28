@@ -389,7 +389,7 @@ FItemSpec* UInventory::FindItem(FName itemID, int stlv)
 	{
 		for(int Index : *IndexSets)
 		{
-			if(GetItemRef(Index).m_nLvStack == stlv)
+			if(stlv == -1 || GetItemRef(Index).m_nLvStack == stlv)
 			{
 				return &GetItemRef(Index);
 			}

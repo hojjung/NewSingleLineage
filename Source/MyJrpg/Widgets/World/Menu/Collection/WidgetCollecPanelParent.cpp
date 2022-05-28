@@ -1,30 +1,24 @@
-// Fill out your copyright notice in the Description page of Project Settings.
-
-
 #include "WidgetCollecPanelParent.h"
 
+#include "MyJrpg/Managers/EquipManager.h"
 #include "MyJrpg/Managers/MyGameInstance.h"
 
 void UWidgetCollecPanelParent::NativeOnInitialized()
 {
 	Super::NativeOnInitialized();
 
-	m_AryUpdateElements.Init(FDelegateHandle(), FGlobalVariable::STORAGE_SIZE + 1);
-
 	SetVisibility(ESlateVisibility::Collapsed);
 
 	m_BtnClose->OnClicked.AddDynamic(this, &UWidgetCollecPanelParent::OnClose);
 
 	CreateElements();
-	//
-	m_ItemInfo->SetVisibility(ESlateVisibility::Collapsed);
 }
 
 void UWidgetCollecPanelParent::CreateElements()
 {
 	int Iter = 0;
-	
-	auto AryColleRows = UMyGameInstance::Get->m_ItemCollecManager->GetAryCollec();
+
+	const TArray<FItemCollecRow*>& AryColleRows = UMyGameInstance::Get->m_ItemCollecManager->GetAryCollec();
 	
 	for(const FName& ItemCollec : UMyGameInstance::Get->m_ItemCollecManager->GetAryCollecKeys())
 	{
@@ -33,11 +27,6 @@ void UWidgetCollecPanelParent::CreateElements()
 		PanelChild->Init(ItemCollec, *AryColleRows[Iter]);
 
 		PanelChild->Update();
-
-		for(UWidget* Ele : PanelChild->GetChildElements())
-		{
-			Cast<UWidgetCollecItemEle>(Ele)->m_OnFocus.AddUObject(this, &UWidgetCollecPanelParent::OnSelected);
-		}
 
 		m_Scroll->AddChild(PanelChild);
 
@@ -59,32 +48,21 @@ void UWidgetCollecPanelParent::UpdateElements()
 	m_TotalStat->UpdateStats();
 }
 
-void UWidgetCollecPanelParent::OnSelected(UWidgetCollecItemEle* ele)
-{
-	if (m_CurrentFocused)
-		m_CurrentFocused->SetMyUnfocus();
-	
-	m_CurrentFocused = ele;
-
-	m_CurrentFocused->SetMyFocus();
-	
-	m_ItemInfo->SetCollecItemInfo(m_CurrentFocused->GetCollecID(),m_CurrentFocused->GetItemIndex(),m_CurrentFocused->GetItemID());
-}
-
 void UWidgetCollecPanelParent::Open()
 {
 	SetVisibility(ESlateVisibility::SelfHitTestInvisible);
 
 	m_UpdateElements = UMyGameInstance::Get->m_ItemCollecManager->m_OnCollecChanged.AddUObject(this, &UWidgetCollecPanelParent::UpdateElements);
 
-	m_AryUpdateElements[0] = UMyGameInstance::Get->m_Inven->m_OnInvenChanged.AddUObject(this, &UWidgetCollecPanelParent::UpdateElements);
-	int Iter = 1;
+	m_AryUpdateElements.Reset(10);
+	
+	m_AryUpdateElements.Add(UMyGameInstance::Get->m_Inven->m_OnInvenChanged.AddUObject(this, &UWidgetCollecPanelParent::UpdateElements));
+	if(UMyGameInstance::Get->m_EquipManager->GetBag())
+		m_AryUpdateElements.Add(UMyGameInstance::Get->m_EquipManager->GetBag()->m_OnInvenChanged.AddUObject(this, &UWidgetCollecPanelParent::UpdateElements));
+	if(UMyGameInstance::Get->m_EquipManager->GetBelt())
+		m_AryUpdateElements.Add(UMyGameInstance::Get->m_EquipManager->GetBelt()->m_OnInvenChanged.AddUObject(this, &UWidgetCollecPanelParent::UpdateElements));
 	for(UInventory* Storage : UMyGameInstance::Get->GetStorages())
-	{
-		m_AryUpdateElements[Iter] = Storage->m_OnInvenChanged.AddUObject(this, &UWidgetCollecPanelParent::UpdateElements);
-
-		Iter++;
-	}
+		m_AryUpdateElements.Add(Storage->m_OnInvenChanged.AddUObject(this, &UWidgetCollecPanelParent::UpdateElements));
 
 	UpdateElements();
 }
@@ -95,19 +73,13 @@ void UWidgetCollecPanelParent::OnClose()
 
 	UMyGameInstance::Get->m_ItemCollecManager->m_OnCollecChanged.Remove(m_UpdateElements);
 
-	UMyGameInstance::Get->m_Inven->m_OnInvenChanged.Remove(m_AryUpdateElements[0]);
-	int Iter = 1;
+	int Iter = 0;
+	UMyGameInstance::Get->m_Inven->m_OnInvenChanged.Remove(m_AryUpdateElements[Iter++]);
+	if(UMyGameInstance::Get->m_EquipManager->GetBag())
+		UMyGameInstance::Get->m_EquipManager->GetBag()->m_OnInvenChanged.Remove(m_AryUpdateElements[Iter++]);
+	if(UMyGameInstance::Get->m_EquipManager->GetBelt())
+		UMyGameInstance::Get->m_EquipManager->GetBelt()->m_OnInvenChanged.Remove(m_AryUpdateElements[Iter++]);
+	
 	for(UInventory* Storage : UMyGameInstance::Get->GetStorages())
-	{
-		Storage->m_OnInvenChanged.Remove(m_AryUpdateElements[Iter]);
-
-		Iter++;
-	}
-
-	if (m_CurrentFocused)
-	{
-		m_CurrentFocused->SetMyUnfocus();
-		m_CurrentFocused = nullptr;
-	}
-	m_ItemInfo->OnClose();
+		Storage->m_OnInvenChanged.Remove(m_AryUpdateElements[Iter++]);
 }

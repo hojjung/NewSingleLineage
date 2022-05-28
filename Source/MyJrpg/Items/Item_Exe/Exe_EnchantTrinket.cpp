@@ -4,8 +4,8 @@
 #include "Exe_EnchantTrinket.h"
 #include "MyJrpg/Managers/MyGameInstance.h"
 
-void UExe_EnchantTrinket::Use() const
+void UExe_EnchantTrinket::Use(FItemSpec& item,UInventory* inven) const
 {
 	UMyLib::GetCanvas()->OpenEnchant();
-	//UMyGameInstance::Get->m_EnchantManager->SetMaterialEquip(item,inven);
+	UMyGameInstance::Get->m_EnchantManager->SetMaterialEquip(item,inven);
 }

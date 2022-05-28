@@ -252,6 +252,11 @@ void UWidgetCanvasWorld::OpenItemInfo(FItemSpec& item, UInventory* inven)
 	m_ItemInfo->SetItemInfo(item,inven);
 }
 
+void UWidgetCanvasWorld::OpenItemInfoCollec(const FName& collecId, int collecIndex, const FName& itemID)
+{
+	m_ItemInfo->SetCollecItemInfo(collecId,collecIndex,itemID);
+}
+
 void UWidgetCanvasWorld::HideHUD()
 {
 	m_BtnMenu->SetVisibility(ESlateVisibility::Collapsed);

@@ -131,25 +131,11 @@ bool UCollectionManager::CheckCanAdd(FName collectionID, int indexItem, UInvento
 
 	const FItemCollecNeed& WantAdd = ItemRow.m_AryItems[indexItem];
 
-	bool IsEquip = UMyLib::GetItemType(WantAdd.m_Item.RowName) == EItemType::Equip;
-
-	// if (IsEquip)
-	// {
-	// 	const FName* FoundEquipItemGId = invenFrom->FindEquipItem(WantAdd.m_Item.RowName, WantAdd.m_nEnchantLv);
-	//
-	// 	if(!FoundEquipItemGId)
-	// 	{
-	// 		return false;
-	// 	}
-	// }
-	// else
-	// {
-	// 	if(!invenFrom->FindMisItem(WantAdd.m_Item.RowName, 1))
-	// 	{
-	// 		return false;
-	// 	}
-	// }
-
+	if(!invenFrom->FindItem(WantAdd.m_Item.RowName, WantAdd.m_nEnchantLv))
+	{
+		return false;
+	}
+	
 	return true;
 }
 
@@ -185,20 +171,18 @@ void UCollectionManager::AddItem(FName collectionID, int indexItem)
 	bool IsEquip = UMyLib::GetItemType(WantAdd.m_Item.RowName) == EItemType::Equip;
 
 	UInventory* InvenFrom = nullptr;
+	
+	FItemSpec* ItemInst = UMyLib::FindItemAllInven(WantAdd.m_Item.RowName, WantAdd.m_nEnchantLv,InvenFrom);
 
 	if(IsEquip)
 	{
-		const FName* FoundItem = nullptr;
-		
-		//InvenFrom = UMyLib::FindEquipItem(WantAdd.m_Item.RowName, WantAdd.m_nEnchantLv,&FoundItem);
-		
-		//InvenFrom->RemoveEquipItem(*FoundItem);
+		InvenFrom->RemoveItem(*ItemInst);
 	}
 	else
 	{
-		//InvenFrom = UMyLib::FindMiscItem(WantAdd.m_Item.RowName);
-		InvenFrom->RemoveItem(WantAdd.m_Item.RowName, 1);
+		InvenFrom->RemoveItem(WantAdd.m_Item.RowName,  WantAdd.m_nEnchantLv);
 	}
+	InvenFrom->UpdateInventory();
 	//
 	UpdateCompleteCollec(collectionID, indexItem, ItemRow);
 

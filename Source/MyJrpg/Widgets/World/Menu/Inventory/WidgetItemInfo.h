@@ -9,6 +9,7 @@
 #include "MyJrpg/DataTables/ItemData.h"
 #include "MyJrpg/Items/Inventory.h"
 #include "MyJrpg/Widgets/World/CommonElements/WidgetBaseElement.h"
+#include "MyJrpg/Widgets/World/Menu/Collection/WidgetCollecItemEle.h"
 #include "MyJrpg/Widgets/World/Menu/Collection/WidgetCollecStatChild.h"
 #include "MyJrpg/Widgets/World/Menu/StackSelector/WidgetStackCalculator.h"
 #include "WidgetItemInfo.generated.h"
@@ -55,6 +56,12 @@ protected:
 	int m_nEraseAmount;
 
 	FItemSpec* m_ItemSpec;
+	
+	FName m_CollecID;
+
+	FName m_CollecTargetItemID;
+
+	int m_nCollecIndex;
 
 protected:
 	virtual void NativeOnInitialized() override;;
@@ -73,6 +80,8 @@ protected:
 	void UpdateEnchantBtn();
 
 	void UpdateSplitBtn();
+	
+	void UpdateEraseBtn();
 
 protected:
 	int GetMax();
@@ -86,6 +95,8 @@ public:
 
 	void SetInfoItemData(const FItemDataRow& data_row);
 
+	void SetCollecItemInfo(const FName& collecId, int collecIndex, const FName& itemID);
+	
 	UFUNCTION()
 	void OnClose();
 	UFUNCTION()

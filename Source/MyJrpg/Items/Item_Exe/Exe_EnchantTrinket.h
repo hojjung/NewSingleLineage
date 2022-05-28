@@ -16,6 +16,6 @@ class MYJRPG_API UExe_EnchantTrinket : public UItemExecuteBase
 
 	
 protected:
-	virtual void Use() const override;
+	virtual void Use(FItemSpec& item,UInventory* inven) const override;
 	
 };
