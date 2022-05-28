@@ -21,8 +21,8 @@ void UWidgetQuestPrizeElement::OnHoldComplete()
 {
 	FName ID = m_QuestReward.m_Item.RowName;
 
-	if (!ID.IsNone())
-		UMyLib::GetCanvas()->OpenItemInfo(EItemInfo::QuestReward,ID,nullptr);
+	//if (!ID.IsNone())
+//		UMyLib::GetCanvas()->OpenItemInfo(EItemInfo::QuestReward,ID,nullptr);
 }
 
 void UWidgetQuestPrizeElement::SetPrize(const FQuestReward& quest_reward)

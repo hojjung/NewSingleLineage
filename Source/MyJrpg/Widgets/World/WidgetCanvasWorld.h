@@ -158,7 +158,7 @@ public:
 
 	UWidgetPickpocketPanel* GetPickpocketMenu();
 
-	void OpenItemInfo(EItemInfo info,const FName& oID,UInventory* inven);
+	void OpenItemInfo(FItemSpec& item);
 
 	UFUNCTION()
 	void ToggleMenu();

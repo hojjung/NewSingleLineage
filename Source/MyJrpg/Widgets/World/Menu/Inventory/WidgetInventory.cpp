@@ -90,6 +90,8 @@ void UWidgetInventory::CreateGridElements()
 		m_AryItemEles[i]->m_OnDrag.AddUObject(this,&UWidgetInventory::OnDrag);
 
 		m_AryItemEles[i]->m_OnDrop.AddUObject(this,&UWidgetInventory::OnDrop);
+
+		m_AryItemEles[i]->m_OnHold.AddUObject(this,&UWidgetInventory::OnHold);
 	}
 }
 
@@ -167,19 +169,7 @@ void UWidgetInventory::OnDrop(UWidgetBaseElement* ele)
 		if(MyItem.m_ID == OtherItem.m_ID || MyItem.m_ID.IsNone())
 		{
 			m_CurrentInven->OnDropItem(ele->GetIndex(), UItemDDO::GetDDOInst->m_FromConverter.Get(),UItemDDO::GetDDOInst->m_nIndex);
-			return;
 		}
-		// switch (UItemDDO::GetDDOInst->m_nIndex)
-		// {
-		// case UItemConvertInst::EItemConvertIndex::Left:
-		// 	break;
-		// case UItemConvertInst::EItemConvertIndex::Right:
-		// 	break;
-		// case UItemConvertInst::EItemConvertIndex::Fuel:
-		// 	break;
-		// case UItemConvertInst::EItemConvertIndex::Cost:
-		// 	break;
-		// }
 		return;
 	}
 	
@@ -218,8 +208,15 @@ void UWidgetInventory::OnDrop(UWidgetBaseElement* ele)
 		m_CurrentInven->UpdateInventory();
 		return;
 	}
+}
 
+void UWidgetInventory::OnHold(UWidgetBaseElement* ele)
+{
+	FItemSpec& ItemSpec = GetInven()->GetItemRef(ele->GetIndex());
 	
+	UMyLib::GetCanvas()->OpenItemInfo(ItemSpec);
+
+	ele->SetMyUnFocus();
 }
 
 UInventory* UWidgetInventory::GetInven() const

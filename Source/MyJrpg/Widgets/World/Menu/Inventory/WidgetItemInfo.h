@@ -6,6 +6,7 @@
 
 #include "Blueprint/UserWidget.h"
 #include "Components/ScrollBox.h"
+#include "MyJrpg/DataTables/ItemData.h"
 #include "MyJrpg/Items/Inventory.h"
 #include "MyJrpg/Widgets/World/CommonElements/WidgetBaseElement.h"
 #include "MyJrpg/Widgets/World/Menu/Collection/WidgetCollecStatChild.h"
@@ -41,6 +42,8 @@ protected:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (BindWidget))
 	UButton* m_BtnRegister;
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (BindWidget))
+	UButton* m_BtnSplit;
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (BindWidget))
 	UScrollBox* m_ScrollInfo;
 	UPROPERTY(EditDefaultsOnly)
 	TSubclassOf<UWidgetCollecStatChild> m_ClassOption;
@@ -50,20 +53,19 @@ protected:
 	TWeakObjectPtr<UInventory> m_Inven;
 	UPROPERTY()
 	int m_nEraseAmount;
-	UPROPERTY()
-	FName m_ItemKey;
-	UPROPERTY()
-	FName m_CollecID;
-	UPROPERTY()
-	int m_nCollecIndex;
 
-	
+	FItemSpec* m_ItemSpec;
+
+protected:
+	void UpdateRegisterBtn();
+
+	void UpdateEnchantBtn();
+
+	void UpdateSplitBtn();
 	
 protected:
 	virtual void NativeOnInitialized() override;;
 	
-	void SetTypeInfo(EItemInfo info, EItemType type,const FItemDataRow& ItemData);
-
 	void UpdateStat(const FName& target, int level);
 
 	void CreateOption(const FString&& infoText, const FString&& formatText, int v);
@@ -74,19 +76,13 @@ protected:
 
 	void EraseConfirm(int am);
 
-	void EraseConfirm();
-
-	void UpdateRegisterBtn();
-
-	void UpdateEnchantBtn();
-
-	FText GetTypeText(EItemType t);
+	void SetTypeText(EItemType t);
 	
 public:
-	void SetItemInfo(EItemInfo info,const FName& oID, UInventory* inven);
+	void SetItemInfo(FItemSpec& item);
 
-	void SetCollecItemInfo(const FName& collecID,int index,const FName& oID);
-	
+	void SetInfoItemData(const FItemDataRow& data_row);
+
 	UFUNCTION()
 	void OnClose();
 	UFUNCTION()

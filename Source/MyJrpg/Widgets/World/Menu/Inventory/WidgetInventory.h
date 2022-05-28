@@ -58,6 +58,8 @@ protected:
 
 	void OnDrop(UWidgetBaseElement* ele);
 
+	void OnHold(UWidgetBaseElement* ele);
+
 	void SetItem(UWidgetBaseElement* target,const FItemSpec& itemSpec);
 
 public:

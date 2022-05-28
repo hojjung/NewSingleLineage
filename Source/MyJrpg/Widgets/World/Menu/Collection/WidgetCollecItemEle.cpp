@@ -48,7 +48,7 @@ void UWidgetCollecItemEle::Init(const FName& collecID, int index, bool is_equip,
 
 void UWidgetCollecItemEle::OnHoldComplete()
 {
-	UMyLib::GetCanvas()->OpenItemInfo(EItemInfo::Inven,m_ItemID,nullptr);
+	//UMyLib::GetCanvas()->OpenItemInfo(EItemInfo::Inven,m_ItemID,nullptr);
 }
 
 void UWidgetCollecItemEle::UpdateEquipItem()

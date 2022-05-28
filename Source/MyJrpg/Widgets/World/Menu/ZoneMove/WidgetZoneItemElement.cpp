@@ -30,6 +30,6 @@ int UWidgetZoneItemElement::GetSortValue() const
 
 void UWidgetZoneItemElement::OnHoldComplete()
 {
-	if (!m_ID.IsNone())
-		UMyLib::GetCanvas()->OpenItemInfo(EItemInfo::QuestReward,m_ID,nullptr);	
+	//if (!m_ID.IsNone())
+		//UMyLib::GetCanvas()->OpenItemInfo(EItemInfo::QuestReward,m_ID,nullptr);	
 }

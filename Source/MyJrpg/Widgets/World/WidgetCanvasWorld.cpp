@@ -243,9 +243,9 @@ UWidgetPickpocketPanel* UWidgetCanvasWorld::GetPickpocketMenu()
 	return m_PickpocketPanel;
 }
 
-void UWidgetCanvasWorld::OpenItemInfo(EItemInfo info,const FName& oID, UInventory* inven)
+void UWidgetCanvasWorld::OpenItemInfo(FItemSpec& item)
 {
-	m_ItemInfo->SetItemInfo(info,oID,inven);
+	m_ItemInfo->SetItemInfo(item);
 }
 
 void UWidgetCanvasWorld::HideHUD()

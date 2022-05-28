@@ -11,6 +11,8 @@ void UWidgetItemInfo::NativeOnInitialized()
 {
 	Super::NativeOnInitialized();
 
+	m_ItemSpec = nullptr;
+
 	m_nEraseAmount = 1;
 
 	m_ItemIcon->SetVisibility(ESlateVisibility::HitTestInvisible);
@@ -26,79 +28,6 @@ void UWidgetItemInfo::NativeOnInitialized()
 	m_BtnRegister->OnClicked.AddDynamic(this,&UWidgetItemInfo::OnRegister);
 }
 
-void UWidgetItemInfo::SetCollecItemInfo(const FName& collecID, int index, const FName& oID)
-{
-	m_CollecID = collecID;
-
-	m_nCollecIndex = index;
-
-	SetItemInfo(EItemInfo::Collection,oID,nullptr);
-}
-
-void UWidgetItemInfo::SetItemInfo(EItemInfo info,const FName& oID,UInventory* inven)
-{
-	SetVisibility(ESlateVisibility::SelfHitTestInvisible);
-
-	for(UWidgetCollecStatChild* Op : m_AryOptions)
-	{
-		Op->RemoveFromParent();
-	}
-
-	m_Inven = inven;
-	
-	m_AryOptions.Reset();
-	
-	m_ItemKey = oID;
-
-	const FItemDataRow& ItemData = UMyLib::GetItemData(m_ItemKey);
-
-	EItemType Type = UMyLib::GetItemType(ItemData);
-
-	m_TextItemName->SetText(ItemData.m_ShowingName);
-
-	if (Type == EItemType::Equip)
-	{
-		int Lv = 0;//m_Inven.Get() ? m_Inven.Get()->GetItemLevel(oID) : 0;
-		
-		//m_BtnEraseItem->SetIsEnabled(!UMyLib::GetEquip()->IsItemEquipped(m_ItemKey));
-		
-		UpdateStat(m_ItemKey,Lv);
-	}
-	
-	SetTypeInfo(info,Type,ItemData);
-}
-
-
-void UWidgetItemInfo::SetTypeInfo(EItemInfo info, EItemType type, const FItemDataRow& ItemData)
-{
-	m_BtnEnchant->SetVisibility(ESlateVisibility::Collapsed);
-	m_BtnEraseItem->SetVisibility(ESlateVisibility::Collapsed);
-	m_BtnRegister->SetVisibility(ESlateVisibility::Collapsed);
-
-	m_TextItemType->SetText(GetTypeText(type));
-	
-	switch (info)
-	{
-	case EItemInfo::Inven:
-		m_BtnEraseItem->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
-		UpdateEnchantBtn();
-		break;
-	case EItemInfo::Market:
-		break;
-	case EItemInfo::Collection:
-		UpdateRegisterBtn();
-		UpdateEnchantBtn();
-		break;
-	case EItemInfo::QuestReward:
-		break;
-	case EItemInfo::Craft:
-		break;
-	case EItemInfo::Shop:
-		break;
-	default: ;
-	}	
-}	
-
 void UWidgetItemInfo::OnClose()
 {
 	SetVisibility(ESlateVisibility::Collapsed);
@@ -106,16 +35,16 @@ void UWidgetItemInfo::OnClose()
 
 void UWidgetItemInfo::OnErase()
 {
-	if(UMyLib::GetItemType(m_ItemKey) == EItemType::Equip)// || m_Inven->GetItemStack(m_ItemKey) == 1
-	{
-		EraseConfirm();
-	}
-	else
-	{
-		UWidgetStackCalculator* Calc = UMyLib::GetCanvas()->OpenCalculator(0);
-		Calc->m_OnGetMax.BindUObject(this, &UWidgetItemInfo::GetMax);
-		Calc->m_OnNumberAccept.AddUObject(this,&UWidgetItemInfo::EraseConfirm);
-	}
+	// if(UMyLib::GetItemType(m_ItemKey) == EItemType::Equip)
+	// {
+	// 	//EraseConfirm();
+	// }
+	// else
+	// {
+	// 	UWidgetStackCalculator* Calc = UMyLib::GetCanvas()->OpenCalculator(0);
+	// 	Calc->m_OnGetMax.BindUObject(this, &UWidgetItemInfo::GetMax);
+	// 	Calc->m_OnNumberAccept.AddUObject(this,&UWidgetItemInfo::EraseConfirm);
+	// }
 	OnClose();
 }
 
@@ -126,56 +55,112 @@ int UWidgetItemInfo::GetMax()
 
 void UWidgetItemInfo::EraseConfirm(int am)
 {
-	m_Inven.Get()->RemoveItem(m_ItemKey,am);
-}
-
-void UWidgetItemInfo::EraseConfirm()
-{
-	//m_Inven.Get()->RemoveEquipItem(m_ItemKey);
+	//m_Inven.Get()->RemoveItem(m_ItemKey,am);
 }
 
 void UWidgetItemInfo::UpdateEnchantBtn()//가지고있으면 해당 인벤으로
 {
- 	m_BtnEnchant->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
+	if(!UMyLib::IsEquip(m_ItemSpec->m_ID))
+	{
+		m_BtnEnchant->SetIsEnabled(false);
+		
+		return ;
+	}
+	m_BtnEnchant->SetVisibility(ESlateVisibility::Visible);
 
-	// if (!UMyLib::IsEquip(m_ItemKey) || !UMyLib::FindEquipItem(m_ItemKey))
-	// {
-	// 	m_BtnEnchant->SetIsEnabled(false);
-	//
-	// 	return ;
-	// }
+	EEquipSlotType T = UMyLib::GetItemData(m_ItemSpec->m_ID).m_ItemType;
+	
+	if (&UMyLib::GetEquip()->GetEquipItem(T) == m_ItemSpec)
+	{
+		m_BtnEnchant->SetIsEnabled(false);
+	
+		return ;
+	}
 
 	m_BtnEnchant->SetIsEnabled(true);
 }
 
-FText UWidgetItemInfo::GetTypeText(EItemType t)
+void UWidgetItemInfo::UpdateSplitBtn()
+{
+	m_BtnSplit->SetVisibility(ESlateVisibility::Visible);
+	
+	if (UMyLib::IsEquip(m_ItemSpec->m_ID) && UMyLib::GetPlayerInven()->EmptySlotCount() < 1 || m_ItemSpec->m_nLvStack < 2)
+	{
+		m_BtnSplit->SetIsEnabled(false);
+		return ;
+	}
+	m_BtnSplit->SetIsEnabled(true);
+}
+
+
+void UWidgetItemInfo::SetItemInfo(FItemSpec& item)
+{
+	m_ItemSpec = &item;
+	
+	const FItemDataRow& ItemData = UMyLib::GetItemData(m_ItemSpec->m_ID);
+	
+	SetInfoItemData(ItemData);
+	
+	m_ItemIcon->SetItem(*m_ItemSpec);
+	
+	m_BtnEraseItem->SetVisibility(ESlateVisibility::Visible);
+	UpdateEnchantBtn();
+	UpdateSplitBtn();
+}
+
+void UWidgetItemInfo::SetInfoItemData(const FItemDataRow& data_row)
+{
+	SetVisibility(ESlateVisibility::SelfHitTestInvisible);
+
+	m_ItemIcon->SetItemData(data_row);
+
+	m_TextItemName->SetText(data_row.m_ShowingName);
+
+	m_BtnEraseItem->SetVisibility(ESlateVisibility::Collapsed);
+
+	m_BtnEnchant->SetVisibility(ESlateVisibility::Collapsed);
+
+	m_BtnRegister->SetVisibility(ESlateVisibility::Collapsed);
+
+	m_BtnSplit->SetVisibility(ESlateVisibility::Collapsed);
+
+	EItemType t = UMyLib::GetItemType(data_row);
+
+	SetTypeText(t);
+}
+
+void UWidgetItemInfo::SetTypeText(EItemType t)
 {
 	switch (t)
 	{
-		case EItemType::Consume: return NSLOCTEXT("UWidgetItemInfo","TypeConsume","소모품");
-		case EItemType::Equip: return NSLOCTEXT("UWidgetItemInfo","TypeEquip","장비");
+	case EItemType::Consume:
+		m_TextItemType->SetText(NSLOCTEXT("UWidgetItemInfo","TypeConsume","소모품"));
+		break;
+	case EItemType::Equip:
+		m_TextItemType->SetText(NSLOCTEXT("UWidgetItemInfo","TypeEquip","장비"));
+		break;
 	}
-
-	return NSLOCTEXT("UWidgetItemInfo","TypeMisc","재료");
+	return m_TextItemType->SetText(NSLOCTEXT("UWidgetItemInfo","TypeMisc","재료"));
 }
+
 
 void UWidgetItemInfo::UpdateRegisterBtn()
 {
 	m_BtnRegister->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
 
-	bool HasItem = false;
-
-	if (UMyLib::IsEquip(m_ItemKey))
-	{
-		int RequireLevel = UMyLib::GetRequireCollecLevel(m_CollecID,m_nCollecIndex);
-		
-		//HasItem = UMyLib::FindEquipItem(m_ItemKey,RequireLevel) != nullptr;
-	}
-	else
-	{
-		//HasItem = UMyLib::FindMiscItem(m_ItemKey) != nullptr;
-	}
-	m_BtnRegister->SetIsEnabled(HasItem);
+	// bool HasItem = false;
+	//
+	// if (UMyLib::IsEquip(m_ItemKey))
+	// {
+	// 	int RequireLevel = UMyLib::GetRequireCollecLevel(m_CollecID,m_nCollecIndex);
+	// 	
+	// 	HasItem = UMyLib::FindEquipItem(m_ItemKey,RequireLevel) != nullptr;
+	// }
+	// else
+	// {
+	// 	HasItem = UMyLib::FindMiscItem(m_ItemKey) != nullptr;
+	// }
+	//m_BtnRegister->SetIsEnabled(HasItem);
 }
 
 void UWidgetItemInfo::OnEnchant()//강화가 두개의 상황이 존재함.그럼결국,콜렉션으로 열때 원본 아이템을 찾을수있어야함
@@ -201,7 +186,7 @@ void UWidgetItemInfo::OnEnchant()//강화가 두개의 상황이 존재함.그�
 
 void UWidgetItemInfo::OnRegister()
 {
-	UMyGameInstance::Get->m_ItemCollecManager->AddItem(m_CollecID,m_nCollecIndex);
+	//UMyGameInstance::Get->m_ItemCollecManager->AddItem(m_CollecID,m_nCollecIndex);
 
 	OnClose();
 }

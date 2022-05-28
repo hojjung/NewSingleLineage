@@ -28,7 +28,7 @@ void UWidgetCraftCostElement::OnHoldComplete()
 {
 	FName ID = m_CraftData->m_ItemDataRowHandle.RowName;
 	
-	UMyLib::GetCanvas()->OpenItemInfo(EItemInfo::Craft,ID,nullptr);
+	//UMyLib::GetCanvas()->OpenItemInfo(EItemInfo::Craft,ID,nullptr);
 }
 
 void UWidgetCraftCostElement::UpdateCostAmount()
