@@ -6,6 +6,7 @@
 #include "MyJrpg/MyLib.h"
 #include "MyJrpg/Managers/EquipManager.h"
 #include "MyJrpg/Managers/MyGameInstance.h"
+#include "MyJrpg/Widgets/World/CommonElements/WidgetConfirmPanel.h"
 
 void UWidgetItemInfo::NativeOnInitialized()
 {
@@ -26,6 +27,8 @@ void UWidgetItemInfo::NativeOnInitialized()
 	m_BtnEnchant->OnClicked.AddDynamic(this,&UWidgetItemInfo::OnEnchant);
 
 	m_BtnRegister->OnClicked.AddDynamic(this,&UWidgetItemInfo::OnRegister);
+
+	m_BtnSplit->OnClicked.AddDynamic(this,&UWidgetItemInfo::OnSplit);
 }
 
 void UWidgetItemInfo::OnClose()
@@ -35,28 +38,50 @@ void UWidgetItemInfo::OnClose()
 
 void UWidgetItemInfo::OnErase()
 {
-	// if(UMyLib::GetItemType(m_ItemKey) == EItemType::Equip)
-	// {
-	// 	//EraseConfirm();
-	// }
-	// else
-	// {
-	// 	UWidgetStackCalculator* Calc = UMyLib::GetCanvas()->OpenCalculator(0);
-	// 	Calc->m_OnGetMax.BindUObject(this, &UWidgetItemInfo::GetMax);
-	// 	Calc->m_OnNumberAccept.AddUObject(this,&UWidgetItemInfo::EraseConfirm);
-	// }
+	UWidgetConfirmPanel::FOnClick Cancel;
+
+	UWidgetConfirmPanel::FOnClick Confirm = UWidgetConfirmPanel::FOnClick::CreateUObject(this,&UWidgetItemInfo::EraseConfirm); 
+
+	FString DescStrF = NSLOCTEXT("UWidgetItemInfo","OnErase","정말로 {0} {1}개를 버릴까요?").ToString();
+
+	int Count = UMyLib::IsEquip(m_ItemSpec->m_ID) ? 1 : m_ItemSpec->m_nLvStack;
+
+	FString DescStr = FString::Format(*DescStrF, {*UMyLib::GetItemData(m_ItemSpec->m_ID).m_ShowingName.ToString(), Count});
+
+	UMyLib::GetCanvas()->GetConfirmPanel()->SetConfirmPanel(DescStr,Cancel,Confirm);
+}
+
+void UWidgetItemInfo::EraseConfirm()
+{
+	UMyLib::GetPlayerInven()->RemoveItem(*m_ItemSpec);
 	OnClose();
 }
 
 int UWidgetItemInfo::GetMax()
 {
-	return 0;//m_Inven.Get()->GetItemStack(m_ItemKey);
+	return m_ItemSpec->m_nLvStack - 1;
 }
 
-void UWidgetItemInfo::EraseConfirm(int am)
+void UWidgetItemInfo::SplitConfirm(int am)
 {
-	//m_Inven.Get()->RemoveItem(m_ItemKey,am);
+	FItemSpec NewItem = *m_ItemSpec;
+
+	NewItem.m_nLvStack = am;
+	
+	int EmptySlot;
+	
+	UMyLib::GetPlayerInven()->GetEmptyIndex(EmptySlot);
+
+	UMyLib::GetPlayerInven()->AddSlot(EmptySlot, NewItem);
+	
+	UMyLib::GetPlayerInven()->AddItemKey(UMyLib::GetItemData(NewItem.m_ID),NewItem.m_ID,EmptySlot);
+
+	m_ItemSpec->m_nLvStack -= am;
+	
+	UMyLib::GetPlayerInven()->UpdateInventory();
 }
+
+
 
 void UWidgetItemInfo::UpdateEnchantBtn()//가지고있으면 해당 인벤으로
 {
@@ -82,9 +107,14 @@ void UWidgetItemInfo::UpdateEnchantBtn()//가지고있으면 해당 인벤으로
 
 void UWidgetItemInfo::UpdateSplitBtn()
 {
+	if (UMyLib::IsEquip(m_ItemSpec->m_ID))
+	{
+		m_BtnSplit->SetVisibility(ESlateVisibility::Collapsed);
+		return ;
+	}
 	m_BtnSplit->SetVisibility(ESlateVisibility::Visible);
 	
-	if (UMyLib::IsEquip(m_ItemSpec->m_ID) && UMyLib::GetPlayerInven()->EmptySlotCount() < 1 || m_ItemSpec->m_nLvStack < 2)
+	if (UMyLib::GetPlayerInven()->EmptySlotCount() < 1 || m_ItemSpec->m_nLvStack < 2)
 	{
 		m_BtnSplit->SetIsEnabled(false);
 		return ;
@@ -188,6 +218,17 @@ void UWidgetItemInfo::OnRegister()
 {
 	//UMyGameInstance::Get->m_ItemCollecManager->AddItem(m_CollecID,m_nCollecIndex);
 
+	OnClose();
+}
+
+void UWidgetItemInfo::OnSplit()
+{
+	int Half = m_ItemSpec->m_nLvStack / 2;
+	
+	UWidgetStackCalculator* Calc = UMyLib::GetCanvas()->GetCalculator();
+	Calc->m_OnGetMax.BindUObject(this, &UWidgetItemInfo::GetMax);
+	Calc->m_OnNumberAccept.AddUObject(this,&UWidgetItemInfo::SplitConfirm);
+	Calc->Open(Half);
 	OnClose();
 }
 

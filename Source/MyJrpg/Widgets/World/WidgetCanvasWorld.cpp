@@ -2,6 +2,7 @@
 
 #include "BUITween.h"
 #include "Animation/UMGSequencePlayer.h"
+#include "CommonElements/WidgetConfirmPanel.h"
 #include "Menu/Craft/WidgetCraftPanel.h"
 #include "Menu/Equipment/WidgetEquipInvenPanel.h"
 #include "Menu/Inventory/WidgetItemInfo.h"
@@ -175,10 +176,8 @@ void UWidgetCanvasWorld::OpenQuestPanel(bool isMain)
 	}
 }
 
-UWidgetStackCalculator* UWidgetCanvasWorld::OpenCalculator(int cnt)
+UWidgetStackCalculator* UWidgetCanvasWorld::GetCalculator()
 {
-	m_Calculator->Open(cnt);
-	
 	return m_Calculator;
 }
 
@@ -241,6 +240,11 @@ UWidgetEquipInvenPanel* UWidgetCanvasWorld::GetEquipInvenMenu()
 UWidgetPickpocketPanel* UWidgetCanvasWorld::GetPickpocketMenu()
 {
 	return m_PickpocketPanel;
+}
+
+UWidgetConfirmPanel* UWidgetCanvasWorld::GetConfirmPanel()
+{
+	return m_ConfirmPanel;
 }
 
 void UWidgetCanvasWorld::OpenItemInfo(FItemSpec& item)

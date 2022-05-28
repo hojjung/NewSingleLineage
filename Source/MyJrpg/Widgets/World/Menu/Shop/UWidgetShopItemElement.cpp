@@ -63,11 +63,13 @@ void UUWidgetShopItemElement::OpenStackCalculator()
 		m_nMaxAmount = FMath::Min(AbleToBuy,AbleToDeposit);
 	}
 
-	UWidgetStackCalculator* Calculator = UMyLib::GetCanvas()->OpenCalculator();
+	UWidgetStackCalculator* Calculator = UMyLib::GetCanvas()->GetCalculator();
 
 	Calculator->m_OnNumberAccept.AddUObject(this,&UUWidgetShopItemElement::OnBuyConfirm);
 
 	Calculator->m_OnGetMax.BindUObject(this,&UUWidgetShopItemElement::GetMaxAmount);
+
+	Calculator->Open(0);
 }
 
 void UUWidgetShopItemElement::OnClicked()

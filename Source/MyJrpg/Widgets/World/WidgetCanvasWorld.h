@@ -23,6 +23,7 @@
 #include "MyJrpg/Pawns/MonsterPawn.h"
 #include "WidgetCanvasWorld.generated.h"
 
+class UWidgetConfirmPanel;
 struct FZoneDataRow;
 class UWidgetStackCalculator;
 class UWidgetShopPanel;
@@ -136,6 +137,8 @@ protected:
 	UWidgetBuildPanel* m_BuildPanel;
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (BindWidget))
 	UWidgetItemConvert* m_ItemConvertPanel;
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (BindWidget))
+	UWidgetConfirmPanel* m_ConfirmPanel; 
 	//
 	bool m_bIsBuildable;
 protected:
@@ -157,6 +160,8 @@ public:
 	UWidgetEquipInvenPanel* GetEquipInvenMenu();
 
 	UWidgetPickpocketPanel* GetPickpocketMenu();
+
+	UWidgetConfirmPanel* GetConfirmPanel();
 
 	void OpenItemInfo(FItemSpec& item);
 
@@ -187,7 +192,7 @@ public:
 	
 	void OpenQuestPanel(bool isMain);
 
-	UWidgetStackCalculator* OpenCalculator(int cnt = 0);
+	UWidgetStackCalculator* GetCalculator();
 	
 	void TryAcceptQuest(FName qId);
 

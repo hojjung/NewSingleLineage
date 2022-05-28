@@ -57,13 +57,6 @@ protected:
 	FItemSpec* m_ItemSpec;
 
 protected:
-	void UpdateRegisterBtn();
-
-	void UpdateEnchantBtn();
-
-	void UpdateSplitBtn();
-	
-protected:
 	virtual void NativeOnInitialized() override;;
 	
 	void UpdateStat(const FName& target, int level);
@@ -72,11 +65,21 @@ protected:
 
 	void CreateOption(TSubclassOf<UOptionBase> op, int lv);
 
+	void SetTypeText(EItemType t);
+	
+protected:
+	void UpdateRegisterBtn();
+
+	void UpdateEnchantBtn();
+
+	void UpdateSplitBtn();
+
+protected:
 	int GetMax();
 
-	void EraseConfirm(int am);
+	void SplitConfirm(int am);
 
-	void SetTypeText(EItemType t);
+	void EraseConfirm();
 	
 public:
 	void SetItemInfo(FItemSpec& item);
@@ -91,6 +94,8 @@ public:
 	void OnEnchant();
 	UFUNCTION()
 	void OnRegister();
+	UFUNCTION()
+	void OnSplit();
 };
 
 //획득처가있어야함

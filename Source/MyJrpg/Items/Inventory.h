@@ -53,7 +53,6 @@ protected://
 	TMap<FName, TSet<int>> m_MapItemKeyCount;
 
 protected:
-	bool GetEmptyIndex(int& out) const;
 
 	void AddItemStack(const FItemDataRow& itemData, int index, int& lvCnt, FName id, int maxStack);
 
@@ -97,6 +96,8 @@ public:
 	
 	bool RemoveItem(FName itemID, int lvCnt);
 
+	bool RemoveItem(const FItemSpec& target);
+
 	void RemoveItem(int index, int lvCnt);
 
 	int GetUsingSlotCount() const;
@@ -123,6 +124,10 @@ public:
 
 	void RemoveItemKey(const FItemDataRow& itemData,FName id, int index);
 
+	void RemoveItemKey(FName id, int index);
+
 	int EmptySlotCount();
+	
+	bool GetEmptyIndex(int& out) const;
 };
 

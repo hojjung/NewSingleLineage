@@ -250,6 +250,13 @@ void UInventory::RemoveItemKey(const FItemDataRow& itemData,FName id, int index)
 	}
 }
 
+void UInventory::RemoveItemKey(FName id, int index)
+{
+	const FItemDataRow& ItemData = UMyLib::GetItemData(id);
+
+	RemoveItemKey(ItemData, id, index);
+}
+
 int UInventory::EmptySlotCount()
 {
 	return m_nInvenMaxSize - GetUsingSlotCount();
@@ -296,6 +303,26 @@ bool UInventory::RemoveItem(FName itemID, int lvCnt)
 	}
 
 	UpdateInventory();
+	return false;
+}
+
+bool UInventory::RemoveItem(const FItemSpec& target)
+{
+	TSet<int>* IndexSets = m_MapItemKeyCount.Find(target.m_ID);
+	if(!IndexSets)
+	{
+		return false;
+	}
+	for(int Index : *IndexSets)
+	{
+		if(&m_AryTotalItems[Index] == &target)
+		{
+			RemoveItemKey(target.m_ID,Index);
+			ClearSlot(Index);
+			UpdateInventory();
+			return true;
+		}
+	}
 	return false;
 }
 
