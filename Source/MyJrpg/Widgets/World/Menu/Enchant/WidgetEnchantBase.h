@@ -70,6 +70,8 @@ protected:
 	void CreateOption(const FString&& infoText, const FString&& formatText, int beforeValue, int afterValue);
 
 	void CreateOption(TSubclassOf<UOptionBase> op, int lv);
+
+	void OnInvenFocused(UWidgetBaseElement* ele, UInventory* inven, int index);
 	
 public:
 	void Open();

@@ -8,6 +8,15 @@
 #include "MyJrpg/Managers/EquipManager.h"
 #include "MyJrpg/Managers/MyGameInstance.h"
 
+void UWidgetInventory::NativeOnInitialized()
+{
+	Super::NativeOnInitialized();
+	
+	m_bUseHold = true;
+
+	check(m_ClassWidgetItemEle);
+}
+
 FReply UWidgetInventory::NativeOnTouchStarted(const FGeometry& InGeometry, const FPointerEvent& InGestureEvent)
 {
 	Super::NativeOnTouchStarted(InGeometry, InGestureEvent);
@@ -28,8 +37,6 @@ FReply UWidgetInventory::NativeOnMouseButtonDown(const FGeometry& InGeometry, co
 
 void UWidgetInventory::Init(UInventory* inven)
 {
-	check(m_ClassWidgetItemEle);
-
 	m_InvenBox->ClearChildren();
 	
 	m_CurrentInven = inven;
@@ -119,7 +126,7 @@ void UWidgetInventory::SetItem(UWidgetBaseElement* target, const FItemSpec& item
 	
 	target->SetFocusable(true);
 	target->SetDragable(true);
-	target->SetHoldable(true);
+	target->SetHoldable(m_bUseHold);
 }
 
 void UWidgetInventory::UnFocusCurrent()
@@ -130,6 +137,12 @@ void UWidgetInventory::UnFocusCurrent()
 
 		m_CurrentFocused= nullptr;
 	}
+}
+
+void UWidgetInventory::SetHoldable(bool b)
+{
+	m_bUseHold = b;
+	UpdateInventory();
 }
 
 void UWidgetInventory::OnFocused(UWidgetBaseElement* ele)

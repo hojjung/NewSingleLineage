@@ -68,7 +68,7 @@ void UWidgetCollecPanelParent::OnSelected(UWidgetCollecItemEle* ele)
 
 	m_CurrentFocused->SetMyFocus();
 	
-	//m_ItemInfo->SetCollecItemInfo(m_CurrentFocused->GetCollecID(),m_CurrentFocused->GetItemIndex(),m_CurrentFocused->GetItemID());
+	m_ItemInfo->SetCollecItemInfo(m_CurrentFocused->GetCollecID(),m_CurrentFocused->GetItemIndex(),m_CurrentFocused->GetItemID());
 }
 
 void UWidgetCollecPanelParent::Open()

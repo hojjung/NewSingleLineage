@@ -50,9 +50,9 @@ protected:
 
 	void UpdateMiscItem();
 
-	void OnClicked();
+	void OnClicked(UWidgetBaseElement* ele);
 
-	void OnHoldComplete();
+	void OnHoldComplete(UWidgetBaseElement* ele);
 	
 public:
 	void Init(const FName& collecID, int index, bool is_equip, const FItemDataHandle& item, int lv);

@@ -96,6 +96,8 @@ public:
 	
 	bool RemoveItem(FName itemID, int lvCnt);
 
+	bool RemoveItem(const FItemSpec& target, int am);
+
 	bool RemoveItem(const FItemSpec& target);
 
 	void RemoveItem(int index, int lvCnt);

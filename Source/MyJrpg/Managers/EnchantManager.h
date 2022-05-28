@@ -55,9 +55,9 @@ public:
 
 	const FItemSpec* GetTargetMat() const;
 
-	bool IsAbleTarget(const FItemSpec& target);
+	bool IsAbleTarget(const FItemSpec& target) const;
 
-	bool IsAbleMaterial(const FItemSpec& material);
+	bool IsAbleMaterial(const FItemSpec& material) const;
 
 	void Clear();
 	

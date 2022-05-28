@@ -43,7 +43,11 @@ protected:
 
 	FDelegateHandle  m_InvenDele;
 
+	bool m_bUseHold;
+
 protected:
+	virtual void NativeOnInitialized() override;
+	
 	virtual FReply NativeOnTouchStarted(const FGeometry& InGeometry, const FPointerEvent& InGestureEvent) override;
 	//prevent penetrate touch
 	virtual FReply NativeOnMouseButtonDown(const FGeometry& InGeometry, const FPointerEvent& InMouseEvent) override;
@@ -74,4 +78,6 @@ public:
 	UInventory* GetInven() const;
 
 	void UnFocusCurrent();
+	
+	void SetHoldable(bool b);
 };

@@ -12,13 +12,17 @@ void UWidgetEnchantBase::NativeOnInitialized()
 
 	m_BtnEnchant->OnClicked.AddDynamic(this, &UWidgetEnchantBase::DoEnchant);
 
+	m_TargetItem->SetVisibility(ESlateVisibility::HitTestInvisible);
+
+	m_TargetMaterial->SetVisibility(ESlateVisibility::HitTestInvisible);
+	
 	UMyGameInstance::Get->m_EnchantManager->m_OnEnchantChanged.AddUObject(this,&UWidgetEnchantBase::Update);
 
 	m_InvenPanel->Init(UMyLib::GetPlayerInven());
 
-	m_TargetItem->SetVisibility(ESlateVisibility::HitTestInvisible);
+	m_InvenPanel->SetHoldable(false);
 
-	m_TargetMaterial->SetVisibility(ESlateVisibility::HitTestInvisible);
+	m_InvenPanel->m_OnFocus.AddUObject(this, &UWidgetEnchantBase::OnInvenFocused);
 }
 
 void UWidgetEnchantBase::UpdateInvens()
@@ -32,6 +36,7 @@ void UWidgetEnchantBase::UpdateInvens()
 	else
 	{
 		m_BagPanel->Init(UMyGameInstance::Get->m_EquipManager->GetBag());
+		m_BagPanel->SetHoldable(false);
 		m_BagPanel->OpenPanel();
 	}
 
@@ -42,6 +47,7 @@ void UWidgetEnchantBase::UpdateInvens()
 	else
 	{
 		m_BeltPanel->Init(UMyGameInstance::Get->m_EquipManager->GetBelt());
+		m_BeltPanel->SetHoldable(false);
 		m_BeltPanel->OpenPanel();
 	}
 }
@@ -255,3 +261,17 @@ void UWidgetEnchantBase::Update()
 	UpdateInvens();
 }
 
+void UWidgetEnchantBase::OnInvenFocused(UWidgetBaseElement* ele, UInventory* inven, int index)
+{
+	ele->SetMyUnFocus();
+
+	FItemSpec& ItemSpec = inven->GetItemRef(index);
+
+	if(UMyLib::IsEquip(ItemSpec.m_ID))
+	{
+		UMyGameInstance::Get->m_EnchantManager->SetTargetEquip(ItemSpec,inven);
+		return ;
+	}
+	
+	UMyGameInstance::Get->m_EnchantManager->SetMaterialEquip(ItemSpec,inven);
+}

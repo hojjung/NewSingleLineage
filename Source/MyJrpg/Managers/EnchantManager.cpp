@@ -138,6 +138,11 @@ void UEnchantManager::SetTargetEquip(FItemSpec& target, UInventory* inven)
 
 	m_InvenTarget = inven;
 
+	if (GetTargetMat() && !IsAbleMaterial(*GetTargetMat()))
+	{
+		m_TargetMat = nullptr;
+	}
+
 	m_OnEnchantChanged.Broadcast();
 }
 
@@ -165,13 +170,19 @@ const FItemSpec* UEnchantManager::GetTargetMat() const
 	return m_TargetMat;
 }
 
-bool UEnchantManager::IsAbleTarget(const FItemSpec& target)
+bool UEnchantManager::IsAbleTarget(const FItemSpec& target) const
 {
+	const FItemDataRow& FoundTarget = UMyLib::GetItemData(target.m_ID);
+
+	if(!UMyLib::IsEquip(FoundTarget))
+	{
+		return false;
+	}
+	
 	if (!GetTargetMat())
 	{
 		return true;
 	}
-	const FItemDataRow& FoundTarget = UMyLib::GetItemData(target.m_ID);
 	
 	const FItemDataRow& FoundMat = UMyLib::GetItemData(GetTargetMat()->m_ID);
 	
@@ -191,11 +202,11 @@ bool UEnchantManager::IsAbleTarget(const FItemSpec& target)
 	return false;
 }
 
-bool UEnchantManager::IsAbleMaterial(const FItemSpec& material)
+bool UEnchantManager::IsAbleMaterial(const FItemSpec& material) const
 {
 	if (!GetTargetItem())
 	{
-		return false;
+		return true;
 	}
 
 	const FItemDataRow& FoundTarget = UMyLib::GetItemData(GetTargetItem()->m_ID);
@@ -240,9 +251,12 @@ void UEnchantManager::DoEnchant()
 		EnchantFail();
 	}
 	
-	m_InvenMat.Get()->RemoveItem(*GetTargetMat());
-	
-	m_TargetMat = nullptr;
+	m_InvenMat.Get()->RemoveItem(*GetTargetMat(),1);
+
+	if(m_TargetMat->m_nLvStack < 1)
+	{
+		m_TargetMat = nullptr;
+	}
 
 	m_OnEnchantChanged.Broadcast();
 
@@ -253,11 +267,15 @@ void UEnchantManager::DoEnchant()
 
 bool UEnchantManager::IsEnchantAvailable() const
 {
-	if (!GetTargetMat() || !GetTargetItem())
+	if (!GetTargetItem())
 	{
 		return false;
 	}
 
+	if(!GetTargetMat() || !IsAbleMaterial(*GetTargetMat()))
+	{
+		return false;
+	}
 	if (GetCrntLevel() >= FGlobalVariable::ENCHANT_MAX)
 	{
 		return false;

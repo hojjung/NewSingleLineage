@@ -306,6 +306,30 @@ bool UInventory::RemoveItem(FName itemID, int lvCnt)
 	return false;
 }
 
+bool UInventory::RemoveItem(const FItemSpec& target, int am)
+{
+	TSet<int>* IndexSets = m_MapItemKeyCount.Find(target.m_ID);
+	if(!IndexSets)
+	{
+		return false;
+	}
+	for(int Index : *IndexSets)
+	{
+		if(&m_AryTotalItems[Index] == &target)
+		{
+			m_AryTotalItems[Index].m_nLvStack-=am;
+			if(m_AryTotalItems[Index].m_nLvStack < 1)
+			{
+				RemoveItemKey(target.m_ID,Index);
+				ClearSlot(Index);
+			}
+			UpdateInventory();
+			return true;
+		}
+	}
+	return false;
+}
+
 bool UInventory::RemoveItem(const FItemSpec& target)
 {
 	TSet<int>* IndexSets = m_MapItemKeyCount.Find(target.m_ID);

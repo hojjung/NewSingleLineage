@@ -159,7 +159,6 @@ void UMyGameInstance::LoadComplete(const float LoadTime, const FString& MapName)
 	}
 }
 
-
 FString UMyGameInstance::GetPlayerName()
 {
 	return TEXT("Need Set Name");
