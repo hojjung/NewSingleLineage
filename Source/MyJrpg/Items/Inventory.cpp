@@ -155,6 +155,30 @@ bool UInventory::HasSpace(FItemSpec& addItem)
 	return EmptySlotCount() > 0;
 }
 
+int UInventory::GetAvailableCount(FName itemID)
+{
+	if(UMyLib::IsEquip(itemID))
+	{
+		return EmptySlotCount();
+	}
+	TSet<int>* FoundSet = m_MapItemKeyCount.Find(itemID);
+
+	if(FoundSet)
+	{
+		int Sum = 0;
+		
+		int MaxStack = UMyLib::GetItemData(itemID).m_nMaxStack;
+		
+		for(int Index : *FoundSet)
+		{
+			Sum += MaxStack - m_AryTotalItems[Index].m_nLvStack;
+		}
+		return Sum;
+	}
+
+	return EmptySlotCount();
+}
+
 void UInventory::AddItemStack(const FItemDataRow& itemData, int index, int& lvCnt, FName id, int maxStack)// = FItemSpec(id,0,0);
 {
 	if(m_AryTotalItems[index].m_ID.IsNone())

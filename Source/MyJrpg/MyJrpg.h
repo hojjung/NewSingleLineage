@@ -147,17 +147,6 @@ public:
 	void operator()(void*) {}
 };
 
-enum class EItemInfo
-{
-	Inven,
-	Market,
-	Collection,
-	QuestReward,
-	Craft,
-	Shop
-};
-
-
 UENUM(BlueprintType)
 enum class EMapType : uint8
 {

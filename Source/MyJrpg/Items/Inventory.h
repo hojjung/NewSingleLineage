@@ -91,6 +91,8 @@ public:
 	void AddSlot(int index, FItemSpec addItem);
 
 	bool HasSpace(FItemSpec& addItem);
+
+	int GetAvailableCount(FName itemID);
 	
 	void ClearSlot(int index);
 	

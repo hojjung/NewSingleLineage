@@ -17,26 +17,16 @@ void UShopManager::BuyItem(const FName& itemID, int amount)
 	{
 		return;
 	}
-
-	// if (UMyLib::IsEquip(itemID))
-	// {
-	// 	int Iter = -1;
-	//
-	// 	while (++Iter < amount)
-	// 	{
-	// 		FName HashID = UMyLib::GenerateEquipItemHashKey(itemID, this);
-	// 		
-	// 		if(!UMyLib::GetPlayerInven()->AddEquipItem(HashID))
-	// 		{
-	// 			break;				
-	// 		}
-	// 	}
-	// }
-	// else
-	// {
-	// 	if(!UMyLib::GetPlayerInven()->AddItem(itemID,amount))
-	// 		return;
-	// }
+	
+	FItemSpec ItemSpec;
+	ItemSpec.m_ID = itemID;
+	ItemSpec.m_nLvStack = amount;
+	
+	if(!UMyLib::GetPlayerInven()->HasSpace(ItemSpec))
+	{
+		return;	
+	}
+	UMyLib::GetPlayerInven()->AddItem(ItemSpec,UMyLib::IsEquip(itemID));
 	
 	UMyGameInstance::Get->m_CurrencyManager->SubGold(TotalCost);
 	
