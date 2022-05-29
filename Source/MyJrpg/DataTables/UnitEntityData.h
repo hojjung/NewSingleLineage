@@ -60,7 +60,7 @@ public://Visual
 
 	virtual FPrimaryAssetId GetPrimaryAssetId() const override
 	{
-		return FPrimaryAssetId("Unit", GetFName());
+		return FPrimaryAssetId(TEXT("Unit"), GetFName());
 	}
 
 	virtual USkeletalMesh* GetSkMesh() const;
