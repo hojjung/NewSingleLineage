@@ -35,6 +35,10 @@ void USpawnManager::SetSpawnActors(const UNPCPaletteDataAsset* npcAssets)
 		{
 			SpawnGatherActor(SpawnDataEle);
 		}
+		else if(SpawnDataEle.m_EntityParentTable->RowStruct->IsChildOf(FBuildDataRow::StaticStruct()))
+		{
+			SpawnFurnitureActor(SpawnDataEle);
+		}
 	}
 }
 
@@ -359,4 +363,25 @@ IFocusable* USpawnManager::GetNearTarget(FVector callerLoc, float range)
 		return Pawn;		
 	}
 	return Prop;
+}
+AStructureActor* USpawnManager::SpawnFurnitureActor(const FNPCSpawnData& spawn_data)
+{
+	FActorSpawnParameters Param;
+
+	Param.bNoFail = true;
+
+	Param.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
+
+	const FBuildDataRow* EntityRow = spawn_data.m_EntityParentTable->FindRow<FBuildDataRow>(spawn_data.m_IDEntity, "");
+	
+	AStructureActor* NpcActor = UMyLib::GetUWorld()->SpawnActor<AStructureActor>(
+		EntityRow->m_ClassActor, spawn_data.m_SpawnPosition, spawn_data.m_SpawnRotation + FRotator(0,FMath::RandRange(-180,180),0), Param);
+
+	NpcActor->SetBuildData(*EntityRow);
+	
+	NpcActor->ConfirmBuild();
+
+	AddFocusActor(NpcActor);
+
+	return NpcActor;
 }

@@ -10,6 +10,7 @@
 #include "Components/WidgetInteractionComponent.h"
 #include "Logics/BulletPool.h"
 #include "MyJrpg/Actors/Field/Bullet.h"
+#include "MyJrpg/Actors/Field/Build/BuildInteract/BI_StorageSearch.h"
 #include "MyJrpg/DataTables/PetTable.h"
 #include "MyJrpg/Pawns/BaseUnitPawn.h"
 #include "MyJrpg/Pawns/CombatUnitPawn.h"
@@ -150,6 +151,8 @@ public:
 	void SetInteracting(bool b);
 
 	bool GetInteracting() const;
+	
+	void WaitInteract(UAnimMontage* am, float interactTime, const FVoidVoid& delegate);
 };
 
 

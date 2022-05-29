@@ -351,6 +351,14 @@ bool AMyPlayerPawn::GetInteracting() const
 	return m_bIsInteracting;
 }
 
+void AMyPlayerPawn::WaitInteract(UAnimMontage* am, float interactTime, const FVoidVoid& delegate)
+{
+	PlayAnimMontage(am);
+	SetInteracting(true);
+	FTimerHandle Handle;
+	GetWorldTimerManager().SetTimer(Handle,delegate,interactTime,false);
+}
+
 void AMyPlayerPawn::OnNotifyTrigger(const FName& name)
 {
 	if(name == TEXT("BaseAttack"))

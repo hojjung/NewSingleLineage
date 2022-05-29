@@ -26,6 +26,9 @@ AItemActor::AItemActor()
 	m_MeshItem->bReceivesDecals = false;
 	m_MeshItem->SetRelativeLocation(FVector(0,0,-88));
 	m_MeshItem->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+	//AnimMontage'/Game/09_SharedAnimations/Loot_Anim_Set/Loot_Corpse_GrabItem_Montage.Loot_Corpse_GrabItem_Montage'
+	static ConstructorHelpers::FObjectFinder<UAnimMontage> FoundAnim(TEXT("AnimMontage'/Game/09_SharedAnimations/Loot_Anim_Set/Loot_Corpse_GrabItem_Montage.Loot_Corpse_GrabItem_Montage'"));
+	m_Anim = FoundAnim.Object;
 }
 
 void AItemActor::EndPlay(const EEndPlayReason::Type EndPlayReason)
@@ -59,7 +62,12 @@ void AItemActor::Init(FName itemID, int countOrLevel)
 	}
 }
 
-void AItemActor::Obtain()//주변에서 누가 보고있으면
+void AItemActor::StartInteract()
+{
+	UMyLib::GetPlayer()->PlayAnimMontage(m_Anim);
+}
+
+void AItemActor::OnObtain()//주변에서 누가 보고있으면
 {
 	if(HasOwnerTeamID())
 	{

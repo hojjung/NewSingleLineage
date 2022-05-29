@@ -138,7 +138,7 @@ void UWidgetLogWindow::CloseDialogueWrap()
 {
 	SetVisibility(ESlateVisibility::Collapsed);
 
-	m_OnClose.Broadcast();
+	m_OnClose.ExecuteIfBound();
 }
 
 UWidgetLogReply* UWidgetLogWindow::CreateSpeakerReply(const FDialogueNode& rr)

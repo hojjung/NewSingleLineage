@@ -91,7 +91,7 @@ namespace FGlobalVariable
 #define PRINT3D(Location,fString) if (GEngine) DrawDebugString(GEngine->GetWorldFromContextObject(this,EGetWorldErrorMode::LogAndReturnNull), Location, *fString, nullptr,  FColor::Orange, 0, false);
 #define PRINT3DGreen(Location,fString) if (GEngine) DrawDebugString(GEngine->GetWorldFromContextObject(this,EGetWorldErrorMode::LogAndReturnNull), Location, *fString, nullptr,  FColor::Green, 0, false);
 
-DECLARE_MULTICAST_DELEGATE(FVoidVoid);
+DECLARE_DELEGATE(FVoidVoid);
 
 UENUM(BlueprintType)
 enum class ETextType: uint8

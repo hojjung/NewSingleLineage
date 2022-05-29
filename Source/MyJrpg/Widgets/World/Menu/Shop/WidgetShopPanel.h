@@ -3,8 +3,9 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "UWidgetShopItemElement.h"
+#include "WidgetShopItemEle.h"
 #include "Blueprint/UserWidget.h"
+
 #include "MyJrpg/Widgets/World/CommonElements/WidgetBasePanel.h"
 #include "MyJrpg/Widgets/World/Menu/Storage/WidgetStorage.h"
 #include "WidgetShopPanel.generated.h"
@@ -20,10 +21,9 @@ class MYJRPG_API UWidgetShopPanel : public UWidgetBasePanel
 {
 	GENERATED_BODY()
 
-
 protected:
 	UPROPERTY(EditDefaultsOnly)
-	TSubclassOf<UUWidgetShopItemElement> m_ClassWidgetItemEle;
+	TSubclassOf<UWidgetShopItemEle> m_ClassWidgetItemEle;
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (BindWidget))
 	UWrapBox* m_InvenBox;
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (BindWidget))
@@ -32,11 +32,11 @@ protected:
 	UWidgetInventory* m_InvenPanel;
 protected:
 	UPROPERTY()
-	TArray<UUWidgetShopItemElement*> m_AryItemEles;
+	TArray<UWidgetShopItemEle*> m_AryItemEles;
 	
 	const TArray<FName>* m_AryItemKeys;
 
-	TWeakObjectPtr<UUWidgetShopItemElement> m_CurrentFocused;
+	TWeakObjectPtr<UWidgetShopItemEle> m_CurrentFocused;
 	
 	TWeakObjectPtr<UInventory> m_CurrentInven;
 
@@ -53,7 +53,7 @@ protected:
 
 	void UnFocusCurrent();
 	
-	void OnFocus(UUWidgetShopItemElement* ele);
+	void OnFocus(UWidgetShopItemEle* ele);
 
 	bool IsSameType(const FName& itemID);
 	

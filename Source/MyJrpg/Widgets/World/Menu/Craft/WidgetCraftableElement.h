@@ -27,8 +27,6 @@ protected:
 	UWidgetBaseElement* m_ItemElement;
 
 protected:
-	void OnHoldComplete(UWidgetBaseElement*);//인포 띄워주기
-
 	void OnClicked(UWidgetBaseElement*);//제작재료 생성시켜주기
 
 public:

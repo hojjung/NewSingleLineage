@@ -33,6 +33,8 @@ protected:
 	AItemActor* SpawnItemActor(const FNPCSpawnData& spawn_data);
 
 	ATreeBase* SpawnGatherActor(const FNPCSpawnData& spawn_data);
+
+	AStructureActor* SpawnFurnitureActor(const FNPCSpawnData& spawn_data);
 	
 public:
 	ACombatUnitPawn* GetNearNpc(FVector callerLoc, float range = 0, const TSet<ACombatUnitPawn*>* ignore = nullptr);

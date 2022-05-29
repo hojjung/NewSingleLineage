@@ -151,7 +151,7 @@ void UWidgetInteract::OnObtain()
 {
 	AItemActor* ItemActor = m_Pl->GetFocusedTarget<AItemActor>();
 	
-	ItemActor->Obtain();
+	ItemActor->StartInteract();
 }
 
 void UWidgetInteract::OnSteal()

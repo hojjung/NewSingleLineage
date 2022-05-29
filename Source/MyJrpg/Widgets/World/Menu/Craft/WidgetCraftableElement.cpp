@@ -2,11 +2,6 @@
 
 #include "MyJrpg/Managers/MyGameInstance.h"
 
-void UWidgetCraftableElement::OnHoldComplete(UWidgetBaseElement*)
-{
-	
-}
-
 void UWidgetCraftableElement::OnClicked(UWidgetBaseElement*)
 {
 	m_ItemElement->SetMyUnFocus();
@@ -28,9 +23,7 @@ void UWidgetCraftableElement::SetCraftable(int index)
 	
 	m_ItemElement->m_OnFocus.AddUObject(this,&UWidgetCraftableElement::OnClicked);
 
-	m_ItemElement->m_OnHold.AddUObject(this,&UWidgetCraftableElement::OnHoldComplete);
-
-	m_ItemElement->SetHoldable(true);
+	m_ItemElement->SetHoldable(false);
 
 	m_ItemElement->SetFocusable(true);
 

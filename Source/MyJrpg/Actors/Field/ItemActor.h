@@ -22,6 +22,8 @@ protected:
 	UBillboardComponent* m_BillboardIcon;
 	UPROPERTY(VisibleAnywhere)
 	UStaticMeshComponent* m_MeshItem;
+	UPROPERTY(VisibleAnywhere)
+	UAnimMontage* m_Anim;
 	FName m_OwnerID;
 
 	FItemSpec m_ItemSpec;
@@ -31,8 +33,10 @@ protected:
 	
 public:
 	void Init(FName itemID, int countOrLevel);//그럼 어떻게 스택 아이템 처리?
+
+	void StartInteract();
 	
-	void Obtain();
+	void OnObtain();
 
 	bool HasOwnerTeamID() const;
 

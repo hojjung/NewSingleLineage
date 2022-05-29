@@ -39,7 +39,7 @@ void UWidgetShopPanel::UnFocusCurrent()
 	}
 }
 
-void UWidgetShopPanel::OnFocus(UUWidgetShopItemElement* ele)
+void UWidgetShopPanel::OnFocus(UWidgetShopItemEle* ele)
 {
 	UnFocusCurrent();
 	
@@ -98,9 +98,11 @@ void UWidgetShopPanel::SetShopPanel(const FName& shopTable)
 	{
 		for (const FName& ItemKey : *m_AryItemKeys)
 		{
-			UUWidgetShopItemElement* ItemEle = CreateWidget<UUWidgetShopItemElement>(this, m_ClassWidgetItemEle);
+			UWidgetShopItemEle* ItemEle = CreateWidget<UWidgetShopItemEle>(this, m_ClassWidgetItemEle);
 
 			ItemEle->Clear();
+
+			ItemEle->UpdateElement(ItemKey);
 
 			m_InvenBox->AddChildToWrapBox(ItemEle)->SetPadding(FMargin(2));
 
