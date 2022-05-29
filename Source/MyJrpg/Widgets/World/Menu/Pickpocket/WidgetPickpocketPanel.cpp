@@ -10,7 +10,6 @@ void UWidgetPickpocketPanel::NativeOnInitialized()
 	SetVisibility(ESlateVisibility::Collapsed);
 
 	m_nCrntIndex = 0;
-
 	
 	m_FilterBtns->RegisterFilter(m_OtherPanel);
 	
@@ -62,6 +61,7 @@ void UWidgetPickpocketPanel::AddInvenDelegate()
 void UWidgetPickpocketPanel::RemoveInvenDelegate()
 {
 	m_OtherPanel->ClosePanel();
+	
 	m_TargetPawn->GetInven()->m_OnInvenChanged.Remove(m_EachInvenHandle);
 }
 

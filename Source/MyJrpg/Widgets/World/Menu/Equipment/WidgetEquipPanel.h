@@ -47,8 +47,6 @@ protected:
 
 	TWeakObjectPtr<UEquipManager> m_Equip;
 
-	TWeakObjectPtr<UInventory> m_Inven;
-	
 protected:
 	bool TryUnequip(EEquipSlotType t);
 	
@@ -68,6 +66,8 @@ protected:
 	void OnDrag(UWidgetBaseElement* ele);
 
 	void OnDrop(UWidgetBaseElement* ele);
+
+	void OnHold(UWidgetBaseElement* ele);
 
 public:
 	void UpdateSlots();

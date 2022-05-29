@@ -28,7 +28,7 @@ protected:
 	FName m_ID;
 
 protected:
-	void OnHoldComplete();
+	void OnHold(UWidgetBaseElement* ele);
 	
 public:
 	void SetZone(const FDropRewardItem& data);

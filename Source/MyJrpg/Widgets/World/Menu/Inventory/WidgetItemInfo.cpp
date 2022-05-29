@@ -248,9 +248,13 @@ void UWidgetItemInfo::OnSplit()
 	int Half = m_ItemSpec->m_nLvStack / 2;
 	
 	UWidgetStackCalculator* Calc = UMyLib::GetCanvas()->GetCalculator();
+	
 	Calc->m_OnGetMax.BindUObject(this, &UWidgetItemInfo::GetMax);
+	
 	Calc->m_OnNumberAccept.AddUObject(this,&UWidgetItemInfo::SplitConfirm);
+	
 	Calc->Open(Half);
+	
 	OnClose();
 }
 

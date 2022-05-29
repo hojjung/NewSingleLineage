@@ -17,8 +17,6 @@ protected:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (BindWidget))
 	UWidgetBaseElement* m_ElementBase;
 
-protected:
-	void OnHoldingComplete();
 public:
 	void SetUnit(const FNpcUnitEntityRow* npc_entity);
 };

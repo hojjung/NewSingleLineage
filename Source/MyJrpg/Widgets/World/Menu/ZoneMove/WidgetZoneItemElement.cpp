@@ -12,15 +12,13 @@ void UWidgetZoneItemElement::SetZone(const FDropRewardItem& data)
 
 	check(m_ItemRow);
 
-	//m_ElementBase->SetIcon(m_ItemRow->m_Icon);
-
-	//m_ElementBase->SetGlowColor(m_ItemRow->m_ColorHandle);
+	m_ElementBase->SetItemData(*m_ItemRow);
 
 	m_ElementBase->SetHoldable(true);
 	
 	m_ElementBase->SetFocusable(false);
 
-	//m_ElementBase->m_OnHold.AddUObject(this,&UWidgetZoneItemElement::OnHoldComplete);
+	m_ElementBase->m_OnHold.AddUObject(this,&UWidgetZoneItemElement::OnHold);
 }
 
 int UWidgetZoneItemElement::GetSortValue() const
@@ -28,8 +26,9 @@ int UWidgetZoneItemElement::GetSortValue() const
 	return m_nCntDrop;
 }
 
-void UWidgetZoneItemElement::OnHoldComplete()
+void UWidgetZoneItemElement::OnHold(UWidgetBaseElement* ele)
 {
-	//if (!m_ID.IsNone())
-		//UMyLib::GetCanvas()->OpenItemInfo(EItemInfo::QuestReward,m_ID,nullptr);	
+	ele->SetMyUnFocus();
+	
+	UMyLib::GetCanvas()->OpenItemInfoData(*m_ItemRow);
 }

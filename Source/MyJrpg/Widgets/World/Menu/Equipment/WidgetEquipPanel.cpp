@@ -14,8 +14,6 @@ void UWidgetEquipPanel::NativeOnInitialized()
 
 	m_Equip = UMyLib::GetEquip();
 
-	m_Inven = UMyLib::GetPlayerInven();
-
 	m_AryEquips.Reset();
 	m_AryEquips.Add(nullptr);
 	m_AryEquips.Add(m_Weapon);
@@ -44,6 +42,8 @@ void UWidgetEquipPanel::NativeOnInitialized()
 		m_AryEquips[Iter]->m_OnDrag.AddUObject(this, &UWidgetEquipPanel::OnDrag);
 
 		m_AryEquips[Iter]->m_OnDrop.AddUObject(this, &UWidgetEquipPanel::OnDrop);
+
+		m_AryEquips[Iter]->m_OnHold.AddUObject(this, &UWidgetEquipPanel::OnHold);
 
 		Iter++;
 	}
@@ -219,4 +219,15 @@ void UWidgetEquipPanel::OnDrop(UWidgetBaseElement* ele)
 	m_Equip->Equip(t,UItemDDO::GetDDOInst->m_FromInven.Get(),UItemDDO::GetDDOInst->m_nIndex);
 
 	UItemDDO::GetDDOInst->m_FromInven->UpdateInventory();
+}
+
+void UWidgetEquipPanel::OnHold(UWidgetBaseElement* ele)
+{
+	ele->SetMyUnFocus();
+	
+	FItemSpec& ItemSpec = m_Equip->GetEquipItem(ele->GetIndex());
+	
+	UMyLib::GetCanvas()->OpenItemInfo(ItemSpec,nullptr);
+
+	ele->SetMyUnFocus();
 }

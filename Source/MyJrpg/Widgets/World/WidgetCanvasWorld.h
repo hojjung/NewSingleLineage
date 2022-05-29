@@ -23,6 +23,7 @@
 #include "MyJrpg/Pawns/MonsterPawn.h"
 #include "WidgetCanvasWorld.generated.h"
 
+class UEquipManager;
 class UWidgetConfirmPanel;
 struct FZoneDataRow;
 class UWidgetStackCalculator;
@@ -163,10 +164,13 @@ public:
 
 	UWidgetConfirmPanel* GetConfirmPanel();
 
+	void OpenItemInfoData(const FItemDataRow& item);
+
 	void OpenItemInfo(FItemSpec& item, UInventory* inven);
 
 	void OpenItemInfoCollec(const FName& collecId, int collecIndex, const FName& itemID);
-
+	
+public:
 	UFUNCTION()
 	void ToggleMenu();
 	UFUNCTION()

@@ -13,6 +13,7 @@
 #include "Menu/ZoneMove/WidgetZoneSelectPanel.h"
 #include "MyJrpg/MyLib.h"
 #include "MyJrpg/DataTables/DialogueTable.h"
+#include "MyJrpg/Managers/EquipManager.h"
 #include "MyJrpg/Managers/MyGameInstance.h"
 #include "MyJrpg/Pawns/MyPlayerPawn.h"
 
@@ -245,6 +246,11 @@ UWidgetPickpocketPanel* UWidgetCanvasWorld::GetPickpocketMenu()
 UWidgetConfirmPanel* UWidgetCanvasWorld::GetConfirmPanel()
 {
 	return m_ConfirmPanel;
+}
+
+void UWidgetCanvasWorld::OpenItemInfoData(const FItemDataRow& item)
+{
+	m_ItemInfo->SetInfoItemData(item);
 }
 
 void UWidgetCanvasWorld::OpenItemInfo(FItemSpec& item, UInventory* inven)

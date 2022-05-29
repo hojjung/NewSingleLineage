@@ -13,7 +13,7 @@ void UWidgetCraftCostElement::SetCraftCost(const FCraftItemCost& cost)
 
 	m_ItemElement->SetGlowColor(CraftData->m_ColorHandle);
 
-	//m_ItemElement->m_OnHold.AddUObject(this,&UWidgetCraftCostElement::OnHoldComplete);
+	m_ItemElement->m_OnHold.AddUObject(this,&UWidgetCraftCostElement::OnHold);
 
 	m_ItemElement->SetHoldable(true);
 
@@ -22,13 +22,6 @@ void UWidgetCraftCostElement::SetCraftCost(const FCraftItemCost& cost)
 	m_ItemElement->SetDragable(false);
 
 	UpdateCostAmount();
-}
-
-void UWidgetCraftCostElement::OnHoldComplete()
-{
-	FName ID = m_CraftData->m_ItemDataRowHandle.RowName;
-	
-	//UMyLib::GetCanvas()->OpenItemInfo(EItemInfo::Craft,ID,nullptr);
 }
 
 void UWidgetCraftCostElement::UpdateCostAmount()
@@ -60,3 +53,15 @@ void UWidgetCraftCostElement::UpdateCostAmount()
 	}
 }
 
+void UWidgetCraftCostElement::OnHold(UWidgetBaseElement* ele)
+{
+	ele->SetMyUnFocus();
+	
+	FItemSpec ItemSpec;
+	
+	ItemSpec.m_ID = m_CraftData->m_ItemDataRowHandle.RowName;
+
+	ItemSpec.m_nLvStack = m_CraftData->m_nStackOrLevel;
+
+	UMyLib::GetCanvas()->OpenItemInfo(ItemSpec,nullptr);
+}

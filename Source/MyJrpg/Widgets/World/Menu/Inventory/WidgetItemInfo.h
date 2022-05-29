@@ -8,6 +8,7 @@
 #include "Components/ScrollBox.h"
 #include "MyJrpg/DataTables/ItemData.h"
 #include "MyJrpg/Items/Inventory.h"
+#include "MyJrpg/Managers/EquipManager.h"
 #include "MyJrpg/Widgets/World/CommonElements/WidgetBaseElement.h"
 #include "MyJrpg/Widgets/World/Menu/Collection/WidgetCollecItemEle.h"
 #include "MyJrpg/Widgets/World/Menu/Collection/WidgetCollecStatChild.h"
@@ -96,7 +97,7 @@ public:
 	void SetInfoItemData(const FItemDataRow& data_row);
 
 	void SetCollecItemInfo(const FName& collecId, int collecIndex, const FName& itemID);
-	
+public:
 	UFUNCTION()
 	void OnClose();
 	UFUNCTION()

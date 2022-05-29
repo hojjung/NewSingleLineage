@@ -26,8 +26,8 @@ protected:
 	const FCraftItemCost* m_CraftData;
 
 protected:
-	void OnHoldComplete();//인포 띄워주기
-
+	void OnHold(UWidgetBaseElement* ele);
+	
 public:
 	void UpdateCostAmount();
 	
