@@ -5,11 +5,12 @@
 
 #include "MyJrpg/MyLib.h"
 
-void UBI_Storage::Init()
+void UBI_Storage::Init(const FString& variable)
 {
-	Super::Init();
+	Super::Init(variable);
 	m_Inven = NewObject<UInventory>(this);
-	m_Inven->Init(20);
+	int Size = FCString::Atoi(*variable);
+	m_Inven->Init(Size);
 	m_Player = UMyLib::GetPlayer();
 }
 

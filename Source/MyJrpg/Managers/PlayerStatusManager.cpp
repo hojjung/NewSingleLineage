@@ -2,6 +2,8 @@
 
 #include "MyAssetManager.h"
 #include "MyJrpg/MyLib.h"
+#include "MyJrpg/DataTables/BuffTable.h"
+#include "MyJrpg/Items/Buff/Buff_Base.h"
 #include "MyJrpg/Skills/Skill_BuffBase.h"
 
 void UPlayerStatusManager::Init()
@@ -30,7 +32,7 @@ void UPlayerStatusManager::Tick(float deltaTime)
 {
 	for (int32 i = m_AryBuff.Num() - 1; i >= 0; --i)
 	{
-		USkill_BuffBase* Buff = m_AryBuff[i];
+		UBuff_Base* Buff = m_AryBuff[i];
 
 		float RemainTime = m_MapBuffDur[Buff->GetClass()];
 
@@ -40,9 +42,9 @@ void UPlayerStatusManager::Tick(float deltaTime)
 
 		if (RemainTime <= 0)
 		{
-			Buff->EndDuration();
+			Buff->EndBuff();
 
-			RemoveBuff(m_AryBuff[i]);
+			RemoveBuff(m_AryBuff[i]->GetClass());
 		}
 		else
 		{
@@ -85,34 +87,40 @@ void UPlayerStatusManager::OnPlTookDmg(float dmg)
 	m_OnTookDmg.Broadcast(dmg);
 }
 
-void UPlayerStatusManager::AddBuff(USkill_BuffBase* buff)
+void UPlayerStatusManager::AddBuff(const FBuffDataRow*  data)
 {
-	if (m_MapBuffInst.Find(buff->GetClass()))
+	if (m_MapBuffInst.Find(data->m_ClassBuff))
 	{
-		RemoveBuff(m_MapBuffInst[buff->GetClass()]);
+		RemoveBuff(data->m_ClassBuff);
 	}
 
-	m_AryBuff.Add(buff);
+	UBuff_Base* BuffInst = NewObject<UBuff_Base>(this,data->m_ClassBuff);
 
-	m_MapBuffDur.Add(buff->GetClass(), buff->GetDuration());
+	BuffInst->Init(*data);
+	
+	m_AryBuff.Emplace(BuffInst);
 
-	m_MapBuffInst.Add(buff->GetClass(), buff);
+	m_MapBuffDur.Add(data->m_ClassBuff, BuffInst->GetDuration());
 
-	m_OnAddBuff.Broadcast(buff);
+	m_MapBuffInst.Add(data->m_ClassBuff, BuffInst);
+
+	m_OnAddBuff.Broadcast(BuffInst);
 }
 
-void UPlayerStatusManager::RemoveBuff(USkill_BuffBase* buff)
+void UPlayerStatusManager::RemoveBuff(TSubclassOf<UBuff_Base> class_buff)
 {
-	m_MapBuffDur.Remove(buff->GetClass());
+	m_MapBuffDur.Remove(class_buff->GetClass());
 
-	m_MapBuffInst.Remove(buff->GetClass());
+	UBuff_Base** BuffInst = m_MapBuffInst.Find(class_buff);
 
-	m_AryBuff.Remove(buff);
+	m_MapBuffInst.Remove(class_buff);
 
-	m_OnRemoveBuff.Broadcast(buff);
+	m_AryBuff.Remove(*BuffInst);
+
+	m_OnRemoveBuff.Broadcast(*BuffInst);
 }
 
-bool UPlayerStatusManager::CheckBuffApplied(TSubclassOf<USkill_BuffBase> buffClass)
+bool UPlayerStatusManager::CheckBuffApplied(TSubclassOf<UBuff_Base> buffClass)
 {
 	return m_MapBuffDur.Contains(buffClass);
 }

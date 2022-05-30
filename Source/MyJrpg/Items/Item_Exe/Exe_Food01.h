@@ -13,5 +13,7 @@ UCLASS()
 class MYJRPG_API UExe_Food01 : public UItemExecuteBase
 {
 	GENERATED_BODY()
-	
+
+public:
+	virtual void Use(FItemSpec& item,UInventory* inven) const override;	
 };

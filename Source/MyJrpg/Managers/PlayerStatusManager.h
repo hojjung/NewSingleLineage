@@ -4,15 +4,13 @@
 
 #include "CoreMinimal.h"
 #include "MyJrpg/DataTables/HumanAsset.h"
-
 #include "MyJrpg/DataTables/UnitEntityData.h"
+#include "MyJrpg/Items/Buff/Buff_Base.h"
 #include "MyJrpg/Pawns/BaseUnitPawn.h"
 #include "MyJrpg/Pawns/MonsterPawn.h"
 #include "PlayerStatusManager.generated.h"
 
-class UConsumeBuffBase;
 class AMyPlayerPawn;
-class USkill_BuffBase;
 /**
  * 플레이어 캐릭터 엔티티 스펙 관리
  * 모든 델리게이트도 이곳에?
@@ -29,7 +27,7 @@ protected:
 	
 	DECLARE_MULTICAST_DELEGATE_OneParam(FOnPlayerPawn,const AMyPlayerPawn*);
 
-	DECLARE_MULTICAST_DELEGATE_OneParam(FOnBuffChanged,USkill_BuffBase*);
+	DECLARE_MULTICAST_DELEGATE_OneParam(FOnBuffChanged,UBuff_Base*);
 
 	DECLARE_MULTICAST_DELEGATE_OneParam(FOnTookDmg, float);
 
@@ -70,11 +68,11 @@ protected:
 	FStatGroup m_MultipleStatGroup;
 
 protected://버프 아이템은 따로 뭔갈 안가질거임,남는시간?
-	TMap<TSubclassOf<USkill_BuffBase>,float> m_MapBuffDur;
+	TMap<TSubclassOf<UBuff_Base>,float> m_MapBuffDur;
 	
-	TMap<TSubclassOf<USkill_BuffBase>,USkill_BuffBase*> m_MapBuffInst;
+	TMap<TSubclassOf<UBuff_Base>,UBuff_Base*> m_MapBuffInst;
 	UPROPERTY()
-	TArray<USkill_BuffBase*> m_AryBuff;//for gc
+	TArray<UBuff_Base*> m_AryBuff;//for gc
 
 	TSoftObjectPtr<UHumanAsset> m_BaseBodyWhite;
 
@@ -96,11 +94,11 @@ public://quest and special, delegates
 	void OnPlTookDmg(float dmg);
 
 public://buff
-	void AddBuff(USkill_BuffBase* buff);
+	void AddBuff(const FBuffDataRow*  class_buff);
 
-	void RemoveBuff(USkill_BuffBase* buff);
+	void RemoveBuff(TSubclassOf<UBuff_Base> class_buff);
 
-	bool CheckBuffApplied(TSubclassOf<USkill_BuffBase> buffClass);
+	bool CheckBuffApplied(TSubclassOf<UBuff_Base> buffClass);
 public://level and exp
 	float GetMaxExp();
 

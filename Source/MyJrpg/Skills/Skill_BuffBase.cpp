@@ -11,7 +11,6 @@
 void USkill_BuffBase::OnSkillTriggered()
 {
 	Super::OnSkillTriggered();
-	UMyGameInstance::Get->m_PlayerStatManager->AddBuff(this);
 }
 
 bool USkill_BuffBase::CanUseSkill()

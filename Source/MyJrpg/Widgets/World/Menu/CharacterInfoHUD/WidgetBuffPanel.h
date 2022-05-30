@@ -22,11 +22,11 @@ protected:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (BindWidget))
 	UWrapBox* m_WrapBox;	
 
-	TMap<USkill_BuffBase*,UWidgetBuffElement*> m_MapBuff;
+	TMap<UBuff_Base*,UWidgetBuffElement*> m_MapBuff;
 protected:
 	virtual void NativeOnInitialized() override;
 	
-	void OnBuffAdd(USkill_BuffBase* buff);
+	void OnBuffAdd(UBuff_Base* buff);
 
-	void OnBuffRemove(USkill_BuffBase* buff);
+	void OnBuffRemove(UBuff_Base* buff);
 };

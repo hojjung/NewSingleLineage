@@ -127,13 +127,13 @@ void ACombatUnitPawn::SetEntity(const FName& id, const FNpcUnitEntityRow& unitEn
 {
 	Super::SetEntity(id, unitEntityRow);
 	
-	if(unitEntityRow.m_ClassAI_Logic)
+	if(unitEntityRow.m_ClassAI_Logic->IsValidLowLevel())
 	{
 		m_AiFsm = NewObject<UAI_LogicBase>(this,unitEntityRow.m_ClassAI_Logic);
 		m_AiFsm->Init(this);
 	}
 
-	if(unitEntityRow.m_ClassAI_Sensor)
+	if(unitEntityRow.m_ClassAI_Sensor->IsValidLowLevel())
 	{
 		m_AiSensor = NewObject<USensor_LogicBase>(this,unitEntityRow.m_ClassAI_Sensor);
 		m_AiSensor->Init(this);
@@ -155,7 +155,12 @@ void ACombatUnitPawn::SetEntity(const FName& id, const FNpcUnitEntityRow& unitEn
 	{
 		m_Stance = HumanAsset->m_StanceType;;
 	}
-		
+
+	if(unitEntityRow.m_ClassInteract->IsValidLowLevel())
+	{
+		m_Interaction = NewObject<UInteractBase>(this,unitEntityRow.m_ClassInteract);
+		m_Interaction->Init(unitEntityRow.m_InteractVariable);
+	}
 }
 
 void ACombatUnitPawn::Tick(float DeltaSeconds)

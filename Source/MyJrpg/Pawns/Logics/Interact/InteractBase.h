@@ -15,5 +15,6 @@ class MYJRPG_API UInteractBase : public UObject
 	GENERATED_BODY()
 
 public:
-	virtual void Interact() {};
+	virtual void Init(const FString& variable) {};
+	virtual void OnInteract() {};
 };

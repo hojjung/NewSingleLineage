@@ -13,9 +13,9 @@ void UBI_StorageSearch::OnSearchEnd()
 	m_Player->SetInteracting(false);
 }
 
-void UBI_StorageSearch::Init()
+void UBI_StorageSearch::Init(const FString& variable)
 {
-	Super::Init();
+	Super::Init(variable);
 
 	m_bIsSearched = false;
 }

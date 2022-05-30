@@ -33,6 +33,8 @@ protected:
 	UPROPERTY()
 	USensor_LogicBase* m_AiSensor;
 	UPROPERTY()
+	UInteractBase* m_Interaction;
+	UPROPERTY()
 	UBulletPool* m_Pool;
 	
 	FTimerHandle m_DeathAnimTimer;

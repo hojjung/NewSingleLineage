@@ -22,7 +22,7 @@ protected:
 	UPROPERTY()
 	AMyPlayerPawn* m_Player;
 public:
-	virtual void Init() override;
+	virtual void Init(const FString& variable) override;
 	
 	virtual bool IsEraseable() override;
 

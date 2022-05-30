@@ -17,7 +17,7 @@ void UBadwordTable::Init()
 
 void UBadwordTable::ChatFilterBadWord(FString& outChatWant)
 {
-	for (auto* BadWord : m_AryBadwordList)
+	for (FBadWordDataRow* BadWord : m_AryBadwordList)
 	{
 		outChatWant = outChatWant.Replace(*BadWord->m_Badword,TEXT("*"));
 	}
@@ -28,9 +28,9 @@ void UBadwordTable::ChatFilterBadWord(FString& outChatWant)
 
 bool UBadwordTable::NicknameHasBadWord(const FString& nameWant)
 {
-	auto& AryChar = nameWant.GetCharArray();
+	const TArray<TCHAR>& AryChar = nameWant.GetCharArray();
 
-	for (auto wChar : AryChar)
+	for (TCHAR wChar : AryChar)
 	{
 		if (L' ' <= wChar && wChar <= L'/') //특수문자 잡기
 		{
@@ -48,7 +48,7 @@ bool UBadwordTable::NicknameHasBadWord(const FString& nameWant)
 		{
 			return true;
 		}
-		if (L'ㄱ' <= wChar && wChar <= L'ㅣ')
+		if (L'ㄱ' <= wChar && wChar <= L'ㅣ')//미완성한글 잡기
 		{
 			return true;
 		}

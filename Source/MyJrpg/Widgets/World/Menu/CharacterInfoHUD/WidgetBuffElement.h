@@ -24,5 +24,5 @@ protected:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (BindWidget))
 	UImage* m_ImgIcon;
 public:
-	void SetBuff(const USkill_BuffBase* buff);
+	void SetBuff(const UBuff_Base* buff);
 };

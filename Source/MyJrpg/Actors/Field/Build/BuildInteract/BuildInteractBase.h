@@ -15,7 +15,7 @@ class MYJRPG_API UBuildInteractBase : public UObject
 	GENERATED_BODY()
 
 public:
-	virtual void Init() {};
+	virtual void Init(const FString& variable) {};
 	
 	virtual bool IsEraseable() { return true;};
 

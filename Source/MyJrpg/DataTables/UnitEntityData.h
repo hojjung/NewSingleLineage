@@ -3,6 +3,7 @@
 #include "ItemData.h"
 #include "NPCPaletteDataAsset.h"
 #include "MyJrpg/MyJrpg.h"
+#include "MyJrpg/Pawns/Logics/Interact/InteractBase.h"
 #include "UObject/NoExportTypes.h"
 #include "UnitEntityData.generated.h"
 
@@ -129,6 +130,10 @@ public://스텟과 보상
 	TSubclassOf<UAI_LogicBase> m_ClassAI_Logic;
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
 	TSubclassOf<USensor_LogicBase> m_ClassAI_Sensor;
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
+	TSubclassOf<UInteractBase> m_ClassInteract;
+	UPROPERTY(EditAnywhere, meta=(EditCondition = "m_ClassInteract != nullptr", EditConditionHides))
+	FString m_InteractVariable;
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
 	UParticleSystem* m_Bullet;
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (UIMin = "0.1"))

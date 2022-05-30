@@ -345,7 +345,7 @@ bool UEquipManager::AddItem(FItemSpec&& addItem, bool newEquipItem)
 FItemSpec* UEquipManager::FindItemInEquip(FName id)
 {
 	int Iter = -1;
-	while (++Iter > (int)EEquipSlotType::Length)
+	while (++Iter < (int)EEquipSlotType::Length)
 	{
 		if(GetEquipItem(Iter).m_ID == id)
 		{

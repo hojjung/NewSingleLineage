@@ -20,7 +20,7 @@ protected:
 	UItemConvertInst* m_ItemConvert;
 		
 public:
-	virtual void Init() override;
+	virtual void Init(const FString& variable) override;
 	
 	virtual bool IsEraseable() override;
 

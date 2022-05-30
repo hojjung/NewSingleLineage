@@ -13,7 +13,7 @@ void UWidgetBuffPanel::NativeOnInitialized()
 	//버프결국 맵순회로 만들어줘야함
 }
 
-void UWidgetBuffPanel::OnBuffAdd(USkill_BuffBase* buff)
+void UWidgetBuffPanel::OnBuffAdd(UBuff_Base* buff)
 {
 	if(m_MapBuff.Contains(buff))
 	{
@@ -31,7 +31,7 @@ void UWidgetBuffPanel::OnBuffAdd(USkill_BuffBase* buff)
 	m_WrapBox->AddChildToWrapBox(ItemEle);	
 }
 
-void UWidgetBuffPanel::OnBuffRemove(USkill_BuffBase* buff)
+void UWidgetBuffPanel::OnBuffRemove(UBuff_Base* buff)
 {
 	m_WrapBox->RemoveChild(m_MapBuff[buff]);
 

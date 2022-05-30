@@ -139,7 +139,7 @@ void UMyGameInstance::TestModeSetting()
 	m_Inven->AddItem(FItemSpec(TEXT("misc_wood01"), 10));
 	m_Inven->AddItem(FItemSpec(TEXT("EnchantWeapon"), 10));
 	m_Inven->AddItem(FItemSpec(TEXT("EnchantArmor"), 10));
-	m_Inven->AddItem(FItemSpec(TEXT("EnchantRing"), 10));
+	m_Inven->AddItem(FItemSpec(TEXT("Food01"), 10));
 	m_Inven->AddItem(FItemSpec(TEXT("Axe01"), 0),true);
 	
 }
@@ -166,6 +166,7 @@ FString UMyGameInstance::GetPlayerName()
 
 void UMyGameInstance::Tick(float deltaTime)
 {
+	m_PlayerStatManager->Tick(deltaTime);
 	m_SkillManager->Tick(deltaTime);
 	m_ChatManager->Tick(deltaTime);
 	m_SkillAuto->Tick(deltaTime);

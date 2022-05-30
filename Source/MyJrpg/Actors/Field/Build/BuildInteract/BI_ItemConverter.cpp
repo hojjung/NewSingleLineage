@@ -5,14 +5,14 @@
 
 #include "MyJrpg/Managers/MyGameInstance.h"
 
-void UBI_ItemConverter::Init()
+void UBI_ItemConverter::Init(const FString& variable)
 {
-	Super::Init();
+	Super::Init(variable);
 	
 	m_ItemConvert = NewObject<UItemConvertInst>(this);
 	UMyGameInstance::Get->m_ItemConvertManager->AddStructureAndItem(Cast<AStructureActor>(GetOuter()),m_ItemConvert);
-	
-	const FItemConvertRow* ItemRow = UItemConvertTable::GetItemConverter->FindRow<FItemConvertRow>(TEXT("WoodCraft"), "");
+
+	const FItemConvertRow* ItemRow = UItemConvertTable::GetItemConverter->FindRow<FItemConvertRow>(*variable, "");
 	
 	m_ItemConvert->SetConvertData(*ItemRow);
 }
