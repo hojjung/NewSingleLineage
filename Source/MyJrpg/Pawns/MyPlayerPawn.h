@@ -66,11 +66,17 @@ protected:
 	
 	FTimerHandle m_InvincTimer;
 
+	FTimerHandle m_WaitInteractTimer;
+
 	TWeakObjectPtr<ACombatUnitPawn> m_LastAttacker;
 
 	bool m_bIsSneaking;
 
 	bool m_bIsInteracting;
+
+	FAIRequestID m_ReqID;
+
+	FVoidVoid m_OnRequestDone;
 
 private:
 	void CreateFocusActor();
@@ -88,6 +94,8 @@ private:
 	void ShowIndicator(IFocusable* target);
 
 	bool CheckTargetRange();
+
+	void OnRequestMoveDone(FAIRequestID id, const FPathFollowingResult& rslt);
 
 public:
 	virtual void SetFocusedTarget(IFocusable* target) override;
@@ -153,6 +161,8 @@ public:
 	bool GetInteracting() const;
 	
 	void WaitInteract(UAnimMontage* am, float interactTime, const FVoidVoid& delegate);
+
+	void RequestInteract(AActor* target, const FVoidVoid& delegate, float r = 250.f);
 };
 
 

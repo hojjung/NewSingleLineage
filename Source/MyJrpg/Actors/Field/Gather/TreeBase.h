@@ -56,6 +56,8 @@ private:
 protected:
 	virtual void OnInteract() override;
 
+	void OnArrived();
+
 	virtual void Tick(float DeltaSeconds) override;
 
 	virtual void EndPlay(const EEndPlayReason::Type EndPlayReason) override;

@@ -65,8 +65,10 @@ void ABaseUnitPawn::SetEntity(const FName& id, const FNpcUnitEntityRow& unitEnti
 {
 	m_EntityID = id;
 	
-	m_PFComp->SetMovementComponent(m_Movement);	
+	m_PFComp->SetMovementComponent(m_Movement);
+	
 	m_PFComp->Initialize();
+	
 	m_Movement->SetPathFollowingAgent(m_PFComp);
 	
 	LoadSetSkMeshAnim(unitEntityRow.m_UnitDataAsset);
@@ -114,7 +116,9 @@ FPathFollowingRequestResult ABaseUnitPawn::MoveTo(const FAIMoveRequest& MoveRequ
 		PRINTF("InvalidRequest");
 		return ResultData;
 	}
+	
 	bool bCanRequestMove = true;
+	
 	bool bAlreadyAtGoal = false;
 
 	if (!MoveRequest.IsMoveToActorRequest())
@@ -262,9 +266,6 @@ FAIRequestID ABaseUnitPawn::RequestMove(const FAIMoveRequest& MoveRequest, FNavP
 	return RequestID;
 }
 
-
-
-
 float ABaseUnitPawn::GetRadius() const
 {
 	return m_Capsule->GetScaledCapsuleRadius();
@@ -273,8 +274,7 @@ float ABaseUnitPawn::GetRadius() const
 void ABaseUnitPawn::StopMove()
 {
 	m_Movement->StopMovementImmediately();
-	m_PFComp->AbortMove(*this, FPathFollowingResultFlags::ForcedScript | FPathFollowingResultFlags::NewRequest
-							, FAIRequestID::CurrentRequest, EPathFollowingVelocityMode::Keep);
+	m_PFComp->AbortMove(*this, FPathFollowingResultFlags::ForcedScript | FPathFollowingResultFlags::NewRequest, FAIRequestID::CurrentRequest, EPathFollowingVelocityMode::Keep);
 }
 
 bool ABaseUnitPawn::IsRange()
@@ -296,12 +296,11 @@ void ABaseUnitPawn::SetActorFeetLocation(FVector loc)
 	SetActorLocation(NewLoc);
 }
 
-EPathFollowingRequestResult::Type ABaseUnitPawn::MoveToLocation(FVector loc, float acceptRadius)
+FPathFollowingRequestResult ABaseUnitPawn::MoveToLocation(FVector loc, float acceptRadius)
 {
 	if (m_PFComp && m_PFComp->GetStatus() != EPathFollowingStatus::Idle)
 	{
-		m_PFComp->AbortMove(*this, FPathFollowingResultFlags::ForcedScript | FPathFollowingResultFlags::NewRequest
-		                    , FAIRequestID::CurrentRequest, EPathFollowingVelocityMode::Keep);
+		m_PFComp->AbortMove(*this, FPathFollowingResultFlags::ForcedScript | FPathFollowingResultFlags::NewRequest, FAIRequestID::CurrentRequest, EPathFollowingVelocityMode::Keep);
 	}
 
 	FAIMoveRequest MoveReq(loc);
@@ -316,19 +315,18 @@ EPathFollowingRequestResult::Type ABaseUnitPawn::MoveToLocation(FVector loc, flo
 	return MoveTo(MoveReq);
 }
 
-EPathFollowingRequestResult::Type ABaseUnitPawn::MoveToActor(AActor* target, float acceptRadius) //바디메쉬크기가 260으로 나온다
+FPathFollowingRequestResult ABaseUnitPawn::MoveToActor(AActor* target, float acceptRadius) //바디메쉬크기가 260으로 나온다
 {
 	if (m_PFComp && m_PFComp->GetStatus() != EPathFollowingStatus::Idle)
 	{
-		m_PFComp->AbortMove(*this, FPathFollowingResultFlags::ForcedScript | FPathFollowingResultFlags::NewRequest
-		                    , FAIRequestID::CurrentRequest, EPathFollowingVelocityMode::Keep);
+		m_PFComp->AbortMove(*this, FPathFollowingResultFlags::ForcedScript | FPathFollowingResultFlags::NewRequest, FAIRequestID::CurrentRequest, EPathFollowingVelocityMode::Keep);
 	}
 
 	FAIMoveRequest MoveReq(Cast<AActor>(target));
 	MoveReq.SetUsePathfinding(true);
 	MoveReq.SetAllowPartialPath(true);
 	MoveReq.SetNavigationFilter(UNavigationQueryFilter::StaticClass());
-	MoveReq.SetAcceptanceRadius(acceptRadius); //GetInteractRange()
+	MoveReq.SetAcceptanceRadius(acceptRadius);
 	MoveReq.SetReachTestIncludesAgentRadius(false);
 	MoveReq.SetReachTestIncludesGoalRadius(false);
 	MoveReq.SetCanStrafe(true);

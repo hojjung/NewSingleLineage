@@ -7,6 +7,7 @@
 #include "Components/WrapBox.h"
 #include "Hud/WidgetGameOver.h"
 #include "Hud/WidgetLevelUp.h"
+#include "Hud/WidgetWaitInteract.h"
 #include "Interact/WidgetInteract.h"
 #include "Menu/CharacterInfoHUD/AlertInfoWindow.h"
 #include "Menu/Collection/WidgetCollecPanelParent.h"
@@ -139,7 +140,9 @@ protected:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (BindWidget))
 	UWidgetItemConvert* m_ItemConvertPanel;
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (BindWidget))
-	UWidgetConfirmPanel* m_ConfirmPanel; 
+	UWidgetConfirmPanel* m_ConfirmPanel;
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (BindWidget))
+	UWidgetWaitInteract* m_WaitBar;
 	//
 	bool m_bIsBuildable;
 protected:
@@ -221,5 +224,7 @@ public:
 	UWidgetStorage* GetStorageMenu();
 	
 	void OpenItemConverter(UItemConvertInst* inst);
+
+	UWidgetWaitInteract* GetWaitInteract(); 
 };
 

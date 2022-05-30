@@ -33,6 +33,8 @@ protected:
 
 protected:
 	virtual void EndPlay(const EEndPlayReason::Type EndPlayReason) override;
+
+	void OnArrived();
 	
 public:
 	virtual const FBuildDataRow& GetBuildData() const ;

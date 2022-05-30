@@ -62,7 +62,12 @@ void AItemActor::Init(FName itemID, int countOrLevel)
 	}
 }
 
-void AItemActor::StartInteract()
+void AItemActor::OnInteract()
+{
+	UMyLib::GetPlayer()->RequestInteract(this,FVoidVoid::CreateUObject(this,&AItemActor::OnArrived),125);
+}
+
+void AItemActor::OnArrived()
 {
 	UMyLib::GetPlayer()->PlayAnimMontage(m_Anim);
 }

@@ -34,8 +34,10 @@ protected:
 public:
 	void Init(FName itemID, int countOrLevel);//그럼 어떻게 스택 아이템 처리?
 
-	void StartInteract();
-	
+	virtual void OnInteract() override;
+
+	void OnArrived();
+
 	void OnObtain();
 
 	bool HasOwnerTeamID() const;

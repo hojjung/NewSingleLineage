@@ -101,6 +101,11 @@ void ATreeBase::SetActorFeetLoc(FVector loc)
 
 void ATreeBase::OnInteract()
 {
+	m_Player->RequestInteract(this,FVoidVoid::CreateUObject(this,&ATreeBase::OnArrived),175);
+}
+
+void ATreeBase::OnArrived()
+{
 	if(m_Player->GetInteracting())
 	{
 		return;
@@ -111,17 +116,12 @@ void ATreeBase::OnInteract()
 	}
 
 	m_Player->PlayAnimMontage(m_GatherAsset->m_AnimGatherMotion);
+	
 	m_Player->HomingRotateToTarget(0);
+	
 	m_Player->SetInteracting(true);
-
-	if(m_GatherAsset->m_bIsAxe)
-	{
-		m_CrntToolID = m_Player->TryShowAxe();
-	}
-	else
-	{
-		m_CrntToolID = m_Player->TryShowPickAxe();
-	}
+	
+	m_CrntToolID = m_GatherAsset->m_bIsAxe ? m_Player->TryShowAxe() : m_CrntToolID = m_Player->TryShowPickAxe();
 }
 
 void ATreeBase::OnTakeChopping()

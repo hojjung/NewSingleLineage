@@ -335,6 +335,11 @@ void UWidgetCanvasWorld::OpenItemConverter(UItemConvertInst* inst)
 	m_ItemConvertPanel->ShowItemConvert(inst);
 }
 
+UWidgetWaitInteract* UWidgetCanvasWorld::GetWaitInteract()
+{
+	return m_WaitBar;
+}
+
 void UWidgetCanvasWorld::OnZoneMove(const FName& zoneID)
 {
 	if(zoneID == TEXT("PlayerHome"))

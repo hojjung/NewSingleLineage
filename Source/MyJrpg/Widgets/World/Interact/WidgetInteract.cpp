@@ -114,15 +114,15 @@ void UWidgetInteract::ShowDur(float per)
 
 void UWidgetInteract::ShowInteract(IFocusable* focus)
 {
-	if(!IsInRange(focus))
-	{
-		if(m_bHasFocus)
-		{
-			HideAllBtns();
-		}
-		m_bHasFocus = false;
-		return;
-	}
+	// if(!IsInRange(focus))
+	// {
+	// 	if(m_bHasFocus)
+	// 	{
+	// 		HideAllBtns();
+	// 	}
+	// 	m_bHasFocus = false;
+	// 	return;
+	// }
 	m_bHasFocus = true;
 	
 	AMonsterPawn* Monster = Cast<AMonsterPawn>(focus);
@@ -151,7 +151,7 @@ void UWidgetInteract::OnObtain()
 {
 	AItemActor* ItemActor = m_Pl->GetFocusedTarget<AItemActor>();
 	
-	ItemActor->StartInteract();
+	ItemActor->OnInteract();
 }
 
 void UWidgetInteract::OnSteal()

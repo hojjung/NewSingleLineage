@@ -23,6 +23,11 @@ void UWidgetWaitInteract::NativeTick(const FGeometry& MyGeometry, float InDeltaT
 	m_fTimer += InDeltaTime;
 
 	m_Bar->SetPercent(m_fTimer / m_fMaxTimer);
+
+	if(m_fTimer >= m_fMaxTimer)
+	{
+		HideInteract();
+	}
 }
 
 void UWidgetWaitInteract::ShowInteract(float time)

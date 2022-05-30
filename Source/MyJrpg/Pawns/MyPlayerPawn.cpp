@@ -68,6 +68,8 @@ void AMyPlayerPawn::BeginPlay()
 {
 	Super::BeginPlay();
 
+	m_PFComp->OnRequestFinished.AddUObject(this, &AMyPlayerPawn::OnRequestMoveDone);
+
 	m_AryIgnores.Reset();
 	
 	m_AryIgnores.Add(this);
@@ -145,7 +147,12 @@ void AMyPlayerPawn::Tick(float DeltaTime)
 	if (IsInputMoving() && IsAlive())//!m_bIsSkillUsing
 	{
 		if(!m_bCanMoveInSkill)
+		{
 			StopAnimMontage();
+			UMyLib::GetCanvas()->GetWaitInteract()->HideInteract();
+			SetInteracting(false);
+			GetWorldTimerManager().ClearTimer(m_WaitInteractTimer);
+		}
 		
 		ClearStopMoveDelegate();
 		
@@ -353,10 +360,35 @@ bool AMyPlayerPawn::GetInteracting() const
 
 void AMyPlayerPawn::WaitInteract(UAnimMontage* am, float interactTime, const FVoidVoid& delegate)
 {
-	PlayAnimMontage(am);
 	SetInteracting(true);
-	FTimerHandle Handle;
-	GetWorldTimerManager().SetTimer(Handle,delegate,interactTime,false);
+	PlayAnimMontage(am);
+	GetWorldTimerManager().SetTimer(m_WaitInteractTimer,delegate,interactTime,false);
+	UMyLib::GetCanvas()->GetWaitInteract()->ShowInteract(interactTime);
+}
+
+void AMyPlayerPawn::RequestInteract(AActor* target, const FVoidVoid& delegate ,float r)
+{
+	FPathFollowingRequestResult Result = MoveToActor(target, r);
+	
+	if(Result.Code == EPathFollowingRequestResult::Type::AlreadyAtGoal)
+	{
+		delegate.ExecuteIfBound();
+		return;
+	}
+	
+	m_ReqID = MoveToActor(target, r).MoveId;
+
+	m_OnRequestDone = delegate;
+}
+
+void AMyPlayerPawn::OnRequestMoveDone(FAIRequestID id, const FPathFollowingResult& rslt)
+{
+	if(m_ReqID != id || !rslt.IsSuccess())
+	{
+		return;
+	}
+	m_OnRequestDone.ExecuteIfBound();
+	m_OnRequestDone.Unbind();
 }
 
 void AMyPlayerPawn::OnNotifyTrigger(const FName& name)

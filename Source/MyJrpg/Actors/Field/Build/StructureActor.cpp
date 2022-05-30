@@ -1,4 +1,6 @@
 #include "StructureActor.h"
+
+#include "MyJrpg/MyLib.h"
 #include "MyJrpg/DataTables/BuildData.h"
 
 AStructureActor::AStructureActor()
@@ -61,8 +63,6 @@ const FBuildDataRow& AStructureActor::GetBuildData() const
 {
 	return *m_BuildData;
 }
-
-
 
 void AStructureActor::SetMat(UMaterialInterface* mat)
 {
@@ -153,6 +153,11 @@ bool AStructureActor::IsUpgradeable()
 }
 
 void AStructureActor::OnInteract()
+{
+	UMyLib::GetPlayer()->RequestInteract(this,FVoidVoid::CreateUObject(this,&AStructureActor::OnArrived),125);
+}
+
+void AStructureActor::OnArrived()
 {
 	m_BuildInteract->OnInteract();
 }

@@ -56,9 +56,9 @@ protected:
 public:
 	virtual void SetEntity(const FName& id, const FNpcUnitEntityRow& unitEntityRow);//Init
 	
-	virtual EPathFollowingRequestResult::Type MoveToLocation(FVector loc, float acceptRadius = 0.f);
+	virtual FPathFollowingRequestResult MoveToLocation(FVector loc, float acceptRadius = 0.f);
 
-	virtual EPathFollowingRequestResult::Type MoveToActor(AActor* target, float acceptRadius = 0);
+	virtual FPathFollowingRequestResult MoveToActor(AActor* target, float acceptRadius = 0);
 
 	bool LineOfSightTo(const AActor* Other) const;
 

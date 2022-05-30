@@ -36,7 +36,6 @@ class MYJRPG_API AModularUnitPawn : public ACombatUnitPawn
 
 public:
 	AModularUnitPawn(const FObjectInitializer& objInit);
-	
 
 protected:
 	UPROPERTY(VisibleAnywhere)
