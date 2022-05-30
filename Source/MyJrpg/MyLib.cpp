@@ -341,36 +341,6 @@ bool UMyLib::IsCollecItemEquip(const FName& collecID, int index)
 	return UMyLib::IsEquip(ItemKey);
 }
 
-bool UMyLib::HasAxe(FName& outFoundAxe)
-{
-	FName Axe01 = TEXT("Axe01");
-	FName Axe02 = TEXT("Axe02");
-	UEquipManager* Equip = UMyGameInstance::Get->m_EquipManager;
-	FName EquipID = Equip->GetEquipItem(EEquipSlotType::Weapon).m_ID; 
-	if(EquipID == Axe01)
-	{
-		outFoundAxe = Axe01;
-		return true;
-	}
-	if(EquipID == Axe02)
-	{
-		outFoundAxe = Axe02;
-		return true;
-	}
-	if(FindItemAllInven(Axe01, 0))
-	{
-		outFoundAxe = Axe01;
-		return  true;
-	}
-	else if(FindItemAllInven(Axe02, 0))
-	{
-		outFoundAxe = Axe02;
-		return  true;
-	}
-
-	return false;
-}
-
 FItemSpec* UMyLib::FindItemAllInven(const FName& id, int stlv)
 {
 	UInventory* outInven;
@@ -412,24 +382,6 @@ FItemSpec* UMyLib::FindItemAllInven(const FName& id, int stlv, UInventory*& outI
 	return nullptr;
 }
 
-bool UMyLib::HasPickaxe(FName& outFoundPickaxe)
-{
-	FName Pickaxe01 = TEXT("Pickaxe01");
-	FName Pickaxe02 = TEXT("Pickaxe02");
-	if(FindItemAllInven(Pickaxe01,0))
-	{
-		outFoundPickaxe = Pickaxe01;
-		return  true;
-	}
-	else if(FindItemAllInven(Pickaxe02, 0))
-	{
-		outFoundPickaxe = Pickaxe02;
-		return  true;
-	}
-
-	return false;
-}
-
 bool UMyLib::IsTestMode()
 {
 	bool IsTestMode = false;
@@ -442,9 +394,12 @@ bool UMyLib::IsTestMode()
 	return IsTestMode;
 }
 
-void UMyLib::ReduceDurability(FItemSpec& item_spec, int amount)
+void UMyLib::ReduceDurability(const FItemSpec& item_spec, int amount)
 {
-	int Index = INDEX_NONE;
+	if(UMyLib::GetPlayerInven()->ReduceDurability(item_spec, amount))
+	{
+		return;
+	}
 	UEquipManager* Equip = UMyGameInstance::Get->m_EquipManager;
 	if(&Equip->GetEquipItem(EEquipSlotType::Weapon) == &item_spec)
 	{

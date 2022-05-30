@@ -20,7 +20,7 @@ public:
 protected:
 	UPROPERTY(VisibleAnywhere)
    	UAnimMontage* m_Anim;
-    	
+	
 	bool m_bIsSearched;
 
 protected:

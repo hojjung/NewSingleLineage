@@ -197,24 +197,27 @@ void AModularUnitPawn::HideWeapon()
 	m_MeshRightHand->SetStaticMesh(nullptr);
 }
 
-FItemSpec* AModularUnitPawn::TryShowPickAxe()
+FItemSpec* AModularUnitPawn::GetAnyItemHave(FName id)
 {
 	FItemSpec* itemSpec = nullptr;
-
-	itemSpec = UMyLib::FindItemAllInven(TEXT("Pickaxe01"), 0);
-	if(itemSpec)
-	{
-		HideWeapon();
-		
-		m_MeshRightHand->SetStaticMesh(m_Pickaxe);
-
-		return itemSpec;
-	}
-	itemSpec = UMyLib::FindItemAllInven(TEXT("Pickaxe02"), 0);
-	if(itemSpec)
-	{
-		HideWeapon();
 	
+	UEquipManager* Equip = UMyGameInstance::Get->m_EquipManager;
+	itemSpec = Equip->FindItemInEquip(id);
+	if(!itemSpec)
+	{
+		return UMyLib::FindItemAllInven(id, -1);; 
+	}
+	return itemSpec;
+}
+
+FItemSpec* AModularUnitPawn::TryShowPickAxe()
+{
+	FItemSpec *itemSpec = GetAnyItemHave(TEXT("Pickaxe01"));
+	if(!itemSpec)
+		itemSpec = GetAnyItemHave(TEXT("Pickaxe02"));
+	if(itemSpec)
+	{
+		HideWeapon();
 		m_MeshRightHand->SetStaticMesh(m_Pickaxe);
 	}
 	return itemSpec;
@@ -222,22 +225,12 @@ FItemSpec* AModularUnitPawn::TryShowPickAxe()
 
 FItemSpec* AModularUnitPawn::TryShowAxe()
 {
-	FItemSpec* itemSpec = nullptr;
-
-	itemSpec = UMyLib::FindItemAllInven(TEXT("Axe01"), 0);
+	FItemSpec *itemSpec = GetAnyItemHave(TEXT("Axe01"));
+	if(!itemSpec)
+		itemSpec = GetAnyItemHave(TEXT("Axe02"));
 	if(itemSpec)
 	{
 		HideWeapon();
-		
-		m_MeshRightHand->SetStaticMesh(m_Axe);
-
-		return itemSpec;
-	}
-	itemSpec = UMyLib::FindItemAllInven(TEXT("Axe02"), 0);
-	if(itemSpec)
-	{
-		HideWeapon();
-	
 		m_MeshRightHand->SetStaticMesh(m_Axe);
 	}
 	return itemSpec;

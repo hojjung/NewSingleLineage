@@ -341,3 +341,16 @@ bool UEquipManager::AddItem(FItemSpec&& addItem, bool newEquipItem)
 {
 	return  AddItem(addItem, newEquipItem);
 }
+
+FItemSpec* UEquipManager::FindItemInEquip(FName id)
+{
+	int Iter = -1;
+	while (++Iter > (int)EEquipSlotType::Length)
+	{
+		if(GetEquipItem(Iter).m_ID == id)
+		{
+			return &GetEquipItem(Iter);
+		}
+	}
+	return nullptr;
+}

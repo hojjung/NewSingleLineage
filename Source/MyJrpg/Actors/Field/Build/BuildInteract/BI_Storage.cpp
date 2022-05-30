@@ -10,6 +10,7 @@ void UBI_Storage::Init()
 	Super::Init();
 	m_Inven = NewObject<UInventory>(this);
 	m_Inven->Init(20);
+	m_Player = UMyLib::GetPlayer();
 }
 
 bool UBI_Storage::IsEraseable()

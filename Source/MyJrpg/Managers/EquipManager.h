@@ -110,4 +110,6 @@ public:
 	bool AddItem(FItemSpec& addItem, bool newEquipItem = false);
 
 	bool AddItem(FItemSpec&& addItem, bool newEquipItem = false);
+	
+	FItemSpec* FindItemInEquip(FName id);
 };

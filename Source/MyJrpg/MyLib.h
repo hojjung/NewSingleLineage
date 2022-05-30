@@ -95,15 +95,11 @@ public:
 
 	static bool IsCollecItemEquip(const FName& collecID, int index);
 	
-	static bool HasAxe(FName& outFoundAxe);
-
 	static FItemSpec* FindItemAllInven(const FName& id, int stlv);
 
 	static FItemSpec* FindItemAllInven(const FName& id, int stlv,UInventory*& outInven);
 	
-	static bool HasPickaxe(FName& outFoundPickaxe);
-
 	static bool IsTestMode();
 	
-	static void ReduceDurability(FItemSpec& item_spec, int amount);
+	static void ReduceDurability(const FItemSpec& item_spec, int amount);
 };

@@ -87,6 +87,8 @@ public:
 
 	void HideWeapon();
 
+	FItemSpec* GetAnyItemHave(FName id);
+
 	FItemSpec* TryShowPickAxe();
 
 	FItemSpec* TryShowAxe();

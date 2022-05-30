@@ -7,6 +7,7 @@
 #include "MyJrpg/Items/Inventory.h"
 #include "BI_Storage.generated.h"
 
+class AMyPlayerPawn;
 /**
  * 
  */
@@ -18,7 +19,8 @@ class MYJRPG_API UBI_Storage : public UBuildInteractBase
 protected:
 	UPROPERTY()
 	UInventory* m_Inven;
-	
+	UPROPERTY()
+	AMyPlayerPawn* m_Player;
 public:
 	virtual void Init() override;
 	

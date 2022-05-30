@@ -10,7 +10,7 @@ UBI_StorageSearch::UBI_StorageSearch()
 void UBI_StorageSearch::OnSearchEnd()
 {
 	m_bIsSearched = true;
-	UMyLib::GetPlayer()->SetInteracting(false);
+	m_Player->SetInteracting(false);
 }
 
 void UBI_StorageSearch::Init()
@@ -27,9 +27,13 @@ bool UBI_StorageSearch::IsEraseable()
 
 void UBI_StorageSearch::OnInteract()
 {
+	if(m_Player->GetInteracting())
+	{
+		return;
+	}
 	if(!m_bIsSearched)
 	{
-		UMyLib::GetPlayer()->WaitInteract(m_Anim, 4.f,FVoidVoid::CreateUObject(this, &UBI_StorageSearch::OnSearchEnd));
+		m_Player->WaitInteract(m_Anim, 4.f,FVoidVoid::CreateUObject(this, &UBI_StorageSearch::OnSearchEnd));
 		return ;
 	}
 	Super::OnInteract();
