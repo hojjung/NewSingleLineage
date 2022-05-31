@@ -43,7 +43,7 @@ void UWidgetCraftCostElement::UpdateCostAmount()
 	
 	m_TextCostAmount->SetText(TextWant);
 	
-	if(Stack > 0)
+	if(Stack >= m_CraftData->m_nStackOrLevel)
 	{
 		m_TextCostAmount->SetColorAndOpacity(FLinearColor::White);
 	}

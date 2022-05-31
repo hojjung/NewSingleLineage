@@ -97,6 +97,8 @@ private:
 
 	void OnRequestMoveDone(FAIRequestID id, const FPathFollowingResult& rslt);
 
+	void TryAttack_External();
+
 public:
 	virtual void SetFocusedTarget(IFocusable* target) override;
 	
@@ -113,7 +115,7 @@ public:
 	void SetPlayerSkMeshDefault();
 
 public://Combat
-	virtual float TryAttack() override;
+	void RequestAttack();
 
 	bool IsManualMoving();
 
@@ -164,5 +166,4 @@ public:
 
 	void RequestInteract(AActor* target, const FVoidVoid& delegate, float r = 250.f);
 };
-
 

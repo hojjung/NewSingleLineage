@@ -201,14 +201,24 @@ void AMyPlayerPawn::SetPlayerSkMeshDefault()
 	LoadSetSkMeshAnim(m_EntityAsset);
 }
 
-float AMyPlayerPawn::TryAttack()
+void AMyPlayerPawn::RequestAttack()
 {
 	if (m_bIsSkillUsing)
 	{
-		return 0;
+		return ;
 	}
-	HomingRotateToTarget(6);
-	return Super::TryAttack();
+	ACombatUnitPawn* FocusActor = GetFocusedTarget<ACombatUnitPawn>();
+	if(!FocusActor)
+	{
+		return;
+	}
+	
+	RequestInteract(FocusActor, FVoidVoid::CreateUObject(this, &AMyPlayerPawn::TryAttack_External),GetAttackRange());
+}
+
+void AMyPlayerPawn::TryAttack_External()
+{
+	TryAttack();
 }
 
 bool AMyPlayerPawn::IsManualMoving()

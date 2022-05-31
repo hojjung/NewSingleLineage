@@ -178,7 +178,7 @@ void UWidgetInteract::OnTalk()
 
 void UWidgetInteract::OnAttack()
 {
-	m_Pl->TryAttack();
+	m_Pl->RequestAttack();
 }
 
 void UWidgetInteract::OnPickPocket()
