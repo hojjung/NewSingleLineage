@@ -6,6 +6,7 @@
 #include "WidgetMapBtn.h"
 #include "Blueprint/UserWidget.h"
 #include "Components/CanvasPanel.h"
+#include "MyJrpg/Widgets/World/Menu/Inventory/WidgetItemInfo.h"
 #include "MyJrpg/Widgets/World/Menu/ZoneMove/WidgetZoneSelectButton.h"
 #include "WidgetMapPanel.generated.h"
 
@@ -22,10 +23,13 @@ protected:
 	UCanvasPanel* m_CanvasMap;
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (BindWidget))
 	UWidgetZoneSelectButton* m_ZoneSelect;
-
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (BindWidget))
+	UWidgetItemInfo* m_ItemInfo;
 	TWeakObjectPtr<UCanvasPanelSlot> m_PanelSlot;
 public:
 	virtual void NativeOnInitialized() override;
+	
+	void OpenItemInfoData(const FItemDataRow& item_data_row);
 
 protected:
 	void OnClick(const FName& zoneID);

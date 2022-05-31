@@ -29,6 +29,14 @@ int UWidgetZoneItemElement::GetSortValue() const
 void UWidgetZoneItemElement::OnHold(UWidgetBaseElement* ele)
 {
 	ele->SetMyUnFocus();
+
+	if(UMyLib::GetPlayerCon())
+	{
+		UMyLib::GetCanvas()->OpenItemInfoData(*m_ItemRow);
+	}
+	else
+	{
+		UMyLib::GetMapCanvas()->OpenItemInfoData(*m_ItemRow);
+	}
 	
-	UMyLib::GetCanvas()->OpenItemInfoData(*m_ItemRow);
 }

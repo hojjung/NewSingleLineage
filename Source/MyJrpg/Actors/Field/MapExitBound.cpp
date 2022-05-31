@@ -1,6 +1,7 @@
 #include "MapExitBound.h"
 
 #include "MyJrpg/MyLib.h"
+#include "MyJrpg/Managers/MyGameInstance.h"
 #include "NavAreas/NavArea_Null.h"
 
 // Sets default values
@@ -42,12 +43,26 @@ void AMapExitBound::BeginPlay()
 {
 	Super::BeginPlay();
 	m_CollBox->OnComponentBeginOverlap.AddDynamic(this, &AMapExitBound::OnTriggerStart);
+	m_CollBox->OnComponentEndOverlap.AddDynamic(this, &AMapExitBound::OnTriggerEnd);
 }
 
 void AMapExitBound::OnTriggerStart(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor,
-	UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
+                                   UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
 	if(OtherActor != UMyLib::GetPlayer())
 		return;
-	PRINTF("AMapExitBound::Start");
+
+	UMyLib::GetCanvas()->GetScreenEffect()->ShowFadeOut(4,FVoidVoid::CreateUObject(this, &AMapExitBound::MoveToMapLevel));
+}
+
+void AMapExitBound::OnTriggerEnd(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex)
+{
+	if(OtherActor != UMyLib::GetPlayer())
+		return;
+	UMyLib::GetCanvas()->GetScreenEffect()->HideFadeOut();
+}
+
+void AMapExitBound::MoveToMapLevel()
+{
+	UMyGameInstance::Get->m_LevelMoveManager->OpenLevel(TEXT("MapSelect"));
 }

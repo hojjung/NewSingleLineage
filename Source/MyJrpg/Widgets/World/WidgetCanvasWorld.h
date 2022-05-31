@@ -7,6 +7,7 @@
 #include "Components/WrapBox.h"
 #include "Hud/WidgetGameOver.h"
 #include "Hud/WidgetLevelUp.h"
+#include "Hud/WidgetScreenEffect.h"
 #include "Hud/WidgetWaitInteract.h"
 #include "Interact/WidgetInteract.h"
 #include "Menu/CharacterInfoHUD/AlertInfoWindow.h"
@@ -144,6 +145,9 @@ protected:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (BindWidget))
 	UWidgetWaitInteract* m_WaitBar;
 	//
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (BindWidget))
+	UWidgetScreenEffect* m_ScreenEffect; 
+	//
 	bool m_bIsBuildable;
 protected:
 	void HideHUD();
@@ -225,6 +229,8 @@ public:
 	
 	void OpenItemConverter(UItemConvertInst* inst);
 
-	UWidgetWaitInteract* GetWaitInteract(); 
+	UWidgetWaitInteract* GetWaitInteract();
+
+	UWidgetScreenEffect* GetScreenEffect();
 };
 

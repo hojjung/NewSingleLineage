@@ -340,6 +340,11 @@ UWidgetWaitInteract* UWidgetCanvasWorld::GetWaitInteract()
 	return m_WaitBar;
 }
 
+UWidgetScreenEffect* UWidgetCanvasWorld::GetScreenEffect()
+{
+	return m_ScreenEffect;
+}
+
 void UWidgetCanvasWorld::OnZoneMove(const FName& zoneID)
 {
 	if(zoneID == TEXT("PlayerHome"))

@@ -13,6 +13,7 @@
 #include "Managers/CraftManager.h"
 #include "Managers/ParticleEffectManager.h"
 #include "Widgets/HUDs/MyHUD.h"
+#include "Widgets/MapSelect/WidgetMapPanel.h"
 #include "MyLib.generated.h"
 
 class UInventory;
@@ -40,6 +41,8 @@ public:
 	static AMyPlayerController* GetPlayerCon();
 
 	static UWidgetCanvasWorld* GetCanvas();
+
+	static UWidgetMapPanel* GetMapCanvas();
 
 	//static UWidgetCanvasGameLevel* GetMainWidget();
 

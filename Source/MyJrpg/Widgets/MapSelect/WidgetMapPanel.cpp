@@ -19,6 +19,13 @@ void UWidgetMapPanel::NativeOnInitialized()
 	m_ZoneSelect->SetVisibility(ESlateVisibility::Collapsed);
 
 	m_PanelSlot = Cast<UCanvasPanelSlot>(m_CanvasMap->Slot);
+
+	m_ItemInfo->SetVisibility(ESlateVisibility::Collapsed);
+}
+
+void UWidgetMapPanel::OpenItemInfoData(const FItemDataRow& item_data_row)
+{
+	m_ItemInfo->SetInfoItemData(item_data_row);
 }
 
 void UWidgetMapPanel::OnClick(const FName& zoneID)

@@ -1,0 +1,84 @@
+// Fill out your copyright notice in the Description page of Project Settings.
+
+
+#include "WidgetScreenEffect.h"
+
+void UWidgetScreenEffect::NativeOnInitialized()
+{
+	Super::NativeOnInitialized();
+
+	EndFade();
+}
+
+void UWidgetScreenEffect::NativeTick(const FGeometry& MyGeometry, float InDeltaTime)
+{
+	Super::NativeTick(MyGeometry, InDeltaTime);
+
+	if(m_fMaxFadeOut <= -1)
+	{
+		return;
+	}
+
+	if(IsFadeOut)
+	{
+		m_fFadeOutTimer += InDeltaTime;
+	}
+	else
+	{
+		m_fFadeOutTimer -= InDeltaTime;
+	}
+
+	float Per = m_fFadeOutTimer / m_fMaxFadeOut;
+	
+	m_ImgBlack->SetRenderOpacity(Per);
+
+	if(m_fFadeOutTimer >= m_fMaxFadeOut)
+	{
+		m_OnFadeOutDone.ExecuteIfBound();
+		EndFade();
+	}
+}
+
+void UWidgetScreenEffect::EndFade()
+{
+	m_ImgBlack->SetVisibility(ESlateVisibility::Collapsed);
+	
+	m_ImgBlack->SetRenderOpacity(0);
+	
+	m_fMaxFadeOut = -1;
+
+	m_fFadeOutTimer = -1;
+	
+	IsFadeOut = false;
+	
+	m_OnFadeOutDone.Unbind();
+}
+
+void UWidgetScreenEffect::ShowFadeOut(float t, const FVoidVoid& onFadeOutEnd)
+{
+	if(IsFadeOut)
+	{
+		return;
+	}
+
+	IsFadeOut = true;
+	
+	m_ImgBlack->SetVisibility(ESlateVisibility::Visible);
+
+	m_fFadeOutTimer = 0;
+	
+	m_fMaxFadeOut = t;
+
+	m_OnFadeOutDone = onFadeOutEnd;
+}
+
+void UWidgetScreenEffect::HideFadeOut()
+{
+	if(!IsFadeOut)
+	{
+		return;
+	}
+	IsFadeOut = false;
+
+	m_OnFadeOutDone.Unbind();
+}

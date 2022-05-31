@@ -4,6 +4,7 @@
 #include "Managers/EquipManager.h"
 #include "Managers/MyGameInstance.h"
 #include "Pawns/MyPlayerPawn.h"
+#include "Widgets/HUDs/MapHUD.h"
 #include "Widgets/World/Menu/Storage/WidgetStorage.h"
 
 UWorld* UMyLib::GetUWorld()
@@ -49,8 +50,15 @@ AMyPlayerController* UMyLib::GetPlayerCon()
 UWidgetCanvasWorld* UMyLib::GetCanvas()
 {
 	AMyHUD* HUD = Cast<AMyHUD>(GetPlayerCon()->GetHUD());
-                                                                                                                                       
-	return HUD->GetCanvas();                                                                                                               
+	                                                                                                                                       
+	return HUD->GetCanvas();
+}
+
+UWidgetMapPanel* UMyLib::GetMapCanvas()
+{
+	AMapHUD *hud = Cast<AMapHUD>(UGameplayStatics::GetPlayerController( GetUWorld(),0)->GetHUD());
+
+	return hud->GetCanvas();
 }
 
 float UMyLib::SetFloatPrecision(float TheFloat, int32 Precision)

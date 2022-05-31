@@ -27,6 +27,15 @@ void ULevelMoveManager::OpenMyLevel(FName zoneData)
 	OpenMyLevel(*DataRow);
 }
 
+void ULevelMoveManager::OpenLevel(FName zoneData)
+{
+	UMyGameInstance::Get->m_GameRule = nullptr;
+	
+	m_ZoneData = nullptr;
+
+	UGameplayStatics::OpenLevel(this,zoneData);
+}
+
 void ULevelMoveManager::OpenMyLevel(const FZoneDataRow& zoneData)
 {
 	UMyGameInstance::Get->m_GameRule = nullptr;
@@ -41,6 +50,11 @@ void ULevelMoveManager::OnOpenWorldLevelComplete()
 	UMyAssetManager::Get()->ClearUnits();
 	
 	UBUITween::Shutdown();
+
+	if(!m_ZoneData)
+	{
+		return;
+	}
 	
 	if(m_ZoneData->m_ClassGameRule->IsValidLowLevel())
 	{

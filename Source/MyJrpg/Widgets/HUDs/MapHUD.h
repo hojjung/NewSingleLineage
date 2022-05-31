@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "GameFramework/HUD.h"
 #include "MyJrpg/Widgets/MapSelect/WidgetMapPanel.h"
+#include "MyJrpg/Widgets/World/WidgetCanvasWorld.h"
 #include "MapHUD.generated.h"
 
 /**
@@ -26,7 +27,9 @@ protected:
 
 protected:
 	virtual void BeginPlay() override;
-	
+
+public:
+	UWidgetMapPanel* GetCanvas();
 };
 
 

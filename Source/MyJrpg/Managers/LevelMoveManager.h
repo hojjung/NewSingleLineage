@@ -38,6 +38,8 @@ public:
 
 	void OpenMyLevel(FName zoneData);
 
+	void OpenLevel(FName zoneData);
+
 	void OnOpenWorldLevelComplete();
 	
 	bool IsGameStart();

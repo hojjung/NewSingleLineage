@@ -19,3 +19,8 @@ void AMapHUD::BeginPlay()
 		m_Canvas->AddToViewport();
 	}
 }
+
+UWidgetMapPanel* AMapHUD::GetCanvas()
+{
+	return m_Canvas;
+}
