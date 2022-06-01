@@ -423,3 +423,8 @@ void UMyLib::ReduceDurability(const FItemSpec& item_spec, int amount)
 		return;
 	}
 }
+
+const FStatGroup& UMyLib::GetItemStatData(const FName& id)
+{
+	return UMyLib::GetItemData(id).m_EquipStats;
+}

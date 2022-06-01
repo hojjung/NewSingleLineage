@@ -48,7 +48,7 @@ void UEquipManager::EquipOption(int index, const FItemSpec& itemWant)
 			StrongEE->Equip();
 		}
 	}
-	//UMyGameInstance::Get->m_PlayerStatManager->EquipItem(itemWant.m_ID);
+	UMyGameInstance::Get->m_PlayerStatManager->EquipItem(itemWant.m_ID);
 }
 
 void UEquipManager::UnequipOption(int index, const FItemSpec& itemWant)
@@ -60,7 +60,7 @@ void UEquipManager::UnequipOption(int index, const FItemSpec& itemWant)
 		StrongEE->UnEquip();
 	}
 	m_AryEqupEffects[index].Empty();
-	//UMyGameInstance::Get->m_PlayerStatManager->UnequipItem(itemWant.m_ID);
+	UMyGameInstance::Get->m_PlayerStatManager->UnequipItem(itemWant.m_ID);
 }
 
 bool UEquipManager::Unequip(EEquipSlotType slotWant, UInventory* returnInven , int * returnInvenIndex, bool updateDele)

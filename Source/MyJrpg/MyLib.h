@@ -105,4 +105,6 @@ public:
 	static bool IsTestMode();
 	
 	static void ReduceDurability(const FItemSpec& item_spec, int amount);
+	
+	static const FStatGroup& GetItemStatData(const FName& id);
 };
