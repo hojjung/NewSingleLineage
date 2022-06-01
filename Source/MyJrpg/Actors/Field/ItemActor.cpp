@@ -64,6 +64,7 @@ void AItemActor::Init(FName itemID, int countOrLevel)
 
 void AItemActor::OnInteract()
 {
+	UMyLib::GetPlayer()->SetInteracting(true);
 	UMyLib::GetPlayer()->RequestInteract(this,FVoidVoid::CreateUObject(this,&AItemActor::OnArrived),125);
 }
 
@@ -74,6 +75,9 @@ void AItemActor::OnArrived()
 
 void AItemActor::OnObtain()//주변에서 누가 보고있으면
 {
+	UMyLib::GetPlayer()->SetInteracting(false);
+	UMyLib::GetPlayer()->SetFocusedTarget(nullptr);
+	
 	if(HasOwnerTeamID())
 	{
 		switch (UMyGameInstance::Get->m_TeamKarma->GetUnitKarma(m_OwnerID))
@@ -99,7 +103,7 @@ bool AItemActor::HasOwnerTeamID() const
 	return !m_OwnerID.IsNone();
 }
 
-float AItemActor::GetBoundHalfHeight()
+FVector AItemActor::GetNavAgentLocation() const
 {
-	return 88.f;
+	return GetActorLocation() - FVector(0.f, 0.f, 88);
 }

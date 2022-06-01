@@ -164,7 +164,5 @@ public:
 
 	EPathFollowingRequestResult::Type ChaseTarget();
 
-	virtual float GetBoundHalfHeight() override;
-	
 	virtual EStanceType GetStance();
 };

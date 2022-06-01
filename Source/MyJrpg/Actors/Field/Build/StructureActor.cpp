@@ -162,17 +162,20 @@ void AStructureActor::OnArrived()
 	m_BuildInteract->OnInteract();
 }
 
-float AStructureActor::GetBoundHalfHeight()
-{
-	FVector Min,Max;
-	m_MeshComp->GetLocalBounds(Min,Max);
-
-	return Max.Z - Min.Z;
-}
-
 bool AStructureActor::IsInteractImplemented()
 {
 	return m_BuildInteract != nullptr;
+}
+
+FVector AStructureActor::GetNavAgentLocation() const
+{
+	FVector Min,Max;
+	
+	m_MeshComp->GetLocalBounds(Min,Max);
+
+	float Z = Max.Z - Min.Z;
+	
+	return GetActorLocation() - FVector(0.f, 0.f, Z);
 }
 
 bool AStructureActor::IsEraseable()

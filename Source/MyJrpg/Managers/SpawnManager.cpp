@@ -242,7 +242,7 @@ AItemActor* USpawnManager::SpawnItemActor(const FNPCSpawnData& spawn_data)
 		spawn_data.m_IDEntity, "");
 	
 	AItemActor* NpcActor = UMyLib::GetUWorld()->SpawnActor<AItemActor>(
-		EntityRow->m_ClassActor, spawn_data.m_SpawnPosition, spawn_data.m_SpawnRotation, Param);
+		EntityRow->m_ClassActor, spawn_data.m_SpawnPosition, spawn_data.m_SpawnRotation + FRotator(0,FMath::RandRange(0,360),0), Param);
 
 
 	if (EntityRow)
@@ -267,12 +267,11 @@ ATreeBase* USpawnManager::SpawnGatherActor(const FNPCSpawnData& spawn_data)
 		spawn_data.m_IDEntity, "");
 	
 	ATreeBase* NpcActor = UMyLib::GetUWorld()->SpawnActor<ATreeBase>(
-		EntityRow->m_ClassActor, spawn_data.m_SpawnPosition, spawn_data.m_SpawnRotation + FRotator(0,FMath::RandRange(-180,180),0), Param);
+		EntityRow->m_ClassActor, spawn_data.m_SpawnPosition, spawn_data.m_SpawnRotation + FRotator(0,FMath::RandRange(0,360),0), Param);
 
 	if (EntityRow)
 	{
 		NpcActor->SetEntity(*EntityRow,UMyLib::GetPlayer());
-		NpcActor->SetActorFeetLoc(spawn_data.m_SpawnPosition);
 	}
 
 	AddFocusActor(NpcActor);

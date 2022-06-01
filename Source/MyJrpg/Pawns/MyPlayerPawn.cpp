@@ -97,10 +97,20 @@ void AMyPlayerPawn::SetPlayerEntity()
 	m_AiSensor->Init(this);
 
 	FStatGroup DefaultStat;
+	DefaultStat.m_nAccu = 10;
+	DefaultStat.m_nAvoid = 0;
+	DefaultStat.m_MaxHp = 100;
+	DefaultStat.m_Dmg = 5;
+	DefaultStat.m_AtkSpeed = 1.0f;
+	DefaultStat.m_DmgReduce = 0;
+	DefaultStat.m_CriPer = 0.1f;
+	DefaultStat.m_CriDmg = 1.5f;
 	DefaultStat.m_MoveSpeed = FGlobalVariable::HERO_DEFAULT_SPEED;
-
+	
 	UMyGameInstance::Get->m_PlayerStatManager->SetBaseStat(DefaultStat);
+	
 	UMyGameInstance::Get->m_PlayerStatManager->UpdateStat();
+	
 	m_StatGroup.m_Hp = m_StatGroup.m_MaxHp;
 }
 
@@ -136,6 +146,19 @@ void AMyPlayerPawn::MoveRight(float AxisValue)
 	}
 }
 
+void AMyPlayerPawn::CancelInteract()
+{
+	UMyLib::GetCanvas()->GetWaitInteract()->HideInteract();
+		
+	GetWorldTimerManager().ClearTimer(m_WaitInteractTimer);
+		
+	SetInteracting(false);
+
+	m_OnCancelInteract.ExecuteIfBound();
+	
+	m_OnCancelInteract.Unbind();
+}
+
 void AMyPlayerPawn::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
@@ -149,16 +172,14 @@ void AMyPlayerPawn::Tick(float DeltaTime)
 		if(!m_bCanMoveInSkill)
 		{
 			StopAnimMontage();
-			UMyLib::GetCanvas()->GetWaitInteract()->HideInteract();
-			SetInteracting(false);
-			GetWorldTimerManager().ClearTimer(m_WaitInteractTimer);
 		}
+		
+		CancelInteract();
 		
 		ClearStopMoveDelegate();
 		
 		m_Movement->SetActive(true);
 
-		SetInteracting(false);
 
 		FVector Loc = GetCapsule()->GetComponentLocation();
 
@@ -250,17 +271,13 @@ void AMyPlayerPawn::ShowIndicator(IFocusable* target)
 	}
 	m_FocusIndicator->SetActorHiddenInGame(false);
 
-	AActor* FocusActor = Cast<AActor>(target);
+	INavAgentInterface* FocusActor = Cast<INavAgentInterface>(target);
 
-	FVector Loc = FocusActor->GetActorLocation();
+	FVector Loc = FocusActor->GetNavAgentLocation();
 
-	float H =  target->GetBoundHalfHeight();
-
-	Loc.Z -= H;
-	
 	FAttachmentTransformRules Rule(EAttachmentRule::KeepWorld,EAttachmentRule::KeepWorld,EAttachmentRule::KeepWorld,false);
 	
-	m_FocusIndicator->AttachToActor(FocusActor, Rule);
+	m_FocusIndicator->AttachToActor(Cast<AActor>(target), Rule);
 
 	m_FocusIndicator->SetActorLocation(Loc);
 }
@@ -338,8 +355,8 @@ void AMyPlayerPawn::DealBaseMeleeAttack()
 void AMyPlayerPawn::ShootBaseRangeAttack()
 {
 	m_Pool->ShootBullet(TEXT("LeftHandSocket"),GetFocusedTarget<ACombatUnitPawn>());
-	UMyGameInstance::Get->m_EquipManager->ReduceDurability(EEquipSlotType::Weapon,1);
 	
+	UMyGameInstance::Get->m_EquipManager->ReduceDurability(EEquipSlotType::Weapon,1);
 }
 
 void AMyPlayerPawn::SetSneak()
@@ -391,12 +408,23 @@ void AMyPlayerPawn::RequestInteract(AActor* target, const FVoidVoid& delegate ,f
 	m_OnRequestDone = delegate;
 }
 
+void AMyPlayerPawn::BindOnCancel(const FVoidVoid& onCancel)
+{
+	m_OnCancelInteract = onCancel;
+}
+
+void AMyPlayerPawn::UnbindCancel()
+{
+	m_OnCancelInteract.Unbind();
+}
+
 void AMyPlayerPawn::OnRequestMoveDone(FAIRequestID id, const FPathFollowingResult& rslt)
 {
 	if(m_ReqID != id || !rslt.IsSuccess())
 	{
 		return;
 	}
+	HomingRotateToTarget(0);
 	m_OnRequestDone.ExecuteIfBound();
 	m_OnRequestDone.Unbind();
 }

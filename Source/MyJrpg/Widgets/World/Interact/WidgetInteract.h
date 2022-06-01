@@ -74,10 +74,6 @@ protected:
 public:
 	void ShowInteract(IFocusable* focus);
 	UFUNCTION()
-	void OnObtain();
-	UFUNCTION()
-	void OnSteal();
-	UFUNCTION()
 	void OnControl();
 	UFUNCTION()
 	void OnTalk();

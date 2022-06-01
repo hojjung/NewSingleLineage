@@ -14,8 +14,8 @@ void UWidgetInteract::NativeOnInitialized()
 
 	m_bHasFocus = false;
 
-	m_BtnObtain->OnClicked.AddDynamic(this, &UWidgetInteract::OnObtain);
-	m_BtnSteal->OnClicked.AddDynamic(this, &UWidgetInteract::OnSteal);
+	m_BtnObtain->OnClicked.AddDynamic(this, &UWidgetInteract::OnControl);
+	m_BtnSteal->OnClicked.AddDynamic(this, &UWidgetInteract::OnControl);
 	m_BtnControl->OnClicked.AddDynamic(this, &UWidgetInteract::OnControl);
 	m_BtnTalk->OnClicked.AddDynamic(this, &UWidgetInteract::OnTalk);
 	m_BtnAttack->OnClicked.AddDynamic(this, &UWidgetInteract::OnAttack);
@@ -147,21 +147,19 @@ void UWidgetInteract::ShowInteract(IFocusable* focus)
 	}
 }
 
-void UWidgetInteract::OnObtain()
-{
-	AItemActor* ItemActor = m_Pl->GetFocusedTarget<AItemActor>();
-	
-	ItemActor->OnInteract();
-}
-
-void UWidgetInteract::OnSteal()
-{
-	OnObtain();
-}
-
 void UWidgetInteract::OnControl()
 {
+	if(m_Pl->GetInteracting())
+	{
+		return;
+	}
 	IFocusable* Prop = m_Pl->GetFocusedTarget<IFocusable>();
+
+	if(!Prop)
+	{
+		return;
+	}
+	
 	
 	Prop->OnInteract();
 }

@@ -131,7 +131,7 @@ void UCraftManager::ReceiveItem()
 	if(m_CrntItemData->m_IsItem)
 	{
 		FItemSpec Items(m_CrntItemData->m_ID,UMyLib::IsEquip(*((FItemDataRow*)(m_CrntItemData->m_ItemData))) ? 0 : 1);
-		UMyLib::GetPlayerInven()->AddItem(Items);
+		UMyLib::GetPlayerInven()->AddItem(Items,true);
 	}
 	else
 	{

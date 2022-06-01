@@ -36,6 +36,7 @@ ATreeBase::ATreeBase()
 	m_MeshTree->SetCollisionProfileName(TEXT("PhysicsActor"));
 	m_MeshTree->CastShadow = false;
 	m_MeshTree->bSelfShadowOnly = false;
+	m_MeshTree->SetRelativeLocation(FVector(0,0,-88));
 	
 
 	m_MeshTrunk = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("m_MeshTrunk"));
@@ -48,7 +49,7 @@ ATreeBase::ATreeBase()
 	m_MeshTrunk->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 	m_MeshTrunk->CastShadow = false;
 	m_MeshTrunk->bSelfShadowOnly = false;
-	
+	m_MeshTrunk->SetRelativeLocation(FVector(0,0,-88));
 
 	m_ShadowMeshComp = CreateDefaultSubobject<UStaticMeshComponent>("StShadow");
 	static ConstructorHelpers::FObjectFinder<UStaticMesh> FoundSt(TEXT("StaticMesh'/Game/03_VisualEffect/FX/Effects/FX_Meshes/SM_CharM_Shadow.SM_CharM_Shadow'"));
@@ -57,7 +58,7 @@ ATreeBase::ATreeBase()
 	m_ShadowMeshComp->SetRelativeScale3D(FVector(6.5f));
 	m_ShadowMeshComp->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 	m_ShadowMeshComp->SetCanEverAffectNavigation(false);
-	m_ShadowMeshComp->SetRelativeLocation(FVector(0,0,-40));
+	m_ShadowMeshComp->SetRelativeLocation(FVector(0,0,-88));
 
 	m_nTreeHp = 3;
 }
@@ -71,10 +72,6 @@ void ATreeBase::SetEntity(const FGatherDataRow& data, AMyPlayerPawn* pl)
 	
 	m_Player = pl;
 
-	float H = GetBoundHalfHeight() * -1.f;
-	m_MeshTree->SetRelativeLocation(FVector(0,0,H));
-	m_MeshTrunk->SetRelativeLocation(FVector(0,0,H));
-	
 	m_GatherAsset = UMyAssetManager::Get()->LoadGatherAsset(m_DataRow->m_GatherAsset);
 
 	m_MeshTree->SetStaticMesh(m_GatherAsset->m_TopMesh);
@@ -90,42 +87,30 @@ void ATreeBase::SetEntity(const FGatherDataRow& data, AMyPlayerPawn* pl)
 	m_bUsePhysics = m_DataRow->m_bUsePhysics;
 }
 
-void ATreeBase::SetActorFeetLoc(FVector loc)
-{
-	FVector NewLoc = loc;
-
-	NewLoc.Z -= m_Capsule->Bounds.BoxExtent.Z;
-		
-	SetActorLocation(NewLoc);
-}
-
 void ATreeBase::OnInteract()
 {
+	if(m_nTreeHp<=0)
+	{
+		m_Player->SetFocusedTarget(nullptr);
+		return;
+	}
+	m_Player->BindOnCancel(FVoidVoid::CreateUObject(this, &ATreeBase::OnHarvestMotionDone));
+	m_Player->SetInteracting(true);
 	m_Player->RequestInteract(this,FVoidVoid::CreateUObject(this,&ATreeBase::OnArrived),175);
 }
 
 void ATreeBase::OnArrived()
 {
-	if(m_Player->GetInteracting())
-	{
-		return;
-	}
-	if(m_nTreeHp<=0)
-	{
-		return;
-	}
-
 	m_Player->PlayAnimMontage(m_GatherAsset->m_AnimGatherMotion);
-	
-	m_Player->HomingRotateToTarget(0);
-	
-	m_Player->SetInteracting(true);
 	
 	m_CrntToolID = m_GatherAsset->m_bIsAxe ? m_Player->TryShowAxe() : m_CrntToolID = m_Player->TryShowPickAxe();
 }
 
 void ATreeBase::OnTakeChopping()
 {
+	m_Player->SetInteracting(false);
+	m_Player->SetFocusedTarget(nullptr);
+	
 	if(m_CrntToolID)
 	{
 		if(m_GatherAsset->m_bIsAxe)
@@ -165,13 +150,16 @@ void ATreeBase::OnTakeChopping()
 
 void ATreeBase::OnGatherDone()
 {
+	UMyLib::GetEquip()->AddItem(FItemSpec(m_DataRow->m_ItemGather.RowName,m_DataRow->m_nItemGatherCount));
+	
 	UMyGameInstance::Get->m_SpawnManager->RemoveFocusActor(this);
+	
 	UGameplayStatics::PlaySoundAtLocation(GetWorld(),m_GatherAsset->m_SoundGatherEnd,GetActorLocation());
+	
 	m_MeshTree->SetCollisionEnabled(ECollisionEnabled::PhysicsOnly);
+	
 	if(m_bUsePhysics)
 		m_MeshTree->SetSimulatePhysics(true);
-
-	UMyLib::GetEquip()->AddItem(FItemSpec(m_DataRow->m_ItemGather.RowName,m_DataRow->m_nItemGatherCount));
 }
 
 void ATreeBase::OnHarvestMotionDone()
@@ -181,11 +169,13 @@ void ATreeBase::OnHarvestMotionDone()
 	m_CrntToolID = nullptr;
 	
 	m_Player->ShowWeapon();
+	
+	m_Player->UnbindCancel();
 }
 
-float ATreeBase::GetBoundHalfHeight()
+FVector ATreeBase::GetNavAgentLocation() const
 {
-	return m_Capsule->GetScaledCapsuleHalfHeight();
+	return GetActorLocation() - FVector(0.f, 0.f, 88); ;
 }
 
 void ATreeBase::CreateSetDeathCurve(float fullLength)
@@ -227,6 +217,7 @@ void ATreeBase::Tick(float DeltaSeconds)
 			SetActorTickEnabled(false);
 			
 			m_MeshTree->DestroyComponent();
+			
 			m_MeshTree = nullptr;
 		}
 	}

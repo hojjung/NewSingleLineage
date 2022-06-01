@@ -30,8 +30,6 @@ class MYJRPG_API IFocusable
 	GENERATED_BODY()
 
 public:
-	virtual float GetBoundHalfHeight() = 0;
-
 	virtual void OnInteract() {};
 
 	virtual bool IsInteractImplemented() { return true;};

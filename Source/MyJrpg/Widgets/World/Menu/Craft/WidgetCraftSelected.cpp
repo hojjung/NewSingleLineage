@@ -120,6 +120,7 @@ void UWidgetCraftSelected::SetLimitLevel(const FCraftDataInfo& data)
 		if(!IsLevelAble)
 		{
 			m_TextCountLimit->SetVisibility(ESlateVisibility::Collapsed);
+			
 			m_TextLevelLimit->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
 			
 			FTextFormat FormatT = FTextFormat::FromString(TEXT("{0} {1} {2}"));
@@ -132,6 +133,7 @@ void UWidgetCraftSelected::SetLimitLevel(const FCraftDataInfo& data)
 		else if (!IsCountEnough)
 		{
 			m_TextLevelLimit->SetVisibility(ESlateVisibility::Collapsed);
+			
 			m_TextCountLimit->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
 
 			int MaxCnt = UMyGameInstance::Get->m_BuildManager->GetFurnitureMaxOwnCnt(data.m_ID);
@@ -154,9 +156,9 @@ void UWidgetCraftSelected::NativeTick(const FGeometry& MyGeometry, float InDelta
 	}
 	m_fCancelTimer += InDeltaTime;
 
-	m_CancelHoldingBar->SetPercent(m_fCancelTimer / 3.f);
+	m_CancelHoldingBar->SetPercent(m_fCancelTimer / 1.f);
 
-	if(m_fCancelTimer > 3.f)
+	if(m_fCancelTimer > 1.f)
 	{
 		Cancel();
 		UMyGameInstance::Get->m_CraftManager->Craft();

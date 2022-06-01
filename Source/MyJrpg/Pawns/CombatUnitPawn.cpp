@@ -74,9 +74,14 @@ void ACombatUnitPawn::HomingRotateToTarget(float speedTime)
 
 	FRotator NewRot = GetActorRotation();
 
-	NewRot.Yaw = UKismetMathLibrary::RInterpTo(
-		NewRot, UKismetMathLibrary::FindLookAtRotation(GetActorLocation(), Cast<AActor>(GetFocusedTarget())->GetActorLocation()),
-		GetWorld()->GetDeltaSeconds(), speedTime).Yaw;
+	if(speedTime <= 0)
+	{
+		NewRot.Yaw = UKismetMathLibrary::FindLookAtRotation(GetActorLocation(), Cast<AActor>(GetFocusedTarget())->GetActorLocation()).Yaw;
+	}
+	else
+	{
+		NewRot.Yaw = UKismetMathLibrary::RInterpTo(NewRot, UKismetMathLibrary::FindLookAtRotation(GetActorLocation(), Cast<AActor>(GetFocusedTarget())->GetActorLocation()),GetWorld()->GetDeltaSeconds(), speedTime).Yaw;
+	}
 
 	SetActorRotation(NewRot);
 }
@@ -356,11 +361,6 @@ bool ACombatUnitPawn::IsSneak() const
 EPathFollowingRequestResult::Type ACombatUnitPawn::ChaseTarget()
 {
 	return MoveToActor(GetFocusedTarget<AActor>());
-}
-
-float ACombatUnitPawn::GetBoundHalfHeight()
-{
-	return GetCapsule()->GetScaledCapsuleHalfHeight();
 }
 
 EStanceType ACombatUnitPawn::GetStance()

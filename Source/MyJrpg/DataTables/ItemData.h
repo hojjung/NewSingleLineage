@@ -220,7 +220,7 @@ public:
 	FColorDataHandle m_ColorHandle;
 	UPROPERTY(EditAnywhere, meta=(EditCondition = "m_ItemType == EEquipSlotType::None", EditConditionHides))
 	TSoftObjectPtr<UStaticMesh> m_ItemDropMesh;
-	UPROPERTY(EditAnywhere, meta=(EditCondition = "m_ItemDropMesh.IsValidLowLevel()", EditConditionHides))
+	UPROPERTY(EditAnywhere, meta=(EditCondition = "m_ItemDropMesh.Get()", EditConditionHides))
 	float m_fItemDropMeshScale = 1.f;
 	UPROPERTY(EditAnywhere, meta=(EditCondition = "m_ItemType != EEquipSlotType::None && m_ItemType != EEquipSlotType::Weapon", EditConditionHides))
 	TSoftObjectPtr<USkeletalMesh> m_ArmorMesh;
@@ -238,6 +238,8 @@ public:
 	TArray<TSubclassOf<UEE_Base>> m_EquipEffects;
 	UPROPERTY(EditAnywhere, meta=(EditCondition = "m_ItemType != EEquipSlotType::Weapon", EditConditionHides))
 	TSubclassOf<UItemExecuteBase> m_ClassExeItem;
+	UPROPERTY(EditAnywhere, meta=(EditCondition = "m_ClassExeItem != nullptr", EditConditionHides))
+	FString m_InteractVariable;
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	int m_nMaxStack = 2;
 	UPROPERTY(EditDefaultsOnly)

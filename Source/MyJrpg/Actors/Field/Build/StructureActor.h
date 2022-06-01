@@ -10,7 +10,7 @@
 
 struct FBuildDataRow;
 UCLASS()
-class MYJRPG_API AStructureActor : public AActor, public IFocusable
+class MYJRPG_API AStructureActor : public AActor, public IFocusable, public INavAgentInterface
 {
 	GENERATED_BODY()
 public:
@@ -50,7 +50,7 @@ public:
 
 	virtual void OnInteract() override;
 
-	virtual float GetBoundHalfHeight() override;
-
 	virtual bool IsInteractImplemented() override;
+
+	virtual FVector GetNavAgentLocation() const override;
 };

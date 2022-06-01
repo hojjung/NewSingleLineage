@@ -10,7 +10,7 @@ class UGatherAsset;
 struct FGatherDataRow;
 
 UCLASS()
-class MYJRPG_API ATreeBase : public AActor, public IFocusable
+class MYJRPG_API ATreeBase : public AActor, public IFocusable, public INavAgentInterface
 {
 	GENERATED_BODY()
 
@@ -65,13 +65,11 @@ protected:
 public:
 	void SetEntity(const FGatherDataRow& data, AMyPlayerPawn* pl);
 
-	void SetActorFeetLoc(FVector loc);
-	
 	virtual void OnTakeChopping();
 
 	virtual void OnHarvestMotionDone();
 
 	virtual void OnGatherDone();
 
-	virtual float GetBoundHalfHeight() override;
+	virtual FVector GetNavAgentLocation() const override;
 };

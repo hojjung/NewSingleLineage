@@ -78,6 +78,8 @@ protected:
 
 	FVoidVoid m_OnRequestDone;
 
+	FVoidVoid m_OnCancelInteract;
+
 private:
 	void CreateFocusActor();
 	
@@ -100,6 +102,8 @@ private:
 	void TryAttack_External();
 
 public:
+	void CancelInteract();
+	
 	virtual void SetFocusedTarget(IFocusable* target) override;
 	
 	void SetPlayerEntity();
@@ -165,5 +169,9 @@ public:
 	void WaitInteract(UAnimMontage* am, float interactTime, const FVoidVoid& delegate);
 
 	void RequestInteract(AActor* target, const FVoidVoid& delegate, float r = 250.f);
+
+	void BindOnCancel( const FVoidVoid& onCancel);
+	
+	void UnbindCancel();
 };
 
