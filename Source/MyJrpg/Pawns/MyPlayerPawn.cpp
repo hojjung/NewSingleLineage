@@ -395,6 +395,8 @@ void AMyPlayerPawn::WaitInteract(UAnimMontage* am, float interactTime, const FVo
 
 void AMyPlayerPawn::RequestInteract(AActor* target, const FVoidVoid& delegate ,float r)
 {
+	PRINTF("AMyPlayerPawn::RequestInteract:Range:%.1f",r);
+	
 	FPathFollowingRequestResult Result = MoveToActor(target, r);
 	
 	if(Result.Code == EPathFollowingRequestResult::Type::AlreadyAtGoal)

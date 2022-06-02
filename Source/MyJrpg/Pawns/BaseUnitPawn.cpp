@@ -171,7 +171,6 @@ FPathFollowingRequestResult ABaseUnitPawn::MoveTo(const FAIMoveRequest& MoveRequ
 				                               : FAIRequestID::InvalidRequest;
 			if (RequestID.IsValid())
 			{
-				bool bAllowStrafe = MoveRequest.CanStrafe();
 				ResultData.MoveId = RequestID;
 				ResultData.Code = EPathFollowingRequestResult::RequestSuccessful;
 
