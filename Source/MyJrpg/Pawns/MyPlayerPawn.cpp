@@ -53,7 +53,7 @@ AMyPlayerPawn::AMyPlayerPawn(const FObjectInitializer& objInit):Super(objInit)
 
 	m_bIsInteracting = false;
 
-	m_fAttackRange = 300;
+	SetAttackRange(250);
 }
 
 void AMyPlayerPawn::CreateFocusActor()
@@ -100,7 +100,7 @@ void AMyPlayerPawn::SetPlayerEntity()
 	DefaultStat.m_nAccu = 10;
 	DefaultStat.m_nAvoid = 0;
 	DefaultStat.m_MaxHp = 100;
-	DefaultStat.m_Dmg = 5;
+	DefaultStat.m_Dmg = 1;
 	DefaultStat.m_AtkSpeed = 1.0f;
 	DefaultStat.m_DmgReduce = 0;
 	DefaultStat.m_CriPer = 0.1f;

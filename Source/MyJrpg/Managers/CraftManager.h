@@ -58,14 +58,14 @@ protected:
 protected:
 	bool IsInvenHasSpace();
 
-	bool IsMaterialEnough();
-
-	void PurchaseItemForCraft();
-
 	void ReceiveItem();
 
 public:
 	void Init();
+	
+	void PurchaseItemForCraft(const TArray<FCraftItemCost>& aryCraftCost);
+	
+	bool IsMaterialEnough(const TArray<FCraftItemCost>& aryCraftCost);
 	
 	void SetCraftItem(int index);
 

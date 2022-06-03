@@ -348,6 +348,9 @@ bool UConstructionManager::IsBuildable()
 	if(!m_PreviewActor.Get())
 		return false;
 	
+	if(!UMyGameInstance::Get->m_CraftManager->IsMaterialEnough(m_PreviewActor->GetBuildData().m_AryCostItem))
+		return false;
+	
 	int X,Y;
 
 	FVector Loc = m_PreviewActor->GetActorLocation();
@@ -627,6 +630,8 @@ void UConstructionManager::TryEraseActor(TWeakObjectPtr<AStructureActor>& holder
 
 void UConstructionManager::ConfirmBuild()
 {
+	UMyGameInstance::Get->m_CraftManager->PurchaseItemForCraft(m_PreviewActor->GetBuildData().m_AryCostItem);
+	
 	int X,Y;
 	FVector Loc = m_PreviewActor->GetActorLocation(); 
 

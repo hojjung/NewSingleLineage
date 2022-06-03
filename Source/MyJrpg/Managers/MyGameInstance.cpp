@@ -105,12 +105,12 @@ void UMyGameInstance::Init()
 	m_ItemCollecManager->Init();
 	m_PetManager->Init();
 	m_SkillManager->Init();
+	m_EquipManager->Init();
 	m_Inven->Init(FGlobalVariable::INVEN_SIZE);
 	m_QuestManager->Init();
 	m_CurrencyManager->Init(0);
 	
 	m_PlayerStatManager->Init();
-	m_EquipManager->Init();
 	m_BadwordTable->Init();
 	m_TeamKarma->Init();
 	//
@@ -133,7 +133,7 @@ void UMyGameInstance::Init()
 
 void UMyGameInstance::TestModeSetting()
 {
-	
+	m_Inven->AddItem(FItemSpec(TEXT("Belt01"),0,true));
 }
 
 void UMyGameInstance::StartGame()

@@ -1,5 +1,6 @@
 #include "WidgetBuildElement.h"
 
+#include "MyJrpg/Managers/MyGameInstance.h"
 #include "MyJrpg/Widgets/World/Menu/Craft/WidgetCraftCostElement.h"
 
 void UWidgetBuildElement::Init(const FBuildDataRow& data)
@@ -11,6 +12,8 @@ void UWidgetBuildElement::Init(const FBuildDataRow& data)
 	m_ImgIcon->SetBrushFromSoftTexture(data.m_Icon);
 
 	m_TextCnt->SetVisibility(ESlateVisibility::Collapsed);
+	
+	UMyGameInstance::Get->m_Inven->m_OnInvenChanged.AddUObject(this, &UWidgetBuildElement::UpdateCost);
 }
 
 void UWidgetBuildElement::SetStackCount(int cnt)
@@ -48,9 +51,19 @@ FReply UWidgetBuildElement::NativeOnMouseButtonUp(const FGeometry& InGeometry, c
 	return FReply::Handled();
 }
 
+void UWidgetBuildElement::UpdateCost()
+{
+	for(UWidgetCraftCostElement* CraftCost : m_CraftCost)
+	{
+		CraftCost->UpdateCostAmount();
+	}
+}
+
 void UWidgetBuildElement::CreateCostWidgets(const TArray<FCraftItemCost>& costData)
 {
 	m_VertCost->ClearChildren();
+
+	m_CraftCost.Reset();
 	
 	for(const FCraftItemCost& CraftData : costData)
 	{
@@ -59,6 +72,8 @@ void UWidgetBuildElement::CreateCostWidgets(const TArray<FCraftItemCost>& costDa
 		SelectButton->SetCraftCost(CraftData);
 
 		m_VertCost->AddChildToVerticalBox(SelectButton);
+
+		m_CraftCost.Add(SelectButton);
 		
 		SelectButton->SetPadding(FMargin(0,0,0,0));
 	}

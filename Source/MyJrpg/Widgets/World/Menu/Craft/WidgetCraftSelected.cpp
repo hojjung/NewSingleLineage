@@ -53,7 +53,10 @@ void UWidgetCraftSelected::SelectCraft(const FCraftDataInfo& data)
 	m_TextName->SetText(data.m_ItemData->m_ShowingName);
 	m_TextDesc->SetText(data.m_ItemData->m_Desc);
 
-	//SetLimitLevel(data);
+	if(!UMyLib::IsTestMode())
+	{
+		SetLimitLevel(data);
+	}
 }
 
 void UWidgetCraftSelected::Close()

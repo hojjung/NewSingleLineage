@@ -35,7 +35,7 @@ void UCraftManager::Craft()
 {
 	if(!UMyLib::IsTestMode())
 	{
-		PurchaseItemForCraft();
+		PurchaseItemForCraft(m_CrntItemData->m_ItemData->m_AryCostItem);
 	}
 		
 	ReceiveItem();
@@ -67,7 +67,7 @@ bool UCraftManager::CheckCraftable()
 		return true;
 	}
 	//재료 체크
-	bool IsMatrialEnough = IsMaterialEnough();
+	bool IsMatrialEnough = IsMaterialEnough(m_CrntItemData->m_ItemData->m_AryCostItem);
 	
 	if(!IsMatrialEnough)
 	{
@@ -101,9 +101,9 @@ bool UCraftManager::IsInvenHasSpace()
 	return true;
 }
 
-bool UCraftManager::IsMaterialEnough()
+bool UCraftManager::IsMaterialEnough(const TArray<FCraftItemCost>& aryCraftCost)
 {
-	for(const FCraftItemCost& Cost : m_CrntItemData->m_ItemData->m_AryCostItem)
+	for(const FCraftItemCost& Cost : aryCraftCost)
 	{
 		if(!UMyLib::GetPlayerInven()->FindItem(Cost.m_ItemDataRowHandle.RowName, Cost.m_nStackOrLevel))
 		{
@@ -113,9 +113,9 @@ bool UCraftManager::IsMaterialEnough()
 	return true;
 }
 
-void UCraftManager::PurchaseItemForCraft()
+void UCraftManager::PurchaseItemForCraft(const TArray<FCraftItemCost>& aryCraftCost)
 {
-	for(const FCraftItemCost& Cost : m_CrntItemData->m_ItemData->m_AryCostItem)
+	for(const FCraftItemCost& Cost : aryCraftCost)
 	{
 		UMyLib::GetPlayerInven()->RemoveItem(Cost.m_ItemDataRowHandle.RowName, Cost.m_nStackOrLevel);
 	}

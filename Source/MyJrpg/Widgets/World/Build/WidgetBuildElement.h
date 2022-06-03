@@ -32,6 +32,8 @@ protected:
 	UVerticalBox* m_VertCost;
 	UPROPERTY(EditAnywhere)
 	TSubclassOf<UWidgetCraftCostElement> m_ClassCostElement;
+	UPROPERTY()
+	TArray<UWidgetCraftCostElement*> m_CraftCost;
 	
 protected:
 	const FBuildDataRow* m_DataRow;
@@ -50,5 +52,7 @@ protected:
 	virtual FReply NativeOnTouchEnded(const FGeometry& InGeometry, const FPointerEvent& InGestureEvent) override;
 
 	virtual FReply NativeOnMouseButtonUp(const FGeometry& InGeometry, const FPointerEvent& InMouseEvent) override;
+
+	void UpdateCost();
 
 };

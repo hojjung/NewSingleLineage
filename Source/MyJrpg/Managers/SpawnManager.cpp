@@ -354,8 +354,10 @@ IFocusable* USpawnManager::GetNearTarget(FVector callerLoc, float range)
 		float Dist1 = FVector::DistSquared2D(Loc1, callerLoc);
 
 		float Dist2 = FVector::DistSquared2D(Loc2, callerLoc);
+
+		float ARange = UMyLib::GetPlayer()->GetAttackRangeSqr(); 
 		
-		if(Dist1 <= UMyLib::GetPlayer()->GetAttackRange() ||  Dist1 <= Dist2)
+		if(Dist1 <= ARange ||  Dist1 <= Dist2)
 		{
 			return Pawn;
 		}

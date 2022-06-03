@@ -12,7 +12,7 @@ void UWidgetBuildPanel::NativeOnInitialized()
 
 	for(const FBuildDataRow* Data : AryDatas)
 	{
-		if(Data->m_BuildType == EBuildType::Furniture || Data->m_BuildType == EBuildType::Field)
+		if(Data->m_BuildType == EBuildType::Furniture || Data->m_BuildType == EBuildType::Field || Data->m_AryCostItem.Num() < 1)
 		{
 			continue;
 		}
