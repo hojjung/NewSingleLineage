@@ -78,7 +78,5 @@ void UWidgetScreenEffect::HideFadeOut()
 	{
 		return;
 	}
-	IsFadeOut = false;
-
-	m_OnFadeOutDone.Unbind();
+	EndFade();
 }

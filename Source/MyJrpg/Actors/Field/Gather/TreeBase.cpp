@@ -96,7 +96,7 @@ void ATreeBase::OnInteract()
 	}
 	m_Player->BindOnCancel(FVoidVoid::CreateUObject(this, &ATreeBase::OnHarvestMotionDone));
 	m_Player->SetInteracting(true);
-	m_Player->RequestInteract(this,FVoidVoid::CreateUObject(this,&ATreeBase::OnArrived),175);
+	m_Player->RequestInteract(this,FVoidVoid::CreateUObject(this,&ATreeBase::OnArrived),90);
 }
 
 void ATreeBase::OnArrived()

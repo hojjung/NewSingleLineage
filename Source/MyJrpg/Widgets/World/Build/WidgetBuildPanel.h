@@ -29,6 +29,8 @@ protected:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (BindWidget))
 	UButton* m_BtnFurniture;
 	UPROPERTY()
+	TArray<UWidgetBuildElement*> m_AryEles; 
+	UPROPERTY()
 	UWidgetBuildElement* m_Focused;
 
 	FDelegateHandle m_DeleTouchWorld;
@@ -36,6 +38,12 @@ protected:
 	FDelegateHandle m_DeleCancel;
 
 	FDelegateHandle m_DeleFurniture;
+	//
+	FDelegateHandle m_DeleInven;
+
+	FDelegateHandle m_DeleBag;
+	
+	FDelegateHandle m_DeleBelt;
 
 protected:
 	virtual void NativeOnInitialized() override;
@@ -47,6 +55,8 @@ protected:
 	void OnCancel();
 
 	void UpdateFurnitureTab();
+
+	void UpdateElement();
 	
 public:
 	virtual void OpenPanel() override;

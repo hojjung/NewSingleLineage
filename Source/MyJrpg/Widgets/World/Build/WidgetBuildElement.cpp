@@ -12,8 +12,6 @@ void UWidgetBuildElement::Init(const FBuildDataRow& data)
 	m_ImgIcon->SetBrushFromSoftTexture(data.m_Icon);
 
 	m_TextCnt->SetVisibility(ESlateVisibility::Collapsed);
-	
-	UMyGameInstance::Get->m_Inven->m_OnInvenChanged.AddUObject(this, &UWidgetBuildElement::UpdateCost);
 }
 
 void UWidgetBuildElement::SetStackCount(int cnt)

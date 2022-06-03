@@ -28,7 +28,7 @@ void UWidgetCraftCostElement::UpdateCostAmount()
 {
 	FString FormatAmount;
 
-	int Stack = UMyLib::GetPlayerInven()->GetItemCount(m_CraftData->m_ItemDataRowHandle.RowName,m_CraftData->m_nStackOrLevel);
+	int Stack = UMyLib::GetItemCountAllInven(m_CraftData->m_ItemDataRowHandle.RowName,m_CraftData->m_nStackOrLevel);
 
 	if(UMyLib::IsEquip(m_CraftData->m_ItemDataRowHandle.RowName))
 	{

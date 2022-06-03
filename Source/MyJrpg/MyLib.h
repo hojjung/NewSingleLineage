@@ -97,6 +97,8 @@ public:
 	static int GetRequireCollecLevel(const FName& collecID, int index);
 
 	static bool IsCollecItemEquip(const FName& collecID, int index);
+
+	static int GetItemCountAllInven(const FName& id, int stlv);
 	
 	static FItemSpec* FindItemAllInven(const FName& id, int stlv);
 
@@ -107,4 +109,10 @@ public:
 	static void ReduceDurability(const FItemSpec& item_spec, int amount);
 	
 	static const FStatGroup& GetItemStatData(const FName& id);
+	
+	static bool HasSpaceAllInven(FItemSpec& item);
+	
+	static bool RemoveItemAll(const FName& id, int stLv);
+	
+	static bool AddItemAll(FItemSpec& items, bool newItem);
 };

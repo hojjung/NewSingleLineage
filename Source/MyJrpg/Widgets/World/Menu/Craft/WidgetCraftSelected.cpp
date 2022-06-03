@@ -35,6 +35,15 @@ void UWidgetCraftSelected::SelectCraft(const FCraftDataInfo& data)
 
 	m_Dele = UMyGameInstance::Get->m_Inven->m_OnInvenChanged.AddUObject(this, &UWidgetCraftSelected::UpdateCraftCostPanel);
 
+	if(UMyGameInstance::Get->m_EquipManager->GetBag())
+	{
+		m_Dele2 = UMyGameInstance::Get->m_EquipManager->GetOnBagChanged().AddUObject(this, &UWidgetCraftSelected::UpdateCraftCostPanel);
+	}
+	if(UMyGameInstance::Get->m_EquipManager->GetBelt())
+	{
+		m_Dele3 = UMyGameInstance::Get->m_EquipManager->GetOnBeltChanged().AddUObject(this, &UWidgetCraftSelected::UpdateCraftCostPanel);
+	}
+
 	m_Icon->SetIcon(data.m_ItemData->m_Icon);
 
 	m_Wrap->ClearChildren();
@@ -57,6 +66,7 @@ void UWidgetCraftSelected::SelectCraft(const FCraftDataInfo& data)
 	{
 		SetLimitLevel(data);
 	}
+	UpdateCraftCostPanel();
 }
 
 void UWidgetCraftSelected::Close()
@@ -64,6 +74,15 @@ void UWidgetCraftSelected::Close()
 	SetVisibility(ESlateVisibility::Collapsed);
 
 	UMyGameInstance::Get->m_Inven->m_OnInvenChanged.Remove(m_Dele);
+
+	if(UMyGameInstance::Get->m_EquipManager->GetBag())
+	{
+		UMyGameInstance::Get->m_EquipManager->GetOnBagChanged().Remove(m_Dele2);
+	}
+	if(UMyGameInstance::Get->m_EquipManager->GetBelt())
+	{
+		UMyGameInstance::Get->m_EquipManager->GetOnBeltChanged().Remove(m_Dele3);
+	}
 }
 
 void UWidgetCraftSelected::Craft()

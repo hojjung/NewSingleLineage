@@ -349,6 +349,23 @@ bool UMyLib::IsCollecItemEquip(const FName& collecID, int index)
 	return UMyLib::IsEquip(ItemKey);
 }
 
+int UMyLib::GetItemCountAllInven(const FName& id, int stlv)
+{
+	int Sum = UMyLib::GetPlayerInven()->GetItemCount(id, stlv);
+	
+	UEquipManager* Equip = UMyGameInstance::Get->m_EquipManager;
+	
+	if(Equip->GetBag())
+	{
+		Sum += Equip->GetBag()->GetItemCount(id, stlv);
+	}
+	if(Equip->GetBelt())
+	{
+		Sum += Equip->GetBelt()->GetItemCount(id, stlv);
+	}
+	return Sum;	
+}
+
 FItemSpec* UMyLib::FindItemAllInven(const FName& id, int stlv)
 {
 	UInventory* outInven;
@@ -427,4 +444,82 @@ void UMyLib::ReduceDurability(const FItemSpec& item_spec, int amount)
 const FStatGroup& UMyLib::GetItemStatData(const FName& id)
 {
 	return UMyLib::GetItemData(id).m_EquipStats;
+}
+
+bool UMyLib::HasSpaceAllInven(FItemSpec& item)
+{
+	if (UMyLib::GetPlayerInven()->HasSpace(item))
+	{
+		return true;
+	}
+	
+	UEquipManager* Equip = UMyGameInstance::Get->m_EquipManager;
+	
+	if(Equip->GetBag())
+	{
+		if (Equip->GetBag()->HasSpace(item))
+		{
+			return true;
+		}
+	}
+	if(Equip->GetBelt())
+	{
+		if (Equip->GetBelt()->HasSpace(item))
+		{
+			return true;
+		}
+	}
+	return false;	
+}
+
+bool UMyLib::RemoveItemAll(const FName& id, int stLv)
+{
+	if (UMyLib::GetPlayerInven()->RemoveItem(id, stLv))
+	{
+		return true;
+	}
+	
+	UEquipManager* Equip = UMyGameInstance::Get->m_EquipManager;
+	
+	if(Equip->GetBag())
+	{
+		if (Equip->GetBag()->RemoveItem(id, stLv))
+		{
+			return true;
+		}
+	}
+	if(Equip->GetBelt())
+	{
+		if (Equip->GetBelt()->RemoveItem(id, stLv))
+		{
+			return true;
+		}
+	}
+	return false;	
+}
+
+bool UMyLib::AddItemAll(FItemSpec& items, bool newItem)
+{
+	if (UMyLib::GetPlayerInven()->AddItem(items, newItem))
+	{
+		return true;
+	}
+	
+	UEquipManager* Equip = UMyGameInstance::Get->m_EquipManager;
+	
+	if(Equip->GetBag())
+	{
+		if (Equip->GetBag()->AddItem(items, newItem))
+		{
+			return true;
+		}
+	}
+	if(Equip->GetBelt())
+	{
+		if (Equip->GetBelt()->AddItem(items, newItem))
+		{
+			return true;
+		}
+	}
+	return false;	
 }

@@ -109,7 +109,6 @@ void UMyGameInstance::Init()
 	m_Inven->Init(FGlobalVariable::INVEN_SIZE);
 	m_QuestManager->Init();
 	m_CurrencyManager->Init(0);
-	
 	m_PlayerStatManager->Init();
 	m_BadwordTable->Init();
 	m_TeamKarma->Init();

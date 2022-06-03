@@ -8,6 +8,8 @@ void UWidgetBuildPanel::NativeOnInitialized()
 {
 	Super::NativeOnInitialized();
 
+	m_AryEles.Reset();
+	
 	const TArray<FBuildDataRow*>& AryDatas = UMyGameInstance::Get->m_BuildManager->GetAryBuildDatas();
 
 	for(const FBuildDataRow* Data : AryDatas)
@@ -21,6 +23,7 @@ void UWidgetBuildPanel::NativeOnInitialized()
 		SelectButton->CreateCostWidgets(Data->m_AryCostItem);
 		SelectButton->m_OnClick.BindUObject(this, &UWidgetBuildPanel::OnClickElement);
 		m_ScrollElements->AddChild(SelectButton);
+		m_AryEles.Add(SelectButton);
 	}
 	
 	m_ScrollFurnitureElements->SetVisibility(ESlateVisibility::Collapsed);
@@ -70,6 +73,19 @@ void UWidgetBuildPanel::OpenPanel()
 	m_DeleFurniture = UMyGameInstance::Get->m_BuildManager->m_OnChanged.AddUObject(this, &UWidgetBuildPanel::UpdateFurnitureTab);
 
 	UpdateFurnitureTab();
+	//
+	m_DeleInven = UMyGameInstance::Get->m_Inven->m_OnInvenChanged.AddUObject(this, &UWidgetBuildPanel::UpdateElement);
+
+	if(UMyGameInstance::Get->m_EquipManager->GetBag())
+	{
+		m_DeleBag = UMyGameInstance::Get->m_EquipManager->GetOnBagChanged().AddUObject(this, &UWidgetBuildPanel::UpdateElement);
+	}
+	if(UMyGameInstance::Get->m_EquipManager->GetBelt())
+	{
+		m_DeleBelt = UMyGameInstance::Get->m_EquipManager->GetOnBeltChanged().AddUObject(this, &UWidgetBuildPanel::UpdateElement);
+	}
+
+	UpdateElement();
 }
 
 void UWidgetBuildPanel::ClosePanel()
@@ -91,6 +107,17 @@ void UWidgetBuildPanel::ClosePanel()
 	UMyGameInstance::Get->m_BuildManager->m_OnChanged.Remove(m_DeleFurniture);
 
 	UMyLib::GetCanvas()->ShowMainHUD(true);
+	//
+	UMyGameInstance::Get->m_Inven->m_OnInvenChanged.Remove(m_DeleInven);
+
+	if(UMyGameInstance::Get->m_EquipManager->GetBag())
+	{
+		UMyGameInstance::Get->m_EquipManager->GetOnBagChanged().Remove(m_DeleBag);
+	}
+	if(UMyGameInstance::Get->m_EquipManager->GetBelt())
+	{
+		UMyGameInstance::Get->m_EquipManager->GetOnBeltChanged().Remove(m_DeleBelt);
+	}
 }
 
 void UWidgetBuildPanel::OnClickStruct()
@@ -144,5 +171,13 @@ void UWidgetBuildPanel::UpdateFurnitureTab()
 		SelectButton->m_OnClick.BindUObject(this, &UWidgetBuildPanel::OnClickElement);
 		
 		m_ScrollFurnitureElements->AddChild(SelectButton);
+	}
+}
+
+void UWidgetBuildPanel::UpdateElement()
+{
+	for(UWidgetBuildElement* Ele : m_AryEles)
+	{
+		Ele->UpdateCost();
 	}
 }

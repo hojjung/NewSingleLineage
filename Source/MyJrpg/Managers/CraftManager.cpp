@@ -95,9 +95,8 @@ bool UCraftManager::IsInvenHasSpace()
 	
 	if(m_CrntItemData->m_IsItem)
 	{
-		return  UMyLib::GetPlayerInven()->HasSpace(Item);
+		return  UMyLib::HasSpaceAllInven(Item);
 	}
-	//UMyLib::GetBuildManager()->AddFurniture(m_CrntItemData->m_ID);
 	return true;
 }
 
@@ -105,7 +104,7 @@ bool UCraftManager::IsMaterialEnough(const TArray<FCraftItemCost>& aryCraftCost)
 {
 	for(const FCraftItemCost& Cost : aryCraftCost)
 	{
-		if(!UMyLib::GetPlayerInven()->FindItem(Cost.m_ItemDataRowHandle.RowName, Cost.m_nStackOrLevel))
+		if(!UMyLib::FindItemAllInven(Cost.m_ItemDataRowHandle.RowName, Cost.m_nStackOrLevel))
 		{
 			return false;
 		}
@@ -117,7 +116,7 @@ void UCraftManager::PurchaseItemForCraft(const TArray<FCraftItemCost>& aryCraftC
 {
 	for(const FCraftItemCost& Cost : aryCraftCost)
 	{
-		UMyLib::GetPlayerInven()->RemoveItem(Cost.m_ItemDataRowHandle.RowName, Cost.m_nStackOrLevel);
+		UMyLib::RemoveItemAll(Cost.m_ItemDataRowHandle.RowName, Cost.m_nStackOrLevel);
 	}
 }
 
@@ -131,7 +130,7 @@ void UCraftManager::ReceiveItem()
 	if(m_CrntItemData->m_IsItem)
 	{
 		FItemSpec Items(m_CrntItemData->m_ID,UMyLib::IsEquip(*((FItemDataRow*)(m_CrntItemData->m_ItemData))) ? 0 : 1);
-		UMyLib::GetPlayerInven()->AddItem(Items,true);
+		UMyLib::AddItemAll(Items,true);
 	}
 	else
 	{

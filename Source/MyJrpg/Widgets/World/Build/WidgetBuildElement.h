@@ -48,11 +48,12 @@ public:
 	void MyUnFocus();
 
 	void CreateCostWidgets(const TArray<FCraftItemCost>& costData);
+	
+	void UpdateCost();
 protected:
 	virtual FReply NativeOnTouchEnded(const FGeometry& InGeometry, const FPointerEvent& InGestureEvent) override;
 
 	virtual FReply NativeOnMouseButtonUp(const FGeometry& InGeometry, const FPointerEvent& InMouseEvent) override;
 
-	void UpdateCost();
 
 };

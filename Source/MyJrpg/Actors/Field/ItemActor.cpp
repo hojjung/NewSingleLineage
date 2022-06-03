@@ -68,7 +68,7 @@ void AItemActor::Init(FName itemID, int countOrLevel)
 void AItemActor::OnInteract()
 {
 	UMyLib::GetPlayer()->SetInteracting(true);
-	UMyLib::GetPlayer()->RequestInteract(this,FVoidVoid::CreateUObject(this,&AItemActor::OnArrived),125);
+	UMyLib::GetPlayer()->RequestInteract(this,FVoidVoid::CreateUObject(this,&AItemActor::OnArrived),50);
 }
 
 void AItemActor::OnArrived()

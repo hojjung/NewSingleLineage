@@ -44,6 +44,10 @@ protected:
 
 	FDelegateHandle m_Dele;
 
+	FDelegateHandle m_Dele2;
+
+	FDelegateHandle m_Dele3;
+
 	float m_fCancelTimer;
 
 	bool m_bStartCraft;
