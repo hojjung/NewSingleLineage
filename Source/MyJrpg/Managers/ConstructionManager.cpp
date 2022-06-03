@@ -62,7 +62,6 @@ void UConstructionManager::StartBuilding()
 void UConstructionManager::EndBuilding()
 {
 	m_GridMesh->Hide();
-	
 	Cancel();
 	CancelSelect();
 	SetFurnitureWallShow();

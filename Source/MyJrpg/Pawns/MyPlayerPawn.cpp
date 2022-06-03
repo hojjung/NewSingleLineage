@@ -231,6 +231,7 @@ void AMyPlayerPawn::RequestAttack()
 	ACombatUnitPawn* FocusActor = GetFocusedTarget<ACombatUnitPawn>();
 	if(!FocusActor)
 	{
+		TryAttack();
 		return;
 	}
 	
@@ -395,12 +396,11 @@ void AMyPlayerPawn::WaitInteract(UAnimMontage* am, float interactTime, const FVo
 
 void AMyPlayerPawn::RequestInteract(AActor* target, const FVoidVoid& delegate ,float r)
 {
-	PRINTF("AMyPlayerPawn::RequestInteract:Range:%.1f",r);
-	
 	FPathFollowingRequestResult Result = MoveToActor(target, r);
 	
 	if(Result.Code == EPathFollowingRequestResult::Type::AlreadyAtGoal)
 	{
+		HomingRotateToTarget(0);
 		delegate.ExecuteIfBound();
 		return;
 	}
@@ -426,7 +426,6 @@ void AMyPlayerPawn::OnRequestMoveDone(FAIRequestID id, const FPathFollowingResul
 	{
 		return;
 	}
-	HomingRotateToTarget(0);
 	m_OnRequestDone.ExecuteIfBound();
 	m_OnRequestDone.Unbind();
 }
