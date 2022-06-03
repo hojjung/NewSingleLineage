@@ -39,6 +39,9 @@ void AItemActor::EndPlay(const EEndPlayReason::Type EndPlayReason)
 
 void AItemActor::Init(FName itemID, int countOrLevel)
 {
+	m_NavProp.AgentHeight = 88;
+	m_NavProp.AgentRadius = 34;
+	
 	m_ItemSpec.m_ID = itemID;
 
 	m_ItemSpec.m_nLvStack = countOrLevel;
@@ -106,4 +109,18 @@ bool AItemActor::HasOwnerTeamID() const
 FVector AItemActor::GetNavAgentLocation() const
 {
 	return GetActorLocation() - FVector(0.f, 0.f, 88);
+}
+
+const FNavAgentProperties& AItemActor::GetNavAgentPropertiesRef() const
+{
+	return m_NavProp;
+}
+
+void AItemActor::GetMoveGoalReachTest(const AActor* MovingActor, const FVector& MoveOffset, FVector& GoalOffset,float& GoalRadius, float& GoalHalfHeight) const
+{
+	GoalOffset = FVector::ZeroVector;
+	
+	GoalRadius = GetNavAgentPropertiesRef().AgentRadius;
+
+	GoalHalfHeight = GetNavAgentPropertiesRef().AgentHeight;
 }

@@ -21,6 +21,8 @@ UMyMovement::UMyMovement(const FObjectInitializer& obj)
 	bPositionCorrected = false;
 	m_fSpeedMultiple = 1;
 	ResetMoveState();
+	NavAgentProps.AgentHeight = 88;
+	NavAgentProps.AgentRadius = 34;
 }
 
 void UMyMovement::BeginPlay()

@@ -36,6 +36,7 @@ protected:
 
 	void OnArrived();
 	
+	
 public:
 	virtual const FBuildDataRow& GetBuildData() const ;
 	virtual void SetBuildData(const FBuildDataRow& data);
@@ -53,4 +54,6 @@ public:
 	virtual bool IsInteractImplemented() override;
 
 	virtual FVector GetNavAgentLocation() const override;
+
+	virtual void GetMoveGoalReachTest(const AActor* MovingActor, const FVector& MoveOffset, FVector& GoalOffset,float& GoalRadius, float& GoalHalfHeight) const override;
 };

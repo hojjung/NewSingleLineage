@@ -62,6 +62,7 @@ protected:
 
 	virtual void EndPlay(const EEndPlayReason::Type EndPlayReason) override;
 
+
 public:
 	void SetEntity(const FGatherDataRow& data, AMyPlayerPawn* pl);
 
@@ -72,4 +73,6 @@ public:
 	virtual void OnGatherDone();
 
 	virtual FVector GetNavAgentLocation() const override;
+	
+	virtual void GetMoveGoalReachTest(const AActor* MovingActor, const FVector& MoveOffset, FVector& GoalOffset,float& GoalRadius, float& GoalHalfHeight) const override;
 };

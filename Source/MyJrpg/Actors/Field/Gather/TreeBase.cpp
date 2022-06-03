@@ -230,3 +230,11 @@ void ATreeBase::EndPlay(const EEndPlayReason::Type EndPlayReason)
 	m_GatherAsset.Reset();
 }
 
+void ATreeBase::GetMoveGoalReachTest(const AActor* MovingActor, const FVector& MoveOffset, FVector& GoalOffset,float& GoalRadius, float& GoalHalfHeight) const
+{
+	GoalOffset = FVector::ZeroVector;
+	
+	GoalRadius = GetNavAgentPropertiesRef().AgentRadius;
+
+	GoalHalfHeight = GetNavAgentPropertiesRef().AgentHeight;
+}

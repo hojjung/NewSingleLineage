@@ -178,6 +178,14 @@ FVector AStructureActor::GetNavAgentLocation() const
 	return GetActorLocation() - FVector(0.f, 0.f, Z);
 }
 
+void AStructureActor::GetMoveGoalReachTest(const AActor* MovingActor, const FVector& MoveOffset, FVector& GoalOffset,
+	float& GoalRadius, float& GoalHalfHeight) const
+{
+	GoalOffset = FVector::ZeroVector;
+
+	GetSimpleCollisionCylinder(GoalRadius, GoalHalfHeight);
+}
+
 bool AStructureActor::IsEraseable()
 {
 	return m_BuildInteract ? m_BuildInteract->IsEraseable() : true;

@@ -28,6 +28,8 @@ protected:
 
 	FItemSpec m_ItemSpec;
 
+	FNavAgentProperties m_NavProp;
+	
 protected:
 	virtual void EndPlay(const EEndPlayReason::Type EndPlayReason) override;
 	
@@ -43,5 +45,9 @@ public:
 	bool HasOwnerTeamID() const;
 
 	virtual FVector GetNavAgentLocation() const override;
+
+	virtual const FNavAgentProperties& GetNavAgentPropertiesRef() const override;
+
+	virtual void GetMoveGoalReachTest(const AActor* MovingActor, const FVector& MoveOffset, FVector& GoalOffset, float& GoalRadius, float& GoalHalfHeight) const override;
 };
 
