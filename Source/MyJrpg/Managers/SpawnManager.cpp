@@ -269,7 +269,7 @@ ATreeBase* USpawnManager::SpawnGatherActor(const FNPCSpawnData& spawn_data)
 
 	if (EntityRow)
 	{
-		NpcActor->SetEntity(*EntityRow,UMyLib::GetPlayer());
+		NpcActor->SetEntity(spawn_data.m_IDEntity,*EntityRow,UMyLib::GetPlayer());
 	}
 
 	AddFocusActor(NpcActor);

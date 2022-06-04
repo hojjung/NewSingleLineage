@@ -45,6 +45,8 @@ private:
 	float m_fDeathAnimDurationTimer;
 
 	FItemSpec* m_CrntToolID;
+	
+	FName m_ID;
 
 private:
 	void CreateSetDeathCurve(float fullLength);
@@ -64,7 +66,7 @@ protected:
 
 
 public:
-	void SetEntity(const FGatherDataRow& data, AMyPlayerPawn* pl);
+	void SetEntity(const FName& id, const FGatherDataRow& data, AMyPlayerPawn* pl);
 
 	virtual void OnTakeChopping();
 
@@ -75,4 +77,6 @@ public:
 	virtual FVector GetNavAgentLocation() const override;
 	
 	virtual void GetMoveGoalReachTest(const AActor* MovingActor, const FVector& MoveOffset, FVector& GoalOffset,float& GoalRadius, float& GoalHalfHeight) const override;
+
+	const FName& GetID() const;
 };

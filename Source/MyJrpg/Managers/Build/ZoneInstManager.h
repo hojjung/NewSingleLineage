@@ -56,15 +56,15 @@ class MYJRPG_API UZoneInstManager : public UObject
 	GENERATED_BODY()
 
 protected:
-	TMap<FName,TArray<FZoneActor>> m_MapBuildInsts;
+	TMap<FName,TArray<FZoneActor>> m_MapBuildInsts;//위치값 밖에 저장이안되는데
 
-	TArray<AMonsterPawn*> m_Npc;
+	TArray<TWeakObjectPtr<AMonsterPawn>> m_Npc;
 
-	TArray<AItemActor*> m_Item;
+	TArray<TWeakObjectPtr<AItemActor>> m_Item;
 
-	TArray<AActor*> m_Gather;
+	TArray<TWeakObjectPtr<ATreeBase>> m_Gather;
 
-	TArray<AActor*> m_Build;
+	TArray<TWeakObjectPtr<AStructureActor>> m_Build;
 
 protected:
 	AMonsterPawn* SpawnNpcActor(const FZoneActor& SpawnData);
@@ -84,6 +84,6 @@ protected:
 public:
 	void SpawnZone(const FName& id, const FZoneDataRow& zoneData);
 
-	void SaveActors();
+	void SaveActors(const FName& id);
 };
 

@@ -30,7 +30,13 @@ void ULevelMoveManager::OpenMyLevel(FName zoneData)
 void ULevelMoveManager::OpenLevel(FName zoneData)
 {
 	UMyGameInstance::Get->m_GameRule = nullptr;
-	
+
+	if(m_ZoneData)
+	{
+		FName ID = GetCrntZoneID();
+		
+		UMyGameInstance::Get->m_ZoneInst->SaveActors(ID);
+	}
 	m_ZoneData = nullptr;
 
 	UGameplayStatics::OpenLevel(this,zoneData);
@@ -61,9 +67,7 @@ void ULevelMoveManager::OnOpenWorldLevelComplete()
 		UMyGameInstance::Get->m_GameRule = NewObject<UGameRuleBase>(this, m_ZoneData->m_ClassGameRule);
 	}
 
-
 	UMyGameInstance::Get->m_ZoneInst->SpawnZone(GetCrntZoneID(), *GetZoneDataCurrent());
-	//UMyGameInstance::Get->m_SpawnManager->SetSpawnActors(m_ZoneData->m_SpawnDataNpc);
 
 	UMyGameInstance::Get->m_EquipManager->UpdateEquip();
 
@@ -78,11 +82,8 @@ void ULevelMoveManager::OnOpenWorldLevelComplete()
 		UMyGameInstance::Get->m_BuildManager->LoadConstruction();
 	}
 	
-	
-	//UMyGameInstance::Get->m_AvatarManager->CreatePreviewActor();
 	UMyGameInstance::Get->m_PetManager->CreatePreviewActor();
-	//UMyGameInstance::Get->m_AvatarManager->EquipSkin(*UMyGameInstance::Get->m_AvatarManager->GetCrntSkin());
-
+	
 	UMyGameInstance::Get->m_SkillAuto->Init();
 }
 

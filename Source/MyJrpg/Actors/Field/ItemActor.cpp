@@ -124,3 +124,8 @@ void AItemActor::GetMoveGoalReachTest(const AActor* MovingActor, const FVector& 
 
 	GoalHalfHeight = GetNavAgentPropertiesRef().AgentHeight;
 }
+
+const FItemSpec& AItemActor::GetItemSpec() const
+{
+	return m_ItemSpec;
+}

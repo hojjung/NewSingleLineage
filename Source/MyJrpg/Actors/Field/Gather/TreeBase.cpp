@@ -64,8 +64,10 @@ ATreeBase::ATreeBase()
 }
 //(X=0.000005,Y=20.000000,Z=-10.000000) btm
 //
-void ATreeBase::SetEntity(const FGatherDataRow& data, AMyPlayerPawn* pl)
+void ATreeBase::SetEntity(const FName& id, const FGatherDataRow& data, AMyPlayerPawn* pl)
 {
+	m_ID = id;
+	
 	m_DataRow = &data;
 	
 	m_nTreeHp = m_DataRow->m_nTreeHp;
@@ -238,4 +240,9 @@ void ATreeBase::GetMoveGoalReachTest(const AActor* MovingActor, const FVector& M
 	GoalRadius = GetNavAgentPropertiesRef().AgentRadius;
 
 	GoalHalfHeight = GetNavAgentPropertiesRef().AgentHeight;
+}
+
+const FName& ATreeBase::GetID() const
+{
+	return m_ID;
 }

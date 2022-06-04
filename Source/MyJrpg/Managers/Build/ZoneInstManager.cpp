@@ -1,5 +1,4 @@
 #include "ZoneInstManager.h"
-
 #include "NPCPaletteDataAsset.h"
 #include "MyJrpg/Actors/Field/ItemActor.h"
 #include "MyJrpg/DataTables/BuildData.h"
@@ -16,6 +15,14 @@ void UZoneInstManager::InitZone(const FName& id, const FZoneDataRow& zoneData)
 
 void UZoneInstManager::SpawnZone(const FName& id, const FZoneDataRow& zoneData)
 {
+	m_Npc.Reset();
+	
+	m_Item.Reset();
+	
+	m_Gather.Reset();
+	
+	m_Build.Reset();
+	
 	TArray<FZoneActor>* BuildInst = m_MapBuildInsts.Find(id);
 	
 	if (!BuildInst)
@@ -26,11 +33,73 @@ void UZoneInstManager::SpawnZone(const FName& id, const FZoneDataRow& zoneData)
 	SpawnActors(*BuildInst);
 }
 
-void UZoneInstManager::SaveActors()
+void UZoneInstManager::SaveActors(const FName& id)
 {
-	//죽으면?
-	//일단은 저장안하는걸로
-	//창고등 안에있는 인스턴스는 어떻게 저장?
+	TArray<FZoneActor>* BuildInst = m_MapBuildInsts.Find(id);
+
+	if(!BuildInst)
+	{
+		return;
+	}
+	
+	BuildInst->Reset();
+
+	for(TWeakObjectPtr<AMonsterPawn> ActorEle : m_Npc)
+	{
+		if(!ActorEle.Get() ||!ActorEle->IsAlive())
+		{
+			continue;
+		}
+		FZoneActor ZoneData;
+		ZoneData.m_nType = EActorType::Npc;
+		ZoneData.m_IDEntity = ActorEle->GetEntityID();
+		ZoneData.m_SpawnPosition = ActorEle->GetActorLocation();
+		ZoneData.m_SpawnRotation = ActorEle->GetActorRotation();
+		BuildInst->Add(ZoneData);
+	}
+	for(TWeakObjectPtr<AItemActor> ActorEle : m_Item)
+	{
+		if(!ActorEle.Get())
+		{
+			continue;
+		}
+		FZoneActor ZoneData;
+		ZoneData.m_nType = EActorType::Item;
+		ZoneData.m_IDEntity = ActorEle->GetItemSpec().m_ID;
+		ZoneData.m_SpawnPosition = ActorEle->GetActorLocation();
+		ZoneData.m_SpawnRotation = ActorEle->GetActorRotation();
+		BuildInst->Add(ZoneData);
+	}
+	for(TWeakObjectPtr<ATreeBase> ActorEle : m_Gather)
+	{
+		if(!ActorEle.Get())
+		{
+			continue;
+		}
+		FZoneActor ZoneData;
+		ZoneData.m_nType = EActorType::Gather;
+		ZoneData.m_IDEntity = ActorEle->GetID();
+		ZoneData.m_SpawnPosition = ActorEle->GetActorLocation();
+		ZoneData.m_SpawnRotation = ActorEle->GetActorRotation();
+		BuildInst->Add(ZoneData);
+	}
+	for(TWeakObjectPtr<AStructureActor> ActorEle : m_Build)
+	{
+		if(!ActorEle.Get())
+		{
+			continue;
+		}
+		FZoneActor ZoneData;
+		ZoneData.m_nType = EActorType::Build;
+		ZoneData.m_IDEntity = ActorEle->GetBuildData().m_RowID;
+		ZoneData.m_SpawnPosition = ActorEle->GetActorLocation();
+		ZoneData.m_SpawnRotation = ActorEle->GetActorRotation();
+		BuildInst->Add(ZoneData);
+	}
+	//나무 체력
+	//NPC인벤토리
+	//창고 인벤토리
+	//가구가 하고있는 슬롯
 }
 
 void UZoneInstManager::SpawnActors(const TArray<FZoneActor>& zoneInst)
@@ -90,7 +159,6 @@ TArray<FZoneActor> UZoneInstManager::CreateBuildInst(const UNPCPaletteDataAsset*
 	return AryZones;
 }
 
-
 AMonsterPawn* UZoneInstManager::SpawnNpcActor(const FZoneActor& SpawnData)
 {
 	FActorSpawnParameters Param;
@@ -109,6 +177,8 @@ AMonsterPawn* UZoneInstManager::SpawnNpcActor(const FZoneActor& SpawnData)
 
 	m_Npc.Add(NpcActor);
 
+	UMyGameInstance::Get->m_SpawnManager->AddFocusActor(NpcActor);
+
 	return NpcActor;
 }
 
@@ -124,7 +194,9 @@ AItemActor* UZoneInstManager::SpawnItemActor(const FZoneActor& spawn_data)
 
 	ItemActor->Init(spawn_data.m_IDEntity,1);
 
-	//AddFocusActor(ItemActor);
+	m_Item.Add(ItemActor);
+
+	UMyGameInstance::Get->m_SpawnManager->AddFocusActor(ItemActor);
 
 	return ItemActor;
 }
@@ -139,13 +211,15 @@ ATreeBase* UZoneInstManager::SpawnGatherActor(const FZoneActor& spawn_data)
 
 	const FGatherDataRow* EntityRow = UGatherTable::GetGatherTable->FindRow<FGatherDataRow>(spawn_data.m_IDEntity, "");
 	
-	ATreeBase* GatherActor = UMyLib::GetUWorld()->SpawnActor<ATreeBase>(EntityRow->m_ClassActor, spawn_data.m_SpawnPosition, spawn_data.m_SpawnRotation + FRotator(0,FMath::RandRange(0,360),0), Param);
+	ATreeBase* TreeActor = UMyLib::GetUWorld()->SpawnActor<ATreeBase>(EntityRow->m_ClassActor, spawn_data.m_SpawnPosition, spawn_data.m_SpawnRotation + FRotator(0,FMath::RandRange(0,360),0), Param);
 
-	GatherActor->SetEntity(*EntityRow,UMyLib::GetPlayer());
+	TreeActor->SetEntity(spawn_data.m_IDEntity, *EntityRow,UMyLib::GetPlayer());
 	
-	//AddFocusActor(NpcActor);
+	m_Gather.Add(TreeActor);
 
-	return GatherActor;
+	UMyGameInstance::Get->m_SpawnManager->AddFocusActor(TreeActor);
+
+	return TreeActor;
 }
 AStructureActor* UZoneInstManager::SpawnBuildActor(const FZoneActor& spawn_data)
 {
@@ -157,13 +231,15 @@ AStructureActor* UZoneInstManager::SpawnBuildActor(const FZoneActor& spawn_data)
 
 	const FBuildDataRow* EntityRow = UBuildData::GetBuildTable->FindRow<FBuildDataRow>(spawn_data.m_IDEntity, "");
 	
-	AStructureActor* NpcActor = UMyLib::GetUWorld()->SpawnActor<AStructureActor>(EntityRow->m_ClassActor, spawn_data.m_SpawnPosition, spawn_data.m_SpawnRotation + FRotator(0,FMath::RandRange(-180,180),0), Param);
+	AStructureActor* StructureActor = UMyLib::GetUWorld()->SpawnActor<AStructureActor>(EntityRow->m_ClassActor, spawn_data.m_SpawnPosition, spawn_data.m_SpawnRotation + FRotator(0,FMath::RandRange(-180,180),0), Param);
 
-	NpcActor->SetBuildData(*EntityRow);
+	StructureActor->SetBuildData(*EntityRow);
 	
-	NpcActor->ConfirmBuild();
+	StructureActor->ConfirmBuild();
 
-	//AddFocusActor(NpcActor);
+	m_Build.Add(StructureActor);
 
-	return NpcActor;
+	UMyGameInstance::Get->m_SpawnManager->AddFocusActor(StructureActor);
+
+	return StructureActor;
 }
