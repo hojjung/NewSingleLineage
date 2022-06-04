@@ -60,8 +60,10 @@ void ULevelMoveManager::OnOpenWorldLevelComplete()
 	{
 		UMyGameInstance::Get->m_GameRule = NewObject<UGameRuleBase>(this, m_ZoneData->m_ClassGameRule);
 	}
-	
-	UMyGameInstance::Get->m_SpawnManager->SetSpawnActors(m_ZoneData->m_SpawnDataNpc);
+
+
+	UMyGameInstance::Get->m_ZoneInst->SpawnZone(GetCrntZoneID(), *GetZoneDataCurrent());
+	//UMyGameInstance::Get->m_SpawnManager->SetSpawnActors(m_ZoneData->m_SpawnDataNpc);
 
 	UMyGameInstance::Get->m_EquipManager->UpdateEquip();
 

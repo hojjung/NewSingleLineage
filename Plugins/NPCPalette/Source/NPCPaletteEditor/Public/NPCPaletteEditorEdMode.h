@@ -90,7 +90,7 @@ private:
 public:
 	void SelectDropEntity(const FNPCPaletteItem& item);
 		
-	void OnSuccessActorPlaced(const FNPCPaletteItem& currentItem,AActor* actorPlaced,const TArray<FName>& aryDatas);
+	void OnSuccessActorPlaced(const FNPCPaletteItem& currentItem,AActor* actorPlaced);
 
 	UTexture2D* GetAssetIcon(FEntityRow* row);
 

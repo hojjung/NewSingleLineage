@@ -261,13 +261,13 @@ void FNPCPaletteEdMode::SelectDropEntity(const FNPCPaletteItem& item)
 	m_DropNpcItem = &item;
 }
 
-void FNPCPaletteEdMode::OnSuccessActorPlaced(const FNPCPaletteItem& currentItem,AActor* actorPlaced,const TArray<FName>& aryDatas)
+void FNPCPaletteEdMode::OnSuccessActorPlaced(const FNPCPaletteItem& currentItem,AActor* actorPlaced)
 {
 	ANPCPaletteGizmoActor* GizmoAcotr = Cast<ANPCPaletteGizmoActor>(actorPlaced);
 
 	GizmoAcotr->m_RowID = currentItem.m_RowID;
 
-	GizmoAcotr->SetTextIcon(GetAssetName(currentItem.m_SelectedEntityRow), GetAssetIcon(currentItem.m_SelectedEntityRow),aryDatas);
+	GizmoAcotr->SetTextIcon(GetAssetName(currentItem.m_SelectedEntityRow), GetAssetIcon(currentItem.m_SelectedEntityRow));
 
 	GizmoAcotr->m_CurrentNPC = currentItem;
 
@@ -316,8 +316,6 @@ void FNPCPaletteEdMode::ClearPlacedAssetActor()
 				Data.m_SpawnRotation = actorIter->GetActorRotation();
 
 				Data.m_EntityParentTable = GizmoActor->m_CurrentNPC.m_EntityParentTable;
-
-				Data.m_AryDatas = GizmoActor->m_AryDatas;
 
 				m_CurrentAsset->m_ArySpawnDatas.Add(Data);
 			}
@@ -370,7 +368,7 @@ void FNPCPaletteEdMode::SpawnPlacedActor()
 			continue;//실패
 		}
 		
-		OnSuccessActorPlaced(NPCItem,ActorSpawned,Data.m_AryDatas);
+		OnSuccessActorPlaced(NPCItem,ActorSpawned);
 	}
 }
 
@@ -561,8 +559,7 @@ bool FNPCPaletteEdMode::HandleClick(FEditorViewportClient* InViewportClient, HHi
 						PlacedActorsThisTrackingSession = true;
 						
 						PlacedActors.Add(OutNewActors[Index]);
-						TArray<FName> AryNotUses;
-						OnSuccessActorPlaced(*m_DropNpcItem,OutNewActors[Index],AryNotUses);
+						OnSuccessActorPlaced(*m_DropNpcItem,OutNewActors[Index]);
 					}
 				}
 

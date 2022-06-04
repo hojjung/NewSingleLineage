@@ -28,13 +28,8 @@ struct FNPCSpawnData
 public:
 	UPROPERTY(EditAnywhere, Category="NPCPalette")
 	FName m_IDEntity;
-
-	UPROPERTY(EditAnywhere, Category="NPCPalette")
-	TArray<FName> m_AryDatas;
-
 	UPROPERTY(EditAnywhere, Category="NPCPalette")
 	FVector  m_SpawnPosition;
-	
 	UPROPERTY(EditAnywhere, Category="NPCPalette")	
 	FRotator m_SpawnRotation;
 

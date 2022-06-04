@@ -203,7 +203,10 @@ void ATreeBase::SetDeathEffectMaterial(float deltaTime)
 	FName MaskParam = TEXT("Visibility");
 
 	m_MeshTree->SetScalarParameterValueOnMaterials(MaskParam, Value);
+	
+	m_MeshTrunk->SetScalarParameterValueOnMaterials(MaskParam, Value);
 }
+
 void ATreeBase::Tick(float DeltaSeconds)
 {
 	Super::Tick(DeltaSeconds);
@@ -216,9 +219,7 @@ void ATreeBase::Tick(float DeltaSeconds)
 		{
 			SetActorTickEnabled(false);
 			
-			m_MeshTree->DestroyComponent();
-			
-			m_MeshTree = nullptr;
+			Destroy();
 		}
 	}
 }

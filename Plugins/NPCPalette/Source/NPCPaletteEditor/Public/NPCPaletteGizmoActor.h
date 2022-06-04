@@ -36,10 +36,8 @@ public:
 	UWidgetComponent* m_WidgetComp;
 	UPROPERTY(VisibleAnywhere, Category="NPCPalette")
 	FName m_RowID;
-	UPROPERTY(EditAnywhere, Category="NPCPalette")
-	TArray<FName> m_AryDatas;
 
-	void SetTextIcon(FText tt,UTexture2D* ii, const TArray<FName>& aryDatas);
+	void SetTextIcon(FText tt,UTexture2D* ii);
 	
 	UArrowComponent* GetArrowComponent() const;
 };

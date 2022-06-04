@@ -101,6 +101,8 @@ void UMyGameInstance::Init()
 
 	m_PreviewActorManager = NewObject<UPreviewActorManager>(this);
 
+	m_ZoneInst = NewObject<UZoneInstManager>(this);
+
 	m_BuildManager->Init();
 	m_ItemCollecManager->Init();
 	m_PetManager->Init();

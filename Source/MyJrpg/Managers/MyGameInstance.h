@@ -17,6 +17,7 @@
 #include "ShopManager.h"
 #include "SkillManager.h"
 #include "SpawnManager.h"
+#include "Build/ZoneInstManager.h"
 #include "Engine/GameInstance.h"
 #include "MyJrpg/DataTables/BadwordTable.h"
 #include "MyJrpg/GameRules/GameRuleBase.h"
@@ -93,6 +94,8 @@ public:
 	UPreviewActorManager* m_PreviewActorManager;
 	UPROPERTY()
 	UItemConvertManager* m_ItemConvertManager;
+	UPROPERTY()
+	UZoneInstManager* m_ZoneInst;
 	
 public:
 	TWeakObjectPtr<AMyPlayerPawn> m_Player;

@@ -82,7 +82,7 @@ ANPCPaletteGizmoActor::ANPCPaletteGizmoActor(const FObjectInitializer& ObjectIni
 /** Returns ArrowComponent subobject **/
 UArrowComponent* ANPCPaletteGizmoActor::GetArrowComponent() const { return m_ArrowComponent; }
 
-void ANPCPaletteGizmoActor::SetTextIcon(FText tt, UTexture2D* ii, const TArray<FName>& aryDatas)
+void ANPCPaletteGizmoActor::SetTextIcon(FText tt, UTexture2D* ii)
 {
 	auto* GizmoWidget =Cast<UGizmoUserWidget> (m_WidgetComp->GetUserWidgetObject());
 
@@ -90,6 +90,4 @@ void ANPCPaletteGizmoActor::SetTextIcon(FText tt, UTexture2D* ii, const TArray<F
 	{
 		GizmoWidget->SetImageAndText(ii,tt);
 	}
-
-	m_AryDatas = aryDatas;
 }

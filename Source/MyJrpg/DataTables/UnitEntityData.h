@@ -148,10 +148,6 @@ public://스텟과 보상
 	float m_fExp = 100.f;
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (UIMin = "0"))
 	float m_fGold = 100.f;
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (UIMin = "1"))
-	float m_fMinSpawnTime = 3;
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (UIMin = "2"))
-	float m_fMaxSpawnTime = 5;
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
 	TArray<FDropRewardItem> m_AryDropItem;
 	

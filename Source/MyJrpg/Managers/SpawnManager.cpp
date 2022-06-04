@@ -217,8 +217,6 @@ AMonsterPawn* USpawnManager::SpawnNpcActor(const FNPCSpawnData& SpawnData)
 	{
 		NpcActor->SetEntity(SpawnData.m_IDEntity,*EntityRow);
 
-		NpcActor->SetReviveTime(EntityRow->m_fMinSpawnTime, EntityRow->m_fMaxSpawnTime);
-
 		if(UMyGameInstance::Get->m_GameRule)
 		{
 			UMyGameInstance::Get->m_GameRule->OnMonsterCreate(NpcActor);
