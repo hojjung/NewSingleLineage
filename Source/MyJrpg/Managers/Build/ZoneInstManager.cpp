@@ -8,9 +8,12 @@
 
 void UZoneInstManager::InitZone(const FName& id, const FZoneDataRow& zoneData)
 {
-	TArray<FZoneActor>& BuildAdded = m_MapBuildInsts.Emplace(id, CreateBuildInst(zoneData.m_SpawnDataNpc));
+	FZoneSerialData NewSerialData;
+	NewSerialData.m_AryZoneActorTrans = CreateBuildInst(zoneData.m_SpawnDataNpc);
 	
-	SpawnActors(BuildAdded);
+	FZoneSerialData& BuildAdded = m_MapBuildInsts.Emplace(id, NewSerialData);
+	
+	SpawnActors(BuildAdded, true);
 }
 
 void UZoneInstManager::SpawnZone(const FName& id, const FZoneDataRow& zoneData)
@@ -23,39 +26,93 @@ void UZoneInstManager::SpawnZone(const FName& id, const FZoneDataRow& zoneData)
 	
 	m_Build.Reset();
 	
-	TArray<FZoneActor>* BuildInst = m_MapBuildInsts.Find(id);
+	FZoneSerialData* BuildInst = m_MapBuildInsts.Find(id);
 	
 	if (!BuildInst)
 	{
 		InitZone(id, zoneData);
 		return ;
 	}
-	SpawnActors(*BuildInst);
+	SpawnActors(*BuildInst, false);
 }
 
 void UZoneInstManager::SaveActors(const FName& id)
 {
-	TArray<FZoneActor>* BuildInst = m_MapBuildInsts.Find(id);
+	FZoneSerialData* BuildInst = m_MapBuildInsts.Find(id);
 
 	if(!BuildInst)
 	{
 		return;
 	}
+
+	int Index = 0;
 	
-	BuildInst->Reset();
+	BuildInst->m_AryZoneActorTrans.Reset();
 
 	for(TWeakObjectPtr<AMonsterPawn> ActorEle : m_Npc)
 	{
 		if(!ActorEle.Get() ||!ActorEle->IsAlive())
 		{
+			Index++;
 			continue;
 		}
-		FZoneActor ZoneData;
+		FZoneActorTransform ZoneData;
 		ZoneData.m_nType = EActorType::Npc;
 		ZoneData.m_IDEntity = ActorEle->GetEntityID();
 		ZoneData.m_SpawnPosition = ActorEle->GetActorLocation();
 		ZoneData.m_SpawnRotation = ActorEle->GetActorRotation();
-		BuildInst->Add(ZoneData);
+		BuildInst->m_AryZoneActorTrans.Add(ZoneData);
+
+		if(ActorEle->GetInven())
+		{
+			TStrongObjectPtr<UInventory> ItemHolder(ActorEle->GetInven());
+			BuildInst->m_MapItemHolders.Add(Index, ItemHolder);
+
+			BuildInst->m_MapGatherHp.Add(Index,ActorEle->GetHp());
+		}
+		Index++;
+	}
+	for(TWeakObjectPtr<ATreeBase> ActorEle : m_Gather)
+	{
+		if(!ActorEle.Get())
+		{
+			Index++;
+			continue;
+		}
+		FZoneActorTransform ZoneData;
+		ZoneData.m_nType = EActorType::Gather;
+		ZoneData.m_IDEntity = ActorEle->GetID();
+		ZoneData.m_SpawnPosition = ActorEle->GetActorLocation();
+		ZoneData.m_SpawnRotation = ActorEle->GetActorRotation();
+		BuildInst->m_AryZoneActorTrans.Add(ZoneData);
+
+		if(ActorEle->GetHP() > 0)
+		{
+			BuildInst->m_MapGatherHp.Add(Index,ActorEle->GetHP());
+		}
+		Index++;
+	}
+	for(TWeakObjectPtr<AStructureActor> ActorEle : m_Build)
+	{
+		if(!ActorEle.Get())
+		{
+			Index++;
+			continue;
+		}
+		FZoneActorTransform ZoneData;
+		ZoneData.m_nType = EActorType::Build;
+		ZoneData.m_IDEntity = ActorEle->GetBuildData().m_RowID;
+		ZoneData.m_SpawnPosition = ActorEle->GetActorLocation();
+		ZoneData.m_SpawnRotation = ActorEle->GetActorRotation();
+		BuildInst->m_AryZoneActorTrans.Add(ZoneData);
+
+		if(ActorEle->GetItemHolder())
+		{
+			TStrongObjectPtr<UInventory> ItemHolder(ActorEle->GetItemHolder());
+			
+			BuildInst->m_MapItemHolders.Add(Index, ItemHolder);
+		}
+		Index++;
 	}
 	for(TWeakObjectPtr<AItemActor> ActorEle : m_Item)
 	{
@@ -63,74 +120,61 @@ void UZoneInstManager::SaveActors(const FName& id)
 		{
 			continue;
 		}
-		FZoneActor ZoneData;
+		FZoneActorTransform ZoneData;
 		ZoneData.m_nType = EActorType::Item;
 		ZoneData.m_IDEntity = ActorEle->GetItemSpec().m_ID;
 		ZoneData.m_SpawnPosition = ActorEle->GetActorLocation();
 		ZoneData.m_SpawnRotation = ActorEle->GetActorRotation();
-		BuildInst->Add(ZoneData);
+		
+		BuildInst->m_AryZoneActorTrans.Add(ZoneData);
 	}
-	for(TWeakObjectPtr<ATreeBase> ActorEle : m_Gather)
-	{
-		if(!ActorEle.Get())
-		{
-			continue;
-		}
-		FZoneActor ZoneData;
-		ZoneData.m_nType = EActorType::Gather;
-		ZoneData.m_IDEntity = ActorEle->GetID();
-		ZoneData.m_SpawnPosition = ActorEle->GetActorLocation();
-		ZoneData.m_SpawnRotation = ActorEle->GetActorRotation();
-		BuildInst->Add(ZoneData);
-	}
-	for(TWeakObjectPtr<AStructureActor> ActorEle : m_Build)
-	{
-		if(!ActorEle.Get())
-		{
-			continue;
-		}
-		FZoneActor ZoneData;
-		ZoneData.m_nType = EActorType::Build;
-		ZoneData.m_IDEntity = ActorEle->GetBuildData().m_RowID;
-		ZoneData.m_SpawnPosition = ActorEle->GetActorLocation();
-		ZoneData.m_SpawnRotation = ActorEle->GetActorRotation();
-		BuildInst->Add(ZoneData);
-	}
-	//나무 체력
-	//NPC인벤토리
-	//창고 인벤토리
-	//가구가 하고있는 슬롯
 }
 
-void UZoneInstManager::SpawnActors(const TArray<FZoneActor>& zoneInst)
+void UZoneInstManager::AddBuildActor(AStructureActor* buildActor)
 {
-	for(const FZoneActor& ZoneActorEle : zoneInst)
+	m_Build.Add(buildActor);
+
+	IFocusable* Focus = Cast<IFocusable>(buildActor);
+
+	if(Focus && Focus->IsInteractImplemented())
+	{
+		UMyGameInstance::Get->m_SpawnManager->AddFocusActor(buildActor);
+	}
+}
+
+void UZoneInstManager::SpawnActors(const FZoneSerialData& zoneInst, bool isInit)
+{
+	int Index = 0;
+	
+	for(const FZoneActorTransform& ZoneActorEle : zoneInst.m_AryZoneActorTrans)
 	{
 		switch (ZoneActorEle.m_nType)
 		{
 		case EActorType::Npc:
-			SpawnNpcActor(ZoneActorEle);
+			SpawnNpcActor(ZoneActorEle, Index, zoneInst);
 			break;
 		case EActorType::Item:
-			SpawnItemActor(ZoneActorEle);
+			SpawnItemActor(ZoneActorEle, Index, zoneInst,isInit);
 			break;
 		case EActorType::Gather:
-			SpawnGatherActor(ZoneActorEle);
+			SpawnGatherActor(ZoneActorEle, Index, zoneInst,isInit);
 			break;
 		case EActorType::Build:
-			SpawnBuildActor(ZoneActorEle);
+			SpawnBuildActor(ZoneActorEle, Index, zoneInst);
 			break;
 		}
+
+		Index++;
 	}
 }
 
-TArray<FZoneActor> UZoneInstManager::CreateBuildInst(const UNPCPaletteDataAsset* npcAssets)
+TArray<FZoneActorTransform> UZoneInstManager::CreateBuildInst(const UNPCPaletteDataAsset* npcAssets)
 {
-	TArray<FZoneActor> AryZones;
+	TArray<FZoneActorTransform> AryZones;
 
 	for(const FNPCSpawnData& SpawnData : npcAssets->m_ArySpawnDatas)
 	{
-		FZoneActor NewBuildInst;
+		FZoneActorTransform NewBuildInst;
 		
 		if(SpawnData.m_EntityParentTable->RowStruct->IsChildOf(FNpcUnitEntityRow::StaticStruct()))
 		{
@@ -159,21 +203,30 @@ TArray<FZoneActor> UZoneInstManager::CreateBuildInst(const UNPCPaletteDataAsset*
 	return AryZones;
 }
 
-AMonsterPawn* UZoneInstManager::SpawnNpcActor(const FZoneActor& SpawnData)
+AMonsterPawn* UZoneInstManager::SpawnNpcActor(const FZoneActorTransform& spawnData, int index, const FZoneSerialData& serialData)
 {
 	FActorSpawnParameters Param;
 	Param.bNoFail = true;
 	Param.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
 
-	const FNpcUnitEntityRow* EntityRow = UUnitEntityData::GetNpcUnitTable->FindRow<FNpcUnitEntityRow>(SpawnData.m_IDEntity, "");
+	const FNpcUnitEntityRow* EntityRow = UUnitEntityData::GetNpcUnitTable->FindRow<FNpcUnitEntityRow>(spawnData.m_IDEntity, "");
 	
-	AMonsterPawn* NpcActor = UMyLib::GetUWorld()->SpawnActor<AMonsterPawn>(EntityRow->m_ClassActor, SpawnData.m_SpawnPosition, SpawnData.m_SpawnRotation, Param);
-	NpcActor->SetEntity(SpawnData.m_IDEntity,*EntityRow);
+	AMonsterPawn* NpcActor = UMyLib::GetUWorld()->SpawnActor<AMonsterPawn>(EntityRow->m_ClassActor, spawnData.m_SpawnPosition, spawnData.m_SpawnRotation, Param);
+	NpcActor->SetEntity(spawnData.m_IDEntity,*EntityRow);
 
 	if(UMyGameInstance::Get->m_GameRule)
 	{
 		UMyGameInstance::Get->m_GameRule->OnMonsterCreate(NpcActor);
 	}
+
+	const int* HpPtr = serialData.m_MapGatherHp.Find(index);
+	if(HpPtr)
+	{
+		NpcActor->SetHp(*HpPtr);
+	}
+	auto* ItemHolder = serialData.m_MapItemHolders.Find(index);
+	
+	NpcActor->SetInven(ItemHolder->Get());
 
 	m_Npc.Add(NpcActor);
 
@@ -182,15 +235,22 @@ AMonsterPawn* UZoneInstManager::SpawnNpcActor(const FZoneActor& SpawnData)
 	return NpcActor;
 }
 
-AItemActor* UZoneInstManager::SpawnItemActor(const FZoneActor& spawn_data)
+AItemActor* UZoneInstManager::SpawnItemActor(const FZoneActorTransform& spawn_data, int index, const FZoneSerialData& serialData, bool isInit)
 {
 	FActorSpawnParameters Param;
 	Param.bNoFail = true;
 	Param.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
 
 	const FItemDataRow* EntityRow = UItemData::GetItemTable->FindRow<FItemDataRow>(spawn_data.m_IDEntity, "");
+
+	FRotator Rot = spawn_data.m_SpawnRotation;
 	
-	AItemActor* ItemActor = UMyLib::GetUWorld()->SpawnActor<AItemActor>(EntityRow->m_ClassActor, spawn_data.m_SpawnPosition, spawn_data.m_SpawnRotation + FRotator(0,FMath::RandRange(0,360),0), Param);
+	if(isInit)
+	{
+		Rot += FRotator(0,FMath::RandRange(0,360),0);
+	}
+	
+	AItemActor* ItemActor = UMyLib::GetUWorld()->SpawnActor<AItemActor>(EntityRow->m_ClassActor, spawn_data.m_SpawnPosition, Rot, Param);
 
 	ItemActor->Init(spawn_data.m_IDEntity,1);
 
@@ -201,7 +261,7 @@ AItemActor* UZoneInstManager::SpawnItemActor(const FZoneActor& spawn_data)
 	return ItemActor;
 }
 
-ATreeBase* UZoneInstManager::SpawnGatherActor(const FZoneActor& spawn_data)
+ATreeBase* UZoneInstManager::SpawnGatherActor(const FZoneActorTransform& spawn_data, int index, const FZoneSerialData& serialData, bool isInit)
 {
 	FActorSpawnParameters Param;
 
@@ -210,10 +270,19 @@ ATreeBase* UZoneInstManager::SpawnGatherActor(const FZoneActor& spawn_data)
 	Param.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
 
 	const FGatherDataRow* EntityRow = UGatherTable::GetGatherTable->FindRow<FGatherDataRow>(spawn_data.m_IDEntity, "");
-	
-	ATreeBase* TreeActor = UMyLib::GetUWorld()->SpawnActor<ATreeBase>(EntityRow->m_ClassActor, spawn_data.m_SpawnPosition, spawn_data.m_SpawnRotation + FRotator(0,FMath::RandRange(0,360),0), Param);
 
-	TreeActor->SetEntity(spawn_data.m_IDEntity, *EntityRow,UMyLib::GetPlayer());
+	FRotator Rot = spawn_data.m_SpawnRotation;
+	
+	if(isInit)
+	{
+		Rot += FRotator(0,FMath::RandRange(0,360),0);
+	}
+	
+	ATreeBase* TreeActor = UMyLib::GetUWorld()->SpawnActor<ATreeBase>(EntityRow->m_ClassActor, spawn_data.m_SpawnPosition, Rot,Param);
+
+	const int* HpPtr = serialData.m_MapGatherHp.Find(index);
+	
+	TreeActor->SetEntity(spawn_data.m_IDEntity, *EntityRow,UMyLib::GetPlayer(), HpPtr);
 	
 	m_Gather.Add(TreeActor);
 
@@ -221,7 +290,7 @@ ATreeBase* UZoneInstManager::SpawnGatherActor(const FZoneActor& spawn_data)
 
 	return TreeActor;
 }
-AStructureActor* UZoneInstManager::SpawnBuildActor(const FZoneActor& spawn_data)
+AStructureActor* UZoneInstManager::SpawnBuildActor(const FZoneActorTransform& spawn_data, int index, const FZoneSerialData& serialData)
 {
 	FActorSpawnParameters Param;
 
@@ -231,15 +300,17 @@ AStructureActor* UZoneInstManager::SpawnBuildActor(const FZoneActor& spawn_data)
 
 	const FBuildDataRow* EntityRow = UBuildData::GetBuildTable->FindRow<FBuildDataRow>(spawn_data.m_IDEntity, "");
 	
-	AStructureActor* StructureActor = UMyLib::GetUWorld()->SpawnActor<AStructureActor>(EntityRow->m_ClassActor, spawn_data.m_SpawnPosition, spawn_data.m_SpawnRotation + FRotator(0,FMath::RandRange(-180,180),0), Param);
+	AStructureActor* StructureActor = UMyLib::GetUWorld()->SpawnActor<AStructureActor>(EntityRow->m_ClassActor, spawn_data.m_SpawnPosition, spawn_data.m_SpawnRotation, Param);
 
 	StructureActor->SetBuildData(*EntityRow);
 	
-	StructureActor->ConfirmBuild();
+	auto* InvenFound = serialData.m_MapItemHolders.Find(index);
+	
+	StructureActor->ConfirmBuild( InvenFound ? InvenFound->Get() : nullptr);
 
-	m_Build.Add(StructureActor);
+	UMyGameInstance::Get->m_BuildManager->SetStructureGrid(StructureActor);
 
-	UMyGameInstance::Get->m_SpawnManager->AddFocusActor(StructureActor);
-
+	AddBuildActor(StructureActor);
+	
 	return StructureActor;
 }

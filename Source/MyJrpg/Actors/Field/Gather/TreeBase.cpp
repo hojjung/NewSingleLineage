@@ -64,13 +64,20 @@ ATreeBase::ATreeBase()
 }
 //(X=0.000005,Y=20.000000,Z=-10.000000) btm
 //
-void ATreeBase::SetEntity(const FName& id, const FGatherDataRow& data, AMyPlayerPawn* pl)
+void ATreeBase::SetEntity(const FName& id, const FGatherDataRow& data, AMyPlayerPawn* pl, const int *hpPtr )
 {
 	m_ID = id;
 	
 	m_DataRow = &data;
-	
-	m_nTreeHp = m_DataRow->m_nTreeHp;
+
+	if(hpPtr)
+	{
+		m_nTreeHp = *hpPtr; 
+	}
+	else
+	{
+		m_nTreeHp = m_DataRow->m_nTreeHp;
+	}
 	
 	m_Player = pl;
 
@@ -245,4 +252,9 @@ void ATreeBase::GetMoveGoalReachTest(const AActor* MovingActor, const FVector& M
 const FName& ATreeBase::GetID() const
 {
 	return m_ID;
+}
+
+int ATreeBase::GetHP()
+{
+	return m_nTreeHp;
 }

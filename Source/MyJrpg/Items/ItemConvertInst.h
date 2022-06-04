@@ -59,15 +59,11 @@ private:
 	bool m_bHasAnyCostItem;
 	
 private:
-	virtual void Init(int size) override;
-
 	void OnInvenChanged();
 	
 	bool CheckLeftItemWithSet(const FItemConvertSet& set, const FItemSpec& item);
 
 	bool CheckCostItemWithSet(const FItemConvertSet& set, const FItemSpec& item);
-
-	bool CheckFuelItemWithSet(const FItemConvertSet& set, const FItemSpec& item);
 
 	bool CheckRightItemEmpty();
 

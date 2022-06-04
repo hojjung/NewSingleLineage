@@ -26,7 +26,7 @@ protected:
 protected:
 	void OnSearchEnd();
 	
-	virtual void Init(const FString& variable) override;
+	virtual void Init(const FString& variable, UInventory* inven) override;
 	
 	virtual bool IsEraseable() override;
 

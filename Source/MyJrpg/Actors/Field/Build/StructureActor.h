@@ -8,6 +8,7 @@
 #include "MyJrpg/Widgets/World/Build/BuildWidgetCompo.h"
 #include "StructureActor.generated.h"
 
+class UInventory;
 struct FBuildDataRow;
 UCLASS()
 class MYJRPG_API AStructureActor : public AActor, public IFocusable, public INavAgentInterface
@@ -42,7 +43,7 @@ public:
 	virtual void SetBuildData(const FBuildDataRow& data);
 	virtual void SetMat(UMaterialInterface* mat);
 	virtual void ShowBuildWidget(bool b);
-	virtual void ConfirmBuild();
+	virtual void ConfirmBuild(UInventory* inven = nullptr);
 	virtual void ShowSelect(bool b);
 	virtual bool IsEraseable() ;
 	virtual void SetColl(bool b) ;
@@ -56,4 +57,6 @@ public:
 	virtual FVector GetNavAgentLocation() const override;
 
 	virtual void GetMoveGoalReachTest(const AActor* MovingActor, const FVector& MoveOffset, FVector& GoalOffset,float& GoalRadius, float& GoalHalfHeight) const override;
+
+	UInventory* GetItemHolder();
 };

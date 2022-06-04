@@ -103,7 +103,7 @@ void AStructureActor::ShowBuildWidget(bool b)
 	m_WidgetComp->ShowBuildWidget(b);
 }
 
-void AStructureActor::ConfirmBuild()
+void AStructureActor::ConfirmBuild(UInventory* inven)
 {
 	m_WidgetComp->SetVisibility(false);
 
@@ -115,7 +115,7 @@ void AStructureActor::ConfirmBuild()
 	{
 		m_BuildInteract = NewObject<UBuildInteractBase>(this, m_BuildData->m_ClassInter);
 
-		m_BuildInteract->Init(m_BuildData->m_InteractVariable);
+		m_BuildInteract->Init(m_BuildData->m_InteractVariable,inven);
 	}
 
 }
@@ -184,6 +184,15 @@ void AStructureActor::GetMoveGoalReachTest(const AActor* MovingActor, const FVec
 	GoalOffset = FVector::ZeroVector;
 
 	GetSimpleCollisionCylinder(GoalRadius, GoalHalfHeight);
+}
+
+UInventory* AStructureActor::GetItemHolder()
+{
+	if(!m_BuildInteract)
+	{
+		return nullptr;
+	}
+	return m_BuildInteract->GetItemHolder();
 }
 
 bool AStructureActor::IsEraseable()

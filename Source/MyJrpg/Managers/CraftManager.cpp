@@ -102,6 +102,10 @@ bool UCraftManager::IsInvenHasSpace()
 
 bool UCraftManager::IsMaterialEnough(const TArray<FCraftItemCost>& aryCraftCost)
 {
+	if(UMyLib::IsTestMode())
+	{
+		return true;
+	}
 	for(const FCraftItemCost& Cost : aryCraftCost)
 	{
 		if(!UMyLib::FindItemAllInven(Cost.m_ItemDataRowHandle.RowName, Cost.m_nStackOrLevel))

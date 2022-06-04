@@ -2,11 +2,6 @@
 
 #include "MyJrpg/MyLib.h"
 
-void UItemConvertInst::Init(int size)
-{
-	Super::Init(size);
-}
-
 void UItemConvertInst::SetConvertData(const FItemConvertRow& convertRow)
 {
 

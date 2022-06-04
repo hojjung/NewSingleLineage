@@ -122,6 +122,7 @@ private:
 	void OnErase(const FVector& Loc);
 
 	void TryEraseActor(TWeakObjectPtr<AStructureActor>& holder);
+	
 
 	bool TraceBuildable(const FVector& Loc, const FVector&& extent, const FRotator& rot, float height);
 
@@ -129,6 +130,8 @@ private:
 
 public:
 	void Init();
+	
+	void SetStructureGrid(AStructureActor* actorWant);
 	
 	void SetFurnitureHide();
 	

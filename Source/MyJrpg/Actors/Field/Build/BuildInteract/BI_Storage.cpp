@@ -4,13 +4,24 @@
 #include "BI_Storage.h"
 
 #include "MyJrpg/MyLib.h"
+#include "MyJrpg/Managers/MyGameInstance.h"
 
-void UBI_Storage::Init(const FString& variable)
+void UBI_Storage::Init(const FString& variable, UInventory* inven)
 {
-	Super::Init(variable);
-	m_Inven = NewObject<UInventory>(this);
-	int Size = FCString::Atoi(*variable);
-	m_Inven->Init(Size);
+	Super::Init(variable, inven);
+	
+	if(inven)
+	{
+		m_Inven	 = inven;
+	}
+	else
+	{
+		m_Inven = NewObject<UInventory>(UMyGameInstance::Get);
+		
+		int Size = FCString::Atoi(*variable);
+		
+		m_Inven->Init(Size);
+	}
 	m_Player = UMyLib::GetPlayer();
 }
 
@@ -22,4 +33,9 @@ bool UBI_Storage::IsEraseable()
 void UBI_Storage::OnInteract()
 {
 	UMyLib::GetCanvas()->OpenStorage(m_Inven);
+}
+
+UInventory* UBI_Storage::GetItemHolder()
+{
+	return m_Inven;
 }

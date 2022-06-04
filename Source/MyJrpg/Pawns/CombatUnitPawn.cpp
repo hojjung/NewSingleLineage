@@ -487,3 +487,8 @@ float ACombatUnitPawn::GetHpPercent() const
 {
 	return  (float)m_StatGroup.m_Hp / (float)m_StatGroup.m_MaxHp;
 }
+
+int ACombatUnitPawn::GetHp()
+{
+	return  m_StatGroup.m_Hp;
+}

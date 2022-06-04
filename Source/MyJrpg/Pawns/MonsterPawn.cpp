@@ -93,8 +93,6 @@ void AMonsterPawn::SetEntity(const FName& id,const FNpcUnitEntityRow& unitEntity
 	m_bIsBoss = unitEntityRow.m_bIsBoss;
 
 	m_TalkID = unitEntityRow.m_TalkID;
-
-	CreateInventory();
 }
 
 void AMonsterPawn::SetReviveTime(float min, float max)
@@ -151,6 +149,24 @@ const FName& AMonsterPawn::GetTalkID() const
 UInventory* AMonsterPawn::GetInven()
 {
 	return m_Inven;
+}
+
+void AMonsterPawn::SetHp(int hp)
+{
+	m_StatGroup.m_Hp = hp;
+	
+	m_PawnInfo->SetPawnInfo(this);
+}
+
+void AMonsterPawn::SetInven(UInventory* inven)
+{
+	if(!inven)
+	{
+		CreateInventory();
+		
+		return;
+	}
+	m_Inven = inven;
 }
 
 void AMonsterPawn::PlayHitFlash()

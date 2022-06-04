@@ -89,6 +89,10 @@ public:
 	const FName& GetTalkID() const;
 
 	UInventory* GetInven();
+	
+	void SetHp(int hp);
+	
+	void SetInven(UInventory* inven);
 };
 
 

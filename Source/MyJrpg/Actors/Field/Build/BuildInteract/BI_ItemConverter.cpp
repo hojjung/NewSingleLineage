@@ -5,16 +5,24 @@
 
 #include "MyJrpg/Managers/MyGameInstance.h"
 
-void UBI_ItemConverter::Init(const FString& variable)
+void UBI_ItemConverter::Init(const FString& variable, UInventory* inven)
 {
-	Super::Init(variable);
-	
-	m_ItemConvert = NewObject<UItemConvertInst>(this);
+	Super::Init(variable, inven);
+
+	if(inven)
+	{
+		m_ItemConvert = Cast<UItemConvertInst>(inven);	
+	}
+	else
+	{
+		m_ItemConvert = NewObject<UItemConvertInst>(UMyGameInstance::Get);
+		
+		const FItemConvertRow* ItemRow = UItemConvertTable::GetItemConverter->FindRow<FItemConvertRow>(*variable, "");
+		
+		m_ItemConvert->SetConvertData(*ItemRow);
+	}
 	UMyGameInstance::Get->m_ItemConvertManager->AddStructureAndItem(Cast<AStructureActor>(GetOuter()),m_ItemConvert);
 
-	const FItemConvertRow* ItemRow = UItemConvertTable::GetItemConverter->FindRow<FItemConvertRow>(*variable, "");
-	
-	m_ItemConvert->SetConvertData(*ItemRow);
 }
 
 bool UBI_ItemConverter::IsEraseable()
@@ -25,4 +33,9 @@ bool UBI_ItemConverter::IsEraseable()
 void UBI_ItemConverter::OnInteract()
 {
 	UMyLib::GetCanvas()->OpenItemConverter(m_ItemConvert);
+}
+
+UInventory* UBI_ItemConverter::GetItemHolder()
+{
+	return m_ItemConvert;
 }

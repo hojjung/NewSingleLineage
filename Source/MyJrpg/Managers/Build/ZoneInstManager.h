@@ -26,19 +26,14 @@ enum class EActorType :uint8
 	Build,
 	Len
 };
+
 USTRUCT()
-struct FZoneActor
+struct FZoneActorTransform
 {
 	GENERATED_BODY()
-
-
-	
 public:
-	FZoneActor()
-	{
-			
-	}
-
+	FZoneActorTransform(){}
+	
 public:
 	UPROPERTY(EditAnywhere)
 	FName m_IDEntity;
@@ -50,13 +45,26 @@ public:
 	FRotator m_SpawnRotation;
 };
 
+USTRUCT()
+struct FZoneSerialData
+{
+	GENERATED_BODY()
+
+public:
+	TArray<FZoneActorTransform> m_AryZoneActorTrans;
+
+	TMap<int,int> m_MapGatherHp;
+
+	TMap<int,TStrongObjectPtr<UInventory>> m_MapItemHolders;
+};
+
 UCLASS()
 class MYJRPG_API UZoneInstManager : public UObject
 {
 	GENERATED_BODY()
 
 protected:
-	TMap<FName,TArray<FZoneActor>> m_MapBuildInsts;//위치값 밖에 저장이안되는데
+	TMap<FName,FZoneSerialData> m_MapBuildInsts;//위치값 밖에 저장이안되는데
 
 	TArray<TWeakObjectPtr<AMonsterPawn>> m_Npc;
 
@@ -67,23 +75,25 @@ protected:
 	TArray<TWeakObjectPtr<AStructureActor>> m_Build;
 
 protected:
-	AMonsterPawn* SpawnNpcActor(const FZoneActor& SpawnData);
+	AMonsterPawn* SpawnNpcActor(const FZoneActorTransform& spawnData, int index, const FZoneSerialData& serialData);
 
-	AItemActor* SpawnItemActor(const FZoneActor& spawn_data);
+	AItemActor* SpawnItemActor(const FZoneActorTransform& spawn_data, int index, const FZoneSerialData& serialData, bool isInit);
 
-	ATreeBase* SpawnGatherActor(const FZoneActor& spawn_data);
+	ATreeBase* SpawnGatherActor(const FZoneActorTransform& spawn_data, int index, const FZoneSerialData& serialData, bool isInit);
 
-	AStructureActor* SpawnBuildActor(const FZoneActor& spawn_data);
+	AStructureActor* SpawnBuildActor(const FZoneActorTransform& spawn_data, int index, const FZoneSerialData& serialData);
 	
-	TArray<FZoneActor> CreateBuildInst(const UNPCPaletteDataAsset* npcAssets);
+	TArray<FZoneActorTransform> CreateBuildInst(const UNPCPaletteDataAsset* npcAssets);
 	
 	void InitZone(const FName& id, const FZoneDataRow& zoneData);
 
-	void SpawnActors(const TArray<FZoneActor>& zoneInst);
+	void SpawnActors(const FZoneSerialData& zoneInst, bool isInit);
 	
 public:
 	void SpawnZone(const FName& id, const FZoneDataRow& zoneData);
 
 	void SaveActors(const FName& id);
+
+	void AddBuildActor(AStructureActor* buildActor);
 };
 

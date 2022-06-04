@@ -628,28 +628,26 @@ void UConstructionManager::TryEraseActor(TWeakObjectPtr<AStructureActor>& holder
 	holder = nullptr;
 }
 
-void UConstructionManager::ConfirmBuild()
+void UConstructionManager::SetStructureGrid(AStructureActor* actorWant)
 {
-	UMyGameInstance::Get->m_CraftManager->PurchaseItemForCraft(m_PreviewActor->GetBuildData().m_AryCostItem);
+	FVector Loc = actorWant->GetActorLocation();
 	
 	int X,Y;
-	FVector Loc = m_PreviewActor->GetActorLocation(); 
-
-	switch (m_PreviewActor->GetBuildData().m_BuildType)
+	switch (actorWant->GetBuildData().m_BuildType)
 	{
 	case EBuildType::Foundation:
 	case EBuildType::Field:
 		{
 			GetIndex(Loc,X,Y);
 			FConEle& Ele = m_Grid[X][Y];
-			Ele.m_Foundation = m_PreviewActor; 
+			Ele.m_Foundation = actorWant; 
 		}
 		break;
 	case EBuildType::Furniture:
 		{
 			GetIndex(Loc,X,Y);
 			FConEle& Ele = m_Grid[X][Y];
-			Ele.m_Furniture = m_PreviewActor;
+			Ele.m_Furniture = actorWant;
 			
 		}
 		break;
@@ -658,12 +656,21 @@ void UConstructionManager::ConfirmBuild()
 			bool IsHori;
 			GetWallIndex(Loc,X,Y,IsHori);
 			if(IsHori)
-				m_WallHorizontal[X].m_Walls[Y] = m_PreviewActor;
+				m_WallHorizontal[X].m_Walls[Y] = actorWant;
 			else
-				m_WallVertical[X].m_Walls[Y] = m_PreviewActor;
+				m_WallVertical[X].m_Walls[Y] = actorWant;
 		}
 		break;
 	}
+}
+
+void UConstructionManager::ConfirmBuild()
+{
+	UMyGameInstance::Get->m_CraftManager->PurchaseItemForCraft(m_PreviewActor->GetBuildData().m_AryCostItem);
+	
+	FVector Loc = m_PreviewActor->GetActorLocation(); 
+
+	SetStructureGrid(m_PreviewActor.Get());
 	
 	const FBuildDataRow& BuildRow = m_PreviewActor->GetBuildData();
 	if(BuildRow.m_BuildType == EBuildType::Furniture)
@@ -672,12 +679,7 @@ void UConstructionManager::ConfirmBuild()
 	}
 	m_PreviewActor->ConfirmBuild();
 
-	IFocusable* Focus = Cast<IFocusable>(m_PreviewActor.Get());
-
-	if(Focus && Focus->IsInteractImplemented())
-	{
-		UMyGameInstance::Get->m_SpawnManager->AddFocusActor(m_PreviewActor.Get());
-	}
+	UMyGameInstance::Get->m_ZoneInst->AddBuildActor(m_PreviewActor.Get());
 	
 	m_PreviewActor = nullptr;
 

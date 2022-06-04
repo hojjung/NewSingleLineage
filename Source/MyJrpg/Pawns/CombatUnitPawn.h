@@ -18,6 +18,7 @@ class MYJRPG_API ACombatUnitPawn : public ABaseUnitPawn,  public IFocusable
 public:
 	ACombatUnitPawn(const FObjectInitializer& objInit);
 
+	DECLARE_MULTICAST_DELEGATE(FOnHpChanged);
 	
 protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
@@ -118,6 +119,8 @@ public:// get
 	float GetAttackRangeSqr();
 	
 	float GetHpPercent() const;
+
+	int GetHp();
 
 	virtual void SetFocusedTarget(IFocusable* target);
 

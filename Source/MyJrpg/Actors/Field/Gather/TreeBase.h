@@ -66,7 +66,7 @@ protected:
 
 
 public:
-	void SetEntity(const FName& id, const FGatherDataRow& data, AMyPlayerPawn* pl);
+	void SetEntity(const FName& id, const FGatherDataRow& data, AMyPlayerPawn* pl, const int *hpPtr = nullptr);
 
 	virtual void OnTakeChopping();
 
@@ -79,4 +79,6 @@ public:
 	virtual void GetMoveGoalReachTest(const AActor* MovingActor, const FVector& MoveOffset, FVector& GoalOffset,float& GoalRadius, float& GoalHalfHeight) const override;
 
 	const FName& GetID() const;
+	
+	int GetHP();
 };
