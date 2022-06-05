@@ -38,7 +38,7 @@ void UConstructionManager::Init()
 	UBuildData::GetBuildTable->GetAllRows<FBuildDataRow>("", m_AryBuildDatas);
 }
 
-void UConstructionManager::LoadConstruction()
+void UConstructionManager::SpawnGrid()
 {
 	FActorSpawnParameters Param;
 	Param.bNoFail = true;

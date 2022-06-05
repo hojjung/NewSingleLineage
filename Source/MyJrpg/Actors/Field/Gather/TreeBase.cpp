@@ -165,7 +165,11 @@ void ATreeBase::OnGatherDone()
 	
 	UGameplayStatics::PlaySoundAtLocation(GetWorld(),m_GatherAsset->m_SoundGatherEnd,GetActorLocation());
 	
+	SetActorEnableCollision(false);
+	
 	m_MeshTree->SetCollisionEnabled(ECollisionEnabled::PhysicsOnly);
+
+	m_ShadowMeshComp->SetHiddenInGame(true);
 	
 	if(m_bUsePhysics)
 		m_MeshTree->SetSimulatePhysics(true);

@@ -139,7 +139,7 @@ public:
 	
 	void SpawnPreviewActor(FVector loc, const FBuildDataRow* dataRow = nullptr);
 	
-	void LoadConstruction();
+	void SpawnGrid();
 
 	FORCEINLINE const TArray<FBuildDataRow*>& GetAryBuildDatas() const
 	{

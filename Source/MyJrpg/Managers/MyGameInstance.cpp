@@ -145,9 +145,13 @@ void UMyGameInstance::StartGame()
 
 void UMyGameInstance::LoadComplete(const float LoadTime, const FString& MapName)
 {
-	if(MapName!=TEXT("InitLevel"))
+	if(m_LevelMoveManager->IsGameStart())
 	{
 		m_LevelMoveManager->OnOpenWorldLevelComplete();
+	}
+	else
+	{
+		StartGame();
 	}
 }
 

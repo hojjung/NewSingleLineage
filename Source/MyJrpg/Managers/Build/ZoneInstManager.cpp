@@ -145,6 +145,14 @@ void UZoneInstManager::AddBuildActor(AStructureActor* buildActor)
 
 void UZoneInstManager::SpawnActors(const FZoneSerialData& zoneInst, bool isInit)
 {
+	if(isInit)
+	{
+		PRINTF("IsInit : T");
+	}
+	else
+	{
+		PRINTF("IsInit : F");
+	}
 	int Index = 0;
 	
 	for(const FZoneActorTransform& ZoneActorEle : zoneInst.m_AryZoneActorTrans)
@@ -252,12 +260,11 @@ AItemActor* UZoneInstManager::SpawnItemActor(const FZoneActorTransform& spawn_da
 	const FItemDataRow* EntityRow = UItemData::GetItemTable->FindRow<FItemDataRow>(spawn_data.m_IDEntity, "");
 
 	FRotator Rot = spawn_data.m_SpawnRotation;
-	
-	if(isInit)
+
+	if (isInit)
 	{
-		Rot += FRotator(0,FMath::RandRange(0,360),0);
+		Rot += FRotator(0, FMath::RandRange(0, 360), 0);
 	}
-	
 	AItemActor* ItemActor = UMyLib::GetUWorld()->SpawnActor<AItemActor>(EntityRow->m_ClassActor, spawn_data.m_SpawnPosition, Rot, Param);
 
 	ItemActor->Init(spawn_data.m_IDEntity,1);
@@ -286,7 +293,7 @@ ATreeBase* UZoneInstManager::SpawnGatherActor(const FZoneActorTransform& spawn_d
 		Rot += FRotator(0,FMath::RandRange(0,360),0);
 	}
 	
-	ATreeBase* TreeActor = UMyLib::GetUWorld()->SpawnActor<ATreeBase>(EntityRow->m_ClassActor, spawn_data.m_SpawnPosition, Rot,Param);
+	ATreeBase* TreeActor = UMyLib::GetUWorld()->SpawnActor<ATreeBase>(EntityRow->m_ClassActor, spawn_data.m_SpawnPosition, Rot, Param);
 
 	const int* HpPtr = serialData.m_MapGatherHp.Find(index);
 	

@@ -18,7 +18,7 @@ void UWidgetConfirm::NativeOnInitialized()
 	m_URL_Refund = TEXT("https://sites.google.com/d/1v7y1DvwBQM8vmNTKL2WO-Z4-NfBZJ1hK/p/1gcJeDXzLEGjHh2KXwu7hpnNISTkGvR6o/edit");
 	//Test
 
-	UMyGameInstance::Get->StartGame();
+	//UMyGameInstance::Get->StartGame();
 }
 
 void UWidgetConfirm::OnConfirm()

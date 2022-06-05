@@ -79,7 +79,7 @@ void ULevelMoveManager::OnOpenWorldLevelComplete()
 
 	if(GetCrntZoneID() == TEXT("PlayerHome"))
 	{
-		UMyGameInstance::Get->m_BuildManager->LoadConstruction();
+		UMyGameInstance::Get->m_BuildManager->SpawnGrid();
 	}
 	
 	UMyGameInstance::Get->m_PetManager->CreatePreviewActor();
