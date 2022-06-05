@@ -1,5 +1,6 @@
 #include "BI_StorageSearch.h"
 #include "MyJrpg/MyLib.h"
+#include "MyJrpg/Managers/MyGameInstance.h"
 
 UBI_StorageSearch::UBI_StorageSearch()
 {
@@ -11,6 +12,7 @@ void UBI_StorageSearch::OnSearchEnd()
 {
 	m_bIsSearched = true;
 	m_Player->SetInteracting(false);
+	UMyGameInstance::Get->m_PlayerStatManager->AddExp(12);
 }
 
 void UBI_StorageSearch::Init(const FString& variable, UInventory* inven)

@@ -33,6 +33,8 @@ protected:
 
 	DECLARE_MULTICAST_DELEGATE(FOnStatChanged);
 
+	DECLARE_MULTICAST_DELEGATE_OneParam(FOnExpEarned, float);
+
 public:
 	FOnMonsterPawn m_OnMonsterKilled;
 
@@ -53,6 +55,8 @@ public:
 	FOnPlayerKilled m_OnPlayerKilled;
 
 	FOnTookDmg m_OnTookDmg;
+
+	FOnExpEarned m_OnExpEarned;
 
 protected:
 	int m_nExp;

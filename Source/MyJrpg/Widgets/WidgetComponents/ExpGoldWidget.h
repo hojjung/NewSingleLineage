@@ -19,8 +19,6 @@ class MYJRPG_API UExpGoldWidget : public UUserWidget
 protected:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (BindWidget))
 	UTextBlock* m_TextExp;
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (BindWidget))
-	UWidgetImageText* m_ImgTextGold;
 	UPROPERTY(Transient,BlueprintReadWrite,meta = (BindWidgetAnim,AllowPrivateAccess = "true"))
 	UWidgetAnimation* ShowHide;
 
@@ -29,6 +27,5 @@ protected:
 	
 	virtual void OnAnimationFinishedPlaying(UUMGSequencePlayer& Player) override;
 	
-public:
-	void ShowExpGold(float exp, float gold);
+	void ShowExp(float exp);
 };

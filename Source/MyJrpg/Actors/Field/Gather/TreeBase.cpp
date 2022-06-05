@@ -116,6 +116,8 @@ void ATreeBase::OnArrived()
 
 void ATreeBase::OnTakeChopping()
 {
+	
+	
 	m_Player->SetInteracting(false);
 	
 	if(m_CrntToolID)
@@ -125,10 +127,12 @@ void ATreeBase::OnTakeChopping()
 			if(m_CrntToolID->m_ID == TEXT("Axe01"))
 			{
 				m_nTreeHp -= 3;
+				UMyGameInstance::Get->m_PlayerStatManager->AddExp(4);
 			}
 			else
 			{
 				m_nTreeHp -= 6;
+				UMyGameInstance::Get->m_PlayerStatManager->AddExp(8);
 			}
 		}
 		else
@@ -136,10 +140,12 @@ void ATreeBase::OnTakeChopping()
 			if(m_CrntToolID->m_ID == TEXT("Pickaxe01"))
 			{
 				m_nTreeHp -= 3;
+				UMyGameInstance::Get->m_PlayerStatManager->AddExp(4);
 			}
 			else
 			{
 				m_nTreeHp -= 6;
+				UMyGameInstance::Get->m_PlayerStatManager->AddExp(8);
 			}
 		}
 
@@ -148,6 +154,7 @@ void ATreeBase::OnTakeChopping()
 	else
 	{
 		m_nTreeHp--;
+		UMyGameInstance::Get->m_PlayerStatManager->AddExp(1);
 	}
 	if(m_nTreeHp<=0)
 	{

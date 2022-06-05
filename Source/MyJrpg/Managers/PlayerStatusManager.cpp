@@ -11,7 +11,7 @@ void UPlayerStatusManager::Init()
 	//m_BaseStatGroup
 	m_nExp = 0;
 
-	m_nMaxExp = 550;
+	m_nMaxExp = 10;
 
 	m_nLevel = 1;
 
@@ -162,6 +162,7 @@ void UPlayerStatusManager::AddExp(int amount)
 		return;
 	}
 
+	m_OnExpEarned.Broadcast(amount);
 	m_nExp += amount;
 
 	if (m_nExp >= GetMaxExp())

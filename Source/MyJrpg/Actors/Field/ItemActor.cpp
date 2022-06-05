@@ -96,6 +96,7 @@ void AItemActor::OnObtain()//주변에서 누가 보고있으면
 	
 	if(UMyLib::GetEquip()->AddItem(m_ItemSpec))
 	{
+		UMyGameInstance::Get->m_PlayerStatManager->AddExp(3);
 		UMyGameInstance::Get->m_ZoneInst->RemoveFocusActor(this);
 		Destroy();
 	}

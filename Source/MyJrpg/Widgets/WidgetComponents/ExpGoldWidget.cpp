@@ -9,20 +9,16 @@ void UExpGoldWidget::NativeOnInitialized()
 
 	SetVisibility(ESlateVisibility::Collapsed);
 
-	UMyGameInstance::Get->m_RewardManager->m_OnExpGold.AddUObject(this,&UExpGoldWidget::ShowExpGold);
+	UMyGameInstance::Get->m_PlayerStatManager->m_OnExpEarned.AddUObject(this,&UExpGoldWidget::ShowExp);
 }
 
-void UExpGoldWidget::ShowExpGold(float exp, float gold)
+void UExpGoldWidget::ShowExp(float exp)
 {
 	SetVisibility(ESlateVisibility::SelfHitTestInvisible);
 	
 	FString ExpStr = FString::Printf(TEXT("Exp %.0f"),exp);
 
-	FString GoldStr = FString::Printf(TEXT("%.0f"),gold);
-
 	m_TextExp->SetText(FText::FromString(ExpStr));
-
-	m_ImgTextGold->SetText(FText::FromString(GoldStr));
 
 	PlayAnimation(ShowHide);
 }

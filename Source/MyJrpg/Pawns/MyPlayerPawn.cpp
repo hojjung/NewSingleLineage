@@ -84,6 +84,7 @@ void AMyPlayerPawn::BeginPlay()
 void AMyPlayerPawn::SetPlayerEntity()
 {
 	const TSoftObjectPtr<UHumanAsset>& HumanAsset = UMyGameInstance::Get->m_PlayerStatManager->GetUnitAsset();
+	
 	LoadSetSkMeshAnim(HumanAsset);
 	
 	ULogic_Player* Player = NewObject<ULogic_Player>(this,ULogic_Player::StaticClass());

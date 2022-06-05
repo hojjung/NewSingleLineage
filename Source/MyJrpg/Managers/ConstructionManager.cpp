@@ -348,8 +348,7 @@ bool UConstructionManager::IsBuildable()
 	if(!m_PreviewActor.Get())
 		return false;
 	
-	if(!UMyGameInstance::Get->m_CraftManager->IsMaterialEnough(m_PreviewActor->GetBuildData().m_AryCostItem))
-		return false;
+
 	
 	int X,Y;
 
@@ -358,6 +357,8 @@ bool UConstructionManager::IsBuildable()
 	switch (m_PreviewActor->GetBuildData().m_BuildType)
 	{
 	case EBuildType::Foundation:
+		if(!UMyGameInstance::Get->m_CraftManager->IsMaterialEnough(m_PreviewActor->GetBuildData().m_AryCostItem))
+			return false;
 	case EBuildType::Field:
 		{
 			GetIndex(Loc , X, Y);
@@ -370,6 +371,8 @@ bool UConstructionManager::IsBuildable()
 			break;
 	case EBuildType::Wall:
 		{
+			if(!UMyGameInstance::Get->m_CraftManager->IsMaterialEnough(m_PreviewActor->GetBuildData().m_AryCostItem))
+				return false;
 			bool IsHori;
 			GetWallIndex(Loc, X, Y, IsHori);
 			if (IsHori)

@@ -27,6 +27,8 @@ void AWorldGameMode::Tick(float DeltaSeconds)
 void AWorldGameMode::StartToLeaveMap()
 {
 	Super::StartToLeaveMap();
+	
 	UMyAssetManager::Get()->ClearUnits();
+	
 	UBUITween::Shutdown();
 }
