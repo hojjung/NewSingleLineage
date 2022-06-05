@@ -20,10 +20,10 @@ bool USkill_SummonBase::SpawnUnit()
 		return false;
 	}
 
-	if(!UMyGameInstance::Get->m_SpawnManager->SummonUnit(m_SummonUnitId,Loc,m_SkillData->m_fDuration))
-	{
-		return false;
-	}
+	// if(!UMyGameInstance::Get->m_ZoneInst->SummonUnit(m_SummonUnitId,Loc,m_SkillData->m_fDuration))
+	// {
+	// 	return false;
+	// }
 
 	return true;
 }

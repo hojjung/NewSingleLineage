@@ -49,7 +49,7 @@ void UWidgetStatPanel::UpdateStats()
 	
 	AddStatText(NSLOCTEXT("UWidgetStatPanel","Damage","Damage"), UMyLib::SetFloatPrecision(Stat.m_Dmg,0),1);
 
-	AddStatText(NSLOCTEXT("UWidgetStatPanel","AtkSpeed","AtkSpeed"), UMyLib::SetFloatPrecision(Stat.m_AtkSpeed),2);
+	AddStatText(NSLOCTEXT("UWidgetStatPanel","AtkSpeed","AtkSpeed"), UMyLib::SetFloatPrecision(Stat.m_AtkPerSec),2);
 
 	AddStatText(NSLOCTEXT("UWidgetStatPanel","Cri-Per","Cri-Per"), UMyLib::GetFloatToPercentText(Stat.m_CriPer),3);
 

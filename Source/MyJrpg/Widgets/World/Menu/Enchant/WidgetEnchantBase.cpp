@@ -1,5 +1,6 @@
 #include "WidgetEnchantBase.h"
 
+#include "MyJrpg/MyLib.h"
 #include "MyJrpg/Managers/EquipManager.h"
 #include "MyJrpg/Managers/MyGameInstance.h"
 #include "MyJrpg/Widgets/World/Menu/Equipment/WidgetEquipInvenPanel.h"
@@ -187,9 +188,9 @@ void UWidgetEnchantBase::UpdateBeforeAfter(const FItemSpec* target, int level)
 	{
 		CreateOption(TEXT("명중"), TEXT("+{0}"), BeforeStat.m_nAccu ,AfterStat.m_nAccu);
 	}
-	if(AfterStat.m_AtkSpeed > 0)
+	if(AfterStat.m_AtkPerSec > 0)
 	{
-		CreateOption(TEXT("공격속도"), TEXT("{0}%"), BeforeStat.m_AtkSpeed ,AfterStat.m_AtkSpeed);
+		CreateOption(TEXT("공격속도"), TEXT("{0}%"), BeforeStat.m_AtkPerSec ,AfterStat.m_AtkPerSec);
 	}
 	if(AfterStat.m_MaxHp > 0)
 	{

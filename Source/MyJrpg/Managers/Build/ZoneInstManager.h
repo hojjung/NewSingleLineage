@@ -64,6 +64,10 @@ class MYJRPG_API UZoneInstManager : public UObject
 	GENERATED_BODY()
 
 protected:
+	UPROPERTY()
+	TArray<TScriptInterface<IFocusable>> m_AryFocusActors;
+
+protected:
 	TMap<FName,FZoneSerialData> m_MapBuildInsts;//위치값 밖에 저장이안되는데
 
 	TArray<TWeakObjectPtr<AMonsterPawn>> m_Npc;
@@ -95,5 +99,20 @@ public:
 	void SaveActors(const FName& id);
 
 	void AddBuildActor(AStructureActor* buildActor);
+
+public:
+	void AddFocusActor(UObject* want);
+	
+	void SpawnPlayer(const FVector& loc, const FRotator& rot);
+
+	void RemoveFocusActor(UObject* want);
+	
+	IFocusable* GetNearProp(FVector callerLoc, float range = 0);
+
+	IFocusable* GetNearTarget(FVector callerLoc, float range = 0);
+
+	ACombatUnitPawn* GetNearNpc(FVector callerLoc, float range, const TSet<ACombatUnitPawn*>* ignore = nullptr);
+
+	void GetNearNpcs(const ABaseUnitPawn* caller, TArray<ACombatUnitPawn*>& outAry, float range,const TSet<ACombatUnitPawn*>* ignore = nullptr);
 };
 

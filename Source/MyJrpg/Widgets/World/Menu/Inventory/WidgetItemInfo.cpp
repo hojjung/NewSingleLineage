@@ -272,9 +272,9 @@ void UWidgetItemInfo::UpdateStat(const FName& target, int level)
 	{
 		CreateOption(TEXT("명중"), TEXT("+{0}"), TotalStat.m_nAccu);
 	}
-	if(TotalStat.m_AtkSpeed > 0)
+	if(TotalStat.m_AtkPerSec > 0)
 	{
-		CreateOption(TEXT("공격속도"), TEXT("{0}%"), TotalStat.m_AtkSpeed);
+		CreateOption(TEXT("공격속도"), TEXT("{0}%"), TotalStat.m_AtkPerSec);
 	}
 	if(TotalStat.m_MaxHp > 0)
 	{

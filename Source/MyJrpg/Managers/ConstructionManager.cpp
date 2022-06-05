@@ -723,7 +723,7 @@ void UConstructionManager::Erase(AStructureActor* buildActor)
 
 	if(Cast<IFocusable>((*Holder).Get()))
 	{
-		UMyGameInstance::Get->m_SpawnManager->RemoveFocusActor((*Holder).Get());
+		UMyGameInstance::Get->m_ZoneInst->RemoveFocusActor((*Holder).Get());
 	}
 	if(buildActor->GetBuildData().m_BuildType == EBuildType::Foundation)
 	{

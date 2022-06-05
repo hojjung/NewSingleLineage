@@ -14,7 +14,7 @@ void USkill_CorpseBomb::OnSkillTriggered()
 {
 	Super::OnSkillTriggered();
 	
-	ACombatUnitPawn* Pawn =  UMyGameInstance::Get->m_SpawnManager->GetNearNpc(m_Player->GetActorLocation(), m_SkillData->m_fRange);
+	ACombatUnitPawn* Pawn =  UMyGameInstance::Get->m_ZoneInst->GetNearNpc(m_Player->GetActorLocation(), m_SkillData->m_fRange);
 	
 	if (!Pawn)
 	{

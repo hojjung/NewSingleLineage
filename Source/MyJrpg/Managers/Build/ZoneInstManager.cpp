@@ -1,5 +1,6 @@
 #include "ZoneInstManager.h"
 #include "NPCPaletteDataAsset.h"
+#include "MyJrpg/MyLib.h"
 #include "MyJrpg/Actors/Field/ItemActor.h"
 #include "MyJrpg/DataTables/BuildData.h"
 #include "MyJrpg/DataTables/GatherTable.h"
@@ -138,7 +139,7 @@ void UZoneInstManager::AddBuildActor(AStructureActor* buildActor)
 
 	if(Focus && Focus->IsInteractImplemented())
 	{
-		UMyGameInstance::Get->m_SpawnManager->AddFocusActor(buildActor);
+		UMyGameInstance::Get->m_ZoneInst->AddFocusActor(buildActor);
 	}
 }
 
@@ -224,13 +225,20 @@ AMonsterPawn* UZoneInstManager::SpawnNpcActor(const FZoneActorTransform& spawnDa
 	{
 		NpcActor->SetHp(*HpPtr);
 	}
-	auto* ItemHolder = serialData.m_MapItemHolders.Find(index);
 	
-	NpcActor->SetInven(ItemHolder->Get());
+	auto* ItemHolder = serialData.m_MapItemHolders.Find(index);
+	if(ItemHolder)
+	{
+		NpcActor->SetInven(ItemHolder->Get());
+	}
+	else
+	{
+		NpcActor->SetInven(nullptr);
+	}
 
 	m_Npc.Add(NpcActor);
 
-	UMyGameInstance::Get->m_SpawnManager->AddFocusActor(NpcActor);
+	UMyGameInstance::Get->m_ZoneInst->AddFocusActor(NpcActor);
 
 	return NpcActor;
 }
@@ -256,7 +264,7 @@ AItemActor* UZoneInstManager::SpawnItemActor(const FZoneActorTransform& spawn_da
 
 	m_Item.Add(ItemActor);
 
-	UMyGameInstance::Get->m_SpawnManager->AddFocusActor(ItemActor);
+	UMyGameInstance::Get->m_ZoneInst->AddFocusActor(ItemActor);
 
 	return ItemActor;
 }
@@ -286,7 +294,7 @@ ATreeBase* UZoneInstManager::SpawnGatherActor(const FZoneActorTransform& spawn_d
 	
 	m_Gather.Add(TreeActor);
 
-	UMyGameInstance::Get->m_SpawnManager->AddFocusActor(TreeActor);
+	UMyGameInstance::Get->m_ZoneInst->AddFocusActor(TreeActor);
 
 	return TreeActor;
 }
@@ -313,4 +321,225 @@ AStructureActor* UZoneInstManager::SpawnBuildActor(const FZoneActorTransform& sp
 	AddBuildActor(StructureActor);
 	
 	return StructureActor;
+}
+
+void UZoneInstManager::SpawnPlayer(const FVector& loc, const FRotator& rot)
+{
+	AMyPlayerPawn* Pl = UMyLib::GetPlayer();
+	
+	float Diff = Pl->GetCapsule()->GetScaledCapsuleHalfHeight();
+
+	FVector LocNew = loc;
+
+	LocNew.Z += Diff;
+
+	Pl->SetActorLocation(LocNew, true);
+	
+	Pl->SetActorRotation(rot);
+}
+
+void UZoneInstManager::AddFocusActor(UObject* want)
+{
+	TScriptInterface<IFocusable> Focus;
+	Focus.SetInterface(want);
+	Focus.SetObject(want);
+	m_AryFocusActors.Add(Focus);
+}
+
+void UZoneInstManager::RemoveFocusActor(UObject* want)
+{
+	TScriptInterface<IFocusable> Focus;
+	Focus.SetInterface(want);
+	Focus.SetObject(want);
+	m_AryFocusActors.Remove(Focus);
+}
+
+IFocusable* UZoneInstManager::GetNearProp(FVector callerLoc, float range)
+{
+	float MAX_Dist = MAX_flt;
+
+	range = range * range;
+
+	IFocusable* NearPawn = nullptr;
+
+	AMyPlayerPawn* PlayerPawn = UMyLib::GetPlayer();
+
+	FNavLocation StartPoint;
+
+	UNavigationSystemV1* NavSys = UMyLib::GetNavSys();
+
+	NavSys->ProjectPointToNavigation(callerLoc, StartPoint);
+
+	for (TScriptInterface<IFocusable>& Focus : m_AryFocusActors)
+	{
+		if (!Focus)
+		{
+			continue;
+		}
+
+		AActor* FocusActor = Cast<AActor>(Focus.GetObject());
+
+		float Length = MAX_flt;
+
+		FNavLocation EndPoint;
+
+		NavSys->ProjectPointToNavigation(FocusActor->GetActorLocation(), EndPoint);
+
+		if (!PlayerPawn->LineOfSightTo(FocusActor))
+		{
+			NavSys->GetPathLength(GetWorld(), StartPoint, EndPoint, Length);
+
+			Length = Length * Length;
+		}
+		else
+		{
+			Length = FVector::DistSquared2D(StartPoint, EndPoint);
+		}
+
+		if (range > 0 && range < Length)
+		{
+			continue;
+		}
+
+		if (MAX_Dist > Length)
+		{
+			NearPawn = Cast<IFocusable>(Focus.GetObject());
+
+			MAX_Dist = Length;
+		}
+	}
+
+	return NearPawn;
+}
+
+IFocusable* UZoneInstManager::GetNearTarget(FVector callerLoc, float range)
+{
+	ACombatUnitPawn* Pawn = GetNearNpc(callerLoc, range);
+	
+	IFocusable* Prop = GetNearProp(callerLoc, range);
+	
+	AActor* FocusActor = Cast<AActor>(Prop);
+
+	if(Pawn && FocusActor)
+	{
+		FVector Loc1 = Pawn->GetActorLocation();
+		
+		FVector Loc2 = FocusActor->GetActorLocation();
+
+		float Dist1 = FVector::DistSquared2D(Loc1, callerLoc);
+
+		float Dist2 = FVector::DistSquared2D(Loc2, callerLoc);
+
+		float ARange = UMyLib::GetPlayer()->GetAttackRangeSqr(); 
+		
+		if(Dist1 <= ARange ||  Dist1 <= Dist2)
+		{
+			return Pawn;
+		}
+		return Prop;
+	}
+	else if (Pawn)
+	{
+		return Pawn;		
+	}
+	return Prop;
+}
+ACombatUnitPawn* UZoneInstManager::GetNearNpc(FVector callerLoc, float range, const TSet<ACombatUnitPawn*>* ignore)
+{
+	float MAX_Dist = MAX_flt;
+
+	range = range * range;
+
+	ACombatUnitPawn* NearPawn = nullptr;
+
+	AMyPlayerPawn* PlayerPawn = UMyLib::GetPlayer();
+
+	FNavLocation StartPoint;
+
+	UNavigationSystemV1* NavSys = UMyLib::GetNavSys();
+
+	NavSys->ProjectPointToNavigation(callerLoc, StartPoint);
+
+	for (TWeakObjectPtr<AMonsterPawn>& Pawn : m_Npc)
+	{
+		if (!Pawn.Get() || !Pawn->IsAlive() || Pawn->IsHidden() || (ignore && (*ignore).Contains(Pawn.Get())))
+		{
+			continue;
+		}
+
+		float Length = MAX_flt;
+
+		FNavLocation EndPoint;
+
+		NavSys->ProjectPointToNavigation(Pawn->GetActorLocation(), EndPoint);
+
+		if (!PlayerPawn->LineOfSightTo(Pawn.Get()))
+		{
+			NavSys->GetPathLength(GetWorld(), StartPoint, EndPoint, Length);
+
+			Length = Length * Length;
+		}
+		else
+		{
+			Length = FVector::DistSquared2D(StartPoint, EndPoint);
+		}
+
+		if (range > 0 && range < Length)
+		{
+			continue;
+		}
+
+		if (MAX_Dist > Length)
+		{
+			NearPawn = Pawn.Get();
+
+			MAX_Dist = Length;
+		}
+	}
+	return NearPawn;
+}
+
+void UZoneInstManager::GetNearNpcs(const ABaseUnitPawn* caller, TArray<ACombatUnitPawn*>& outAry, float range,const TSet<ACombatUnitPawn*>* ignore)
+{
+	FVector Loc = caller->GetActorLocation();
+
+	range = range * range;
+
+	FNavLocation StartPoint;
+
+	UNavigationSystemV1* NavSys = UMyLib::GetNavSys();
+
+	NavSys->ProjectPointToNavigation(Loc, StartPoint);
+
+	for (TWeakObjectPtr<AMonsterPawn>& Pawn : m_Npc)
+	{
+		if (!Pawn.Get() || !Pawn->IsAlive() || Pawn->IsHidden() || (ignore && (*ignore).Contains(Pawn.Get())))
+		{
+			continue;
+		}
+
+		float Length = MAX_flt;
+
+		FNavLocation EndPoint;
+
+		NavSys->ProjectPointToNavigation(Pawn->GetActorLocation(), EndPoint);
+
+		if (!caller->LineOfSightTo(Pawn.Get()))
+		{
+			NavSys->GetPathLength(GetWorld(), StartPoint, EndPoint, Length);
+
+			Length = Length * Length;
+		}
+		else
+		{
+			Length = FVector::DistSquared2D(StartPoint, EndPoint);
+		}
+
+		if (range > 0 && range < Length)
+		{
+			continue;
+		}
+
+		outAry.Add(Pawn.Get());
+	}
 }

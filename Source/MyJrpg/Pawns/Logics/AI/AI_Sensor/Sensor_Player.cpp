@@ -21,7 +21,7 @@ void USensor_Player::UpdateAISensing()
 {
 	FVector Loc = m_PlayerOwner->GetActorLocation();
 	
-	IFocusable* Target = UMyGameInstance::Get->m_SpawnManager->GetNearTarget(Loc);
+	IFocusable* Target = UMyGameInstance::Get->m_ZoneInst->GetNearTarget(Loc);
 	
 	if(Target)
 	{

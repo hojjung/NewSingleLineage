@@ -41,7 +41,7 @@ void USkill_ChainLight::EndSkillAnim()
 
 ACombatUnitPawn* USkill_ChainLight::ExecuteChainLight(FVector&& start, float range)
 {
-	ACombatUnitPawn* Pawn = UMyGameInstance::Get->m_SpawnManager->GetNearNpc(start, range, &m_Hitten);
+	ACombatUnitPawn* Pawn = UMyGameInstance::Get->m_ZoneInst->GetNearNpc(start, range, &m_Hitten);
 
 	if (!Pawn)
 	{

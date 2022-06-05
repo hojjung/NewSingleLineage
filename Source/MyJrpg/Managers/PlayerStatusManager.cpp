@@ -210,13 +210,13 @@ void UPlayerStatusManager::SubMultiMoveSpeed(float speedM)
 
 void UPlayerStatusManager::AddMultiAtkSpeed(float speedM)
 {
-	m_MultipleStatGroup.m_AtkSpeed *= speedM;
+	m_MultipleStatGroup.m_AtkPerSec *= speedM;
 	UpdateStat();
 }
 
 void UPlayerStatusManager::SubMultiAtkSpeed(float speedM)
 {
-	m_MultipleStatGroup.m_AtkSpeed /= speedM;
+	m_MultipleStatGroup.m_AtkPerSec /= speedM;
 	UpdateStat();
 }
 

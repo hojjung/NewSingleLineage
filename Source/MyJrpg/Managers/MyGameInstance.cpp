@@ -71,7 +71,6 @@ void UMyGameInstance::Init()
 
 	m_EffectManager = NewObject<UParticleEffectManager>(this);
 	m_LevelMoveManager = NewObject<ULevelMoveManager>(this);
-	m_SpawnManager = NewObject<USpawnManager>(this);
 	m_PlayerStatManager = NewObject<UPlayerStatusManager>(this);
 	m_RewardManager = NewObject<URewardManager>(this);
 	m_EquipManager = NewObject<UEquipManager>(this);

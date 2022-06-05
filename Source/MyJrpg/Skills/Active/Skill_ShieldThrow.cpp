@@ -25,7 +25,7 @@ void USkill_ShieldThrow::OnSkillTriggered()
 
 ACombatUnitPawn* USkill_ShieldThrow::Shoot(const FVector& start)
 {
-	ACombatUnitPawn* Pawn = UMyGameInstance::Get->m_SpawnManager->GetNearNpc(start, m_SkillData->m_fRange, &m_Hitten);
+	ACombatUnitPawn* Pawn = UMyGameInstance::Get->m_ZoneInst->GetNearNpc(start, m_SkillData->m_fRange, &m_Hitten);
 
 	if (!Pawn)
 	{

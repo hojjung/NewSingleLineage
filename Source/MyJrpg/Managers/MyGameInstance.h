@@ -16,9 +16,9 @@
 #include "QuickSlotManager.h"
 #include "ShopManager.h"
 #include "SkillManager.h"
-#include "SpawnManager.h"
 #include "Build/ZoneInstManager.h"
 #include "Engine/GameInstance.h"
+#include "MyJrpg/Actors/MyPlayerController.h"
 #include "MyJrpg/DataTables/BadwordTable.h"
 #include "MyJrpg/GameRules/GameRuleBase.h"
 #include "MyJrpg/Pawns/Logics/PlSkillAuto.h"
@@ -47,8 +47,6 @@ protected:
 public:
 	UPROPERTY()
 	ULevelMoveManager* m_LevelMoveManager;
-	UPROPERTY()
-	USpawnManager* m_SpawnManager;
 	UPROPERTY()
 	UPlayerStatusManager* m_PlayerStatManager;
 	UPROPERTY()

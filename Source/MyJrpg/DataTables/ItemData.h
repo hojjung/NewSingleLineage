@@ -37,7 +37,7 @@ public:
 		m_MaxHp = 100;
 		m_Hp = 100;
 		m_Dmg = 10;
-		m_AtkSpeed = 1.0f;
+		m_AtkPerSec = 1.0f;
 		m_MoveSpeed = 300;
 		m_CriPer = 0;
 		m_DmgReduce = 0;
@@ -51,7 +51,7 @@ public:
 		m_MaxHp     = initAll;
 		m_Hp        = initAll;
 		m_Dmg       = initAll;
-		m_AtkSpeed  = initAll;
+		m_AtkPerSec  = initAll;
 		m_MoveSpeed = initAll;
 		m_CriPer    = initAll;
 		m_CriDmg    = initAll;
@@ -76,7 +76,7 @@ public:
 	UPROPERTY(EditDefaultsOnly)
 	float m_CriDmg;
 	UPROPERTY(EditDefaultsOnly)
-	float m_AtkSpeed;
+	float m_AtkPerSec;
 	UPROPERTY(EditDefaultsOnly)
 	float m_MoveSpeed;
 	

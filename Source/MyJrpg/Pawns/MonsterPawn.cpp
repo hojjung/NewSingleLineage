@@ -240,7 +240,7 @@ void AMonsterPawn::OnReviveAnimEnd()
 
 void AMonsterPawn::CreateInventory()
 {
-	m_Inven = NewObject<UInventory>(this);
+	m_Inven = NewObject<UInventory>(UMyGameInstance::Get);
 	m_Inven->Init(FGlobalVariable::MOB_INVEN);
 	m_Inven->AddItem(FItemSpec(TEXT("Coin"), 10));
 }

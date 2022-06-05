@@ -161,7 +161,7 @@ void ATreeBase::OnGatherDone()
 {
 	UMyLib::GetEquip()->AddItem(FItemSpec(m_DataRow->m_ItemGather.RowName,m_DataRow->m_nItemGatherCount));
 	
-	UMyGameInstance::Get->m_SpawnManager->RemoveFocusActor(this);
+	UMyGameInstance::Get->m_ZoneInst->RemoveFocusActor(this);
 	
 	UGameplayStatics::PlaySoundAtLocation(GetWorld(),m_GatherAsset->m_SoundGatherEnd,GetActorLocation());
 	

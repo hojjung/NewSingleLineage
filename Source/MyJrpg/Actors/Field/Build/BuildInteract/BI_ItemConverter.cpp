@@ -3,6 +3,7 @@
 
 #include "BI_ItemConverter.h"
 
+#include "MyJrpg/MyLib.h"
 #include "MyJrpg/Managers/MyGameInstance.h"
 
 void UBI_ItemConverter::Init(const FString& variable, UInventory* inven)

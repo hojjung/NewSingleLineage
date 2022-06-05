@@ -115,7 +115,7 @@ float ACombatUnitPawn::PlayBaseAttackAnim()
 	
 	int RandIndex = FMath::RandRange(0, AnimAry.Num()-1);
 	
-	return PlayAnimMontage(GetBaseAttackMontage(), 1 * GetStat().m_AtkSpeed, AnimAry[RandIndex].SectionName);
+	return PlayAnimMontage(GetBaseAttackMontage(), 1 * GetStat().m_AtkPerSec, AnimAry[RandIndex].SectionName);
 }
 
 UAnimMontage* ACombatUnitPawn::GetBaseAttackMontage()
