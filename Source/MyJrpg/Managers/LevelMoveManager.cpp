@@ -53,10 +53,6 @@ void ULevelMoveManager::OpenMyLevel(const FZoneDataRow& zoneData)
 
 void ULevelMoveManager::OnOpenWorldLevelComplete()
 {
-	UMyAssetManager::Get()->ClearUnits();
-	
-	UBUITween::Shutdown();
-
 	if(!m_ZoneData)
 	{
 		return;

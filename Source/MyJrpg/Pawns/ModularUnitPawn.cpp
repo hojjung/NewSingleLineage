@@ -5,6 +5,7 @@
 
 #include "PetPawn.h"
 #include "MyJrpg/MeshMergeLib.h"
+#include "MyJrpg/MyLib.h"
 #include "MyJrpg/Managers/EquipManager.h"
 #include "MyJrpg/Managers/MyGameInstance.h"
 #include "MyJrpg/Managers/PreviewActorManager.h"
@@ -178,7 +179,9 @@ void AModularUnitPawn::SpawnEquipActor(const FWeaponData& weaponData)
 
 UAnimMontage* AModularUnitPawn::GetBaseAttackMontage()
 {
-	UHumanAsset* HumanAsset = Cast<UHumanAsset>(m_EntityAsset.Get());
+	UUnitEntityAsset* AssetWant = m_EntityAsset.Get();
+	
+	UHumanAsset* HumanAsset = Cast<UHumanAsset>(AssetWant);
 	
 	return HumanAsset->GetStanceAnim(m_Stance);
 }

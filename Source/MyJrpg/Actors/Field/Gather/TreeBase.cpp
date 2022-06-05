@@ -100,7 +100,6 @@ void ATreeBase::OnInteract()
 {
 	if(m_nTreeHp<=0)
 	{
-		m_Player->SetFocusedTarget(nullptr);
 		return;
 	}
 	m_Player->BindOnCancel(FVoidVoid::CreateUObject(this, &ATreeBase::OnHarvestMotionDone));
@@ -118,7 +117,6 @@ void ATreeBase::OnArrived()
 void ATreeBase::OnTakeChopping()
 {
 	m_Player->SetInteracting(false);
-	m_Player->SetFocusedTarget(nullptr);
 	
 	if(m_CrntToolID)
 	{
@@ -164,8 +162,6 @@ void ATreeBase::OnGatherDone()
 	UMyGameInstance::Get->m_ZoneInst->RemoveFocusActor(this);
 	
 	UGameplayStatics::PlaySoundAtLocation(GetWorld(),m_GatherAsset->m_SoundGatherEnd,GetActorLocation());
-	
-	SetActorEnableCollision(false);
 	
 	m_MeshTree->SetCollisionEnabled(ECollisionEnabled::PhysicsOnly);
 

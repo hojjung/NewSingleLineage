@@ -18,4 +18,6 @@ public:
 
 protected:
 	virtual void Tick(float DeltaSeconds) override;
+
+	virtual void StartToLeaveMap() override;
 };

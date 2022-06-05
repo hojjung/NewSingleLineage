@@ -84,7 +84,7 @@ void ABaseUnitPawn::SetEntity(const FName& id, const FNpcUnitEntityRow& unitEnti
 
 void ABaseUnitPawn::LoadSetSkMeshAnim(TSoftObjectPtr<UUnitEntityAsset> asset)
 {
-	m_EntityAsset = UMyAssetManager::Get()->LoadUnitAsset(asset);
+	m_EntityAsset =  UMyAssetManager::Get()->LoadUnitAsset(asset);
 
 	m_BodyMesh->SetSkeletalMesh(m_EntityAsset->GetSkMesh());
 
