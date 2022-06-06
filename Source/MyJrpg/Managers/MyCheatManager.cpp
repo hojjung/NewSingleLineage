@@ -37,11 +37,6 @@ void UMyCheatManager::RemoveItemFromFocusedTarget(FName id, int amount)
 	//FocusedPawn->GetInven()->RemoveItem(id,amount);
 }
 
-void UMyCheatManager::AddTestItemToPlayer()
-{
-	UMyGameInstance::Get->m_RewardManager->RequestMonsterReward();
-}
-
 void UMyCheatManager::AddQuest(FName id)
 {
 	UMyGameInstance::Get->m_QuestManager->RegisterMainQuest(id);

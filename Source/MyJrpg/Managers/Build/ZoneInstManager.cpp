@@ -145,14 +145,6 @@ void UZoneInstManager::AddBuildActor(AStructureActor* buildActor)
 
 void UZoneInstManager::SpawnActors(const FZoneSerialData& zoneInst, bool isInit)
 {
-	if(isInit)
-	{
-		PRINTF("IsInit : T");
-	}
-	else
-	{
-		PRINTF("IsInit : F");
-	}
 	int Index = 0;
 	
 	for(const FZoneActorTransform& ZoneActorEle : zoneInst.m_AryZoneActorTrans)
@@ -245,8 +237,6 @@ AMonsterPawn* UZoneInstManager::SpawnNpcActor(const FZoneActorTransform& spawnDa
 	}
 
 	m_Npc.Add(NpcActor);
-
-	UMyGameInstance::Get->m_ZoneInst->AddFocusActor(NpcActor);
 
 	return NpcActor;
 }

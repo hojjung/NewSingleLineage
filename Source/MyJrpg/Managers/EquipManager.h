@@ -25,6 +25,10 @@ public:
 
 	FOnEquipChanged m_OnDurChanged;
 
+	DECLARE_MULTICAST_DELEGATE_TwoParams(FOnItemEarn, const FItemDataRow& item, int amount);
+
+	FOnItemEarn m_OnItemEarn;
+
 protected:
 	bool m_bIsRange;
 	

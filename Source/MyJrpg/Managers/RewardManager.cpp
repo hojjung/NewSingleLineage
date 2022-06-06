@@ -43,34 +43,39 @@ void URewardManager::ReceiveQuestReward(const FQuestReward& qReward)
 	}
 }
 
-void URewardManager::RequestMonsterReward()
+void URewardManager::RequestMonsterReward(const FName& mobId)
 {
 	const FName& ZoneId = UMyGameInstance::Get->m_LevelMoveManager->GetCrntZoneID();
 
+	const FNpcUnitEntityRow* NpcUnit = UUnitEntityData::GetNpcUnitTable->FindRow<FNpcUnitEntityRow>(mobId, "");
+
+	TArray<FDropRewardItem> DropReward = NpcUnit->m_AryDropItem;
+	
+	DropObtain(DropReward);
+	
 	const TArray<FDropRewardItem>* AryDropDatas = UMyGameInstance::Get->m_RewardManager->GetDropItems(ZoneId);
-
+	
 	if(AryDropDatas)
+		DropObtain(*AryDropDatas);
+}
+
+void URewardManager::DropObtain(const TArray<FDropRewardItem>& items)
+{
+	for(const auto& DropItem : items)
 	{
-		for(const auto& DropItem : *AryDropDatas)
+		int RandIndex = FMath::RandRange(0,DropItem.m_nExpectDropCount - 1);
+
+		if(RandIndex == 0)
 		{
-			int RandIndex = FMath::RandRange(0,DropItem.m_nExpectDropCount - 1);
-
-			if(RandIndex == 0)
+			int RandStackCount = FMath::RandRange(1,DropItem.m_nMaxStack);
+				
+			if (UMyLib::IsEquip(DropItem.m_Item.RowName))
 			{
-				int Amount = 1;
-			
-				EItemType type = UMyLib::GetItemType(DropItem.m_Item.RowName);
-
-				// if (type == EItemType::Equip)
-				// {
-				// 	FName HashID = UMyLib::GenerateEquipItemHashKey(DropItem.m_Item.RowName,this);
-				//
-				// 	UMyGameInstance::Get->m_Inven->AddEquipItem(HashID);
-				//
-				// 	continue;;
-				// }
-				//
-				// UMyGameInstance::Get->m_Inven->AddItem(DropItem.m_Item.RowName,Amount);
+				UMyGameInstance::Get->m_EquipManager->AddItem(FItemSpec(DropItem.m_Item.RowName, 0), true);
+			}
+			else
+			{
+				UMyGameInstance::Get->m_EquipManager->AddItem(FItemSpec(DropItem.m_Item.RowName, RandStackCount));
 			}
 		}
 	}
@@ -119,7 +124,7 @@ void URewardManager::OnMonsterDead(const AMonsterPawn* monster)
 
 	m_OnExpGold.Broadcast(monster->GetRewardExp(),monster->GetRewardGold());
 	
-	RequestMonsterReward();
+	RequestMonsterReward(monster->GetEntityID());
 }
 
 void URewardManager::AddDropItemData(const FDropData& drop, const FName& itemID)

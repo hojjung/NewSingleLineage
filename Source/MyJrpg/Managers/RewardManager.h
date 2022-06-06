@@ -34,8 +34,9 @@ protected:
 protected:
 	void ReceiveQuestReward(const FQuestReward& qReward);
 
+	void DropObtain(const TArray<FDropRewardItem>& items);
 public:
-	void RequestMonsterReward();
+	void RequestMonsterReward(const FName& mobId);
 
 	bool RequestQuestReward(const TArray<FQuestReward>& aryQuest);
 

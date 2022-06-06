@@ -2,6 +2,7 @@
 
 #include "WidgetItemObtainElement.h"
 #include "MyJrpg/Items/Inventory.h"
+#include "MyJrpg/Managers/EquipManager.h"
 #include "MyJrpg/Managers/MyGameInstance.h"
 #include "MyJrpg/Managers/RewardManager.h"
 
@@ -9,13 +10,13 @@ void UWidgetItemObtainPanel::NativeOnInitialized()
 {
 	Super::NativeOnInitialized();
 
-	m_nIter = 0;
+	UMyGameInstance::Get->m_EquipManager->m_OnItemEarn.AddUObject(this, &UWidgetItemObtainPanel::OnItemObtain);
 	
-	//UMyGameInstance::Get->m_Inven->m_OnItemObtain.AddUObject(this, &UWidgetItemObtainPanel::OnItemObtain);
-
 	FTimerHandle Timer;
 
 	GetWorld()->GetTimerManager().SetTimer(Timer,this,&UWidgetItemObtainPanel::OnItemObtainQue,1,true,0.15f);
+	
+	m_nIter = 0;
 }
 
 void UWidgetItemObtainPanel::OnItemObtain(const FItemDataRow& item, int amount)

@@ -37,6 +37,7 @@ UCLASS()
 class MYJRPG_API UMyGameInstance : public UGameInstance
 {
 	GENERATED_BODY()
+
 public:
 	static UMyGameInstance* Get;
 	

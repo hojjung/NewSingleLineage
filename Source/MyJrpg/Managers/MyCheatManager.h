@@ -23,9 +23,6 @@ public:
 	void RemoveItemFromFocusedTarget(FName id,int amount);
 
 	UFUNCTION(Exec)
-	void AddTestItemToPlayer();
-
-	UFUNCTION(Exec)
 	void AddQuest(FName id);
 
 	UFUNCTION(Exec)

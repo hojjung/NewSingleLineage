@@ -102,6 +102,8 @@ public:
 	UPROPERTY(EditDefaultsOnly)
 	FItemDataHandle m_Item;
 	UPROPERTY(EditDefaultsOnly)
+	int m_nMaxStack = 1;
+	UPROPERTY(EditDefaultsOnly)
 	int m_nExpectDropCount=5;//5번에 한번,20% 드랍이란뜻임
 };
 

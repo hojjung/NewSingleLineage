@@ -153,6 +153,8 @@ void UWidgetItemInfo::SetItemInfo(FItemSpec& item, UInventory* inven)
 	const FItemDataRow& ItemData = UMyLib::GetItemData(m_ItemSpec->m_ID);
 	
 	SetInfoItemData(ItemData);
+
+	UpdateStat(ItemData, m_ItemSpec->m_nLvStack);
 	
 	m_ItemIcon->SetItem(*m_ItemSpec);
 
@@ -178,6 +180,19 @@ void UWidgetItemInfo::SetInfoItemData(const FItemDataRow& data_row)
 	m_BtnSplit->SetVisibility(ESlateVisibility::Collapsed);
 
 	EItemType t = UMyLib::GetItemType(data_row);
+
+	if(EItemType::Equip == t)
+	{
+		m_VertItemOptions->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
+		m_TextItemEffectTitle->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
+	}
+	else
+	{
+		m_VertItemOptions->SetVisibility(ESlateVisibility::Collapsed);
+		m_TextItemEffectTitle->SetVisibility(ESlateVisibility::Collapsed);
+	}
+	
+	m_TextItemDesc->SetText(data_row.m_Desc);
 
 	SetTypeText(t);
 }
@@ -258,11 +273,9 @@ void UWidgetItemInfo::OnSplit()
 	OnClose();
 }
 
-void UWidgetItemInfo::UpdateStat(const FName& target, int level)
+void UWidgetItemInfo::UpdateStat(const FItemDataRow& target, int level)
 {
-	const FItemDataRow& ItemData = UMyLib::GetItemData(target);
-
-	const FStatGroup TotalStat = (ItemData.m_EnchantStats * level) + ItemData.m_EquipStats;
+	const FStatGroup TotalStat = (target.m_EnchantStats * level) + target.m_EquipStats;
 
 	if(TotalStat.m_Dmg > 0)
 	{
@@ -299,7 +312,7 @@ void UWidgetItemInfo::UpdateStat(const FName& target, int level)
 
 	if (level > 0)
 	{
-		for (const auto& ClassOp : ItemData.m_Options)
+		for (const auto& ClassOp : target.m_Options)
 		{
 			CreateOption(ClassOp, level);
 		}
@@ -310,7 +323,7 @@ void UWidgetItemInfo::CreateOption(const FString&& infoText, const FString&& for
 {
 	UWidgetCollecStatChild* WidgetOp =  CreateWidget<UWidgetCollecStatChild>(this, m_ClassOption);
 
-	m_ScrollInfo->AddChild(WidgetOp);
+	m_VertItemOptions->AddChild(WidgetOp);
 
 	m_AryOptions.Add(WidgetOp);
 

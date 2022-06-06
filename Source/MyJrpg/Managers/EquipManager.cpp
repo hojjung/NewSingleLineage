@@ -315,20 +315,27 @@ bool UEquipManager::HasSpace(FItemSpec&& addItem)
 
 bool UEquipManager::AddItem(FItemSpec& addItem, bool newEquipItem)
 {
+	int StLv = addItem.m_nLvStack;
+	
+	const FItemDataRow& ItemData = UMyLib::GetItemData(addItem.m_ID);
+	
 	if(UMyLib::GetPlayerInven()->AddItem(addItem,newEquipItem))
 	{
+		m_OnItemEarn.Broadcast(ItemData, StLv);
 		return true;
 	}
 	else
 	{
 		if(GetBag() && GetBag()->AddItem(addItem,newEquipItem))
 		{
+			m_OnItemEarn.Broadcast(ItemData, StLv);
 			return true;
 		}
 		else
 		{
 			if(GetBelt() && GetBelt()->AddItem(addItem,newEquipItem))
 			{
+				m_OnItemEarn.Broadcast(ItemData, StLv);
 				return true;
 			}	
 		}

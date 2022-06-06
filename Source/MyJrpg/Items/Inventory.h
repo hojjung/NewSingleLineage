@@ -42,7 +42,7 @@ class MYJRPG_API UInventory : public UObject
 	
 public:
 	DECLARE_MULTICAST_DELEGATE(FOnInvenChanged);
-
+	
 	FOnInvenChanged m_OnInvenChanged;
 	
 protected://

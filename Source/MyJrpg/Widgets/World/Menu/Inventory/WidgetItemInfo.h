@@ -34,6 +34,12 @@ protected:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (BindWidget))
 	UTextBlock* m_TextItemName;
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (BindWidget))
+	UVerticalBox* m_VertItemOptions;
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (BindWidget))
+	UTextBlock* m_TextItemEffectTitle;
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (BindWidget))
+	UTextBlock* m_TextItemDesc;
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (BindWidget))
 	UTextBlock* m_TextItemType;
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (BindWidget))
 	UButton* m_BtnClose;
@@ -45,8 +51,6 @@ protected:
 	UButton* m_BtnRegister;
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (BindWidget))
 	UButton* m_BtnSplit;
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (BindWidget))
-	UScrollBox* m_ScrollInfo;
 	UPROPERTY(EditDefaultsOnly)
 	TSubclassOf<UWidgetCollecStatChild> m_ClassOption;
 	UPROPERTY()
@@ -67,7 +71,7 @@ protected:
 protected:
 	virtual void NativeOnInitialized() override;;
 	
-	void UpdateStat(const FName& target, int level);
+	void UpdateStat(const FItemDataRow& target, int level);
 
 	void CreateOption(const FString&& infoText, const FString&& formatText, int v);
 
