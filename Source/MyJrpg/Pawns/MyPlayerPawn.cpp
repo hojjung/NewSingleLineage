@@ -24,6 +24,7 @@ AMyPlayerPawn::AMyPlayerPawn(const FObjectInitializer& objInit):Super(objInit)
 	m_bCanMoveInSkill = false;
 	m_bIsInvincible = false;
 	m_bIsSneaking = false;
+	m_bUseFsmTick = false;
 
 	m_Light = CreateDefaultSubobject<UPointLightComponent>("m_Light");
 	m_Light->SetupAttachment(m_Capsule);
@@ -149,6 +150,10 @@ void AMyPlayerPawn::MoveRight(float AxisValue)
 
 void AMyPlayerPawn::CancelInteract()
 {
+	if(!GetInteracting())
+	{
+		return;
+	}
 	UMyLib::GetCanvas()->GetWaitInteract()->HideInteract();
 		
 	GetWorldTimerManager().ClearTimer(m_WaitInteractTimer);
@@ -256,6 +261,7 @@ void AMyPlayerPawn::SetAutoCombat(bool useAuto)
 	if(!useAuto)
 	{
 		StopMove();
+		CancelInteract();
 	}
 }
 

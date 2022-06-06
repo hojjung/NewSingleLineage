@@ -42,6 +42,8 @@ protected:
 	UButton* m_BtnSneak;//sub all
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (BindWidget))
 	UButton* m_BtnAuto;//sub all
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (BindWidget))
+	UImage* m_ImgUseAuto;
 	UPROPERTY(EditAnywhere,BlueprintReadWrite,meta=(ExposeOnSpawn="true"))
 	UMaterialInterface* m_MatWant;
 	UPROPERTY(VisibleAnywhere,BlueprintReadWrite,Transient)

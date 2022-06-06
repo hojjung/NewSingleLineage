@@ -35,6 +35,8 @@ void UWidgetInteract::NativeOnInitialized()
 	UMyGameInstance::Get->m_EquipManager->m_OnEquipChanged.AddUObject(this, &UWidgetInteract::OnEquipChanged);
 	UMyGameInstance::Get->m_EquipManager->m_OnDurChanged.AddUObject(this, &UWidgetInteract::OnEquipChanged);
 	OnEquipChanged();
+
+	m_ImgUseAuto->SetVisibility(ESlateVisibility::Collapsed);
 }
 
 void UWidgetInteract::ShowWidgetMonster(const AMonsterPawn* mob)
@@ -193,7 +195,16 @@ void UWidgetInteract::OnSneak()
 
 void UWidgetInteract::OnAutoToggle()
 {
-	UWidgetInteract::AutoToggle=!UWidgetInteract::AutoToggle;
+	UWidgetInteract::AutoToggle = !UWidgetInteract::AutoToggle;
+
+	if(UWidgetInteract::AutoToggle)
+	{
+		m_ImgUseAuto->SetVisibility(ESlateVisibility::HitTestInvisible);
+	}
+	else
+	{
+		m_ImgUseAuto->SetVisibility(ESlateVisibility::Collapsed);
+	}
 	UMyLib::GetPlayer()->SetAutoCombat(AutoToggle);
 	UMyGameInstance::Get->m_SkillAuto->SetUseAuto(AutoToggle);
 }

@@ -152,5 +152,8 @@ public://스텟과 보상
 	float m_fGold = 100.f;
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
 	TArray<FDropRewardItem> m_AryDropItem;
-	
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
+	UParticleSystem* m_TakeHitEffect;
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
+	USoundBase* m_TakeHitSound;
 };

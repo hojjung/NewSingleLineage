@@ -4,6 +4,7 @@
 #include "AI_LogicBase.h"
 #include "Logic_Player.generated.h"
 
+class AMyPlayerPawn;
 /**
  * 
  */
@@ -35,6 +36,8 @@ protected:
 	typedef void (ULogic_Player::*FPtrState)(void);
 
 	FPtrState m_AryStateFunction[static_cast<int>(EFSM::Length)];
+
+	TWeakObjectPtr<AMyPlayerPawn> m_Pl;
 
 protected:
 	void OnIdle();

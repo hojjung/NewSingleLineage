@@ -1,5 +1,6 @@
 #include "Logic_Player.h"
 #include "NavigationSystem.h"
+#include "MyJrpg/Actors/Field/ItemActor.h"
 #include "MyJrpg/Pawns/CombatUnitPawn.h"
 #include "MyJrpg/Pawns/MyPlayerPawn.h"
 #include "Navigation/PathFollowingComponent.h"
@@ -10,9 +11,9 @@ void ULogic_Player::Init(ACombatUnitPawn* pawnUnit)
 	
 	check(m_Owner);
 
-	m_CurrentState = EFSM::Idle;
+	m_Pl = Cast<AMyPlayerPawn>(m_Owner);
 
-	AMyPlayerPawn* PlayerPawn = Cast<AMyPlayerPawn>(m_Owner);
+	m_CurrentState = EFSM::Idle;
 	//
 	m_AryStateFunction[static_cast<int>(EFSM::Idle)] = &ULogic_Player::OnIdle;
 
@@ -21,6 +22,7 @@ void ULogic_Player::Init(ACombatUnitPawn* pawnUnit)
 	m_AryStateFunction[static_cast<int>(EFSM::Chase)] = &ULogic_Player::OnChase;
 
 	m_AryStateFunction[static_cast<int>(EFSM::Combat)] = &ULogic_Player::OnCombat;
+
 
 	//
 	ResetStartPosition(m_Owner->GetActorLocation());
@@ -63,11 +65,18 @@ FString ULogic_Player::CurrentState()
 
 void ULogic_Player::CheckSetState()
 {
-	AMyPlayerPawn* PlayerPawn = Cast<AMyPlayerPawn>(m_Owner);
-	
-	ACombatUnitPawn* NPCPawn = PlayerPawn->GetFocusedTarget<ACombatUnitPawn>();
+	AItemActor* ItemTarget = m_Pl->GetFocusedTarget<AItemActor>();
 
-	if(PlayerPawn->IsManualMoving())
+	if(m_Pl->GetInteracting() || ItemTarget)
+	{
+		m_CurrentState = EFSM::Interacting;
+		return;
+	}
+	m_Pl->CancelInteract();
+	
+	ACombatUnitPawn* NPCPawn = m_Pl->GetFocusedTarget<ACombatUnitPawn>();
+
+	if(m_Pl->IsManualMoving())
 	{
 		m_CurrentState = EFSM::Idle;
 		return;
@@ -104,7 +113,13 @@ void ULogic_Player::OnCombat()
 
 void ULogic_Player::OnInteract()
 {
+	if(m_Pl->GetInteracting())
+	{
+		return;
+	}
+	AItemActor* ItemTarget = m_Pl->GetFocusedTarget<AItemActor>();
 	
+	ItemTarget->OnInteract();
 }
 
 void ULogic_Player::OnFocusFriendly()

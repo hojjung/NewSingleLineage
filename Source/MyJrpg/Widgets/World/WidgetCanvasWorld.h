@@ -9,7 +9,6 @@
 #include "Hud/WidgetLevelUp.h"
 #include "Hud/WidgetScreenEffect.h"
 #include "Hud/WidgetWaitInteract.h"
-#include "Interact/WidgetInteract.h"
 #include "Menu/CharacterInfoHUD/AlertInfoWindow.h"
 #include "Menu/Collection/WidgetCollecPanelParent.h"
 #include "Menu/Dialogue/WidgetLogWindow.h"

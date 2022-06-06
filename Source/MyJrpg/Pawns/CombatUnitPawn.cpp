@@ -15,7 +15,7 @@ ACombatUnitPawn::ACombatUnitPawn(const FObjectInitializer& objInit):Super(objIni
 	m_fDeathAnimDurationMax = 0;
 	m_fDeathAnimDurationTimer = 0;
 	
-	m_bUseFsmTick=true;
+	m_bUseFsmTick = true;
 	m_bCanUseSkill = true;
 	//
 	m_ShadowMeshComp = CreateDefaultSubobject<UStaticMeshComponent>("StShadow");

@@ -46,15 +46,6 @@ AMonsterPawn::AMonsterPawn(const FObjectInitializer& obj): Super(obj.SetDefaultS
 	m_SpeechBubbleComp->SetRelativeLocation(FVector(0, 0, 130));
 	m_SpeechBubbleComp->SetCanEverAffectNavigation(false);
 	//
-	static ConstructorHelpers::FObjectFinder<UParticleSystem> FoundHitEffect(
-		TEXT("ParticleSystem'/Game/03_VisualEffect/P_Hit.P_Hit'"));
-
-	static ConstructorHelpers::FObjectFinder<USoundBase> FoundHitSound(
-		TEXT("SoundWave'/Game/Sound/Fantasy_Game_Weapon_Impact.Fantasy_Game_Weapon_Impact'"));
-
-	m_HitParticle->SetTemplate(FoundHitEffect.Object);
-
-	m_SoundComp->SetSound(FoundHitSound.Object);
 }
 
 void AMonsterPawn::SetEntity(const FName& id,const FNpcUnitEntityRow& unitEntityRow)
@@ -93,6 +84,10 @@ void AMonsterPawn::SetEntity(const FName& id,const FNpcUnitEntityRow& unitEntity
 	m_bIsBoss = unitEntityRow.m_bIsBoss;
 
 	m_TalkID = unitEntityRow.m_TalkID;
+
+	m_HitParticle->SetTemplate(unitEntityRow.m_TakeHitEffect);
+
+	m_SoundComp->SetSound(unitEntityRow.m_TakeHitSound);
 }
 
 void AMonsterPawn::SetReviveTime(float min, float max)
