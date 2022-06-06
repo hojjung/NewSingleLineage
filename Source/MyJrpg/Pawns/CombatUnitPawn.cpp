@@ -318,6 +318,11 @@ void ACombatUnitPawn::StopSilence()
 	GetWorldTimerManager().ClearTimer(m_SilenceTimer);
 }
 
+bool ACombatUnitPawn::IsUseFsm()
+{
+	return m_bUseFsmTick;
+}
+
 FSkillTrigger& ACombatUnitPawn::GetSkillTriggerDelegate()
 {
 	return m_OnSkillTrigger;

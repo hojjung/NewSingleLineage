@@ -170,7 +170,7 @@ public:
 	
 	void AddFurniture(const FName& id);
 
-	void RemoveFurniture(const FName& id, int amount = 1);
+	int RemoveFurniture(const FName& id, int amount = 1);
 
 	const TMap<FName,int>& GetInvenFurniture() const;
 

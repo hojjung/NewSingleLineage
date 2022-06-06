@@ -107,9 +107,9 @@ public:
 
 	void RemoveFocusActor(UObject* want);
 	
-	IFocusable* GetNearProp(FVector callerLoc, float range = 0);
+	IFocusable* GetNearProp(FVector callerLoc, float range = 0, UClass* ignoreClass = nullptr);
 
-	IFocusable* GetNearTarget(FVector callerLoc, float range = 0);
+	IFocusable* GetNearTarget(FVector callerLoc, float range = 0, UClass* ignoreClass = nullptr);
 
 	ACombatUnitPawn* GetNearNpc(FVector callerLoc, float range, const TSet<ACombatUnitPawn*>* ignore = nullptr);
 

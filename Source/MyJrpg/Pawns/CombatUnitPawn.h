@@ -139,6 +139,8 @@ public:// get
 	void TakeSilence(float duration);
 
 	void StopSilence();
+
+	bool IsUseFsm();
 	
 public:
 	template<typename T = IFocusable>

@@ -20,7 +20,10 @@ protected:
 	UWidgetInventory* m_StoragePanel;
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (BindWidget))
 	UWidgetInventory* m_InvenPanel;
-	
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (BindWidget))
+	UWidgetInventory* m_Bag;
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (BindWidget))
+	UWidgetInventory* m_Belt;
 protected:
 	virtual void NativeOnInitialized() override;
 

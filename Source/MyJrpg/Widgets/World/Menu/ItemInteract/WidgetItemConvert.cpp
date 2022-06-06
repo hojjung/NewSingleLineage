@@ -1,5 +1,6 @@
 #include "WidgetItemConvert.h"
 
+#include "MyJrpg/MyLib.h"
 #include "MyJrpg/Managers/EquipManager.h"
 #include "MyJrpg/Managers/MyGameInstance.h"
 #include "MyJrpg/Widgets/World/Menu/Inventory/ItemDDO.h"
@@ -175,8 +176,6 @@ void UWidgetItemConvert::UpdatePanel()
 			m_RightItem->Clear();
 		}
 	}
-
-	
 }
 
 void UWidgetItemConvert::UpdateElement(UWidgetBaseElement* ele, const FItemSpec& item)

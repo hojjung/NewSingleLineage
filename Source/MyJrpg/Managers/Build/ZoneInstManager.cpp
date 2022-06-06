@@ -351,7 +351,7 @@ void UZoneInstManager::RemoveFocusActor(UObject* want)
 	m_AryFocusActors.Remove(Focus);
 }
 
-IFocusable* UZoneInstManager::GetNearProp(FVector callerLoc, float range)
+IFocusable* UZoneInstManager::GetNearProp(FVector callerLoc, float range, UClass* ignoreClass)
 {
 	float MAX_Dist = MAX_flt;
 
@@ -375,6 +375,11 @@ IFocusable* UZoneInstManager::GetNearProp(FVector callerLoc, float range)
 		}
 
 		AActor* FocusActor = Cast<AActor>(Focus.GetObject());
+
+		if(FocusActor->GetClass() == ignoreClass)
+		{
+			continue;
+		}
 
 		float Length = MAX_flt;
 
@@ -409,11 +414,11 @@ IFocusable* UZoneInstManager::GetNearProp(FVector callerLoc, float range)
 	return NearPawn;
 }
 
-IFocusable* UZoneInstManager::GetNearTarget(FVector callerLoc, float range)
+IFocusable* UZoneInstManager::GetNearTarget(FVector callerLoc, float range, UClass* ignoreClass)
 {
 	ACombatUnitPawn* Pawn = GetNearNpc(callerLoc, range);
 	
-	IFocusable* Prop = GetNearProp(callerLoc, range);
+	IFocusable* Prop = GetNearProp(callerLoc, range, ignoreClass);
 	
 	AActor* FocusActor = Cast<AActor>(Prop);
 

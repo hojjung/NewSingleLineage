@@ -21,7 +21,7 @@ void USensor_Player::UpdateAISensing()
 {
 	FVector Loc = m_PlayerOwner->GetActorLocation();
 	
-	IFocusable* Target = UMyGameInstance::Get->m_ZoneInst->GetNearTarget(Loc);
+	IFocusable* Target = UMyGameInstance::Get->m_ZoneInst->GetNearTarget(Loc, 0, m_PlayerOwner->IsUseFsm() ? AStructureActor::StaticClass() : nullptr );
 	
 	if(Target)
 	{

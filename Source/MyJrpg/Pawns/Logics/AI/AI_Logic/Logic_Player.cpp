@@ -1,6 +1,7 @@
 #include "Logic_Player.h"
 #include "NavigationSystem.h"
 #include "MyJrpg/Actors/Field/ItemActor.h"
+#include "MyJrpg/Actors/Field/Build/StructureActor.h"
 #include "MyJrpg/Pawns/CombatUnitPawn.h"
 #include "MyJrpg/Pawns/MyPlayerPawn.h"
 #include "Navigation/PathFollowingComponent.h"
@@ -58,6 +59,8 @@ FString ULogic_Player::CurrentState()
 		break;
 	case EFSM::Combat: return TEXT("Combat");
 		break;
+	case EFSM::Interacting: return TEXT("Interacting");
+		break;
 	}
 
 	return TEXT("None");
@@ -65,29 +68,30 @@ FString ULogic_Player::CurrentState()
 
 void ULogic_Player::CheckSetState()
 {
-	AItemActor* ItemTarget = m_Pl->GetFocusedTarget<AItemActor>();
+	IFocusable* Focused = m_Pl->GetFocusedTarget<>();
+	
+	if(m_Pl->IsManualMoving() || !Focused)
+	{
+		m_CurrentState = EFSM::Idle;
+		return;
+	}
 
-	if(m_Pl->GetInteracting() || ItemTarget)
+	ACombatUnitPawn* NPCPawn = Cast<ACombatUnitPawn>(Focused);
+
+	if(!NPCPawn && (Focused || m_Pl->GetInteracting()))
 	{
 		m_CurrentState = EFSM::Interacting;
+
 		return;
 	}
-	m_Pl->CancelInteract();
 	
-	ACombatUnitPawn* NPCPawn = m_Pl->GetFocusedTarget<ACombatUnitPawn>();
+	m_Pl->CancelInteract();
 
-	if(m_Pl->IsManualMoving())
+	if (!NPCPawn->IsAlive())
 	{
 		m_CurrentState = EFSM::Idle;
 		return;
 	}
-
-	if(!NPCPawn || !NPCPawn->IsAlive())//포커싱된게 없다면/죽었다면/싫어하지 않는다면
-	{
-		m_CurrentState = EFSM::Idle;
-		return;
-	}
-
 	OnTargetFocused(NPCPawn);
 }
 
@@ -117,7 +121,7 @@ void ULogic_Player::OnInteract()
 	{
 		return;
 	}
-	AItemActor* ItemTarget = m_Pl->GetFocusedTarget<AItemActor>();
+	IFocusable* ItemTarget = m_Pl->GetFocusedTarget<>();
 	
 	ItemTarget->OnInteract();
 }

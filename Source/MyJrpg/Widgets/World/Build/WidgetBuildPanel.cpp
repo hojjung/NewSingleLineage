@@ -1,5 +1,6 @@
 #include "WidgetBuildPanel.h"
 
+#include "MyJrpg/MyLib.h"
 #include "MyJrpg/Actors/Field/Build/StructureActor.h"
 #include "MyJrpg/Managers/ConstructionManager.h"
 #include "MyJrpg/Managers/MyGameInstance.h"

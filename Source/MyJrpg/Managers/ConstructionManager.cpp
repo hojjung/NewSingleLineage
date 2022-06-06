@@ -348,8 +348,6 @@ bool UConstructionManager::IsBuildable()
 	if(!m_PreviewActor.Get())
 		return false;
 	
-
-	
 	int X,Y;
 
 	FVector Loc = m_PreviewActor->GetActorLocation();
@@ -671,22 +669,31 @@ void UConstructionManager::ConfirmBuild()
 {
 	UMyGameInstance::Get->m_CraftManager->PurchaseItemForCraft(m_PreviewActor->GetBuildData().m_AryCostItem);
 	
-	FVector Loc = m_PreviewActor->GetActorLocation(); 
+	FVector Loc = m_PreviewActor->GetActorLocation();
+
+	bool PreviewSpawn = true;
 
 	SetStructureGrid(m_PreviewActor.Get());
 	
 	const FBuildDataRow& BuildRow = m_PreviewActor->GetBuildData();
 	if(BuildRow.m_BuildType == EBuildType::Furniture)
 	{
-		RemoveFurniture(m_PreviewActor->GetBuildData().m_RowID);
+		PreviewSpawn = RemoveFurniture(m_PreviewActor->GetBuildData().m_RowID) > 0;
 	}
 	m_PreviewActor->ConfirmBuild();
 
 	UMyGameInstance::Get->m_ZoneInst->AddBuildActor(m_PreviewActor.Get());
 	
 	m_PreviewActor = nullptr;
-
-	SpawnPreviewActor(Loc, &BuildRow);
+	if(PreviewSpawn)
+	{
+		SpawnPreviewActor(Loc, &BuildRow);
+	}
+	else
+	{
+		m_OnCancel.Broadcast();
+		CancelSelect();
+	}
 
 	m_OnConfirm.Broadcast();
 }
@@ -807,7 +814,7 @@ void UConstructionManager::AddFurniture(const FName& id)
 	m_OnChanged.Broadcast();
 }
 
-void UConstructionManager::RemoveFurniture(const FName& id, int amount)
+int UConstructionManager::RemoveFurniture(const FName& id, int amount)
 {
 	int* Count = m_MapInvenFurniture.Find(id);
 	if(Count)
@@ -819,6 +826,8 @@ void UConstructionManager::RemoveFurniture(const FName& id, int amount)
 		}
 	}
 	m_OnChanged.Broadcast();
+
+	return (*Count);
 }
 
 const TMap<FName, int>& UConstructionManager::GetInvenFurniture() const

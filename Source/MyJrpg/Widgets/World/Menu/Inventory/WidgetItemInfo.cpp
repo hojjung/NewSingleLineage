@@ -85,6 +85,8 @@ void UWidgetItemInfo::SplitConfirm(int am)
 	m_ItemSpec->m_nLvStack -= am;
 	
 	UMyLib::GetPlayerInven()->UpdateInventory();
+
+	m_Inven->UpdateInventory();
 }
 
 
