@@ -1,5 +1,7 @@
 #include "WidgetCraftSelected.h"
 #include "WidgetCraftCostElement.h"
+#include "MyJrpg/MyLib.h"
+#include "MyJrpg/Managers/EquipManager.h"
 #include "MyJrpg/Managers/MyGameInstance.h"
 
 void UWidgetCraftSelected::NativeOnInitialized()

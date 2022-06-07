@@ -154,7 +154,6 @@ void ATreeBase::OnTakeChopping()
 	else
 	{
 		m_nTreeHp--;
-		UMyGameInstance::Get->m_PlayerStatManager->AddExp(1);
 	}
 	if(m_nTreeHp<=0)
 	{

@@ -685,6 +685,7 @@ void UConstructionManager::ConfirmBuild()
 	UMyGameInstance::Get->m_ZoneInst->AddBuildActor(m_PreviewActor.Get());
 	
 	m_PreviewActor = nullptr;
+	
 	if(PreviewSpawn)
 	{
 		SpawnPreviewActor(Loc, &BuildRow);
