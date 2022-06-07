@@ -101,6 +101,7 @@ private:
 
 	void TryAttack_External();
 
+
 public:
 	void CancelInteract();
 	
@@ -173,5 +174,14 @@ public:
 	void BindOnCancel( const FVoidVoid& onCancel);
 	
 	void UnbindCancel();
+
+public:
+	FVector2D GetCameraOffset();
+	
+	void SetCameraOffset(const FVector2D& vector_2d);
+
+	void ClearCameraOffset();
+
+	FVector2D m_Offset;
 };
 

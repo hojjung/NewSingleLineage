@@ -427,6 +427,29 @@ void AMyPlayerPawn::UnbindCancel()
 	m_OnCancelInteract.Unbind();
 }
 
+FVector2D AMyPlayerPawn::GetCameraOffset()
+{
+	return m_Offset;
+}
+
+void AMyPlayerPawn::SetCameraOffset(const FVector2D& vector_2d)
+{
+	m_Offset = vector_2d;
+
+	FVector2D NewLoc2D = m_Offset.GetRotated(45);
+	
+	FVector NewLoc = -FVector(NewLoc2D.X,NewLoc2D.Y, 0);
+	
+	m_DissolveCam->SetRelativeLocation(NewLoc);
+}
+
+void AMyPlayerPawn::ClearCameraOffset()
+{
+	m_Offset = FVector2D(0);
+	
+	m_DissolveCam->SetRelativeLocation(FVector(0,0,0));
+}
+
 void AMyPlayerPawn::OnRequestMoveDone(FAIRequestID id, const FPathFollowingResult& rslt)
 {
 	if(m_ReqID != id || !rslt.IsSuccess())
