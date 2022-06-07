@@ -30,10 +30,14 @@ protected:
 	UButton* m_BtnFurniture;
 	UPROPERTY()
 	TArray<UWidgetBuildElement*> m_AryEles; 
-	UPROPERTY()
-	UWidgetBuildElement* m_Focused;
+	
+	TWeakObjectPtr<UWidgetBuildElement> m_Focused;
+
+	TWeakObjectPtr<AMyPlayerPawn> m_Pl;
 
 	FDelegateHandle m_DeleTouchWorld;
+
+	FDelegateHandle m_DeleFlick;
 
 	FDelegateHandle m_DeleCancel;
 
@@ -51,6 +55,8 @@ protected:
 	void OnClickElement(UWidgetBuildElement* ele,const FBuildDataRow& data);
 
 	void OnTouchWorld(const FHitResult& hit);
+
+	void OnFlick(const FVector2D& delta);
 
 	void OnCancel();
 

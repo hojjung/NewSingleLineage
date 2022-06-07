@@ -24,7 +24,11 @@ class MYJRPG_API AMyPlayerController : public APlayerController
 public:
 	DECLARE_MULTICAST_DELEGATE_OneParam(FOnTouchWorld,const FHitResult&);
 
+	DECLARE_MULTICAST_DELEGATE_OneParam(FOnFlick,const FVector2D&);
+
 	FOnTouchWorld m_OnTouch;
+
+	FOnFlick m_OnFlick;
 	
 public:
 	AMyPlayerController();
@@ -38,6 +42,10 @@ protected:
 	int m_CompUseIndex;
 	UPROPERTY()
 	UTouchInterface* m_Joystick;
+
+	FVector2D m_MousePos;
+
+	bool m_bUseFlick;
 	
 protected:
 	virtual void BeginPlay() override;
@@ -48,9 +56,13 @@ protected:
 
 	virtual void SetupInputComponent() override;
 
+	virtual void Tick(float DeltaSeconds) override;
+
 	void ExitGame();
 
-	bool CheckInteract();
+	void OnPressed();
+
+	void OnReleased();
 
 public:
 	void ShowInGameWorldText(float number,ABaseUnitPawn* interactActor,ETextType dmgPopup); //target

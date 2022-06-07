@@ -8,6 +8,8 @@
 void UWidgetBuildPanel::NativeOnInitialized()
 {
 	Super::NativeOnInitialized();
+	
+	m_Pl = UMyLib::GetPlayer();
 
 	m_AryEles.Reset();
 	
@@ -34,7 +36,7 @@ void UWidgetBuildPanel::NativeOnInitialized()
 
 void UWidgetBuildPanel::OnClickElement(UWidgetBuildElement* ele, const FBuildDataRow& data)
 {
-	if(m_Focused)
+	if(m_Focused.Get())
 		m_Focused->MyUnFocus();
 	m_Focused = ele;
 	m_Focused->MyFocus();
@@ -48,7 +50,7 @@ void UWidgetBuildPanel::OnTouchWorld(const FHitResult& hit)
 {
 	AStructureActor* SActor = Cast<AStructureActor>(hit.Actor.Get());
 	
-	if(SActor && !m_Focused)
+	if(SActor && !m_Focused.Get())
 	{
 		UMyGameInstance::Get->m_BuildManager->Cancel();
 		UMyGameInstance::Get->m_BuildManager->CancelSelect();
@@ -68,6 +70,8 @@ void UWidgetBuildPanel::OpenPanel()
 	UMyGameInstance::Get->m_BuildManager->StartBuilding();
 	
 	m_DeleTouchWorld = UMyLib::GetPlayerCon()->m_OnTouch.AddUObject(this, &UWidgetBuildPanel::OnTouchWorld);
+
+	m_DeleFlick = UMyLib::GetPlayerCon()->m_OnFlick.AddUObject(this, &UWidgetBuildPanel::OnFlick);
 
 	m_DeleCancel = UMyGameInstance::Get->m_BuildManager->m_OnCancel.AddUObject(this, &UWidgetBuildPanel::OnCancel);
 	
@@ -92,6 +96,8 @@ void UWidgetBuildPanel::OpenPanel()
 void UWidgetBuildPanel::ClosePanel()
 {
 	Super::ClosePanel();
+	
+	m_Pl->ClearCameraOffset();
 
 	OnClickStruct();
 
@@ -102,6 +108,8 @@ void UWidgetBuildPanel::ClosePanel()
 	OnCancel();
 	
 	UMyLib::GetPlayerCon()->m_OnTouch.Remove(m_DeleTouchWorld);
+
+	UMyLib::GetPlayerCon()->m_OnFlick.Remove(m_DeleFlick);
 
 	UMyGameInstance::Get->m_BuildManager->m_OnCancel.Remove(m_DeleCancel);
 
@@ -119,6 +127,15 @@ void UWidgetBuildPanel::ClosePanel()
 	{
 		UMyGameInstance::Get->m_EquipManager->GetOnBeltChanged().Remove(m_DeleBelt);
 	}
+}
+
+void UWidgetBuildPanel::OnFlick(const FVector2D& delta)
+{
+	FVector2D CamOff = m_Pl->GetCameraOffset();
+
+	CamOff += delta;
+	
+	m_Pl->SetCameraOffset(CamOff);
 }
 
 void UWidgetBuildPanel::OnClickStruct()
@@ -143,7 +160,7 @@ void UWidgetBuildPanel::OnClickFurniture()
 
 void UWidgetBuildPanel::OnCancel()
 {
-	if(m_Focused)
+	if(m_Focused.Get())
 	{
 		m_Focused->MyUnFocus();
 		m_Focused = nullptr;

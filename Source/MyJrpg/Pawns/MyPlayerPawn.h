@@ -80,6 +80,8 @@ protected:
 
 	FVoidVoid m_OnCancelInteract;
 
+	FVector2D m_Offset;
+
 private:
 	void CreateFocusActor();
 	
@@ -181,7 +183,5 @@ public:
 	void SetCameraOffset(const FVector2D& vector_2d);
 
 	void ClearCameraOffset();
-
-	FVector2D m_Offset;
 };
 

@@ -16,6 +16,8 @@ AMyPlayerController::AMyPlayerController()
 	bShowMouseCursor = true;
 	//
 	SetHidden(false);
+
+	m_bUseFlick = false;
 }
 
 void AMyPlayerController::BeginPlay()
@@ -67,22 +69,26 @@ void AMyPlayerController::SetupInputComponent()
 	Super::SetupInputComponent();
 	InputComponent->BindAction("Exit", EInputEvent::IE_Pressed, this, &AMyPlayerController::ExitGame);
 	InputComponent->BindAction("MouseClick", EInputEvent::IE_Pressed, this, &AMyPlayerController::OnTouchPressed);
+
+	InputComponent->BindAction("MouseClick", EInputEvent::IE_Pressed, this, &AMyPlayerController::OnPressed);
+	InputComponent->BindAction("MouseClick", EInputEvent::IE_Released, this, &AMyPlayerController::OnReleased);
 }
 
-bool AMyPlayerController::CheckInteract()
+void AMyPlayerController::Tick(float DeltaSeconds)
 {
-	FHitResult Hit;
-    	
-    GetHitResultUnderCursor(ECC_EngineTraceChannel4, false, Hit);
-    
-    if(!Hit.bBlockingHit)
-    {
-    	return false;
-    }
+	Super::Tick(DeltaSeconds);
 
-	m_OnTouch.Broadcast(Hit);
+	if(!m_bUseFlick)
+	{
+		return;
+	}
+	FVector2D OldPos = m_MousePos;
 
-	return true;
+	GetMousePosition(m_MousePos.X,m_MousePos.Y);
+
+	FVector2D Delta = m_MousePos - OldPos;
+	
+	m_OnFlick.Broadcast(Delta);
 }
 
 void AMyPlayerController::ShowInGameWorldText(float number, ABaseUnitPawn* interactActor, ETextType dmgPopup)
@@ -105,9 +111,29 @@ void AMyPlayerController::ExitGame()
 	UKismetSystemLibrary::QuitGame(GetWorld(), this, EQuitPreference::Quit, true);
 }
 
+void AMyPlayerController::OnPressed()
+{
+	m_bUseFlick = true;
+	GetMousePosition(m_MousePos.X,m_MousePos.Y);
+}
+
+void AMyPlayerController::OnReleased()
+{
+	m_bUseFlick = false;
+}
+
 void AMyPlayerController::OnTouchPressed()
 {
-	CheckInteract();
+	FHitResult Hit;
+    	
+	GetHitResultUnderCursor(ECC_EngineTraceChannel4, false, Hit);
+    
+	if(!Hit.bBlockingHit)
+	{
+		return ;
+	}
+
+	m_OnTouch.Broadcast(Hit);
 }
 
 void AMyPlayerController::EnableJoystick(bool b)
