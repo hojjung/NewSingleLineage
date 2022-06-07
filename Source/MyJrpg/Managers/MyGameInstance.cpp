@@ -133,7 +133,7 @@ void UMyGameInstance::Init()
 
 void UMyGameInstance::TestModeSetting()
 {
-	m_Inven->AddItem(FItemSpec(TEXT("Belt01"),0,true));
+	m_Inven->AddItem(FItemSpec(TEXT("Wood01"),1));
 }
 
 void UMyGameInstance::StartGame()

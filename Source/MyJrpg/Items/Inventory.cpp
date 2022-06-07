@@ -28,6 +28,11 @@ bool UInventory::GetEmptyIndex(int& out) const
 	return false;
 }
 
+int UInventory::GetInvenSize() const
+{
+	return m_nInvenMaxSize;
+}
+
 void UInventory::UpdateInventory()
 {
 	m_OnInvenChanged.Broadcast();
@@ -36,11 +41,6 @@ void UInventory::UpdateInventory()
 bool UInventory::AddItem(FItemSpec&& addItem, bool newEquipItem)
 {
 	return AddItem(addItem,newEquipItem);
-}
-
-int UInventory::GetInvenSize() const
-{
-	return m_nInvenMaxSize;
 }
 
 bool UInventory::AddItem(FItemSpec& addItem, bool newEquipItem)

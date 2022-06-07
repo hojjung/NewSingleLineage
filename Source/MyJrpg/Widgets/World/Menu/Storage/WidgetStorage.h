@@ -24,6 +24,18 @@ protected:
 	UWidgetInventory* m_Bag;
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (BindWidget))
 	UWidgetInventory* m_Belt;
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (BindWidget))
+	UButton* m_BtnWithdrawAll;
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (BindWidget))
+	UButton* m_BtnDepositAll;
+
+protected:
+	DECLARE_DELEGATE_RetVal_TwoParams(bool, FAddItem, FItemSpec&,bool);
+
+	void AddRemoveItem(UInventory* from, FAddItem to, int index);
+	
+	void AddRemoveItemAll(UInventory* from, FAddItem to);
+	
 protected:
 	virtual void NativeOnInitialized() override;
 
@@ -39,4 +51,8 @@ public:
 	void SetTargetInven(UInventory* storage);
 
 	virtual void ClosePanel() override;
+	UFUNCTION()
+	void OnWithdrawAll();
+	UFUNCTION()
+	void OnDepositAll();
 };

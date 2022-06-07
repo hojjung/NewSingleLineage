@@ -4,6 +4,7 @@
 #include "MyJrpg/Managers/EquipManager.h"
 #include "MyJrpg/Managers/MyGameInstance.h"
 
+
 void UWidgetStorage::NativeOnInitialized()
 {
 	Super::NativeOnInitialized();
@@ -30,6 +31,9 @@ void UWidgetStorage::NativeOnInitialized()
 	m_Belt->m_OnFocus.AddUObject(this, &UWidgetStorage::OnPlInvenFocused);
 
 	m_Belt->m_OnFocusConfirm.AddUObject(this, &UWidgetStorage::OnPlInvenFocuseConfirm);
+
+	m_BtnDepositAll->OnClicked.AddDynamic(this, &UWidgetStorage::OnDepositAll);
+	m_BtnWithdrawAll->OnClicked.AddDynamic(this, &UWidgetStorage::OnWithdrawAll);
 }
 
 void UWidgetStorage::SetTargetInven(UInventory* storage)
@@ -71,6 +75,60 @@ void UWidgetStorage::ClosePanel()
 	}
 }
 
+void UWidgetStorage::AddRemoveItem(UInventory* from, FAddItem to, int index)
+{
+	FItemSpec& ItemRef = from->GetItemRef(index);
+
+	if(ItemRef.m_ID.IsNone())
+	{
+		return;
+	}
+		
+	int BeforeStack = ItemRef.m_nLvStack;
+		
+	if(to.Execute(ItemRef,false))
+	{
+		from->RemoveItemKey(ItemRef.m_ID,index);
+		from->ClearSlot(index);
+	}
+	else
+	{
+		from->RemoveItem(ItemRef.m_ID,BeforeStack - ItemRef.m_nLvStack);
+	}
+}
+
+void UWidgetStorage::AddRemoveItemAll(UInventory* from, FAddItem to)
+{
+	int MaxStorage = from->GetInvenSize();
+
+	int Iter = -1;
+	while (++Iter < MaxStorage)
+	{
+		AddRemoveItem(from, to, Iter);
+	}
+	from->UpdateInventory();
+}
+
+void UWidgetStorage::OnWithdrawAll()//모두꺼내기
+{
+	AddRemoveItemAll(m_StoragePanel->GetInven(),FAddItem::CreateUObject(UMyGameInstance::Get->m_EquipManager, &UEquipManager::AddItem));
+}
+
+void UWidgetStorage::OnDepositAll()
+{
+	AddRemoveItemAll(UMyGameInstance::Get->m_Inven,FAddItem::CreateUObject(m_StoragePanel->GetInven(), &UInventory::AddItem));
+
+	if(UMyGameInstance::Get->m_EquipManager->GetBag())
+	{
+		AddRemoveItemAll(UMyGameInstance::Get->m_EquipManager->GetBag(),FAddItem::CreateUObject(m_StoragePanel->GetInven(), &UInventory::AddItem));
+	}
+	
+	if(UMyGameInstance::Get->m_EquipManager->GetBelt())
+	{
+		AddRemoveItemAll(UMyGameInstance::Get->m_EquipManager->GetBelt(),FAddItem::CreateUObject(m_StoragePanel->GetInven(), &UInventory::AddItem));
+	}
+}
+
 void UWidgetStorage::OnPlInvenFocused(UWidgetBaseElement* ele, UInventory* inven, int index)
 {
 	ele->SetTextFocus(NSLOCTEXT("UWidgetStorage","Deposite","넣기?"));
@@ -83,18 +141,12 @@ void UWidgetStorage::OnStorageInvenFocused(UWidgetBaseElement* ele, UInventory* 
 
 void UWidgetStorage::OnPlInvenFocuseConfirm(UWidgetBaseElement* ele, UInventory* inven, int index)
 {
-	FItemSpec Item = inven->GetItemConstRef(index);
-	inven->ClearSlot(index);
-	inven->RemoveItemKey(Item.m_ID,index);
-	m_StoragePanel->GetInven()->AddItem(Item);
+	AddRemoveItem(inven, FAddItem::CreateUObject(m_StoragePanel->GetInven(), &UInventory::AddItem), index);
 	inven->UpdateInventory();
 }
 
 void UWidgetStorage::OnStorageFocuseConfirm(UWidgetBaseElement* ele, UInventory* inven, int index)
 {
-	FItemSpec Item = inven->GetItemConstRef(index);
-	inven->ClearSlot(index);
-	inven->RemoveItemKey(Item.m_ID,index);
-	UMyGameInstance::Get->m_EquipManager->AddItem(Item);
+	AddRemoveItem(inven, FAddItem::CreateUObject(UMyGameInstance::Get->m_EquipManager, &UEquipManager::AddItem), index);
 	inven->UpdateInventory();
 }
