@@ -113,6 +113,10 @@ public:
 	UParticleSystem* m_SwordTrail;
 	UPROPERTY(EditAnywhere)
 	UParticleSystem* m_SwordAura;
+	UPROPERTY(EditAnywhere)
+	float m_fMaxStealPer = 1;
+	UPROPERTY(EditAnywhere)
+	float m_fMaxStealLv = 1;
 };
 
 USTRUCT(BlueprintType)

@@ -39,13 +39,13 @@ protected:
 protected:
 	virtual void NativeOnInitialized() override;
 
-	void OnPlInvenFocused(UWidgetBaseElement* ele, UInventory* inven, int index);
+	virtual void OnPlInvenFocused(UWidgetBaseElement* ele, UInventory* inven, int index);
 
-	void OnPlInvenFocuseConfirm(UWidgetBaseElement* ele, UInventory* inven, int index);
+	virtual void OnPlInvenFocuseConfirm(UWidgetBaseElement* ele, UInventory* inven, int index);
 	
-	void OnStorageInvenFocused(UWidgetBaseElement* ele, UInventory* inven, int index);
+	virtual void OnStorageInvenFocused(UWidgetBaseElement* ele, UInventory* inven, int index);
 	
-	void OnStorageFocuseConfirm(UWidgetBaseElement* ele, UInventory* inven, int index);
+	virtual void OnStorageFocuseConfirm(UWidgetBaseElement* ele, UInventory* inven, int index);
 	
 public:
 	void SetTargetInven(UInventory* storage);

@@ -82,6 +82,33 @@ namespace FGlobalVariable
 
 	static const float GRID_SIZE = 333.3f;//??188
 };
+
+namespace FStealPercent
+{
+	static const float NormalMaxPer = 90.f;
+	
+	static const float NormalMaxLv = 30.f;
+
+	static const float GreenMaxPer = 80.f;
+	
+	static const float GreenMaxLv = 45.f;
+
+	static const float BlueMaxPer = 70.f;
+	
+	static const float BlueMaxLv = 60.f;
+
+	static const float RedMaxPer = 55.f;
+    	
+	static const float RedMaxLv = 75.f;
+
+	static const float PurpleMaxPer = 40.f;
+    	
+	static const float PurpleMaxLv = 90.f;
+
+	static const float OrangeMaxPer = 1.f;
+    	
+	static const float OrangeMaxLv = 1.f;
+}
 //(X=0.885000,Y=0.885000,Z=0.885000) =타일 스캐일
 //그리드 20칸
 //평원 크기 50
