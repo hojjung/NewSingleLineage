@@ -52,7 +52,7 @@ void UZoneInstManager::SaveActors(const FName& id)
 
 	for(TWeakObjectPtr<AMonsterPawn> ActorEle : m_Npc)
 	{
-		if(!ActorEle.Get() ||!ActorEle->IsAlive())
+		if(!ActorEle.Get())
 		{
 			Index++;
 			continue;
@@ -69,7 +69,7 @@ void UZoneInstManager::SaveActors(const FName& id)
 			TStrongObjectPtr<UInventory> ItemHolder(ActorEle->GetInven());
 			BuildInst->m_MapItemHolders.Add(Index, ItemHolder);
 
-			BuildInst->m_MapGatherHp.Add(Index,ActorEle->GetHp());
+			BuildInst->m_MapGatherHp.Add(Index, ActorEle->IsAlive() ? ActorEle->GetHp() : 0);
 		}
 		Index++;
 	}
@@ -224,6 +224,10 @@ AMonsterPawn* UZoneInstManager::SpawnNpcActor(const FZoneActorTransform& spawnDa
 	if(HpPtr)
 	{
 		NpcActor->SetHp(*HpPtr);
+		if(*HpPtr <= 0)
+		{
+			NpcActor->SetDeadBody();
+		}
 	}
 	
 	auto* ItemHolder = serialData.m_MapItemHolders.Find(index);
@@ -430,7 +434,7 @@ IFocusable* UZoneInstManager::GetNearTarget(FVector callerLoc, float range, UCla
 
 		float Dist1 = FVector::DistSquared2D(Loc1, callerLoc);
 
-		float Dist2 = FVector::DistSquared2D(Loc2, callerLoc) + 250000;
+		float Dist2 = FVector::DistSquared2D(Loc2, callerLoc) + (Pawn->IsAlive() ? 562500 : 0 );
 
 		float ARange = UMyLib::GetPlayer()->GetAttackRangeSqr(); 
 		
@@ -491,15 +495,14 @@ ACombatUnitPawn* UZoneInstManager::GetNearNpc(FVector callerLoc, float range, co
 			continue;
 		}
 
+		if(!Pawn->IsAlive())
+		{
+			Length += 562500;
+		}
+		
 		if (MAX_Dist > Length)
 		{
 			NearPawn = Pawn.Get();
-
-			if(!Pawn->IsAlive())
-			{
-				Length += 90000;
-			}
-
 			MAX_Dist = Length;
 		}
 	}

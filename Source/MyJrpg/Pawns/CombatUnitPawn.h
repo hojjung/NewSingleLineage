@@ -119,7 +119,7 @@ public:// get
 
 	void SetEnableFsm(bool useFsm);
 	
-	void PlayDeathAnim();
+	void PlayDeathAnim(float rate = 1.f);
 
 	void TakeStun(float duration);
 

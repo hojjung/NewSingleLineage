@@ -20,7 +20,6 @@ void USensor_Player::Init(ACombatUnitPawn* owner)
 void USensor_Player::UpdateAISensing()
 {
 	FVector Loc = m_PlayerOwner->GetActorLocation();
-
 	
 	IFocusable* Target = nullptr;
 

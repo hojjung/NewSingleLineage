@@ -148,8 +148,8 @@ void UPlayerStatusManager::TryLevelUp()
 	}
 	m_nLevel++;
 
-	m_nExp = FMath::Max(m_nExp - m_nMaxExp, 0);
-
+	m_nExp = m_nExp - m_nMaxExp;//150 140
+	
 	m_nMaxExp = m_nMaxExp * 1.2f;
 
 	m_OnLevelChanged.Broadcast();
@@ -163,11 +163,17 @@ void UPlayerStatusManager::AddExp(int amount)
 	}
 
 	m_OnExpEarned.Broadcast(amount);
+	
 	m_nExp += amount;
 
-	if (m_nExp >= GetMaxExp())
+	while (m_nLevel < FGlobalVariable::LEVEL_MAX && m_nExp >= GetMaxExp())
 	{
-		TryLevelUp();
+		m_nLevel++;
+		
+		m_nExp -= m_nMaxExp;
+		m_nMaxExp = m_nMaxExp * 1.2f;
+		
+		m_OnLevelChanged.Broadcast();
 	}
 
 	m_OnExpChanged.Broadcast();

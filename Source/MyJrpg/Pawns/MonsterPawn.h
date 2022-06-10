@@ -83,6 +83,8 @@ public:
 	void SetHp(int hp);
 	
 	void SetInven(UInventory* inven);
+
+	void SetDeadBody();
 };
 
 

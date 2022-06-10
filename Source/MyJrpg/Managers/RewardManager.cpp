@@ -43,23 +43,23 @@ void URewardManager::ReceiveQuestReward(const FQuestReward& qReward)
 	}
 }
 
-void URewardManager::RequestMonsterReward(const FName& mobId)
+void URewardManager::RequestMonsterReward(AMonsterPawn* mobPawn)
 {
 	const FName& ZoneId = UMyGameInstance::Get->m_LevelMoveManager->GetCrntZoneID();
 
-	const FNpcUnitEntityRow* NpcUnit = UUnitEntityData::GetNpcUnitTable->FindRow<FNpcUnitEntityRow>(mobId, "");
+	const FNpcUnitEntityRow* NpcUnit = UUnitEntityData::GetNpcUnitTable->FindRow<FNpcUnitEntityRow>(mobPawn->GetEntityID(), "");
 
 	TArray<FDropRewardItem> DropReward = NpcUnit->m_AryDropItem;
 	
-	DropObtain(DropReward);
+	DropObtain(mobPawn->GetInven(), DropReward);
 	
 	const TArray<FDropRewardItem>* AryDropDatas = UMyGameInstance::Get->m_RewardManager->GetDropItems(ZoneId);
 	
 	if(AryDropDatas)
-		DropObtain(*AryDropDatas);
+		DropObtain(mobPawn->GetInven(), *AryDropDatas);
 }
 
-void URewardManager::DropObtain(const TArray<FDropRewardItem>& items)
+void URewardManager::DropObtain(UInventory* inven , const TArray<FDropRewardItem>& items)
 {
 	for(const auto& DropItem : items)
 	{
@@ -71,11 +71,11 @@ void URewardManager::DropObtain(const TArray<FDropRewardItem>& items)
 				
 			if (UMyLib::IsEquip(DropItem.m_Item.RowName))
 			{
-				UMyGameInstance::Get->m_EquipManager->AddItem(FItemSpec(DropItem.m_Item.RowName, 0), true);
+				inven->AddItem(FItemSpec(DropItem.m_Item.RowName, 0), true);
 			}
 			else
 			{
-				UMyGameInstance::Get->m_EquipManager->AddItem(FItemSpec(DropItem.m_Item.RowName, RandStackCount));
+				inven->AddItem(FItemSpec(DropItem.m_Item.RowName, RandStackCount));
 			}
 		}
 	}
@@ -114,7 +114,7 @@ bool URewardManager::RequestQuestReward(const TArray<FQuestReward>& aryQuest)
 	return true;
 }
 
-void URewardManager::OnMonsterDead(const AMonsterPawn* monster)
+void URewardManager::OnMonsterDead(AMonsterPawn* monster)
 {
 	m_OnMonsterDead.Broadcast(monster->GetEntityID());
 
@@ -124,7 +124,7 @@ void URewardManager::OnMonsterDead(const AMonsterPawn* monster)
 
 	m_OnExpGold.Broadcast(monster->GetRewardExp(),monster->GetRewardGold());
 	
-	RequestMonsterReward(monster->GetEntityID());
+	RequestMonsterReward(monster);
 }
 
 void URewardManager::AddDropItemData(const FDropData& drop, const FName& itemID)

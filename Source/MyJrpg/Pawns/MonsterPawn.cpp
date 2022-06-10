@@ -171,6 +171,25 @@ void AMonsterPawn::SetInven(UInventory* inven)
 	m_Inven = inven;
 }
 
+void AMonsterPawn::SetDeadBody()
+{
+	if(m_Pool)
+		m_Pool->HideAll();
+	if(m_AiSensor)
+		m_AiSensor->SetSensingUpdatesEnabled(false);
+	SetFocusedTarget(nullptr);
+	m_Capsule->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+	m_Movement->SetComponentTickEnabled(false);
+	m_ShadowMeshComp->SetVisibility(false);
+	m_PawnInfo->SetVisibility(false);
+	m_SpeechBubbleComp->SetVisibility(false);
+	
+	GetSkMesh()->SetAnimationMode(EAnimationMode::AnimationSingleNode);
+	GetSkMesh()->SetAnimation(m_EntityAsset->m_DeathMontage);
+	float AnimLength = m_EntityAsset->m_DeathMontage->GetPlayLength() * 0.85f;
+	GetSkMesh()->SetPosition(AnimLength);
+}
+
 void AMonsterPawn::PlayHitFlash()
 {
 	FName TimeParamName = TEXT("StartTime");

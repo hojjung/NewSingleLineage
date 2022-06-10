@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "MyJrpg/DataTables/QuestData.h"
 #include "MyJrpg/DataTables/UnitEntityData.h"
+#include "MyJrpg/Items/Inventory.h"
 #include "UObject/NoExportTypes.h"
 #include "RewardManager.generated.h"
 
@@ -34,13 +35,13 @@ protected:
 protected:
 	void ReceiveQuestReward(const FQuestReward& qReward);
 
-	void DropObtain(const TArray<FDropRewardItem>& items);
+	void DropObtain(UInventory* inven , const TArray<FDropRewardItem>& items);
 public:
-	void RequestMonsterReward(const FName& mobId);
+	void RequestMonsterReward(AMonsterPawn* mobId);
 
 	bool RequestQuestReward(const TArray<FQuestReward>& aryQuest);
 
-	void OnMonsterDead(const AMonsterPawn* monster);
+	void OnMonsterDead(AMonsterPawn* monster);
 	
 	void AddDropItemData(const FDropData& drop, const FName& itemID);
 

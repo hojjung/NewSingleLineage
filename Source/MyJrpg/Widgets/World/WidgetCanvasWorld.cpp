@@ -310,7 +310,6 @@ void UWidgetCanvasWorld::ShowGameOverWindow(const ACombatUnitPawn* killer)
 void UWidgetCanvasWorld::StartPickPocket(AMonsterPawn* mob)
 {
 	m_PickpocketPanel->SetTargetPawn(mob);
-	m_PickpocketPanel->OpenPanel();
 }
 
 void UWidgetCanvasWorld::ShowMainHUD(bool b)

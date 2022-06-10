@@ -6,13 +6,14 @@
 #include "MyJrpg/Pawns/MonsterPawn.h"
 #include "MyJrpg/Widgets/World/CommonElements/WidgetBasePanel.h"
 #include "MyJrpg/Widgets/World/Menu/Inventory/WidgetInventory.h"
+#include "MyJrpg/Widgets/World/Menu/Storage/WidgetStorage.h"
 #include "WidgetPickpocketPanel.generated.h"
 
 /**
  * 
  */
 UCLASS()
-class MYJRPG_API UWidgetPickpocketPanel : public UWidgetBasePanel
+class MYJRPG_API UWidgetPickpocketPanel : public UWidgetStorage
 {
 	GENERATED_BODY()
 	
@@ -20,17 +21,6 @@ class MYJRPG_API UWidgetPickpocketPanel : public UWidgetBasePanel
 protected:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (BindWidget))
 	UTextBlock* m_TxtStorageInvenCount;
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (BindWidget))
-	UWidgetInventory* m_OtherPanel;
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (BindWidget))
-	UWidgetFilterBtns* m_FilterBtns;
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (BindWidget))
-	UWidgetInventory* m_InvenPanel;
-	UPROPERTY()
-	int m_nCrntIndex;
-
-	FDelegateHandle m_EachInvenHandle;
-
 	UPROPERTY()
 	AMonsterPawn* m_TargetPawn;
 	
@@ -39,15 +29,8 @@ protected:
 
 	virtual void UpdateText();
 	
-	void AddInvenDelegate();
-	
-	void RemoveInvenDelegate();
 public:
 	void SetTargetPawn(AMonsterPawn* targetPawn);
 	
-	virtual void OpenPanel() override;
-
-	virtual void ClosePanel() override;
-
 	AMonsterPawn* GetCurrentTargetPawn();
 };

@@ -216,13 +216,11 @@ void ACombatUnitPawn::SetEnableFsm(bool useFsm)
 	m_bUseFsmTick = useFsm;
 }
 
-void ACombatUnitPawn::PlayDeathAnim()
+void ACombatUnitPawn::PlayDeathAnim(float rate)
 {
 	if(m_EntityAsset->m_DeathMontage)
 	{
-		PlayAnimMontage(m_EntityAsset->m_DeathMontage);
-
-		float AnimLength = m_EntityAsset->m_DeathMontage->GetPlayLength() - 0.4f;
+		float AnimLength = PlayAnimMontage(m_EntityAsset->m_DeathMontage, rate) * 0.85f;
 
 		GetWorldTimerManager().SetTimer(m_DeathAnimTimer, this, &ACombatUnitPawn::OnDeathAnimEnd, AnimLength, false);
 	}
@@ -341,6 +339,8 @@ void ACombatUnitPawn::OnDeathAnimEnd()
 	m_BodyMesh->bPauseAnims = true;
 	
 	SetActorTickEnabled(false);
+	
+	GetWorldTimerManager().ClearTimer(m_DeathAnimTimer);
 }
 
 float ACombatUnitPawn::GetCriticalDmg(float amount)
