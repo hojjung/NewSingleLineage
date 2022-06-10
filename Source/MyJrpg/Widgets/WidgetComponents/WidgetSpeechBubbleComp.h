@@ -19,10 +19,11 @@ public:
 	UWidgetSpeechBubbleComp();
 
 protected:
-	void Hide();
 
 	virtual void BeginPlay() override;
 public:
+	void Hide();
+	
 	void Speech(const FText& text);
 
 	void SetText(const FText& text);

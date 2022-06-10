@@ -466,3 +466,8 @@ FText ABaseUnitPawn::GetPawnName() const
 {
 	return m_PawnName;
 }
+
+FVector ABaseUnitPawn::GetNavAgentLocation() const
+{
+	return GetActorLocation() - FVector(0.f, 0.f, GetCapsule()->Bounds.BoxExtent.Z);
+}

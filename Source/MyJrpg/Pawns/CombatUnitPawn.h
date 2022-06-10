@@ -42,8 +42,6 @@ protected:
 
 	FTimerHandle m_StunTimer;
 
-	FFloatCurve m_CurveDeathAnim;
-
 	FTimerHandle m_SilenceTimer;
 	UPROPERTY()
 	TScriptInterface<IFocusable> m_FocusedTarget;//TScriptInterface<IInteractable>
@@ -59,17 +57,10 @@ protected:
 	float m_fAttackMinCD;
 	float m_fAttackRange;
 	float m_fAttackRangeSqr;
-	float m_fDeathAnimDurationMax;
-	float m_fDeathAnimDurationTimer;
 	bool m_bUseFsmTick;
 	bool m_bCanUseSkill;
 
 	EStanceType m_Stance;
-	
-private:
-	void CreateSetDeathCurve(float fullLength);
-	
-	void SetDeathEffectMaterial(float deltaTime);
 	
 protected:
 	bool TryHit(const FStatGroup& other);
@@ -83,8 +74,6 @@ protected:
 	virtual  void PlayTookHitMontage();
 	
 	virtual void OnDeathAnimEnd();
-
-	void StartDeathEffectMaterial(float duration);
 
 	float PlayBaseAttackAnim();
 

@@ -88,20 +88,6 @@ void UWidgetInteract::HideAllBtns()
 	m_BtnControl->SetVisibility(ESlateVisibility::Collapsed);
 }
 
-bool UWidgetInteract::IsInRange(IFocusable* focus)
-{
-	if(!focus)
-		return false;
-	
-	AActor* FocusActor = Cast<AActor>(focus);
-
-	FVector PlayerLoc = UMyLib::GetPlayer()->GetActorLocation();
-
-	FVector FocusLoc = FocusActor->GetActorLocation();
-
-	return FVector::DistSquared2D(PlayerLoc, FocusLoc) <= 90000;
-}
-
 void UWidgetInteract::HideDur()
 {
 	m_DurGauge->SetVisibility(ESlateVisibility::Collapsed);
@@ -116,15 +102,6 @@ void UWidgetInteract::ShowDur(float per)
 
 void UWidgetInteract::ShowInteract(IFocusable* focus)
 {
-	// if(!IsInRange(focus))
-	// {
-	// 	if(m_bHasFocus)
-	// 	{
-	// 		HideAllBtns();
-	// 	}
-	// 	m_bHasFocus = false;
-	// 	return;
-	// }
 	m_bHasFocus = true;
 	
 	AMonsterPawn* Monster = Cast<AMonsterPawn>(focus);
@@ -182,6 +159,15 @@ void UWidgetInteract::OnAttack()
 }
 
 void UWidgetInteract::OnPickPocket()
+{
+	UMyLib::GetPlayer()->SetInteracting(true);
+	
+	AMonsterPawn* Mob = m_Pl->GetFocusedTarget<AMonsterPawn>();
+	
+	UMyLib::GetPlayer()->RequestInteract(Mob,FVoidVoid::CreateUObject(this,&UWidgetInteract::OnPickPocketMoveEnd),25);
+}
+
+void UWidgetInteract::OnPickPocketMoveEnd()
 {
 	AMonsterPawn* Mob = m_Pl->GetFocusedTarget<AMonsterPawn>();
 	

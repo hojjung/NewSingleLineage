@@ -190,7 +190,7 @@ void ATreeBase::OnHarvestMotionDone()
 
 FVector ATreeBase::GetNavAgentLocation() const
 {
-	return GetActorLocation() - FVector(0.f, 0.f, 88); ;
+	return GetActorLocation() - FVector(0.f, 0.f, 88);
 }
 
 void ATreeBase::CreateSetDeathCurve(float fullLength)

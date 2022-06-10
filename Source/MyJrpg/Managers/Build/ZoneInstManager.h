@@ -109,9 +109,9 @@ public:
 	
 	IFocusable* GetNearProp(FVector callerLoc, float range = 0, UClass* ignoreClass = nullptr);
 
-	IFocusable* GetNearTarget(FVector callerLoc, float range = 0, UClass* ignoreClass = nullptr);
+	IFocusable* GetNearTarget(FVector callerLoc, float range = 0, UClass* ignoreClass = nullptr, bool excludeDead = false);
 
-	ACombatUnitPawn* GetNearNpc(FVector callerLoc, float range, const TSet<ACombatUnitPawn*>* ignore = nullptr);
+	ACombatUnitPawn* GetNearNpc(FVector callerLoc, float range, const TSet<ACombatUnitPawn*>* ignore = nullptr, bool excludeDead = false);
 
 	void GetNearNpcs(const ABaseUnitPawn* caller, TArray<ACombatUnitPawn*>& outAry, float range,const TSet<ACombatUnitPawn*>* ignore = nullptr);
 };

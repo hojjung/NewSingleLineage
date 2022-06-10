@@ -8,7 +8,7 @@
 #include "MonsterPawn.generated.h"
 
 /**
- * 
+ * GetWorldTimerManager().SetTimer(m_DeathAnimTimer, this, &ACombatUnitPawn::OnDeathAnimEnd, AnimLength, false);
  */
 UCLASS()
 class MYJRPG_API AMonsterPawn : public ACombatUnitPawn
@@ -27,10 +27,6 @@ protected:
 	UParticleSystemComponent* m_HitParticle;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 	UWidgetSpeechBubbleComp* m_SpeechBubbleComp;
-	UPROPERTY()
-	float m_fMinReviveTimer;
-	UPROPERTY()
-	float m_fMaxReviveTimer;
 	UPROPERTY()
 	float m_fMaxHp;
 	UPROPERTY()
@@ -55,16 +51,12 @@ protected:
 
 	void PlayHittenEffect();
 
-	void Revive();
-
-	void OnReviveAnimEnd();
-
 	void CreateInventory();
+
+	virtual void OnDeathAnimEnd() override;
 
 public:
 	virtual void SetFocusedTarget(IFocusable* target) override;
-	
-	void SetReviveTimer();
 	
 	void Speech(FText text);
 
@@ -75,8 +67,6 @@ public:
 	virtual void Dead() override;
 	
 	virtual bool TakeDmg(float amount, ACombatUnitPawn* attacker) override;
-
-	void SetReviveTime(float min,float max);
 
 	virtual void OnNotifyTrigger(const FName& name) override;
 

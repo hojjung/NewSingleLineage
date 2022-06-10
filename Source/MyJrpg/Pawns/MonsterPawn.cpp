@@ -104,13 +104,6 @@ void AMonsterPawn::SetEntity(const FName& id,const FNpcUnitEntityRow& unitEntity
 	}
 }
 
-void AMonsterPawn::SetReviveTime(float min, float max)
-{
-	m_fMinReviveTimer = min;
-
-	m_fMaxReviveTimer = max;
-}
-
 void AMonsterPawn::OnNotifyTrigger(const FName& name)
 {
 	if(name == TEXT("BaseAttack"))
@@ -197,61 +190,31 @@ void AMonsterPawn::PlayHittenEffect()
 	m_HitParticle->Activate(true);
 }
 
-void AMonsterPawn::Revive()
-{
-	return;
-	SetActorHiddenInGame(false);
-	
-	SetActorLocation(m_SpawnPoint);
-
-	SetActorRotation(m_SpawnRot);
-	
-	m_BodyMesh->bPauseAnims = false;
-	
-	m_Capsule->SetCollisionEnabled(ECollisionEnabled::QueryOnly);
-	//
-	m_BodyMesh->SetVectorParameterValueOnMaterials(TEXT("EffectColor"), UKismetMathLibrary::Conv_LinearColorToVector(FLinearColor::White));
-	//
-	FName MaskParam = TEXT("Visibility");
-
-	m_BodyMesh->SetScalarParameterValueOnMaterials(MaskParam, 1.0f);
-	
-	FName DurationParamName = TEXT("Duration");
-
-	m_BodyMesh->SetScalarParameterValueOnMaterials(DurationParamName, 0.25f);
-
-	FName TimeParamName = TEXT("StartTime");
-
-	float TimeSec = 0;
-
-	m_BodyMesh->SetScalarParameterValueOnMaterials(TimeParamName, TimeSec);
-	////
-	PlayAnimMontage(m_EntityAsset->m_SpawnAnim);
-	//
-	float AnimLength = m_EntityAsset->m_SpawnAnim->GetPlayLength() - 0.4f;
-	//22 05 03 :게임 디자인적으로 내구도가 존재하는데 몹이 리젠되면 손해 
-	GetWorldTimerManager().SetTimer(m_DeathAnimTimer, this, &AMonsterPawn::OnReviveAnimEnd, AnimLength, false);
-}
-
-void AMonsterPawn::OnReviveAnimEnd()
-{
-	m_ShadowMeshComp->SetVisibility(true);
-
-	m_Movement->SetComponentTickEnabled(true);
-
-	if(m_AiSensor)
-		m_AiSensor->SetSensingUpdatesEnabled(true);
-
-	SetActorTickEnabled(true);
-
-	m_StatGroup.m_Hp = m_fMaxHp;
-}
-
 void AMonsterPawn::CreateInventory()
 {
 	m_Inven = NewObject<UInventory>(UMyGameInstance::Get);
 	m_Inven->Init(FGlobalVariable::MOB_INVEN);
 	m_Inven->AddItem(FItemSpec(TEXT("Coin"), 10));
+}
+
+void AMonsterPawn::Dead()
+{
+	m_ShadowMeshComp->SetVisibility(false);
+	
+	m_PawnInfo->SetVisibility(false);
+	
+	Super::Dead();
+
+	UMyGameInstance::Get->m_GameRule->OnMonsterDead(this);
+
+	m_SpeechBubbleComp->SetVisibility(false);
+}
+
+void AMonsterPawn::OnDeathAnimEnd()
+{
+	Super::OnDeathAnimEnd();
+	
+	GetSkMesh()->SetCollisionEnabled(ECollisionEnabled::QueryOnly);
 }
 
 void AMonsterPawn::SetFocusedTarget(IFocusable* target)
@@ -274,25 +237,6 @@ void AMonsterPawn::SetFocusedTarget(IFocusable* target)
 	Super::SetFocusedTarget(target);
 }
 
-void AMonsterPawn::SetReviveTimer()
-{
-	FTimerHandle m_ReviveHandle;
-	
-	GetWorldTimerManager().SetTimer(m_ReviveHandle,this,&AMonsterPawn::Revive, FMath::RandRange(m_fMinReviveTimer,m_fMaxReviveTimer), false);
-}
-
-void AMonsterPawn::Dead()
-{
-	m_ShadowMeshComp->SetVisibility(false);
-	
-	m_PawnInfo->SetVisibility(false);
-	
-	Super::Dead();
-
-	UMyGameInstance::Get->m_GameRule->OnMonsterDead(this);
-
-	m_SpeechBubbleComp->SetVisibility(false);
-}
 
 bool AMonsterPawn::TakeDmg(float amount, ACombatUnitPawn* attacker)
 {
@@ -329,10 +273,15 @@ bool AMonsterPawn::TakeDmg(float amount, ACombatUnitPawn* attacker)
 
 void AMonsterPawn::Speech(FText text)
 {
+	if(!IsAlive())
+	{
+		m_SpeechBubbleComp->Hide();
+		return;
+	}
 	m_SpeechBubbleComp->Speech(text);
 }
 
 void AMonsterPawn::Speech(FString text)
 {
-	m_SpeechBubbleComp->Speech(FText::FromString(text));
+	Speech(FText::FromString(text));
 }

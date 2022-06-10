@@ -95,5 +95,7 @@ public:
 	const FName& GetEntityID() const;
 
 	void SetActorFeetLocation(FVector loc);
+
+	virtual FVector GetNavAgentLocation() const override;
 };
 

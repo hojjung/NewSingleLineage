@@ -28,9 +28,12 @@ void UWidgetPickpocketPanel::ClosePanel()
 	Super::ClosePanel();
 
 	RemoveInvenDelegate();
+	
 	m_InvenPanel->ClosePanel();
 
 	m_TargetPawn = nullptr;
+
+	UMyLib::GetPlayer()->SetInteracting(false);
 }
 
 AMonsterPawn* UWidgetPickpocketPanel::GetCurrentTargetPawn()

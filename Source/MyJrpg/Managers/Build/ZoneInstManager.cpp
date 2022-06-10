@@ -414,9 +414,9 @@ IFocusable* UZoneInstManager::GetNearProp(FVector callerLoc, float range, UClass
 	return NearPawn;
 }
 
-IFocusable* UZoneInstManager::GetNearTarget(FVector callerLoc, float range, UClass* ignoreClass)
+IFocusable* UZoneInstManager::GetNearTarget(FVector callerLoc, float range, UClass* ignoreClass, bool excludeDead)
 {
-	ACombatUnitPawn* Pawn = GetNearNpc(callerLoc, range);
+	ACombatUnitPawn* Pawn = GetNearNpc(callerLoc, range, nullptr, excludeDead);
 	
 	IFocusable* Prop = GetNearProp(callerLoc, range, ignoreClass);
 	
@@ -430,7 +430,7 @@ IFocusable* UZoneInstManager::GetNearTarget(FVector callerLoc, float range, UCla
 
 		float Dist1 = FVector::DistSquared2D(Loc1, callerLoc);
 
-		float Dist2 = FVector::DistSquared2D(Loc2, callerLoc);
+		float Dist2 = FVector::DistSquared2D(Loc2, callerLoc) + 250000;
 
 		float ARange = UMyLib::GetPlayer()->GetAttackRangeSqr(); 
 		
@@ -446,7 +446,7 @@ IFocusable* UZoneInstManager::GetNearTarget(FVector callerLoc, float range, UCla
 	}
 	return Prop;
 }
-ACombatUnitPawn* UZoneInstManager::GetNearNpc(FVector callerLoc, float range, const TSet<ACombatUnitPawn*>* ignore)
+ACombatUnitPawn* UZoneInstManager::GetNearNpc(FVector callerLoc, float range, const TSet<ACombatUnitPawn*>* ignore, bool excludeDead)
 {
 	float MAX_Dist = MAX_flt;
 
@@ -464,7 +464,7 @@ ACombatUnitPawn* UZoneInstManager::GetNearNpc(FVector callerLoc, float range, co
 
 	for (TWeakObjectPtr<AMonsterPawn>& Pawn : m_Npc)
 	{
-		if (!Pawn.Get() || !Pawn->IsAlive() || Pawn->IsHidden() || (ignore && (*ignore).Contains(Pawn.Get())))
+		if (!Pawn.Get() || (excludeDead && !Pawn->IsAlive()) || Pawn->IsHidden() || (ignore && (*ignore).Contains(Pawn.Get())))
 		{
 			continue;
 		}
@@ -494,6 +494,11 @@ ACombatUnitPawn* UZoneInstManager::GetNearNpc(FVector callerLoc, float range, co
 		if (MAX_Dist > Length)
 		{
 			NearPawn = Pawn.Get();
+
+			if(!Pawn->IsAlive())
+			{
+				Length += 90000;
+			}
 
 			MAX_Dist = Length;
 		}

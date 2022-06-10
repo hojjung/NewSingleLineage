@@ -6,6 +6,4 @@
 void URule_Default::OnMonsterDead(AMonsterPawn* monster_pawn)
 {
 	UMyGameInstance::Get->m_RewardManager->OnMonsterDead(monster_pawn);
-
-	monster_pawn->SetReviveTimer();	
 }

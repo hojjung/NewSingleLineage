@@ -12,8 +12,6 @@ ACombatUnitPawn::ACombatUnitPawn(const FObjectInitializer& objInit):Super(objIni
    	m_fHitAnimCD = -1.f;
    	m_fAttackMinCD = 0.25f;
 	SetAttackRange(200);
-	m_fDeathAnimDurationMax = 0;
-	m_fDeathAnimDurationTimer = 0;
 	
 	m_bUseFsmTick = true;
 	m_bCanUseSkill = true;
@@ -30,26 +28,6 @@ ACombatUnitPawn::ACombatUnitPawn(const FObjectInitializer& objInit):Super(objIni
 
 	m_BulletTarget = CreateDefaultSubobject<USceneComponent>(TEXT("m_BulletTarget"));
 	m_BulletTarget->SetupAttachment(RootComponent);
-
-
-}
-
-void ACombatUnitPawn::CreateSetDeathCurve(float fullLength)
-{
-	m_CurveDeathAnim =FFloatCurve(); 
-	m_CurveDeathAnim.UpdateOrAddKey(1, 0);
-	m_CurveDeathAnim.UpdateOrAddKey(0, fullLength);
-}
-
-void ACombatUnitPawn::SetDeathEffectMaterial(float deltaTime)
-{
-	m_fDeathAnimDurationTimer+=deltaTime;
-
-	float Value = m_CurveDeathAnim.Evaluate(m_fDeathAnimDurationTimer);
-
-	FName MaskParam = TEXT("Visibility");
-
-	m_BodyMesh->SetScalarParameterValueOnMaterials(MaskParam, Value);
 }
 
 bool ACombatUnitPawn::TryHit(const FStatGroup& other)
@@ -84,29 +62,6 @@ void ACombatUnitPawn::HomingRotateToTarget(float speedTime)
 	}
 
 	SetActorRotation(NewRot);
-}
-
-void ACombatUnitPawn::StartDeathEffectMaterial(float duration)
-{
-	m_fDeathAnimDurationMax = duration;
-
-	m_fDeathAnimDurationTimer = 0.f;
-
-	CreateSetDeathCurve(duration);
-
-	FName TimeParamName = TEXT("StartTime");
-
-	FName DurationParamName = TEXT("Duration");
-
-	FName ColorParam = TEXT("EffectColor");
-
-	float TimeSec = UGameplayStatics::GetTimeSeconds(GetWorld());
-
-	m_BodyMesh->SetScalarParameterValueOnMaterials(TimeParamName, TimeSec);
-
-	m_BodyMesh->SetScalarParameterValueOnMaterials(DurationParamName, duration);
-
-	m_BodyMesh->SetVectorParameterValueOnMaterials(ColorParam, UKismetMathLibrary::Conv_LinearColorToVector(FLinearColor::Red));
 }
 
 float ACombatUnitPawn::PlayBaseAttackAnim()
@@ -174,15 +129,6 @@ void ACombatUnitPawn::Tick(float DeltaSeconds)
 
 	if(!IsAlive())
 	{
-		SetDeathEffectMaterial(DeltaSeconds);
-
-		if(m_fDeathAnimDurationTimer>=m_fDeathAnimDurationMax)
-		{
-			SetActorTickEnabled(false);
-			
-			SetActorHiddenInGame(true);
-		}
-
 		return;
 	}
 
@@ -274,8 +220,6 @@ void ACombatUnitPawn::PlayDeathAnim()
 {
 	if(m_EntityAsset->m_DeathMontage)
 	{
-		StartDeathEffectMaterial(m_EntityAsset->m_DeathMontage->GetPlayLength());
-		
 		PlayAnimMontage(m_EntityAsset->m_DeathMontage);
 
 		float AnimLength = m_EntityAsset->m_DeathMontage->GetPlayLength() - 0.4f;
@@ -395,6 +339,8 @@ void ACombatUnitPawn::Dead()
 void ACombatUnitPawn::OnDeathAnimEnd()
 {
 	m_BodyMesh->bPauseAnims = true;
+	
+	SetActorTickEnabled(false);
 }
 
 float ACombatUnitPawn::GetCriticalDmg(float amount)

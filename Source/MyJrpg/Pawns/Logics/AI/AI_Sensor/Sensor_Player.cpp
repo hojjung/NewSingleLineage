@@ -20,12 +20,23 @@ void USensor_Player::Init(ACombatUnitPawn* owner)
 void USensor_Player::UpdateAISensing()
 {
 	FVector Loc = m_PlayerOwner->GetActorLocation();
+
 	
-	IFocusable* Target = UMyGameInstance::Get->m_ZoneInst->GetNearTarget(Loc, 0, m_PlayerOwner->IsUseFsm() ? AStructureActor::StaticClass() : nullptr );
+	IFocusable* Target = nullptr;
+
+	if(m_PlayerOwner->IsUseFsm())
+	{
+		Target = UMyGameInstance::Get->m_ZoneInst->GetNearTarget(Loc, 0, AStructureActor::StaticClass(), true);
+	}
+	else
+	{
+		Target = UMyGameInstance::Get->m_ZoneInst->GetNearTarget(Loc, 0, nullptr, false);
+	}
 	
 	if(Target)
 	{
 		m_PlayerOwner->SetFocusedTarget(Target);
+		
 		return ;
 	}
 	

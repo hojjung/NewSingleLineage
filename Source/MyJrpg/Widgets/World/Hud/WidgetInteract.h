@@ -65,13 +65,13 @@ protected:
 	
 	void HideAllBtns();
 
-	bool IsInRange(IFocusable* focus);
-
 	void HideDur();
 
 	void ShowDur(float per);
 
 	void OnEquipChanged();
+
+	void OnPickPocketMoveEnd();
 
 public:
 	void ShowInteract(IFocusable* focus);
