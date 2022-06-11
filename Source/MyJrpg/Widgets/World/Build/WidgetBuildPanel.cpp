@@ -134,7 +134,7 @@ void UWidgetBuildPanel::OnFlick(const FVector2D& delta)
 	FVector2D CamOff = m_Pl->GetCameraOffset();
 
 	CamOff += delta;
-	
+
 	m_Pl->SetCameraOffset(CamOff);
 }
 

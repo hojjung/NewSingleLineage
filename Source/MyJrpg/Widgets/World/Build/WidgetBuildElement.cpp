@@ -31,18 +31,18 @@ void UWidgetBuildElement::MyUnFocus()
 	m_ImgFocus->SetVisibility(ESlateVisibility::Collapsed);
 }
 
-FReply UWidgetBuildElement::NativeOnTouchEnded(const FGeometry& InGeometry, const FPointerEvent& InGestureEvent)
+FReply UWidgetBuildElement::NativeOnTouchStarted(const FGeometry& InGeometry, const FPointerEvent& InGestureEvent)
 {
-	Super::NativeOnTouchEnded(InGeometry, InGestureEvent);
+	Super::NativeOnTouchStarted(InGeometry, InGestureEvent);
 
 	m_OnClick.ExecuteIfBound(this, *m_DataRow);
 	
 	return FReply::Handled();
 }
 
-FReply UWidgetBuildElement::NativeOnMouseButtonUp(const FGeometry& InGeometry, const FPointerEvent& InMouseEvent)
+FReply UWidgetBuildElement::NativeOnMouseButtonDown(const FGeometry& InGeometry, const FPointerEvent& InMouseEvent)
 {
-	Super::NativeOnMouseButtonUp(InGeometry, InMouseEvent);
+	Super::NativeOnMouseButtonDown(InGeometry, InMouseEvent);
 
 	m_OnClick.ExecuteIfBound(this, *m_DataRow);
 
@@ -74,5 +74,7 @@ void UWidgetBuildElement::CreateCostWidgets(const TArray<FCraftItemCost>& costDa
 		m_CraftCost.Add(SelectButton);
 		
 		SelectButton->SetPadding(FMargin(0,0,0,0));
+
+		SelectButton->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
 	}
 }

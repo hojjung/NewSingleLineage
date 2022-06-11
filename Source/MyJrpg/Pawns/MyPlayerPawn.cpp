@@ -437,10 +437,14 @@ void AMyPlayerPawn::SetCameraOffset(const FVector2D& vector_2d)
 	m_Offset = vector_2d;
 
 	FVector2D NewLoc2D = m_Offset.GetRotated(45);
+
+	NewLoc2D.X = FMath::Clamp(NewLoc2D.X, -4400.f, 600.f);
+	NewLoc2D.Y = FMath::Clamp(NewLoc2D.Y, -2600.f, 2600.f);
 	
 	FVector NewLoc = -FVector(NewLoc2D.X,NewLoc2D.Y, 0);
-	
+
 	m_DissolveCam->SetRelativeLocation(NewLoc);
+
 }
 
 void AMyPlayerPawn::ClearCameraOffset()

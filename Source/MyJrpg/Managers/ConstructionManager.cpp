@@ -78,9 +78,9 @@ void UConstructionManager::GetIndex(const FVector& inloc, int& outX, int& outY)
 
 	int X = (inloc.Y + 2500.f) / FGlobalVariable::GRID_SIZE;
 
-	outX = FMath::Clamp(X, 0,FGlobalVariable::GRID_COUNT);
+	outX = FMath::Clamp(X, 0,FGlobalVariable::GRID_COUNT - 1);
 
-	outY = FMath::Clamp(Y, 0,FGlobalVariable::GRID_COUNT);
+	outY = FMath::Clamp(Y, 0,FGlobalVariable::GRID_COUNT - 1);
 }
 
 bool UConstructionManager::GetWallIndex(const FVector& inloc, int& outX, int& outY, bool &isHori)
@@ -88,7 +88,7 @@ bool UConstructionManager::GetWallIndex(const FVector& inloc, int& outX, int& ou
 	float X = (inloc.Y + 2500.f) / FGlobalVariable::GRID_SIZE;//14.5 최대, 15.5초과
 	
 	float Y = (inloc.X + 2500.f) / FGlobalVariable::GRID_SIZE;
-	
+
 	float PercentX = X -  (int)X;
 	
 	float PercentY = Y -  (int)Y;
@@ -96,15 +96,35 @@ bool UConstructionManager::GetWallIndex(const FVector& inloc, int& outX, int& ou
 	if(PercentY <= 0.2f)//s
 	{
 		isHori = true;
+
 		outX = X;
 		outY = Y;
+		
+		if(outX >= FGlobalVariable::GRID_COUNT)
+		{
+			outX = FGlobalVariable::GRID_COUNT - 1;
+		}
+		if(outY >= FGlobalVariable::GRID_COUNT + 1)
+		{
+			outY = FGlobalVariable::GRID_COUNT;
+		}
 		return true;
 	}
 	else if (PercentY >= 0.8f)//n
 	{
 		isHori = true;
+
 		outX = X;
 		outY = Y + 1;
+		
+		if(outX >= FGlobalVariable::GRID_COUNT)
+		{
+			outX = FGlobalVariable::GRID_COUNT - 1;
+		}
+		if(outY >= FGlobalVariable::GRID_COUNT + 1)
+		{
+			outY = FGlobalVariable::GRID_COUNT;
+		}
 		return true;
 	}
 	isHori = false;
@@ -116,7 +136,19 @@ bool UConstructionManager::GetWallIndex(const FVector& inloc, int& outX, int& ou
 	{
 		outX = X + 1;
 	}//e
+
 	outY = Y;
+	
+	if(outX >= FGlobalVariable::GRID_COUNT + 1)
+	{
+		outX = FGlobalVariable::GRID_COUNT;
+	}
+	if(outY >= FGlobalVariable::GRID_COUNT)
+	{
+		outY = FGlobalVariable::GRID_COUNT - 1;
+	}
+	
+
 	return true;
 }
 
