@@ -28,6 +28,20 @@ bool UInventory::GetEmptyIndex(int& out) const
 	return false;
 }
 
+int UInventory::GetItemIndex(const FItemSpec& itemHere)
+{
+	auto& SetIndex = m_MapItemKeyCount[itemHere.m_ID];
+
+	for(auto Index : SetIndex)
+	{
+		if(&GetItemRef(Index) == &itemHere)
+		{
+			return Index;
+		}
+	}
+	return INDEX_NONE;
+}
+
 int UInventory::GetInvenSize() const
 {
 	return m_nInvenMaxSize;

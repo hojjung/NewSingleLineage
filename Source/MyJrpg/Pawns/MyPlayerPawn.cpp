@@ -348,7 +348,7 @@ void AMyPlayerPawn::DealBaseMeleeAttack()
 
 	ACombatUnitPawn* Pawn =  Cast<ACombatUnitPawn>(GetFocusedTarget());
 
-	if(!Pawn)
+	if(!Pawn || !Pawn->IsAlive())
 	{
 		return ;
 	}

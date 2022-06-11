@@ -51,6 +51,9 @@ protected:
 	UButton* m_BtnRegister;
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (BindWidget))
 	UButton* m_BtnSplit;
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (BindWidget))
+	UButton* m_BtnUse;
+	
 	UPROPERTY(EditDefaultsOnly)
 	TSubclassOf<UWidgetCollecStatChild> m_ClassOption;
 	UPROPERTY()
@@ -112,6 +115,8 @@ public:
 	void OnRegister();
 	UFUNCTION()
 	void OnSplit();
+	UFUNCTION()
+	void OnUse();
 };
 
 //획득처가있어야함

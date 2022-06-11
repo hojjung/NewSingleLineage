@@ -123,7 +123,7 @@ void UWidgetCanvasWorld::OpenQuest()
 
 void UWidgetCanvasWorld::OpenInventory()
 {
-	m_EquipInvenPanel->OpenInventory();
+	m_EquipInvenPanel->OpenPanel();
 }
 
 void UWidgetCanvasWorld::OpenSkill()

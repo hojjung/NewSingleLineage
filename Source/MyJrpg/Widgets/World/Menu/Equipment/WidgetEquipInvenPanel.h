@@ -48,16 +48,14 @@ protected:
 
 	void OnEquipChanged();
 
-	void OnBagBeltChanged();
-
 public:
 	UWidgetInventory* GetInvenPanel();
 
 	UWidgetEquipPanel* GetEquipPanel();
 
 	virtual void ClosePanel() override;
-	
-	void OpenInventory();
+
+	virtual void OpenPanel() override;
 };
 
 

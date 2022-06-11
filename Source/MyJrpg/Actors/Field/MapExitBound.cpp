@@ -31,7 +31,7 @@ AMapExitBound::AMapExitBound()
 	m_TextRender->SetupAttachment(RootComponent);
 	m_TextRender->SetWorldSize(350);
 	m_TextRender->SetHorizontalAlignment(EHorizTextAligment::EHTA_Center);
-	m_TextRender->SetVerticalAlignment(EVerticalTextAligment::EVRTA_TextTop);
+	m_TextRender->SetVerticalAlignment(EVerticalTextAligment::EVRTA_TextCenter);
 	m_TextRender->SetText(  FText::FromString(TEXT("World Map")));
 	m_TextRender->SetRelativeLocation(FVector(0,0,2));
 	m_TextRender->SetRelativeRotation(FRotator(90,0,0));

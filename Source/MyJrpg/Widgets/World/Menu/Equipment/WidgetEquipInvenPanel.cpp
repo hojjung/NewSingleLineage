@@ -15,7 +15,7 @@ void UWidgetEquipInvenPanel::NativeOnInitialized()
 	Super::NativeOnInitialized();
 
 	m_InvenPanel->Init(UMyLib::GetPlayerInven());
-
+	
 	m_InvenPanel->m_OnFocus.AddUObject(this, &UWidgetEquipInvenPanel::OnPlInvenFocused);
 
 	m_InvenPanel->m_OnFocusConfirm.AddUObject(this, &UWidgetEquipInvenPanel::OnPlInvenFocuseConfirm);
@@ -57,6 +57,7 @@ void UWidgetEquipInvenPanel::OnEquipChanged()
 		m_DeleBelt = UMyGameInstance::Get->m_EquipManager->GetOnBeltChanged().AddUObject(m_EquipPanel, &UWidgetEquipPanel::UpdateSlots);
 	}
 }
+
 
 void UWidgetEquipInvenPanel::OnPlInvenFocused(UWidgetBaseElement* ele, UInventory* inven, int index)
 {
@@ -123,9 +124,9 @@ void UWidgetEquipInvenPanel::ClosePanel()
 	m_BeltPanel->ClosePanel();
 }
 
-void UWidgetEquipInvenPanel::OpenInventory()
+void UWidgetEquipInvenPanel::OpenPanel()
 {
-	SetVisibility(ESlateVisibility::SelfHitTestInvisible);
+	Super::OpenPanel();
 
 	m_EquipPanel->Open();
 

@@ -96,10 +96,8 @@ bool UConstructionManager::GetWallIndex(const FVector& inloc, int& outX, int& ou
 	if(PercentY <= 0.2f)//s
 	{
 		isHori = true;
-
 		outX = X;
 		outY = Y;
-		
 		if(outX >= FGlobalVariable::GRID_COUNT)
 		{
 			outX = FGlobalVariable::GRID_COUNT - 1;
@@ -110,13 +108,11 @@ bool UConstructionManager::GetWallIndex(const FVector& inloc, int& outX, int& ou
 		}
 		return true;
 	}
-	else if (PercentY >= 0.8f)//n
+	if (PercentY >= 0.8f)//n
 	{
 		isHori = true;
-
 		outX = X;
 		outY = Y + 1;
-		
 		if(outX >= FGlobalVariable::GRID_COUNT)
 		{
 			outX = FGlobalVariable::GRID_COUNT - 1;
@@ -128,17 +124,15 @@ bool UConstructionManager::GetWallIndex(const FVector& inloc, int& outX, int& ou
 		return true;
 	}
 	isHori = false;
-	if(PercentX <= 0.5f)//w
+	if(PercentX <= 0.5f)
 	{
 		outX = X;
 	}
 	else
 	{
 		outX = X + 1;
-	}//e
-
+	}
 	outY = Y;
-	
 	if(outX >= FGlobalVariable::GRID_COUNT + 1)
 	{
 		outX = FGlobalVariable::GRID_COUNT;
@@ -147,8 +141,6 @@ bool UConstructionManager::GetWallIndex(const FVector& inloc, int& outX, int& ou
 	{
 		outY = FGlobalVariable::GRID_COUNT - 1;
 	}
-	
-
 	return true;
 }
 

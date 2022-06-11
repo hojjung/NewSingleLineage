@@ -1,5 +1,7 @@
 #include "WidgetMapPanel.h"
 
+#include "MyJrpg/Widgets/World/Menu/Craft/WidgetCraftPanel.h"
+
 void UWidgetMapPanel::NativeOnInitialized()
 {
 	Super::NativeOnInitialized();
@@ -21,6 +23,14 @@ void UWidgetMapPanel::NativeOnInitialized()
 	m_PanelSlot = Cast<UCanvasPanelSlot>(m_CanvasMap->Slot);
 
 	m_ItemInfo->SetVisibility(ESlateVisibility::Collapsed);
+
+	m_InvenEquip->SetVisibility(ESlateVisibility::Collapsed);
+
+	m_CraftPanel->SetVisibility(ESlateVisibility::Collapsed);
+
+	m_BtnCraft->OnClicked.AddDynamic(this, &UWidgetMapPanel::OnOpenCraft);
+
+	m_BtnInven->OnClicked.AddDynamic(this, &UWidgetMapPanel::OnOpenInven);
 }
 
 void UWidgetMapPanel::OpenItemInfoData(const FItemDataRow& item_data_row)
@@ -49,6 +59,16 @@ FReply UWidgetMapPanel::NativeOnTouchEnded(const FGeometry& InGeometry, const FP
 	FReply Re = Super::NativeOnTouchEnded(InGeometry, InGestureEvent);
 	
 	return FReply::Handled();
+}
+
+void UWidgetMapPanel::OnOpenInven()
+{
+	m_InvenEquip->OpenPanel();
+}
+
+void UWidgetMapPanel::OnOpenCraft()
+{
+	m_CraftPanel->OpenPanel();
 }
 
 FReply UWidgetMapPanel::NativeOnTouchMoved(const FGeometry& InGeometry, const FPointerEvent& InGestureEvent)

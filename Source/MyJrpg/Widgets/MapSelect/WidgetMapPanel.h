@@ -6,6 +6,8 @@
 #include "WidgetMapBtn.h"
 #include "Blueprint/UserWidget.h"
 #include "Components/CanvasPanel.h"
+#include "MyJrpg/Widgets/World/Menu/Craft/WidgetCraftPanel.h"
+#include "MyJrpg/Widgets/World/Menu/Equipment/WidgetEquipInvenPanel.h"
 #include "MyJrpg/Widgets/World/Menu/Inventory/WidgetItemInfo.h"
 #include "MyJrpg/Widgets/World/Menu/ZoneMove/WidgetZoneSelectButton.h"
 #include "WidgetMapPanel.generated.h"
@@ -25,6 +27,14 @@ protected:
 	UWidgetZoneSelectButton* m_ZoneSelect;
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (BindWidget))
 	UWidgetItemInfo* m_ItemInfo;
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (BindWidget))
+	UButton* m_BtnInven;
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (BindWidget))
+	UButton* m_BtnCraft;
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (BindWidget))
+	UWidgetEquipInvenPanel* m_InvenEquip;
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (BindWidget))
+	UWidgetCraftPanel* m_CraftPanel;
 	TWeakObjectPtr<UCanvasPanelSlot> m_PanelSlot;
 public:
 	virtual void NativeOnInitialized() override;
@@ -39,4 +49,10 @@ protected:
 	virtual FReply NativeOnTouchMoved(const FGeometry& InGeometry, const FPointerEvent& InGestureEvent) override;
 
 	virtual FReply NativeOnTouchEnded(const FGeometry& InGeometry, const FPointerEvent& InGestureEvent) override;
+
+public:
+	UFUNCTION()
+	void OnOpenInven();
+	UFUNCTION()
+	void OnOpenCraft();
 };

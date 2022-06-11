@@ -78,6 +78,8 @@ public:
 
 	static EEquipSlotType GetEquipItemSlot(const FName& id);
 
+	static EEquipSlotType GetEquipItemSlot(const FItemDataRow& data);
+
 	static UParticleEffectManager* GetEffectM();
 
 	static bool CheckAngle(const AActor* center, const AActor* target, float angle);

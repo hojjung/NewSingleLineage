@@ -200,6 +200,11 @@ EEquipSlotType UMyLib::GetEquipItemSlot(const FName& id)
 	return UMyLib::GetItemData(id).m_ItemType;
 }
 
+EEquipSlotType UMyLib::GetEquipItemSlot(const FItemDataRow& data)
+{
+	return data.m_ItemType;
+}
+
 UParticleEffectManager* UMyLib::GetEffectM()
 {
 	return UMyGameInstance::Get->m_EffectManager;

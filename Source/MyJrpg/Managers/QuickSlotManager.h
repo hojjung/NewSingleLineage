@@ -25,5 +25,7 @@ public:
 
 	void UnregisterItem(TSubclassOf<UItemExecuteBase> exe);
 
-	void ExeItem(TSubclassOf<UItemExecuteBase> exe,UInventory* inven, int index, int cnt);
+	int ExeItem(TSubclassOf<UItemExecuteBase> exe,UInventory* inven, int index, int cnt);
+
+	int ExeItem(TSubclassOf<UItemExecuteBase> exe,UInventory* inven, FItemSpec& item, int cnt);
 };

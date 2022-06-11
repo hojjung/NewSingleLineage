@@ -133,5 +133,7 @@ public:
 	int EmptySlotCount();
 	
 	bool GetEmptyIndex(int& out) const;
+
+	int GetItemIndex(const FItemSpec& itemHere);
 };
 

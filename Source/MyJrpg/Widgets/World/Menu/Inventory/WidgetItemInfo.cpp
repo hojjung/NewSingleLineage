@@ -29,6 +29,8 @@ void UWidgetItemInfo::NativeOnInitialized()
 	m_BtnRegister->OnClicked.AddDynamic(this,&UWidgetItemInfo::OnRegister);
 
 	m_BtnSplit->OnClicked.AddDynamic(this,&UWidgetItemInfo::OnSplit);
+
+	m_BtnUse->OnClicked.AddDynamic(this,&UWidgetItemInfo::OnUse);
 }
 
 void UWidgetItemInfo::OnClose()
@@ -181,17 +183,29 @@ void UWidgetItemInfo::SetInfoItemData(const FItemDataRow& data_row)
 
 	m_BtnSplit->SetVisibility(ESlateVisibility::Collapsed);
 
+	m_BtnUse->SetVisibility(ESlateVisibility::Collapsed);
+
 	EItemType t = UMyLib::GetItemType(data_row);
 
 	if(EItemType::Equip == t)
 	{
 		m_VertItemOptions->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
 		m_TextItemEffectTitle->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
+
+		if(m_ItemSpec)
+		{
+			m_BtnUse->SetVisibility(ESlateVisibility::Visible);
+		}
 	}
 	else
 	{
 		m_VertItemOptions->SetVisibility(ESlateVisibility::Collapsed);
 		m_TextItemEffectTitle->SetVisibility(ESlateVisibility::Collapsed);
+
+		if(EItemType::Consume == t)
+		{
+			m_BtnUse->SetVisibility(ESlateVisibility::Visible);
+		}
 	}
 	
 	m_TextItemDesc->SetText(data_row.m_Desc);
@@ -273,6 +287,36 @@ void UWidgetItemInfo::OnSplit()
 	Calc->Open(Half);
 	
 	OnClose();
+}
+
+void UWidgetItemInfo::OnUse()
+{
+	const FItemDataRow& ItemData = UMyLib::GetItemData(m_ItemSpec->m_ID);
+	
+	switch (UMyLib::GetItemType(ItemData))
+	{
+	case EItemType::None:
+	case EItemType::misc:
+		break;
+	case EItemType::Consume:
+		{
+			int Remain = UMyGameInstance::Get->m_QuickManager->ExeItem(ItemData.m_ClassExeItem, m_Inven.Get(), *m_ItemSpec,1);
+			if(Remain < 1)
+			{
+				OnClose();
+			}
+		}
+		break;
+	case EItemType::Equip:
+		{
+			EEquipSlotType SlotT = UMyLib::GetEquipItemSlot(ItemData);
+			int Index = m_Inven->GetItemIndex(*m_ItemSpec);
+			UMyLib::GetEquip()->Equip(SlotT, m_Inven.Get(), Index);
+			m_Inven->UpdateInventory();
+			OnClose();
+		}
+		break;
+	}
 }
 
 void UWidgetItemInfo::UpdateStat(const FItemDataRow& target, int level)

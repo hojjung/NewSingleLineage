@@ -8,9 +8,9 @@
 
 AMapGameMode::AMapGameMode()
 {
-	PlayerControllerClass=AInitPlayerController::StaticClass();
+	PlayerControllerClass = AInitPlayerController::StaticClass();
 	HUDClass = AMapHUD::StaticClass();
-	DefaultPawnClass=nullptr;
+	DefaultPawnClass = AMyPlayerPawn::StaticClass();
 }
 
 void AMapGameMode::BeginPlay()
