@@ -195,6 +195,11 @@ UInventory* AStructureActor::GetItemHolder()
 	return m_BuildInteract->GetItemHolder();
 }
 
+FText AStructureActor::GetTextInteract()
+{
+	return NSLOCTEXT("AStructureActor","Control","조작");
+}
+
 bool AStructureActor::IsEraseable()
 {
 	return m_BuildInteract ? m_BuildInteract->IsEraseable() : true;

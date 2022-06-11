@@ -6,86 +6,30 @@
 #include "MyJrpg/Pawns/MonsterPawn.h"
 #include "MyJrpg/Pawns/MyPlayerPawn.h"
 
-bool UWidgetInteract::AutoToggle = false;
-
 void UWidgetInteract::NativeOnInitialized()
 {
 	Super::NativeOnInitialized();
 
+	m_bAutoToggle = false;
+
 	m_bHasFocus = false;
 
-	m_BtnObtain->OnClicked.AddDynamic(this, &UWidgetInteract::OnControl);
-	m_BtnSteal->OnClicked.AddDynamic(this, &UWidgetInteract::OnControl);
-	m_BtnControl->OnClicked.AddDynamic(this, &UWidgetInteract::OnControl);
-	m_BtnTalk->OnClicked.AddDynamic(this, &UWidgetInteract::OnTalk);
+	m_BtnInteract->OnClicked.AddDynamic(this, &UWidgetInteract::OnInteract);
 	m_BtnAttack->OnClicked.AddDynamic(this, &UWidgetInteract::OnAttack);
-	m_BtnPickPocket->OnClicked.AddDynamic(this, &UWidgetInteract::OnPickPocket);
 	m_BtnSneak->OnClicked.AddDynamic(this, &UWidgetInteract::OnSneak);
 	m_BtnAuto->OnClicked.AddDynamic(this, &UWidgetInteract::OnAutoToggle);
-
-	m_BtnObtain->SetVisibility(ESlateVisibility::Collapsed);
-	m_BtnSteal->SetVisibility(ESlateVisibility::Collapsed);
-	m_BtnControl->SetVisibility(ESlateVisibility::Collapsed);
-	m_BtnTalk->SetVisibility(ESlateVisibility::Collapsed);
-	m_BtnPickPocket->SetVisibility(ESlateVisibility::Collapsed);
+	
+	m_BtnInteract->SetVisibility(ESlateVisibility::Collapsed);
 
 	m_Pl = UMyLib::GetPlayer();
 	m_Pl->m_OnFocus.AddUObject(this, &UWidgetInteract::ShowInteract);
 
 	UMyGameInstance::Get->m_EquipManager->m_OnEquipChanged.AddUObject(this, &UWidgetInteract::OnEquipChanged);
 	UMyGameInstance::Get->m_EquipManager->m_OnDurChanged.AddUObject(this, &UWidgetInteract::OnEquipChanged);
+	
 	OnEquipChanged();
 
 	m_ImgUseAuto->SetVisibility(ESlateVisibility::Collapsed);
-}
-
-void UWidgetInteract::ShowWidgetMonster(const AMonsterPawn* mob)
-{
-	m_BtnObtain->SetVisibility(ESlateVisibility::Collapsed);
-	m_BtnSteal->SetVisibility(ESlateVisibility::Collapsed);
-	m_BtnControl->SetVisibility(ESlateVisibility::Collapsed);
-
-	if(mob->GetFocusedTarget() != m_Pl)
-	{
-		m_BtnPickPocket->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
-	}
-	else if(!UMyGameInstance::Get->m_TeamKarma->IsFoe(mob))
-	{
-		m_BtnTalk->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
-	}
-}
-
-void UWidgetInteract::ShowWidgetItem(const AItemActor* item)
-{
-	m_BtnControl->SetVisibility(ESlateVisibility::Collapsed);
-	m_BtnPickPocket->SetVisibility(ESlateVisibility::Collapsed);
-	m_BtnTalk->SetVisibility(ESlateVisibility::Collapsed);
-	
-	if(item->HasOwnerTeamID())
-	{
-		m_BtnSteal->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
-		return;
-	}
-	m_BtnObtain->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
-}
-
-void UWidgetInteract::ShowWidgetProp()
-{
-	m_BtnPickPocket->SetVisibility(ESlateVisibility::Collapsed);
-	m_BtnTalk->SetVisibility(ESlateVisibility::Collapsed);
-	m_BtnSteal->SetVisibility(ESlateVisibility::Collapsed);
-	m_BtnObtain->SetVisibility(ESlateVisibility::Collapsed);
-	
-	m_BtnControl->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
-}
-
-void UWidgetInteract::HideAllBtns()
-{
-	m_BtnPickPocket->SetVisibility(ESlateVisibility::Collapsed);
-	m_BtnTalk->SetVisibility(ESlateVisibility::Collapsed);
-	m_BtnSteal->SetVisibility(ESlateVisibility::Collapsed);
-	m_BtnObtain->SetVisibility(ESlateVisibility::Collapsed);
-	m_BtnControl->SetVisibility(ESlateVisibility::Collapsed);
 }
 
 void UWidgetInteract::HideDur()
@@ -102,31 +46,25 @@ void UWidgetInteract::ShowDur(float per)
 
 void UWidgetInteract::ShowInteract(IFocusable* focus)
 {
+	m_BtnInteract->SetVisibility(ESlateVisibility::Collapsed);
+	
 	m_bHasFocus = true;
 	
 	AMonsterPawn* Monster = Cast<AMonsterPawn>(focus);
-	if(Monster)
+
+	if(!focus || (Monster && Monster->IsAlive()))
 	{
-		ShowWidgetMonster(Monster);
 		return;
 	}
 	
-	AItemActor* Item = Cast<AItemActor>(focus);
-	if(Item)
-	{
-		ShowWidgetItem(Item);
-		return;
-	}
+	m_BtnInteract->SetVisibility(ESlateVisibility::Visible);
+
+	FText InterText = focus->GetTextInteract();
 	
-	AActor* Prop = Cast<AActor>(focus);
-	if(Prop)
-	{
-		ShowWidgetProp();
-		return;
-	}
+	m_TextInteract->SetText(InterText);
 }
 
-void UWidgetInteract::OnControl()
+void UWidgetInteract::OnInteract()
 {
 	if(m_Pl->GetInteracting())
 	{
@@ -138,40 +76,12 @@ void UWidgetInteract::OnControl()
 	{
 		return;
 	}
-	
-	
 	Prop->OnInteract();
-}
-
-void UWidgetInteract::OnTalk()
-{
-	AMonsterPawn* Prop = m_Pl->GetFocusedTarget<AMonsterPawn>();
-	
-	const FName& TalkID = Prop->GetTalkID();
-
-	if (!TalkID.IsNone())
-		UMyLib::GetCanvas()->StartDialogue(TalkID);
 }
 
 void UWidgetInteract::OnAttack()
 {
 	m_Pl->RequestAttack();
-}
-
-void UWidgetInteract::OnPickPocket()
-{
-	UMyLib::GetPlayer()->SetInteracting(true);
-	
-	AMonsterPawn* Mob = m_Pl->GetFocusedTarget<AMonsterPawn>();
-	
-	UMyLib::GetPlayer()->RequestInteract(Mob,FVoidVoid::CreateUObject(this,&UWidgetInteract::OnPickPocketMoveEnd),25);
-}
-
-void UWidgetInteract::OnPickPocketMoveEnd()
-{
-	AMonsterPawn* Mob = m_Pl->GetFocusedTarget<AMonsterPawn>();
-	
-	UMyLib::GetCanvas()->StartPickPocket(Mob);
 }
 
 void UWidgetInteract::OnSneak()
@@ -181,9 +91,9 @@ void UWidgetInteract::OnSneak()
 
 void UWidgetInteract::OnAutoToggle()
 {
-	UWidgetInteract::AutoToggle = !UWidgetInteract::AutoToggle;
+	m_bAutoToggle = !m_bAutoToggle;
 
-	if(UWidgetInteract::AutoToggle)
+	if(m_bAutoToggle)
 	{
 		m_ImgUseAuto->SetVisibility(ESlateVisibility::HitTestInvisible);
 	}
@@ -191,8 +101,10 @@ void UWidgetInteract::OnAutoToggle()
 	{
 		m_ImgUseAuto->SetVisibility(ESlateVisibility::Collapsed);
 	}
-	UMyLib::GetPlayer()->SetAutoCombat(AutoToggle);
-	UMyGameInstance::Get->m_SkillAuto->SetUseAuto(AutoToggle);
+	
+	UMyLib::GetPlayer()->SetAutoCombat(m_bAutoToggle);
+	
+	UMyGameInstance::Get->m_SkillAuto->SetUseAuto(m_bAutoToggle);
 }
 
 void UWidgetInteract::OnEquipChanged()

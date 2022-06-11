@@ -59,4 +59,6 @@ public:
 	virtual void GetMoveGoalReachTest(const AActor* MovingActor, const FVector& MoveOffset, FVector& GoalOffset,float& GoalRadius, float& GoalHalfHeight) const override;
 
 	UInventory* GetItemHolder();
+
+	virtual FText GetTextInteract() override;
 };

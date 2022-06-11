@@ -33,4 +33,9 @@ public:
 	virtual void OnInteract() {};
 
 	virtual bool IsInteractImplemented() { return true;};
+
+	virtual FText GetTextInteract()
+	{
+		return FText::FromString(TEXT("None"));
+	};
 };

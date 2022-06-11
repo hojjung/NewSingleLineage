@@ -25,20 +25,12 @@ protected:
 	TWeakObjectPtr<AMonsterPawn> m_TargetPawn;
 	
 protected:
-	virtual void NativeOnInitialized() override;
+	virtual void OpenPanel() override;
+
+	virtual void ClosePanel() override;
 
 	virtual void UpdateText();
 
-	virtual void OnPlInvenFocused(UWidgetBaseElement* ele, UInventory* inven, int index) override;
-
-	virtual void OnPlInvenFocuseConfirm(UWidgetBaseElement* ele, UInventory* inven, int index) override;
-
-	virtual void OnStorageInvenFocused(UWidgetBaseElement* ele, UInventory* inven, int index) override;
-	
-	virtual void OnStorageFocuseConfirm(UWidgetBaseElement* ele, UInventory* inven, int index) override;
-
-	float GetSuccessPercent(const FItemDataRow& itemData);
-	
 public:
 	void SetTargetPawn(AMonsterPawn* targetPawn);
 	

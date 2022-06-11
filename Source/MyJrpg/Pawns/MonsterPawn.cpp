@@ -212,8 +212,12 @@ void AMonsterPawn::PlayHittenEffect()
 void AMonsterPawn::CreateInventory()
 {
 	m_Inven = NewObject<UInventory>(UMyGameInstance::Get);
+	
 	m_Inven->Init(FGlobalVariable::MOB_INVEN);
-	m_Inven->AddItem(FItemSpec(TEXT("Coin"), 10));
+
+	float Gold = FMath::RandRange(GetRewardGold() * 0.7f, GetRewardGold() * 1.3f);
+	
+	m_Inven->AddItem(FItemSpec(TEXT("Coin"), Gold));
 }
 
 void AMonsterPawn::Dead()
@@ -303,4 +307,21 @@ void AMonsterPawn::Speech(FText text)
 void AMonsterPawn::Speech(FString text)
 {
 	Speech(FText::FromString(text));
+}
+
+void AMonsterPawn::OnInteract()
+{
+	UMyLib::GetPlayer()->SetInteracting(true);
+	
+	UMyLib::GetPlayer()->RequestInteract(this,FVoidVoid::CreateUObject(this,&AMonsterPawn::OnRequestMoveDone),25);
+}
+
+FText AMonsterPawn::GetTextInteract()
+{
+	return NSLOCTEXT("AMonsterPawn","Loot","살펴보기");
+}
+
+void AMonsterPawn::OnRequestMoveDone()
+{
+	UMyLib::GetCanvas()->StartPickPocket(this);
 }

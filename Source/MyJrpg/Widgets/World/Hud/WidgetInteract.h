@@ -20,69 +20,45 @@ class MYJRPG_API UWidgetInteract : public UUserWidget
 {
 	GENERATED_BODY()
 
-public:
-	static bool AutoToggle;
-
 protected:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (BindWidget))
-	UButton* m_BtnObtain;//Main 1
+	UButton* m_BtnInteract;//Main 2
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (BindWidget))
-	UButton* m_BtnSteal;//Main 1
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (BindWidget))
-	UButton* m_BtnControl;//Main 2
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (BindWidget))
-	UButton* m_BtnTalk;//Main 3 //대화는 결국 서브다.
+	UTextBlock* m_TextInteract;
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (BindWidget))
 	UMaterialProgressBar* m_DurGauge;
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (BindWidget))
 	UButton* m_BtnAttack;//Main 3 //공격버튼은 유닛에게 언제나 있을수있음
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (BindWidget))
-	UButton* m_BtnPickPocket;//sub 3 //main으로 변경,상대방의 뒤를 잡았을때만 //대화 //조작
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (BindWidget))
 	UButton* m_BtnSneak;//sub all
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (BindWidget))
 	UButton* m_BtnAuto;//sub all
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (BindWidget))
 	UImage* m_ImgUseAuto;
-	UPROPERTY(EditAnywhere,BlueprintReadWrite,meta=(ExposeOnSpawn="true"))
-	UMaterialInterface* m_MatWant;
-	UPROPERTY(VisibleAnywhere,BlueprintReadWrite,Transient)
-	UMaterialInstanceDynamic* m_MatInst;
 protected:
 	UPROPERTY()
 	AMyPlayerPawn* m_Pl;
 	
-	bool m_bHasFocus;	
+	bool m_bHasFocus;
+	
+	bool m_bAutoToggle;
 
 protected:
 	virtual void NativeOnInitialized() override;
 	
-	void ShowWidgetMonster(const AMonsterPawn* mob);
-
-	void ShowWidgetItem(const AItemActor* item);
-	
-	void ShowWidgetProp();
-	
-	void HideAllBtns();
-
 	void HideDur();
 
 	void ShowDur(float per);
 
 	void OnEquipChanged();
-
-	void OnPickPocketMoveEnd();
+	
+	void ShowInteract(IFocusable* focus);
 
 public:
-	void ShowInteract(IFocusable* focus);
 	UFUNCTION()
-	void OnControl();
-	UFUNCTION()
-	void OnTalk();
+	void OnInteract();
 	UFUNCTION()
 	void OnAttack();
-	UFUNCTION()
-	void OnPickPocket();
 	UFUNCTION()
 	void OnSneak();
 	UFUNCTION()

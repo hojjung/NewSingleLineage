@@ -55,6 +55,8 @@ protected:
 
 	virtual void OnDeathAnimEnd() override;
 
+	void OnRequestMoveDone();
+	
 public:
 	virtual void SetFocusedTarget(IFocusable* target) override;
 	
@@ -85,6 +87,10 @@ public:
 	void SetInven(UInventory* inven);
 
 	void SetDeadBody();
+
+	virtual void OnInteract() override;
+
+	virtual FText GetTextInteract() override;
 };
 
 

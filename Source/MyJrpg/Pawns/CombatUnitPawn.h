@@ -130,7 +130,7 @@ public:// get
 	void StopSilence();
 
 	bool IsUseFsm();
-	
+
 public:
 	template<typename T = IFocusable>
 	T* GetFocusedTarget() const

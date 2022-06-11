@@ -130,3 +130,8 @@ const FItemSpec& AItemActor::GetItemSpec() const
 {
 	return m_ItemSpec;
 }
+
+FText AItemActor::GetTextInteract()
+{
+	return NSLOCTEXT("AItemActor","Loot","줍기");
+}

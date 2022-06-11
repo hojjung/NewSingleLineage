@@ -265,6 +265,8 @@ bool ACombatUnitPawn::IsUseFsm()
 	return m_bUseFsmTick;
 }
 
+
+
 FSkillTrigger& ACombatUnitPawn::GetSkillTriggerDelegate()
 {
 	return m_OnSkillTrigger;
@@ -314,6 +316,8 @@ EStanceType ACombatUnitPawn::GetStance()
 {
 	return m_Stance; 
 }
+
+
 
 void ACombatUnitPawn::Dead()
 {

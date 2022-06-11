@@ -81,4 +81,6 @@ public:
 	const FName& GetID() const;
 	
 	int GetHP();
+
+	virtual FText GetTextInteract() override;
 };
