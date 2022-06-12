@@ -175,8 +175,7 @@ FVector AStructureActor::GetNavAgentLocation() const
 	return GetActorLocation() - FVector(0.f, 0.f, H);
 }
 
-void AStructureActor::GetMoveGoalReachTest(const AActor* MovingActor, const FVector& MoveOffset, FVector& GoalOffset,
-	float& GoalRadius, float& GoalHalfHeight) const
+void AStructureActor::GetMoveGoalReachTest(const AActor* MovingActor, const FVector& MoveOffset, FVector& GoalOffset,float& GoalRadius, float& GoalHalfHeight) const
 {
 	GoalOffset = m_MeshComp->GetRelativeLocation();
 	

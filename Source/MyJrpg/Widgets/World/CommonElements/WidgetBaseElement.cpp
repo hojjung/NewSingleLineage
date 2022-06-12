@@ -123,12 +123,12 @@ bool UWidgetBaseElement::NativeOnDrop(const FGeometry& InGeometry, const FDragDr
 
 void UWidgetBaseElement::HideDurBar()
 {
-	m_DurParent->SetVisibility(ESlateVisibility::Collapsed);
+	m_Dur->SetVisibility(ESlateVisibility::Collapsed);
 }
 
 void UWidgetBaseElement::ShowDurBar(float per)
 {
-	m_DurParent->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
+	m_Dur->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
 
 	m_Dur->SetPercent(per);
 }

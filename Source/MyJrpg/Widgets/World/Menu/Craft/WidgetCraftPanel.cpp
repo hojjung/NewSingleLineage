@@ -31,6 +31,10 @@ void UWidgetCraftPanel::CreateAllCraftWidget(const TArray<FCraftDataInfo>& ary)
 
 void UWidgetCraftPanel::OnSelectCraftItem(int index)
 {
+	if(m_Selected->IsCrafting())
+	{
+		return;
+	}
 	UMyGameInstance::Get->m_CraftManager->SetCraftItem(index);
 
 	OnUpdateItems();

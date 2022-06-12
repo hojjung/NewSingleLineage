@@ -699,7 +699,7 @@ void UConstructionManager::ConfirmBuild()
 	SetStructureGrid(m_PreviewActor.Get());
 	
 	const FBuildDataRow& BuildRow = m_PreviewActor->GetBuildData();
-	if(BuildRow.m_BuildType == EBuildType::Furniture)
+	if(BuildRow.m_BuildType == EBuildType::Furniture || BuildRow.m_BuildType == EBuildType::Field)
 	{
 		PreviewSpawn = RemoveFurniture(m_PreviewActor->GetBuildData().m_RowID) > 0;
 	}

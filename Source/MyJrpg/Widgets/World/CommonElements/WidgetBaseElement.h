@@ -47,8 +47,6 @@ class MYJRPG_API UWidgetBaseElement : public UUserWidget
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (BindWidget))
 	UTextBlock* m_TextStackAmount;//Level
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (BindWidget))
-	USizeBox* m_DurParent;//
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (BindWidget))
 	UProgressBar* m_Dur;//	
  	float m_fTimer;
 	

@@ -71,4 +71,6 @@ public:
 
 	UFUNCTION()
 	void Cancel();
+
+	bool IsCrafting();
 };

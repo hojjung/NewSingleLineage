@@ -85,6 +85,8 @@ void UWidgetCraftSelected::Close()
 	{
 		UMyGameInstance::Get->m_EquipManager->GetOnBeltChanged().Remove(m_Dele3);
 	}
+
+	Cancel();
 }
 
 void UWidgetCraftSelected::Craft()
@@ -107,6 +109,11 @@ void UWidgetCraftSelected::Cancel()
 	m_fCancelTimer = 0;
 
 	m_BtnCancel->SetVisibility(ESlateVisibility::Collapsed);
+}
+
+bool UWidgetCraftSelected::IsCrafting()
+{
+	return m_bStartCraft;
 }
 
 void UWidgetCraftSelected::UpdateCraftCostPanel()
