@@ -404,17 +404,33 @@ void AMyPlayerPawn::WaitInteract(UAnimMontage* am, float interactTime, const FVo
 void AMyPlayerPawn::RequestInteract(AActor* target, const FVoidVoid& delegate ,float r)
 {
 	FPathFollowingRequestResult Result = MoveToActor(target, r);
-	
+
+	if(Result.Code == EPathFollowingRequestResult::Type::Failed)
+	{
+		PRINTF("EPathFollowingRequestResult::Type::Failed");
+		return;
+	}
 	if(Result.Code == EPathFollowingRequestResult::Type::AlreadyAtGoal)
 	{
+		m_ReqID = FAIRequestID(); 
 		HomingRotateToTarget(0);
 		delegate.ExecuteIfBound();
 		return;
 	}
 	
-	m_ReqID = MoveToActor(target, r).MoveId;
+	m_ReqID = Result.MoveId;
 
 	m_OnRequestDone = delegate;
+}
+
+void AMyPlayerPawn::OnRequestMoveDone(FAIRequestID id, const FPathFollowingResult& rslt)
+{
+	if(m_ReqID != id || !rslt.IsSuccess())
+	{
+		return;
+	}
+	m_OnRequestDone.ExecuteIfBound();
+	m_OnRequestDone.Unbind();
 }
 
 void AMyPlayerPawn::BindOnCancel(const FVoidVoid& onCancel)
@@ -454,15 +470,6 @@ void AMyPlayerPawn::ClearCameraOffset()
 	m_DissolveCam->SetRelativeLocation(FVector(0,0,0));
 }
 
-void AMyPlayerPawn::OnRequestMoveDone(FAIRequestID id, const FPathFollowingResult& rslt)
-{
-	if(m_ReqID != id || !rslt.IsSuccess())
-	{
-		return;
-	}
-	m_OnRequestDone.ExecuteIfBound();
-	m_OnRequestDone.Unbind();
-}
 
 void AMyPlayerPawn::OnNotifyTrigger(const FName& name)
 {

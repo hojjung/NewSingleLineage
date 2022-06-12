@@ -26,14 +26,13 @@ void AStructureActor::SetBuildData(const FBuildDataRow& data)
 {
 	m_BuildData = &data;
 
-	if(!m_BuildData->m_Mesh.ToSoftObjectPath().IsNull())
+	if (!m_BuildData->m_Mesh.ToSoftObjectPath().IsNull())
 	{
 		m_MeshComp->SetStaticMesh(m_BuildData->m_Mesh.LoadSynchronous());
-		m_MeshComp->SetRelativeLocation(m_BuildData->m_Offset);
-		m_MeshComp->SetRelativeScale3D(FVector(m_BuildData->m_fScale));
-		m_MeshComp->SetRelativeRotation(FRotator(0,m_BuildData->m_fRotYaw,0));
 	}
-
+	m_MeshComp->SetRelativeLocation(m_BuildData->m_Offset);
+	m_MeshComp->SetRelativeScale3D(FVector(m_BuildData->m_fScale));
+	m_MeshComp->SetRelativeRotation(FRotator(0, m_BuildData->m_fRotYaw, 0));
 
 	GetComponents(m_AryMeshCompos);
 
@@ -114,10 +113,8 @@ void AStructureActor::ConfirmBuild(UInventory* inven)
 	if(m_BuildData->m_ClassInter->IsValidLowLevel())
 	{
 		m_BuildInteract = NewObject<UBuildInteractBase>(this, m_BuildData->m_ClassInter);
-
 		m_BuildInteract->Init(m_BuildData->m_InteractVariable,inven);
 	}
-
 }
 
 void AStructureActor::ShowSelect(bool b)
@@ -154,7 +151,7 @@ bool AStructureActor::IsUpgradeable()
 
 void AStructureActor::OnInteract()
 {
-	UMyLib::GetPlayer()->RequestInteract(this,FVoidVoid::CreateUObject(this,&AStructureActor::OnArrived),125);
+	UMyLib::GetPlayer()->RequestInteract(this,FVoidVoid::CreateUObject(this,&AStructureActor::OnArrived),1);
 }
 
 void AStructureActor::OnArrived()
@@ -169,20 +166,20 @@ bool AStructureActor::IsInteractImplemented()
 
 FVector AStructureActor::GetNavAgentLocation() const
 {
-	FVector Min,Max;
+	float R = 0;
 	
-	m_MeshComp->GetLocalBounds(Min,Max);
+	float H = 0;
 
-	float Z = Max.Z - Min.Z;
-	
-	return GetActorLocation() - FVector(0.f, 0.f, Z);
+	GetSimpleCollisionCylinder(R, H);
+
+	return GetActorLocation() - FVector(0.f, 0.f, H);
 }
 
 void AStructureActor::GetMoveGoalReachTest(const AActor* MovingActor, const FVector& MoveOffset, FVector& GoalOffset,
 	float& GoalRadius, float& GoalHalfHeight) const
 {
-	GoalOffset = FVector::ZeroVector;
-
+	GoalOffset = m_MeshComp->GetRelativeLocation();
+	
 	GetSimpleCollisionCylinder(GoalRadius, GoalHalfHeight);
 }
 

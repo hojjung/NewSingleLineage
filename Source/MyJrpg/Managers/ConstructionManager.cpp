@@ -361,7 +361,7 @@ void UConstructionManager::SpawnPreviewActor(FVector loc, const FBuildDataRow* d
 		m_PreviewActor->SetActorEnableCollision(false);
 	}
 	
-	m_PreviewActor->SetActorLocation(NewLoc + dataRow->m_Offset);
+	m_PreviewActor->SetActorLocation(NewLoc);
 	m_PreviewActor->SetActorRotation(NewRot);
 
 	CheckBuildable();
@@ -446,7 +446,7 @@ bool UConstructionManager::TraceBuildable(const FVector& Loc, const FVector&& ex
 	FVector Dest = Loc + FVector(0,0,height);
 	
 	if(UKismetSystemLibrary::BoxTraceSingleForObjects(this,Dest,Dest,extent,
-		rot,ObjectTypes,false,AryIgnore,EDrawDebugTrace::Persistent,Hit,false))
+		rot,ObjectTypes,false,AryIgnore,EDrawDebugTrace::None,Hit,false))
 	{
 		return false;
 	}
@@ -593,7 +593,6 @@ AStructureActor* UConstructionManager::SpawnStructure(const FBuildDataRow& data)
 	Param.bNoFail = true;
 	Param.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
 	AStructureActor* StructActor = GetWorld()->SpawnActor<AStructureActor>(data.m_ClassActor, Param);
-	Cast<AActor>(StructActor)->SetActorScale3D(FVector(0.885f));
 	StructActor->SetBuildData(data);
 
 	return StructActor;
