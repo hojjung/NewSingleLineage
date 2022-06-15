@@ -20,8 +20,8 @@ void UPetManager::CreatePreviewActor()
 
 	Param.bNoFail = true;
 	
-	m_PreviewActor = GetWorld()->SpawnActor<APreviewActor>(APreviewActor::StaticClass(),FVector(9999,9999,9999),FRotator(0),Param);
-	m_PreviewActor->SetMeshScale(0.4f);
+	//m_PreviewActor = GetWorld()->SpawnActor<APreviewActor>(APreviewActor::StaticClass(),FVector(9999,9999,9999),FRotator(0),Param);
+	//m_PreviewActor->SetMeshScale(0.4f);
 }
 
 void UPetManager::EquipPet(const FName& id)

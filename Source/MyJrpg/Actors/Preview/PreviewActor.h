@@ -35,6 +35,11 @@ protected:
 	UStaticMeshComponent* m_MeshLeftHand;
 	UPROPERTY(VisibleAnywhere)
 	UStaticMeshComponent* m_MeshRightHand;
+
+	TWeakObjectPtr<AAttachedWeapon> m_ActorLeftHand;
+
+	TWeakObjectPtr<AAttachedWeapon> m_ActorRightHand;
+	
 protected:
 	UPROPERTY()
 	UTextureRenderTarget2D* m_CaptureTexture;
@@ -58,6 +63,8 @@ protected:
 
 public:
 	void SetMeshScale(float s);
+	void RemoveRightActor();
+	void RemoveLeftActor();
 
 	void OnMeshVisualChanged(const AModularUnitPawn* charData);
 	

@@ -38,21 +38,25 @@ public:
 	AModularUnitPawn(const FObjectInitializer& objInit);
 
 protected:
-	UPROPERTY(VisibleAnywhere)
-	UStaticMeshComponent* m_MeshLeftHand;
+	FSkeletalMeshMergeParams m_MergeParam;
 	UPROPERTY(VisibleAnywhere)
 	UStaticMeshComponent* m_MeshRightHand;
+	UPROPERTY(VisibleAnywhere)
+	UStaticMeshComponent* m_MeshLeftHand;
+
 	
-	FSkeletalMeshMergeParams m_MergeParam;
 	
 protected:
 	bool m_bIsHatEquipped;
 
 	bool m_bIsGloveEquipped;
 
-	bool m_bIsBootHighEquipped;
+	bool m_bIsChestEquipped;
 
 protected:
+	TWeakObjectPtr<AAttachedWeapon> m_ActorRightHand;
+
+	TWeakObjectPtr<AAttachedWeapon> m_ActorLeftHand;
 	UPROPERTY()
 	UStaticMesh* m_CacheLeftHand;
 	UPROPERTY()
@@ -96,4 +100,8 @@ public:
 	UStaticMeshComponent* GetLeftWeaponMesh() const;
 	
 	UStaticMeshComponent* GetRightWeaponMesh() const;
+
+	AAttachedWeapon* GetLeftWeaponActor() const;
+
+	AAttachedWeapon* GetRightWeaponActor() const;
 };

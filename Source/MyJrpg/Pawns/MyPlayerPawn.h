@@ -40,8 +40,6 @@ protected:
 	UPROPERTY()
 	AMoveIndicator* m_FocusIndicator;
 	UPROPERTY(VisibleAnywhere)
-	UPointLightComponent* m_Light;
-	UPROPERTY(VisibleAnywhere)
 	UCameraDissolve* m_DissolveCam;
 	UPROPERTY(VisibleAnywhere)
 	UCameraComponent* m_TopCamera;

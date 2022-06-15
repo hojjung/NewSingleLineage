@@ -78,7 +78,8 @@ void AModularUnitPawn::UpdateMorpthTarget()
 {
 	m_BodyMesh->SetMorphTarget(TEXT("hat_equipped"), m_bIsHatEquipped ? 1.f : 0.f);
 	m_BodyMesh->SetMorphTarget(TEXT("gloves_equipped"), m_bIsGloveEquipped ? 1.f : 0.f);
-	m_BodyMesh->SetMorphTarget(TEXT("boot_high_equipped"), m_bIsBootHighEquipped ? 1.f : 0.f);
+	m_BodyMesh->SetMorphTarget(TEXT("boot_high_equipped"), 1);
+	m_BodyMesh->SetMorphTarget(TEXT("chest_equipped"), m_bIsChestEquipped ? 1.f : 0.f);
 }
 
 void AModularUnitPawn::TrySpawnBullets(const FItemDataRow& Itemdata)
@@ -126,8 +127,8 @@ void AModularUnitPawn::UpdateEquipActor()
 		case EBodyIndex::Gloves:
 			m_bIsGloveEquipped = m_MergeParam.MeshesToMerge[Iter] != nullptr;
 			break;
-		case EBodyIndex::Legs:
-			m_bIsBootHighEquipped = m_MergeParam.MeshesToMerge[Iter] != nullptr;
+		case EBodyIndex::Body:
+			m_bIsChestEquipped = m_MergeParam.MeshesToMerge[Iter] != nullptr;
 			break;
 		}
 	}
@@ -148,10 +149,21 @@ void AModularUnitPawn::UpdateEquipActor()
 	}
 	else
 	{
+		if(m_ActorLeftHand.Get())
+		{
+			m_ActorLeftHand.Get()->Destroy();
+		}
+		if(m_ActorRightHand.Get())
+		{
+			m_ActorRightHand.Get()->Destroy();
+		}
+		
 		m_CacheLeftHand = nullptr;
 
 		m_CacheRightHand = nullptr;
+		
 		m_Stance = EStanceType::None;
+		
 		HideWeapon();
 		
 		TryKillBullets();
@@ -171,10 +183,73 @@ void AModularUnitPawn::UpdateEquipActor()
 void AModularUnitPawn::SpawnEquipActor(const FWeaponData& weaponData)
 {
 	m_Stance = weaponData.m_Stance;
-	
-	m_CacheLeftHand = weaponData.m_MeshLeft.LoadSynchronous();
 
-	m_CacheRightHand = weaponData.m_MeshRight.LoadSynchronous();
+	if(weaponData.m_MeshLeft)
+	{
+		m_CacheLeftHand = weaponData.m_MeshLeft.LoadSynchronous();
+		if(m_ActorLeftHand.Get())
+		{
+			m_ActorLeftHand.Get()->Destroy();
+		}
+	}
+	else if(weaponData.m_ClassLeftActor)
+	{
+		m_CacheLeftHand = nullptr;
+		if(m_ActorLeftHand.Get())
+		{
+			if (m_ActorLeftHand.Get()->GetClass() == weaponData.m_ClassLeftActor)
+			{
+				return;				
+			}
+			m_ActorLeftHand.Get()->Destroy();
+		}
+		m_ActorLeftHand = GetWorld()->SpawnActor<AAttachedWeapon>(weaponData.m_ClassLeftActor);
+		FAttachmentTransformRules Rule = FAttachmentTransformRules(EAttachmentRule::SnapToTarget,false);
+		m_ActorLeftHand->AttachToComponent(m_MeshLeftHand,Rule);
+	}
+	else
+	{
+		m_CacheLeftHand = nullptr;
+		
+		if(m_ActorLeftHand.Get())
+		{
+			m_ActorLeftHand.Get()->Destroy();
+		}
+	}
+
+	if(weaponData.m_MeshRight)
+	{
+		m_CacheRightHand = weaponData.m_MeshRight.LoadSynchronous();
+
+		if(m_ActorRightHand.Get())
+		{
+			m_ActorRightHand.Get()->Destroy();
+		}
+	}
+	else if(weaponData.m_ClassRightActor)
+	{
+		m_CacheRightHand = nullptr;
+		if(m_ActorRightHand.Get())
+		{
+			if(m_ActorRightHand.Get()->GetClass() == weaponData.m_ClassLeftActor)
+			{
+				return;
+			}
+			m_ActorRightHand.Get()->Destroy();
+		}
+		m_ActorRightHand = GetWorld()->SpawnActor<AAttachedWeapon>(weaponData.m_ClassRightActor);
+		FAttachmentTransformRules Rule = FAttachmentTransformRules(EAttachmentRule::SnapToTarget,false);
+		m_ActorRightHand->AttachToComponent(m_MeshRightHand,Rule);
+	}
+	else
+	{
+		m_CacheRightHand = nullptr;
+		
+		if(m_ActorRightHand.Get())
+		{
+			m_ActorRightHand.Get()->Destroy();
+		}
+	}
 }
 
 UAnimMontage* AModularUnitPawn::GetBaseAttackMontage()
@@ -191,6 +266,15 @@ void AModularUnitPawn::ShowWeapon()
 	m_MeshLeftHand->SetStaticMesh(m_CacheLeftHand);
 
 	m_MeshRightHand->SetStaticMesh(m_CacheRightHand);
+
+	if(m_ActorLeftHand.Get())
+	{
+		m_ActorLeftHand.Get()->SetActorHiddenInGame(false);
+	}
+	if(m_ActorRightHand.Get())
+	{
+		m_ActorRightHand.Get()->SetActorHiddenInGame(false);
+	}
 }
 
 void AModularUnitPawn::HideWeapon()
@@ -198,6 +282,15 @@ void AModularUnitPawn::HideWeapon()
 	m_MeshLeftHand->SetStaticMesh(nullptr);
 
 	m_MeshRightHand->SetStaticMesh(nullptr);
+
+	if(m_ActorLeftHand.Get())
+	{
+		m_ActorLeftHand.Get()->SetActorHiddenInGame(true);
+	}
+	if(m_ActorRightHand.Get())
+	{
+		m_ActorRightHand.Get()->SetActorHiddenInGame(true);
+	}
 }
 
 FItemSpec* AModularUnitPawn::GetAnyItemHave(FName id)
@@ -247,4 +340,14 @@ UStaticMeshComponent* AModularUnitPawn::GetLeftWeaponMesh() const
 UStaticMeshComponent* AModularUnitPawn::GetRightWeaponMesh() const
 {
 	return m_MeshRightHand;
+}
+
+AAttachedWeapon* AModularUnitPawn::GetLeftWeaponActor() const
+{
+	return m_ActorLeftHand.Get();
+}
+
+AAttachedWeapon* AModularUnitPawn::GetRightWeaponActor() const
+{
+	return m_ActorRightHand.Get();
 }

@@ -3,6 +3,7 @@
 #include "NPCPaletteDataAsset.h"
 #include "MyJrpg/MyJrpg.h"
 #include "Engine/DataTable.h"
+#include "MyJrpg/Items/AttachedWeapon.h"
 #include "UObject/NoExportTypes.h"
 #include "ItemData.generated.h"
 
@@ -190,7 +191,11 @@ public:
 	UPROPERTY(EditAnywhere)
 	EStanceType m_Stance;
 	UPROPERTY(EditAnywhere)
+	TSubclassOf<AAttachedWeapon> m_ClassRightActor;
+	UPROPERTY(EditAnywhere)
 	TSoftObjectPtr<UStaticMesh> m_MeshRight;
+	UPROPERTY(EditAnywhere)
+	TSubclassOf<AAttachedWeapon> m_ClassLeftActor;
 	UPROPERTY(EditAnywhere)
 	TSoftObjectPtr<UStaticMesh> m_MeshLeft;
 	UPROPERTY(EditAnywhere)

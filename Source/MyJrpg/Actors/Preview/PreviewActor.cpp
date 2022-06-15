@@ -106,17 +106,85 @@ void APreviewActor::SetMeshScale(float s)
 	m_MeshBody->SetRelativeScale3D(FVector(s));
 }
 
+void APreviewActor::RemoveRightActor()
+{
+	if(!m_ActorRightHand.Get())
+	{
+		return;
+	}
+	m_Capture->ShowOnlyActors.Remove(m_ActorRightHand.Get());
+	m_ActorRightHand->Destroy();
+}
+
+void APreviewActor::RemoveLeftActor()
+{
+	if(!m_ActorLeftHand.Get())
+	{
+		return;
+	}
+	m_Capture->ShowOnlyActors.Remove(m_ActorLeftHand.Get());
+	m_ActorLeftHand->Destroy();
+}
+
 void APreviewActor::OnMeshVisualChanged(const AModularUnitPawn* charData)
 {
 	m_MeshBody->SetSkeletalMesh(charData->GetSkMesh()->SkeletalMesh,false);
 
 	UStaticMesh* LeftMesh = charData->GetLeftWeaponMesh()->GetStaticMesh();
 
+	AAttachedWeapon* LeftActor = charData->GetLeftWeaponActor();
+
+	if(LeftMesh)
+	{
+		m_MeshLeftHand->SetStaticMesh(LeftMesh);
+		RemoveLeftActor();
+	}
+	else if (LeftActor)
+	{
+		m_MeshLeftHand->SetStaticMesh(nullptr);
+		if(m_ActorLeftHand.Get() && LeftActor->GetClass() == m_ActorLeftHand->GetClass())
+		{
+			return;
+		}
+		RemoveLeftActor();
+		m_ActorLeftHand = GetWorld()->SpawnActor<AAttachedWeapon>(LeftActor->GetClass());
+		FAttachmentTransformRules Rule = FAttachmentTransformRules(EAttachmentRule::SnapToTarget,false);
+		m_ActorLeftHand->AttachToComponent(m_MeshLeftHand,Rule);
+		m_Capture->ShowOnlyActors.Add(m_ActorLeftHand.Get());
+	}
+	else
+	{
+		m_MeshLeftHand->SetStaticMesh(nullptr);
+		RemoveLeftActor();
+	}
+
 	UStaticMesh* RightMesh = charData->GetRightWeaponMesh()->GetStaticMesh();
 
-	m_MeshLeftHand->SetStaticMesh(LeftMesh);
+	AAttachedWeapon* RightActor = charData->GetRightWeaponActor();
 
-	m_MeshRightHand->SetStaticMesh(RightMesh);
+	if(RightMesh)
+	{
+		m_MeshRightHand->SetStaticMesh(RightMesh);
+		RemoveRightActor();
+	}
+	else if(RightActor)
+	{
+		m_MeshRightHand->SetStaticMesh(nullptr);
+		if(m_ActorRightHand.Get() && RightActor->GetClass() == m_ActorRightHand->GetClass())
+		{
+			return;
+		}
+		RemoveRightActor();
+		m_ActorRightHand = GetWorld()->SpawnActor<AAttachedWeapon>(RightActor->GetClass());
+		FAttachmentTransformRules Rule = FAttachmentTransformRules(EAttachmentRule::SnapToTarget,false);
+		m_ActorRightHand->AttachToComponent(m_MeshRightHand,Rule);
+		m_Capture->ShowOnlyActors.Add(m_ActorRightHand.Get());
+	}
+	else
+	{
+		m_MeshRightHand->SetStaticMesh(nullptr);
+		RemoveRightActor();
+	}
 }
 
 void APreviewActor::OnMeshVisualChanged(const FUnitEntityRow& charData)

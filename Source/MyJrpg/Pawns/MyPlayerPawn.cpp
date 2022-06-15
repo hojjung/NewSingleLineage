@@ -26,13 +26,6 @@ AMyPlayerPawn::AMyPlayerPawn(const FObjectInitializer& objInit):Super(objInit)
 	m_bIsSneaking = false;
 	m_bUseFsmTick = false;
 
-	m_Light = CreateDefaultSubobject<UPointLightComponent>("m_Light");
-	m_Light->SetupAttachment(m_Capsule);
-	m_Light->SetRelativeLocation(FVector(0,0,140));
-	m_Light->CastShadows = false;
-	m_Light->LightColor = FColor(255,204,127);
-	m_Light->Intensity = 2000;
-	
 	m_Capsule->SetCollisionEnabled(ECollisionEnabled::QueryOnly);
 
 	m_DissolveCam = CreateDefaultSubobject<UCameraDissolve>(TEXT("CamDissolve00"));
