@@ -32,8 +32,6 @@ protected:
 	UPROPERTY()
 	float m_fExp;
 	UPROPERTY()
-	float m_fGold;
-	UPROPERTY()
 	FVector m_SpawnPoint;
 	UPROPERTY()
 	FRotator m_SpawnRot;
@@ -73,8 +71,6 @@ public:
 	virtual void OnNotifyTrigger(const FName& name) override;
 
 	float GetRewardExp() const;
-
-	float GetRewardGold() const;
 
 	bool IsBoss() const;
 	

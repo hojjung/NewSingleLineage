@@ -80,8 +80,6 @@ void AMonsterPawn::SetEntity(const FName& id,const FNpcUnitEntityRow& unitEntity
 
 	m_fExp = unitEntityRow.m_fExp;
 
-	m_fGold = unitEntityRow.m_fGold;
-
 	if(unitEntityRow.m_Bullet)
 	{
 		m_Pool = NewObject<UBulletPool>(this);
@@ -131,11 +129,6 @@ void AMonsterPawn::OnNotifyTrigger(const FName& name)
 float AMonsterPawn::GetRewardExp() const
 {
 	return m_fExp;
-}
-
-float AMonsterPawn::GetRewardGold() const
-{
-	return m_fGold;
 }
 
 bool AMonsterPawn::IsBoss() const
@@ -214,10 +207,6 @@ void AMonsterPawn::CreateInventory()
 	m_Inven = NewObject<UInventory>(UMyGameInstance::Get);
 	
 	m_Inven->Init(FGlobalVariable::MOB_INVEN);
-
-	float Gold = FMath::RandRange(GetRewardGold() * 0.7f, GetRewardGold() * 1.3f);
-	
-	m_Inven->AddItem(FItemSpec(TEXT("Coin"), Gold));
 }
 
 void AMonsterPawn::Dead()

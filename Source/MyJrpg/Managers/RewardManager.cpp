@@ -118,11 +118,9 @@ void URewardManager::OnMonsterDead(AMonsterPawn* monster)
 {
 	m_OnMonsterDead.Broadcast(monster->GetEntityID());
 
-	UMyGameInstance::Get->m_CurrencyManager->AddGold(monster->GetRewardGold());
-
 	UMyGameInstance::Get->m_PlayerStatManager->AddExp(monster->GetRewardExp());
 
-	m_OnExpGold.Broadcast(monster->GetRewardExp(),monster->GetRewardGold());
+	m_OnExpGold.Broadcast(monster->GetRewardExp());
 	
 	RequestMonsterReward(monster);
 }
