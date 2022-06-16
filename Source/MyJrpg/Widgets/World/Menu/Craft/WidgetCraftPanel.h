@@ -2,7 +2,6 @@
 
 #include "CoreMinimal.h"
 #include "ImageText.h"
-#include "WidgetCraftFilterBtns.h"
 #include "WidgetCraftSelected.h"
 #include "Components/ScrollBox.h"
 #include "Components/WrapBox.h"

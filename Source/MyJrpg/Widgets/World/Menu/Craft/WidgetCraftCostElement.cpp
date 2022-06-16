@@ -22,7 +22,6 @@ void UWidgetCraftCostElement::SetCraftCost(const FCraftItemCost& cost)
 	m_ItemElement->SetDragable(false);
 
 	UpdateCostAmount();
-
 }
 
 void UWidgetCraftCostElement::UpdateCostAmount()
