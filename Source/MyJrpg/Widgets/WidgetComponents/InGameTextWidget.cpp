@@ -8,6 +8,8 @@ void UInGameTextWidget::NativeOnInitialized()
 
 	m_AryDmgTxtFuncs[static_cast<int>(ETextType::NormalRight)] = &UInGameTextWidget::PlayNormalDmg;
 
+	m_AryDmgTxtFuncs[static_cast<int>(ETextType::PlDmg)] = &UInGameTextWidget::PlayerTakeDmg;
+	
 	m_AryDmgTxtFuncs[static_cast<int>(ETextType::CritcalRight)] = &UInGameTextWidget::PlayCriticalDmg;
 
 	m_AryDmgTxtFuncs[static_cast<int>(ETextType::PlayerTookHeal)] = &UInGameTextWidget::PlayPlayerHeal;
@@ -27,6 +29,11 @@ void UInGameTextWidget::SetParentComponent(UInGameTextWidgetComp* parent)
 void UInGameTextWidget::PlayNormalDmg()
 {
 	PlayAnimation(Dmg);
+}
+
+void UInGameTextWidget::PlayerTakeDmg()
+{
+	PlayAnimation(PlDmg);
 }
 
 void UInGameTextWidget::PlayCriticalDmg()

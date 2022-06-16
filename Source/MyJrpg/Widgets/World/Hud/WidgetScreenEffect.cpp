@@ -35,7 +35,7 @@ void UWidgetScreenEffect::NativeTick(const FGeometry& MyGeometry, float InDeltaT
 	if(m_fFadeOutTimer >= m_fMaxFadeOut)
 	{
 		m_OnFadeOutDone.ExecuteIfBound();
-		EndFade();
+		//EndFade();
 	}
 }
 

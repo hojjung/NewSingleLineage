@@ -98,6 +98,7 @@ UENUM(BlueprintType)
 enum class ETextType: uint8
 {
 	NormalRight,
+	PlDmg,
 	CritcalRight,
 	Miss,
 	PlayerTookHeal,

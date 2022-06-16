@@ -381,9 +381,9 @@ bool ACombatUnitPawn::TakeDmg(float amount, ACombatUnitPawn* attacker)
 		return false;
 	}
 
-	amount = GetRandomDmg(amount);
+	amount = attacker->GetRandomDmg(amount);
 
-	float CriDmg = GetCriticalDmg(amount);
+	float CriDmg = attacker->GetCriticalDmg(amount);
 	
 	if(CriDmg)
 	{

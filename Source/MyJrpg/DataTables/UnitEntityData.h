@@ -28,11 +28,11 @@ struct FAttach
 
 public:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
-	FName m_SocketName;
+	UStaticMesh* m_BackMesh;
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
-	USkeletalMesh* m_SkMesh;
+	UStaticMesh* m_LeftMesh;
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
-	UStaticMesh* m_StMesh;
+	UStaticMesh* m_RightMesh;
 };
 
 
@@ -57,7 +57,7 @@ public://Visual
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
 	UAnimMontage* m_TookHitMontage;
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
-	TArray<FAttach> m_AryAttaches; 
+	FAttach m_Attach; 
 
 	virtual FPrimaryAssetId GetPrimaryAssetId() const override
 	{

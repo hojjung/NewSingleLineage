@@ -141,6 +141,21 @@ void AMyPlayerPawn::MoveRight(float AxisValue)
 	}
 }
 
+void AMyPlayerPawn::ShowPopupText(float nbr, ETextType t)
+{
+	ETextType Type;
+	
+	if(t == ETextType::NormalRight)
+	{
+		Type = ETextType::PlDmg;
+	}
+	else
+	{
+		Type = t;
+	}
+	Super::ShowPopupText(nbr, Type);
+}
+
 void AMyPlayerPawn::CancelInteract()
 {
 	if(!GetInteracting())
@@ -256,11 +271,6 @@ void AMyPlayerPawn::SetAutoCombat(bool useAuto)
 		StopMove();
 		CancelInteract();
 	}
-}
-
-void AMyPlayerPawn::ShowPopupText(float nbr, ETextType t)
-{
-	//not use
 }
 
 void AMyPlayerPawn::ShowIndicator(IFocusable* target)

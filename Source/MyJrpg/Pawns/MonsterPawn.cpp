@@ -54,8 +54,38 @@ AMonsterPawn::AMonsterPawn(const FObjectInitializer& obj): Super(obj.SetDefaultS
 	m_HitParticle->SetTemplate(FoundHitEffect.Object);
 
 	m_SoundComp->SetSound(FoundHitSound.Object);
+	//
+	//
+	m_MeshLeftHand = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("m_MeshLeftHand"));
+	m_MeshLeftHand->SetupAttachment(m_BodyMesh);
+	m_MeshLeftHand->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+	m_MeshLeftHand->bCastDynamicShadow = false;
+	m_MeshLeftHand->bAffectDynamicIndirectLighting = true;
+	m_MeshLeftHand->PrimaryComponentTick.TickGroup = TG_PrePhysics;
+	m_MeshLeftHand->CanCharacterStepUpOn = ECanBeCharacterBase::ECB_No;
+	//
+	m_MeshRightHand = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("m_MeshRightHand"));
+	m_MeshRightHand->SetupAttachment(m_BodyMesh);
+	m_MeshRightHand->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+	m_MeshRightHand->bCastDynamicShadow = false;
+	m_MeshRightHand->bAffectDynamicIndirectLighting = true;
+	m_MeshRightHand->PrimaryComponentTick.TickGroup = TG_PrePhysics;
+	m_MeshRightHand->CanCharacterStepUpOn = ECanBeCharacterBase::ECB_No;
+	//
+	m_MeshBackHand = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("m_MeshBackHand"));
+	m_MeshBackHand->SetupAttachment(m_BodyMesh);
+	m_MeshBackHand->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+	m_MeshBackHand->bCastDynamicShadow = false;
+	m_MeshBackHand->bAffectDynamicIndirectLighting = true;
+	m_MeshBackHand->PrimaryComponentTick.TickGroup = TG_PrePhysics;
+	m_MeshBackHand->CanCharacterStepUpOn = ECanBeCharacterBase::ECB_No;
 }
 
+void AMonsterPawn::BeginPlay()
+{
+	Super::BeginPlay();
+	AttachWeapons();
+}
 void AMonsterPawn::SetEntity(const FName& id,const FNpcUnitEntityRow& unitEntityRow)
 {
 	m_fAttackRange = unitEntityRow.m_fAtkRange;
@@ -100,6 +130,27 @@ void AMonsterPawn::SetEntity(const FName& id,const FNpcUnitEntityRow& unitEntity
 	{
 		m_SoundComp->SetSound(unitEntityRow.m_TakeHitSound);
 	}
+
+	if(m_EntityAsset->m_Attach.m_LeftMesh)
+	{
+		m_MeshLeftHand->SetStaticMesh(m_EntityAsset->m_Attach.m_LeftMesh);
+	}
+	if(m_EntityAsset->m_Attach.m_RightMesh)
+	{
+		m_MeshRightHand->SetStaticMesh(m_EntityAsset->m_Attach.m_RightMesh);
+	}
+	if(m_EntityAsset->m_Attach.m_BackMesh)
+	{
+		m_MeshBackHand->SetStaticMesh(m_EntityAsset->m_Attach.m_BackMesh);
+	}
+}
+
+void AMonsterPawn::AttachWeapons()
+{
+	FAttachmentTransformRules Rules(EAttachmentRule::KeepRelative, true);
+	m_MeshLeftHand->AttachToComponent(m_BodyMesh, Rules, TEXT("LeftHandSocket"));
+	m_MeshRightHand->AttachToComponent(m_BodyMesh, Rules, TEXT("RightHandSocket"));
+	m_MeshBackHand->AttachToComponent(m_BodyMesh, Rules, TEXT("BackSocket"));
 }
 
 void AMonsterPawn::OnNotifyTrigger(const FName& name)

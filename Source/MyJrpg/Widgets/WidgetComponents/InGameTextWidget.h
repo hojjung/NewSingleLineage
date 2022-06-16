@@ -21,6 +21,8 @@ public:
 	UPROPERTY(Transient,BlueprintReadWrite,meta = (BindWidgetAnim,AllowPrivateAccess = "true"))
 	UWidgetAnimation* Dmg;
 	UPROPERTY(Transient,BlueprintReadWrite,meta = (BindWidgetAnim,AllowPrivateAccess = "true"))
+	UWidgetAnimation* PlDmg;
+	UPROPERTY(Transient,BlueprintReadWrite,meta = (BindWidgetAnim,AllowPrivateAccess = "true"))
 	UWidgetAnimation* Critical;
 	UPROPERTY(Transient,BlueprintReadWrite,meta = (BindWidgetAnim,AllowPrivateAccess = "true"))
 	UWidgetAnimation* Heal;
@@ -42,6 +44,8 @@ public:
 	void SetParentComponent(UInGameTextWidgetComp* parent);
 	
 	void PlayNormalDmg();
+	
+	void PlayerTakeDmg();
 
 	void PlayCriticalDmg();
 

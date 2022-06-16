@@ -19,6 +19,12 @@ public:
 	AMonsterPawn(const FObjectInitializer& obj);
 
 protected:
+	UPROPERTY(VisibleAnywhere)
+	UStaticMeshComponent* m_MeshRightHand;
+	UPROPERTY(VisibleAnywhere)
+	UStaticMeshComponent* m_MeshLeftHand;
+	UPROPERTY(VisibleAnywhere)
+	UStaticMeshComponent* m_MeshBackHand;
 	UPROPERTY(VisibleAnywhere,BlueprintReadWrite)
 	UWidgetPawnInfoComp* m_PawnInfo;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
@@ -43,6 +49,10 @@ protected:
 	FName m_TalkID;
 	
 protected:
+	virtual void BeginPlay() override;
+	
+	void AttachWeapons();
+	
 	void PlayHitFlash();
 	
 	void PlayHittenSound();
