@@ -73,6 +73,10 @@ void AItemActor::OnInteract()
 
 void AItemActor::OnArrived()
 {
+	if(!UMyLib::GetEquip()->HasSpace(m_ItemSpec))
+	{
+		return;
+	}
 	UMyLib::GetPlayer()->PlayAnimMontage(m_Anim);
 }
 
@@ -134,4 +138,9 @@ const FItemSpec& AItemActor::GetItemSpec() const
 FText AItemActor::GetTextInteract()
 {
 	return NSLOCTEXT("AItemActor","Loot","줍기");
+}
+
+bool AItemActor::IsInteractable()
+{
+	return UMyLib::GetEquip()->HasSpace(GetItemSpec());
 }

@@ -116,10 +116,6 @@ void ATreeBase::OnArrived()
 
 void ATreeBase::OnTakeChopping()
 {
-	
-	
-	m_Player->SetInteracting(false);
-	
 	if(m_CrntToolID)
 	{
 		if(m_GatherAsset->m_bIsAxe)
@@ -268,4 +264,9 @@ int ATreeBase::GetHP()
 FText ATreeBase::GetTextInteract()
 {
 	return NSLOCTEXT("ATreeBase","Gather","채집");
+}
+
+bool ATreeBase::IsInteractable()
+{
+	return UMyLib::GetEquip()->HasSpace(FItemSpec(m_DataRow->m_ItemGather.RowName,m_DataRow->m_nItemGatherCount));
 }

@@ -271,7 +271,7 @@ void UEquipManager::UpdateDur()
 	m_OnDurChanged.Broadcast();
 }
 
-bool UEquipManager::HasSpace(FItemSpec& addItem)
+bool UEquipManager::HasSpace(const FItemSpec& addItem)
 {
 	bool IsEquip = UMyLib::IsEquip(addItem.m_ID);
 
@@ -308,7 +308,7 @@ bool UEquipManager::HasSpace(FItemSpec& addItem)
 	return false;
 }
 
-bool UEquipManager::HasSpace(FItemSpec&& addItem)
+bool UEquipManager::HasSpace(const FItemSpec&& addItem)
 {
 	return HasSpace(addItem);
 }

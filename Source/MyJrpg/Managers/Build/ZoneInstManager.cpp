@@ -373,7 +373,7 @@ IFocusable* UZoneInstManager::GetNearProp(FVector callerLoc, float range, UClass
 
 	for (TScriptInterface<IFocusable>& Focus : m_AryFocusActors)
 	{
-		if (!Focus)
+		if (!Focus.GetObject())
 		{
 			continue;
 		}
@@ -381,6 +381,13 @@ IFocusable* UZoneInstManager::GetNearProp(FVector callerLoc, float range, UClass
 		AActor* FocusActor = Cast<AActor>(Focus.GetObject());
 
 		if(FocusActor->GetClass() == ignoreClass)
+		{
+			continue;
+		}
+
+		IFocusable* FocusInter = Cast<IFocusable>(Focus.GetObject());
+		
+		if(!FocusInter->IsInteractable())
 		{
 			continue;
 		}
@@ -409,7 +416,7 @@ IFocusable* UZoneInstManager::GetNearProp(FVector callerLoc, float range, UClass
 
 		if (MAX_Dist > Length)
 		{
-			NearPawn = Cast<IFocusable>(Focus.GetObject());
+			NearPawn = FocusInter;
 
 			MAX_Dist = Length;
 		}

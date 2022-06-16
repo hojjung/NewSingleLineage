@@ -177,6 +177,8 @@ struct FCraftable :  public FEntityRow
 
 public:
 	UPROPERTY(EditDefaultsOnly,BlueprintReadOnly)
+	int m_nCraftSortOrder=0;
+	UPROPERTY(EditDefaultsOnly,BlueprintReadOnly)
 	int m_nCraftLevelLimit=1;
 	UPROPERTY(EditDefaultsOnly,BlueprintReadOnly)
 	TArray<FCraftItemCost> m_AryCostItem;

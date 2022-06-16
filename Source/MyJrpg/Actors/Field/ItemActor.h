@@ -53,5 +53,7 @@ public:
 	const FItemSpec& GetItemSpec() const;
 
 	virtual FText GetTextInteract() override;
+
+	virtual bool IsInteractable() override;
 };
 

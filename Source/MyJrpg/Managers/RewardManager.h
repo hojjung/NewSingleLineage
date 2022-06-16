@@ -36,6 +36,7 @@ protected:
 	void ReceiveQuestReward(const FQuestReward& qReward);
 
 	void DropObtain(UInventory* inven , const TArray<FDropRewardItem>& items);
+	
 public:
 	void RequestMonsterReward(AMonsterPawn* mobId);
 

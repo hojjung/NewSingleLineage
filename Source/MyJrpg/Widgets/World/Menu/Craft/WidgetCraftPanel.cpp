@@ -42,7 +42,12 @@ void UWidgetCraftPanel::OnSelectCraftItem(int index)
 
 void UWidgetCraftPanel::OnUpdateItems()
 {
-	m_Selected->SelectCraft(*UMyGameInstance::Get->m_CraftManager->GetCrntItemRow());
+	const FCraftDataInfo* DataInfo = UMyGameInstance::Get->m_CraftManager->GetCrntItemRow();
+	
+	if(DataInfo)
+	{
+		m_Selected->SelectCraft(*DataInfo);
+	}
 }
 
 void UWidgetCraftPanel::ClosePanel()

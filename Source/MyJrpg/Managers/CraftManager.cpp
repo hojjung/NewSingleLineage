@@ -18,7 +18,10 @@ void UCraftManager::Init()
 		m_AryCraftables.Emplace(FCraftDataInfo(it.Key,false));
 	}
 	
-	m_AryCraftables.Sort([](const FCraftDataInfo& LHS, const FCraftDataInfo& RHS)  { return LHS.m_ItemData->m_nCraftLevelLimit < RHS.m_ItemData->m_nCraftLevelLimit; });
+	m_AryCraftables.Sort([](const FCraftDataInfo& LHS, const FCraftDataInfo& RHS)
+	{
+		return LHS.m_ItemData->m_nCraftLevelLimit + LHS.m_ItemData->m_nCraftSortOrder < RHS.m_ItemData->m_nCraftLevelLimit + RHS.m_ItemData->m_nCraftSortOrder;
+	});
 }
 
 void UCraftManager::AddCraftItemData(FName id)

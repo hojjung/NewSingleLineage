@@ -83,4 +83,6 @@ public:
 	int GetHP();
 
 	virtual FText GetTextInteract() override;
+
+	virtual bool IsInteractable() override;
 };

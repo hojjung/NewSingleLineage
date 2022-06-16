@@ -122,7 +122,7 @@ void ULogic_Player::OnInteract()
 		return;
 	}
 	IFocusable* ItemTarget = m_Pl->GetFocusedTarget<>();
-	
+
 	ItemTarget->OnInteract();
 }
 

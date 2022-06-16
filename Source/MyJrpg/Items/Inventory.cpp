@@ -140,7 +140,7 @@ void UInventory::AddSlot(int index, FItemSpec addItem)
 	m_AryTotalItems[index] = addItem;
 }
 
-bool UInventory::HasSpace(FItemSpec& addItem)
+bool UInventory::HasSpace(FItemSpec addItem)
 {
 	if(UMyLib::IsEquip(addItem.m_ID))
 	{
@@ -148,7 +148,7 @@ bool UInventory::HasSpace(FItemSpec& addItem)
 	}
 	TSet<int>* FoundSet = m_MapItemKeyCount.Find(addItem.m_ID);
 
-	if(FoundSet)
+	if(FoundSet)//이미있는거에 합칠수 있는지만 물음
 	{
 		int MaxStack = UMyLib::GetItemData(addItem.m_ID).m_nMaxStack;
 		for(int Index : *FoundSet)
@@ -162,10 +162,7 @@ bool UInventory::HasSpace(FItemSpec& addItem)
 				return true;
 			}
 		}
-
-		return false;
 	}
-
 	return EmptySlotCount() > 0;
 }
 

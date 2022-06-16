@@ -4,7 +4,7 @@ UDataTable* UItemConvertTable::GetItemConverter = nullptr;
 
 UItemConvertTable::UItemConvertTable()
 {
-	static ConstructorHelpers::FObjectFinder<UDataTable> FoundTable(TEXT("DataTable'/Game/00_DataTables/Item/ItemConvertTable.ItemConvertTable'"));
+	static ConstructorHelpers::FObjectFinder<UDataTable> FoundTable(TEXT("DataTable'/Game/00_DataTables/Build/ItemConvertTable.ItemConvertTable'"));
 	//
 	GetItemConverter = FoundTable.Object;
 }

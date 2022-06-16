@@ -107,9 +107,9 @@ public:
 	void UpdateDur();
 	
 public:
-	bool HasSpace(FItemSpec& addItem);
+	bool HasSpace(const FItemSpec& addItem);
 
-	bool HasSpace(FItemSpec&& addItem);
+	bool HasSpace(const FItemSpec&& addItem);
 
 	bool AddItem(FItemSpec& addItem, bool newEquipItem = false);
 
