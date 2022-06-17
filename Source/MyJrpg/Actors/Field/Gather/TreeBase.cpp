@@ -59,7 +59,7 @@ ATreeBase::ATreeBase()
 	m_ShadowMeshComp->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 	m_ShadowMeshComp->SetCanEverAffectNavigation(false);
 	m_ShadowMeshComp->SetRelativeLocation(FVector(0,0,-88));
-
+	m_ShadowMeshComp->bReceivesDecals = false;
 	m_nTreeHp = 3;
 }
 //(X=0.000005,Y=20.000000,Z=-10.000000) btm

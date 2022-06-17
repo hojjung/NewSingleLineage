@@ -25,6 +25,7 @@ ACombatUnitPawn::ACombatUnitPawn(const FObjectInitializer& objInit):Super(objIni
 	m_ShadowMeshComp->SetRelativeScale3D(FVector(1));
 	m_ShadowMeshComp->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 	m_ShadowMeshComp->SetCanEverAffectNavigation(false);
+	m_ShadowMeshComp->bReceivesDecals = false;
 
 	m_BulletTarget = CreateDefaultSubobject<USceneComponent>(TEXT("m_BulletTarget"));
 	m_BulletTarget->SetupAttachment(RootComponent);

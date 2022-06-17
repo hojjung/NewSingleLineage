@@ -18,6 +18,7 @@ AItemActor::AItemActor()
 	m_BillboardIcon->SetupAttachment(RootComponent);//-70
 	m_BillboardIcon->SetRelativeScale3D(FVector(2));
 	m_BillboardIcon->SetRelativeLocation(FVector(0,0,-56));
+	m_BillboardIcon->bReceivesDecals = false;
 	//
 	m_MeshItem = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("m_MeshTree"));
 	m_MeshItem->CanCharacterStepUpOn = ECB_No;
