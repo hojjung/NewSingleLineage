@@ -17,20 +17,8 @@ class MYJRPG_API UWidgetPickpocketPanel : public UWidgetStorage
 {
 	GENERATED_BODY()
 	
-	
-protected:
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (BindWidget))
-	UTextBlock* m_TxtStorageInvenCount;
-	
 	TWeakObjectPtr<AMonsterPawn> m_TargetPawn;
 	
-protected:
-	virtual void OpenPanel() override;
-
-	virtual void ClosePanel() override;
-
-	virtual void UpdateText();
-
 public:
 	void SetTargetPawn(AMonsterPawn* targetPawn);
 	

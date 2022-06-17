@@ -16,7 +16,7 @@ class MYJRPG_API UBuildInteractBase : public UObject
 	GENERATED_BODY()
 
 public:
-	virtual void Init(const FString& variable, UInventory* inven) {}
+	virtual void Init(const TArray<FString>& variable, UInventory* inven) {}
 	
 	virtual UInventory* GetItemHolder() {return nullptr ;}
 	

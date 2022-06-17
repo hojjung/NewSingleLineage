@@ -183,7 +183,7 @@ void UEquipManager::EquipBag(int i)
 {
 	m_BagInven = NewObject<UInventory>(this);
 
-	m_BagInven->Init(i);
+	m_BagInven->Init(i, NSLOCTEXT("UEquipManager","Bag","가방"));
 
 	m_BagInven->UpdateInventory();
 }
@@ -197,7 +197,7 @@ void UEquipManager::EquipBelt(int i)
 {
 	m_BeltSlots	= NewObject<UInventory>(this);
 
-	m_BeltSlots->Init(i);
+	m_BeltSlots->Init(i,NSLOCTEXT("UEquipManager","Belt","벨트"));
 
 	m_BeltSlots->UpdateInventory();
 }

@@ -20,7 +20,7 @@ protected:
 	UItemConvertInst* m_ItemConvert;
 		
 public:
-	virtual void Init(const FString& variable, UInventory* inven) override;
+	virtual void Init(const TArray<FString>& variable, UInventory* inven) override;
 	
 	virtual bool IsEraseable() override;
 

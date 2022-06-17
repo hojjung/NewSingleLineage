@@ -37,13 +37,6 @@ AMapExitBound::AMapExitBound()
 	m_TextRender->CastShadow = false;
 }
 
-void AMapExitBound::PostEditChangeProperty(FPropertyChangedEvent& PropertyChangedEvent)
-{
-	Super::PostEditChangeProperty(PropertyChangedEvent);
-	
-	m_CollBox->SetBoxExtent(m_Decal->DecalSize);
-}
-// Called when the game starts or when spawned
 void AMapExitBound::BeginPlay()
 {
 	Super::BeginPlay();

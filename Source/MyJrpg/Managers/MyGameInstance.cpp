@@ -107,7 +107,7 @@ void UMyGameInstance::Init()
 	m_PetManager->Init();
 	m_SkillManager->Init();
 	m_EquipManager->Init();
-	m_Inven->Init(FGlobalVariable::INVEN_SIZE);
+	m_Inven->Init(FGlobalVariable::INVEN_SIZE,NSLOCTEXT("UMyGameInstance","Inven","소지품"));
 	m_QuestManager->Init();
 	m_CurrencyManager->Init(0);
 	m_PlayerStatManager->Init();

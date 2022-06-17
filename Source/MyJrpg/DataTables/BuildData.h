@@ -42,7 +42,7 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	TSubclassOf<UBuildInteractBase> m_ClassInter = nullptr;
 	UPROPERTY(EditAnywhere, meta=(EditCondition = "m_ClassInter != nullptr", EditConditionHides))
-	FString m_InteractVariable;
+	TArray<FString>  m_AryInteractVariable;
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	TSubclassOf<AStructureActor> m_ClassActor;
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)

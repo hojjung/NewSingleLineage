@@ -1,5 +1,4 @@
 #include "WidgetStorage.h"
-#include "Components/WrapBoxSlot.h"
 #include "MyJrpg/MyLib.h"
 #include "MyJrpg/Managers/EquipManager.h"
 #include "MyJrpg/Managers/MyGameInstance.h"
@@ -57,11 +56,23 @@ void UWidgetStorage::SetTargetInven(UInventory* storage)
 	}
 
 	OpenPanel();
+
+	UpdateText();
+}
+
+void UWidgetStorage::OpenPanel()
+{
+	Super::OpenPanel();
+
+	UMyLib::GetPlayer()->SetInteracting(true);
 }
 
 void UWidgetStorage::ClosePanel()
 {
 	Super::ClosePanel();
+	
+	UMyLib::GetPlayer()->SetInteracting(false);
+	
 	m_InvenPanel->ClosePanel();
 	m_StoragePanel->ClosePanel();
 
@@ -149,4 +160,9 @@ void UWidgetStorage::OnStorageFocuseConfirm(UWidgetBaseElement* ele, UInventory*
 {
 	AddRemoveItem(inven, FAddItem::CreateUObject(UMyGameInstance::Get->m_EquipManager, &UEquipManager::AddItem), index);
 	inven->UpdateInventory();
+}
+
+void UWidgetStorage::UpdateText()
+{
+	m_TextStorageName->SetText(m_StoragePanel->GetInven()->GetInvenName());
 }

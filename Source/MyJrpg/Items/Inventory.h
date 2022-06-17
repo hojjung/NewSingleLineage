@@ -52,6 +52,8 @@ protected://
 
 	TMap<FName, TSet<int>> m_MapItemKeyCount;
 
+	FText m_InvenName;
+
 protected:
 
 	void AddItemStack(const FItemDataRow& itemData, int index, int& lvCnt, FName id, int maxStack);
@@ -78,7 +80,7 @@ public:
 		return m_AryTotalItems[index];
 	}
 	
-	virtual void Init(int size);
+	virtual void Init(int size, FText invenName);
 	
 	int GetInvenSize() const;
 	
@@ -135,5 +137,7 @@ public:
 	bool GetEmptyIndex(int& out) const;
 
 	int GetItemIndex(const FItemSpec& itemHere);
+
+	const FText& GetInvenName() const;
 };
 

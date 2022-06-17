@@ -4,8 +4,10 @@
 #include "MyJrpg/Managers/EquipManager.h"
 #include "MyJrpg/Managers/MyGameInstance.h"
 
-void UInventory::Init(int size)
+void UInventory::Init(int size, FText invenName)
 {
+	m_InvenName = invenName;
+	
 	m_nInvenMaxSize = size;
 	
 	m_AryTotalItems.Init(FItemSpec(), m_nInvenMaxSize);
@@ -40,6 +42,11 @@ int UInventory::GetItemIndex(const FItemSpec& itemHere)
 		}
 	}
 	return INDEX_NONE;
+}
+
+const FText& UInventory::GetInvenName() const
+{
+	return m_InvenName;
 }
 
 int UInventory::GetInvenSize() const

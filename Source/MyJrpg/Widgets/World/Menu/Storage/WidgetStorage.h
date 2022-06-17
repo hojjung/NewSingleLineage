@@ -17,6 +17,8 @@ class MYJRPG_API UWidgetStorage : public UWidgetBasePanel
 	
 protected:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (BindWidget))
+	UTextBlock* m_TextStorageName;
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (BindWidget))
 	UWidgetInventory* m_StoragePanel;
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (BindWidget))
 	UWidgetInventory* m_InvenPanel;
@@ -46,10 +48,15 @@ protected:
 	virtual void OnStorageInvenFocused(UWidgetBaseElement* ele, UInventory* inven, int index);
 	
 	virtual void OnStorageFocuseConfirm(UWidgetBaseElement* ele, UInventory* inven, int index);
-	
+
+	virtual void UpdateText();
+
+
 public:
 	void SetTargetInven(UInventory* storage);
 
+	virtual void OpenPanel() override;
+	
 	virtual void ClosePanel() override;
 	UFUNCTION()
 	void OnWithdrawAll();

@@ -6,7 +6,7 @@
 #include "MyJrpg/MyLib.h"
 #include "MyJrpg/Managers/MyGameInstance.h"
 
-void UBI_Storage::Init(const FString& variable, UInventory* inven)
+void UBI_Storage::Init(const TArray<FString>& variable, UInventory* inven)
 {
 	Super::Init(variable, inven);
 	
@@ -18,9 +18,9 @@ void UBI_Storage::Init(const FString& variable, UInventory* inven)
 	{
 		m_Inven = NewObject<UInventory>(UMyGameInstance::Get);
 		
-		int Size = FCString::Atoi(*variable);
+		int Size = FCString::Atoi(*variable[0]);
 		
-		m_Inven->Init(Size);
+		m_Inven->Init(Size,NSLOCTEXT("UBI_Storage","StorageName","창고"));
 	}
 	m_Player = UMyLib::GetPlayer();
 }

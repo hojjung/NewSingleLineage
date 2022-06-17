@@ -14,7 +14,7 @@ void UItemConvertInst::SetConvertData(const FItemConvertRow& convertRow)
 	m_SelectedConvertSet = nullptr;
 	m_ItemConvertRow = &convertRow;
 	m_bIsNeedFire = m_ItemConvertRow->m_AryFuelItems.Num() > 0 && m_fMaxFireTimer <= 0;
-	Init(EItemConvertIndex::Len);
+	Init(EItemConvertIndex::Len, convertRow.m_TextConverterName);
 
 	m_bHasAnyCostItem = false;
 	for(const FItemConvertSet& Set :m_ItemConvertRow->m_AryItems)

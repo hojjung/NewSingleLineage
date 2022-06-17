@@ -380,7 +380,7 @@ IFocusable* UZoneInstManager::GetNearProp(FVector callerLoc, float range, UClass
 
 		AActor* FocusActor = Cast<AActor>(Focus.GetObject());
 
-		if(FocusActor->GetClass() == ignoreClass)
+		if(FocusActor->GetClass()->IsChildOf(ignoreClass))
 		{
 			continue;
 		}

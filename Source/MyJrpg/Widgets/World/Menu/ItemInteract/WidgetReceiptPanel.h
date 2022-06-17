@@ -26,8 +26,4 @@ protected:
 	
 public:
 	void SetReceipt(const FItemConvertRow& item_convert_row);
-	
-	virtual void ClosePanel() override;
-
-	virtual void OpenPanel() override;
 };

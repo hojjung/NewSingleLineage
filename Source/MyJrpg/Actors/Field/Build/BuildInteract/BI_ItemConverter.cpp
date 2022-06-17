@@ -6,7 +6,7 @@
 #include "MyJrpg/MyLib.h"
 #include "MyJrpg/Managers/MyGameInstance.h"
 
-void UBI_ItemConverter::Init(const FString& variable, UInventory* inven)
+void UBI_ItemConverter::Init(const TArray<FString>& variable, UInventory* inven)
 {
 	Super::Init(variable, inven);
 
@@ -18,7 +18,7 @@ void UBI_ItemConverter::Init(const FString& variable, UInventory* inven)
 	{
 		m_ItemConvert = NewObject<UItemConvertInst>(UMyGameInstance::Get);
 		
-		const FItemConvertRow* ItemRow = UItemConvertTable::GetItemConverter->FindRow<FItemConvertRow>(*variable, "");
+		const FItemConvertRow* ItemRow = UItemConvertTable::GetItemConverter->FindRow<FItemConvertRow>(*variable[0], "");
 		
 		m_ItemConvert->SetConvertData(*ItemRow);
 	}

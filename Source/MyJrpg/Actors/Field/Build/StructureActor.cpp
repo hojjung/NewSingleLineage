@@ -113,7 +113,7 @@ void AStructureActor::ConfirmBuild(UInventory* inven)
 	if(m_BuildData->m_ClassInter->IsValidLowLevel())
 	{
 		m_BuildInteract = NewObject<UBuildInteractBase>(this, m_BuildData->m_ClassInter);
-		m_BuildInteract->Init(m_BuildData->m_InteractVariable,inven);
+		m_BuildInteract->Init(m_BuildData->m_AryInteractVariable,inven);
 	}
 }
 

@@ -256,8 +256,12 @@ void AMonsterPawn::PlayHittenEffect()
 void AMonsterPawn::CreateInventory()
 {
 	m_Inven = NewObject<UInventory>(UMyGameInstance::Get);
+
+	FText InvenT = NSLOCTEXT("AMonsterPawn","'s Inven","의 소지품");
+
+	FString FormatStr = FString::Printf(TEXT("%s%s"),*m_PawnName.ToString(),*InvenT.ToString());
 	
-	m_Inven->Init(FGlobalVariable::MOB_INVEN);
+	m_Inven->Init(FGlobalVariable::MOB_INVEN, FText::FromString(FormatStr));
 }
 
 void AMonsterPawn::Dead()
