@@ -3,6 +3,8 @@
 
 #include "WidgetReceiptEle.h"
 
+#include "MyJrpg/MyLib.h"
+
 void UWidgetReceiptEle::SetElement(const FItemConvertSet& item_converts)
 {
 	if(item_converts.m_CostItem.RowName.IsNone())
@@ -23,4 +25,24 @@ void UWidgetReceiptEle::SetElement(const FItemConvertSet& item_converts)
 	m_LeftItem->SetItem(FItemSpec(item_converts.m_LeftItem.RowName,LeftSt));
 	
 	m_RightItem->SetItem(FItemSpec(item_converts.m_RightItem.RowName,RightSt));
+
+	m_LeftItem->SetHoldable(true);
+	m_LeftItem->SetDragable(false);
+	m_LeftItem->SetFocusable(false);
+
+	m_RightItem->SetHoldable(true);
+	m_RightItem->SetDragable(false);
+	m_RightItem->SetFocusable(false);
+
+	m_LeftItem->m_OnHold.AddUObject(this,&UWidgetReceiptEle::OnHold);
+
+	m_RightItem->m_OnHold.AddUObject(this,&UWidgetReceiptEle::OnHold);
+
+	m_CostItem->m_OnHold.AddUObject(this,&UWidgetReceiptEle::OnHold);
+}
+
+
+void UWidgetReceiptEle::OnHold(UWidgetBaseElement* ele)
+{
+	UMyLib::GetCanvas()->OpenItemInfoData(*ele->GetItemData());
 }

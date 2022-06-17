@@ -26,4 +26,7 @@ protected:
 	
 public:
 	void SetElement(const FItemConvertSet& item_converts);
+
+protected:
+	void OnHold(UWidgetBaseElement* ele);
 };

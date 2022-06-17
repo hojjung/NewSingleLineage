@@ -60,6 +60,8 @@ class MYJRPG_API UWidgetBaseElement : public UUserWidget
 
 	int m_nIndex;
 
+	const FItemDataRow* m_ItemData;
+
  protected:
  	virtual void NativeOnInitialized() override;
  	
@@ -123,4 +125,6 @@ public:
 	void SetItem(const FItemSpec& itemSpec);
 
 	void SetItemData(const FItemDataRow& itemData);
+
+	const FItemDataRow* GetItemData() const;
 };

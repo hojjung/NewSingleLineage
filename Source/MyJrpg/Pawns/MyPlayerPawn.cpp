@@ -95,7 +95,7 @@ void AMyPlayerPawn::SetPlayerEntity()
 	DefaultStat.m_nAccu = 10;
 	DefaultStat.m_nAvoid = 0;
 	DefaultStat.m_MaxHp = 100;
-	DefaultStat.m_Dmg = 444;
+	DefaultStat.m_Dmg = 4;
 	DefaultStat.m_AtkPerSec = 0.8f;
 	DefaultStat.m_DmgReduce = 0;
 	DefaultStat.m_CriPer = 0.1f;

@@ -174,6 +174,8 @@ void UWidgetBaseElement::Clear()
 	SetHoldable(false);
 
 	HideDurBar();
+
+	m_ItemData = nullptr;
 }
 
 void UWidgetBaseElement::SetHoldable(bool isActive)
@@ -306,7 +308,14 @@ void UWidgetBaseElement::SetItem(const FItemSpec& itemSpec)
 
 void UWidgetBaseElement::SetItemData(const FItemDataRow& itemData)
 {
-	SetIcon(itemData.m_Icon);
+	m_ItemData = &itemData;
 	
-	SetGlowColor(itemData.m_ColorHandle);
+	SetIcon(m_ItemData->m_Icon);
+	
+	SetGlowColor(m_ItemData->m_ColorHandle);
+}
+
+const FItemDataRow* UWidgetBaseElement::GetItemData() const
+{
+	return m_ItemData;
 }

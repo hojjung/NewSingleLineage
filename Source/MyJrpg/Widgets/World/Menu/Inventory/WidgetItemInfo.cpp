@@ -202,7 +202,7 @@ void UWidgetItemInfo::SetInfoItemData(const FItemDataRow& data_row)
 		m_VertItemOptions->SetVisibility(ESlateVisibility::Collapsed);
 		m_TextItemEffectTitle->SetVisibility(ESlateVisibility::Collapsed);
 
-		if(EItemType::Consume == t)
+		if(m_ItemSpec)
 		{
 			m_BtnUse->SetVisibility(ESlateVisibility::Visible);
 		}

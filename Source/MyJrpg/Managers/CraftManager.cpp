@@ -20,7 +20,11 @@ void UCraftManager::Init()
 	
 	m_AryCraftables.Sort([](const FCraftDataInfo& LHS, const FCraftDataInfo& RHS)
 	{
-		return LHS.m_ItemData->m_nCraftLevelLimit + LHS.m_ItemData->m_nCraftSortOrder < RHS.m_ItemData->m_nCraftLevelLimit + RHS.m_ItemData->m_nCraftSortOrder;
+		if(LHS.m_ItemData->m_nCraftLevelLimit == RHS.m_ItemData->m_nCraftLevelLimit)
+		{
+			return LHS.m_ItemData->m_nCraftSortOrder < RHS.m_ItemData->m_nCraftSortOrder;	
+		}
+		return LHS.m_ItemData->m_nCraftLevelLimit < RHS.m_ItemData->m_nCraftLevelLimit;
 	});
 }
 

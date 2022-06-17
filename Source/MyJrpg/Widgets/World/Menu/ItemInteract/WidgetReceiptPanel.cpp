@@ -1,5 +1,7 @@
 #include "WidgetReceiptPanel.h"
 
+#include "Components/ScrollBoxSlot.h"
+
 void UWidgetReceiptPanel::SetReceipt(const FItemConvertRow& item_convert_row)
 {
 	m_Scroll->ClearChildren();
@@ -10,6 +12,8 @@ void UWidgetReceiptPanel::SetReceipt(const FItemConvertRow& item_convert_row)
 
 		ItemEle->SetElement(SetWant);
 
-		m_Scroll->AddChild(ItemEle);
+		UPanelSlot* PanelSlotWant = m_Scroll->AddChild(ItemEle);
+
+		Cast<UScrollBoxSlot>(PanelSlotWant)->SetPadding(FMargin(0,40,0,0));
 	}
 }
