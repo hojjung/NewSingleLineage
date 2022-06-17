@@ -52,11 +52,12 @@ void UZoneInstManager::SaveActors(const FName& id)
 
 	for(TWeakObjectPtr<AMonsterPawn> ActorEle : m_Npc)
 	{
-		if(!ActorEle.Get())
+		if(!ActorEle.Get() || !ActorEle->IsAlive() && ActorEle->GetInven()->IsInvenEmpty())
 		{
 			Index++;
 			continue;
 		}
+
 		FZoneActorTransform ZoneData;
 		ZoneData.m_nType = EActorType::Npc;
 		ZoneData.m_IDEntity = ActorEle->GetEntityID();
@@ -475,7 +476,7 @@ ACombatUnitPawn* UZoneInstManager::GetNearNpc(FVector callerLoc, float range, co
 
 	for (TWeakObjectPtr<AMonsterPawn>& Pawn : m_Npc)
 	{
-		if (!Pawn.Get() || (excludeDead && !Pawn->IsAlive()) || Pawn->IsHidden() || (ignore && (*ignore).Contains(Pawn.Get())))
+		if (!Pawn.Get() || (excludeDead && !Pawn->IsAlive()) || Pawn->IsHidden() || (ignore && (*ignore).Contains(Pawn.Get())) || !Pawn->IsInteractable())
 		{
 			continue;
 		}

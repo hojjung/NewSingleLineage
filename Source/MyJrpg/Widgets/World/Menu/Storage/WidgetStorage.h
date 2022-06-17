@@ -59,7 +59,7 @@ public:
 	
 	virtual void ClosePanel() override;
 	UFUNCTION()
-	void OnWithdrawAll();
+	virtual void OnWithdrawAll();
 	UFUNCTION()
-	void OnDepositAll();
+	virtual void OnDepositAll();
 };

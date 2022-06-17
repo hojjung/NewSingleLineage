@@ -304,6 +304,11 @@ int UInventory::EmptySlotCount()
 	return m_nInvenMaxSize - GetUsingSlotCount();
 }
 
+bool UInventory::IsInvenEmpty()
+{
+	return EmptySlotCount() == m_nInvenMaxSize; 
+}
+
 bool UInventory::RemoveItem(FName itemID, int lvCnt)
 {
 	const FItemDataRow& ItemData = UMyLib::GetItemData(itemID);

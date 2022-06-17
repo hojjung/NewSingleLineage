@@ -25,6 +25,11 @@ AStructureActor::AStructureActor()
 void AStructureActor::SetBuildData(const FBuildDataRow& data)
 {
 	m_BuildData = &data;
+	
+	if(m_BuildData->m_BuildType == EBuildType::Foundation)
+	{
+		m_MeshComp->bReceivesDecals = true;
+	}
 
 	if (!m_BuildData->m_Mesh.ToSoftObjectPath().IsNull())
 	{

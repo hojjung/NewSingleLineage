@@ -23,4 +23,7 @@ public:
 	void SetTargetPawn(AMonsterPawn* targetPawn);
 	
 	AMonsterPawn* GetCurrentTargetPawn();
+
+protected:
+	virtual void OnWithdrawAll() override;
 };

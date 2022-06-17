@@ -16,6 +16,7 @@ AModularUnitPawn::AModularUnitPawn(const FObjectInitializer& objInit): Super(obj
 	m_MeshLeftHand->SetupAttachment(m_BodyMesh);
 	m_MeshLeftHand->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 	m_MeshLeftHand->bCastDynamicShadow = false;
+	m_MeshLeftHand->bReceivesDecals = false;
 	m_MeshLeftHand->bAffectDynamicIndirectLighting = true;
 	m_MeshLeftHand->PrimaryComponentTick.TickGroup = TG_PrePhysics;
 	m_MeshLeftHand->CanCharacterStepUpOn = ECanBeCharacterBase::ECB_No;
@@ -24,6 +25,7 @@ AModularUnitPawn::AModularUnitPawn(const FObjectInitializer& objInit): Super(obj
 	m_MeshRightHand->SetupAttachment(m_BodyMesh);
 	m_MeshRightHand->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 	m_MeshRightHand->bCastDynamicShadow = false;
+	m_MeshRightHand->bReceivesDecals = false;
 	m_MeshRightHand->bAffectDynamicIndirectLighting = true;
 	m_MeshRightHand->PrimaryComponentTick.TickGroup = TG_PrePhysics;
 	m_MeshRightHand->CanCharacterStepUpOn = ECanBeCharacterBase::ECB_No;

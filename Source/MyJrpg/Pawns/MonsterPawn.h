@@ -97,6 +97,8 @@ public:
 	virtual void OnInteract() override;
 
 	virtual FText GetTextInteract() override;
+
+	virtual bool IsInteractable() override;
 };
 
 

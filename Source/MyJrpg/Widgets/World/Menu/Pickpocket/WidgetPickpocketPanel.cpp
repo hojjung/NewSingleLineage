@@ -16,3 +16,13 @@ AMonsterPawn* UWidgetPickpocketPanel::GetCurrentTargetPawn()
 {
 	return m_TargetPawn.Get();
 }
+
+void UWidgetPickpocketPanel::OnWithdrawAll()
+{
+	Super::OnWithdrawAll();
+
+	if(m_StoragePanel->GetInven()->IsInvenEmpty())
+	{
+		ClosePanel();
+	}
+}

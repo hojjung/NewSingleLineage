@@ -13,8 +13,9 @@ class MYJRPG_API AMoveIndicator : public AActor
 	
 public:	
 	AMoveIndicator();
-	
+
+protected:
 	UPROPERTY(VisibleAnywhere)
-	UStaticMeshComponent* m_Decal;
+	UDecalComponent* m_Decal;
 
 };

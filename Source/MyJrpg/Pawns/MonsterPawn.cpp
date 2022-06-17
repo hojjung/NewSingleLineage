@@ -63,6 +63,7 @@ AMonsterPawn::AMonsterPawn(const FObjectInitializer& obj): Super(obj.SetDefaultS
 	m_MeshLeftHand->bAffectDynamicIndirectLighting = true;
 	m_MeshLeftHand->PrimaryComponentTick.TickGroup = TG_PrePhysics;
 	m_MeshLeftHand->CanCharacterStepUpOn = ECanBeCharacterBase::ECB_No;
+	m_MeshLeftHand->bReceivesDecals = false;
 	//
 	m_MeshRightHand = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("m_MeshRightHand"));
 	m_MeshRightHand->SetupAttachment(m_BodyMesh);
@@ -71,6 +72,7 @@ AMonsterPawn::AMonsterPawn(const FObjectInitializer& obj): Super(obj.SetDefaultS
 	m_MeshRightHand->bAffectDynamicIndirectLighting = true;
 	m_MeshRightHand->PrimaryComponentTick.TickGroup = TG_PrePhysics;
 	m_MeshRightHand->CanCharacterStepUpOn = ECanBeCharacterBase::ECB_No;
+	m_MeshRightHand->bReceivesDecals = false;
 	//
 	m_MeshBackHand = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("m_MeshBackHand"));
 	m_MeshBackHand->SetupAttachment(m_BodyMesh);
@@ -79,6 +81,7 @@ AMonsterPawn::AMonsterPawn(const FObjectInitializer& obj): Super(obj.SetDefaultS
 	m_MeshBackHand->bAffectDynamicIndirectLighting = true;
 	m_MeshBackHand->PrimaryComponentTick.TickGroup = TG_PrePhysics;
 	m_MeshBackHand->CanCharacterStepUpOn = ECanBeCharacterBase::ECB_No;
+	m_MeshBackHand->bReceivesDecals = false;
 }
 
 void AMonsterPawn::BeginPlay()
@@ -363,6 +366,11 @@ void AMonsterPawn::OnInteract()
 FText AMonsterPawn::GetTextInteract()
 {
 	return NSLOCTEXT("AMonsterPawn","Loot","살펴보기");
+}
+
+bool AMonsterPawn::IsInteractable()
+{
+	return m_Inven && !m_Inven->IsInvenEmpty();
 }
 
 void AMonsterPawn::OnRequestMoveDone()

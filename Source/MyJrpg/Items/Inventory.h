@@ -133,6 +133,8 @@ public:
 	void RemoveItemKey(FName id, int index);
 
 	int EmptySlotCount();
+
+	bool IsInvenEmpty();
 	
 	bool GetEmptyIndex(int& out) const;
 
