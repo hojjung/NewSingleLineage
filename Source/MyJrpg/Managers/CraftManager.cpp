@@ -7,9 +7,9 @@ void UCraftManager::Init()
 {
 	Clear();
 
-	for(auto& it : UBuildData::GetBuildTable->GetRowMap())
+	for(const auto& it : UBuildData::GetBuildTable->GetRowMap())
 	{
-		FBuildDataRow* Build = (FBuildDataRow*)it.Value;
+		const FBuildDataRow* Build = (FBuildDataRow*)it.Value;
 		
 		if(Build->m_BuildType == EBuildType::Foundation || Build->m_BuildType == EBuildType::Wall || Build->m_AryCostItem.Num() < 1)
 		{

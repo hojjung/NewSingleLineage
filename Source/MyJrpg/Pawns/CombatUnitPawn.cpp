@@ -357,7 +357,7 @@ float ACombatUnitPawn::GetCriticalDmg(float amount)
 		return 0;
 	}
 
-	return amount * GetStat().m_CriPer; 
+	return amount * GetStat().m_CriDmg; 
 }
 
 float ACombatUnitPawn::GetReductDmg(float amount)
@@ -389,7 +389,6 @@ bool ACombatUnitPawn::TakeDmg(float amount, ACombatUnitPawn* attacker)
 	if(CriDmg)
 	{
 		amount = CriDmg;
-		TextType = ETextType::CritcalRight;
 	}
 
 	float ReducDmg = GetReductDmg(amount);

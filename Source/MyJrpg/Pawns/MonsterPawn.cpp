@@ -370,6 +370,10 @@ FText AMonsterPawn::GetTextInteract()
 
 bool AMonsterPawn::IsInteractable()
 {
+	if(IsAlive())
+	{
+		return true;
+	}
 	return m_Inven && !m_Inven->IsInvenEmpty();
 }
 

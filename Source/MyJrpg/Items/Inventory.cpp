@@ -306,7 +306,7 @@ int UInventory::EmptySlotCount()
 
 bool UInventory::IsInvenEmpty()
 {
-	return EmptySlotCount() == m_nInvenMaxSize; 
+	return m_MapItemKeyCount.Num() < 1; 
 }
 
 bool UInventory::RemoveItem(FName itemID, int lvCnt)
