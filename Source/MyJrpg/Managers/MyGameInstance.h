@@ -82,8 +82,6 @@ public:
 	UPROPERTY()
 	UPetManager* m_PetManager;
 	UPROPERTY()
-	UGameRuleBase* m_GameRule;
-	UPROPERTY()
 	UFriendKarmaManager* m_TeamKarma;
 	UPROPERTY()
 	UConstructionManager* m_BuildManager;

@@ -14,9 +14,3 @@ UZoneData::UZoneData()
 	//
 	GetZoneTable = FoundTable.Object;
 }
-
-FZoneDataRow::FZoneDataRow()
-{
-	m_ClassGameRule = URule_Default::StaticClass();
-}
-

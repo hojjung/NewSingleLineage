@@ -33,15 +33,8 @@ struct FZoneDataRow : public FTableRowBase
 	GENERATED_BODY()
 
 public:
-	FZoneDataRow();
-
-public:
 	UPROPERTY(EditDefaultsOnly,BlueprintReadOnly)
 	FName m_RowKey = TEXT("Should Same Row Key");
-	UPROPERTY(EditDefaultsOnly,BlueprintReadOnly)
-	EMapType m_MapType;
-	UPROPERTY(EditDefaultsOnly,BlueprintReadOnly)
-	TSubclassOf<UGameRuleBase> m_ClassGameRule;
 	UPROPERTY(EditDefaultsOnly,BlueprintReadOnly)
 	FText m_ShowingName;
 	UPROPERTY(EditDefaultsOnly,BlueprintReadOnly,meta = (MultiLine="true"))

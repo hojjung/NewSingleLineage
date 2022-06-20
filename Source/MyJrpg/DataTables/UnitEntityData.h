@@ -123,8 +123,6 @@ public://스텟과 보상
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
 	bool m_bIsBoss = false;
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
-	bool m_bIsRespawn = true;
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
 	FName m_FriendTeamID;
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
 	FName m_TalkID;

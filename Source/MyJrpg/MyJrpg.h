@@ -149,15 +149,6 @@ public:
 	void operator()(void*) {}
 };
 
-UENUM(BlueprintType)
-enum class EMapType : uint8
-{
-	Default,
-	Special,
-	Boss,
-	Length UMETA(Hidden)
-};
-
 enum class EKarma
 {
 	Neutral,

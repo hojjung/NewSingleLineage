@@ -66,8 +66,6 @@ protected:
 	void OnRequestMoveDone();
 	
 public:
-	virtual void SetFocusedTarget(IFocusable* target) override;
-	
 	void Speech(FText text);
 
 	void Speech(FString text);

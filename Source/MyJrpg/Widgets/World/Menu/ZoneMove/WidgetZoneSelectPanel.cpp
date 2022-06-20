@@ -36,18 +36,6 @@ void UWidgetZoneSelectPanel::CreateButtons()
 
 		SelectButton->Init(*ZoneData);
 
-		switch (ZoneData->m_MapType)
-		{
-		case EMapType::Default:
-			m_ScrollWorld->AddChild(SelectButton);
-			break;
-		case EMapType::Special:
-			m_ScrollSpecial->AddChild(SelectButton);
-			break;
-		case EMapType::Boss:
-			m_ScrollBoss->AddChild(SelectButton);
-			break;
-		}
 		I++;
 	}
 

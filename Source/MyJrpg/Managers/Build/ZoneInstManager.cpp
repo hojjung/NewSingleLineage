@@ -216,11 +216,6 @@ AMonsterPawn* UZoneInstManager::SpawnNpcActor(const FZoneActorTransform& spawnDa
 	AMonsterPawn* NpcActor = UMyLib::GetUWorld()->SpawnActor<AMonsterPawn>(EntityRow->m_ClassActor, spawnData.m_SpawnPosition, spawnData.m_SpawnRotation, Param);
 	NpcActor->SetEntity(spawnData.m_IDEntity,*EntityRow);
 
-	if(UMyGameInstance::Get->m_GameRule)
-	{
-		UMyGameInstance::Get->m_GameRule->OnMonsterCreate(NpcActor);
-	}
-
 	const int* HpPtr = serialData.m_MapGatherHp.Find(index);
 	if(HpPtr)
 	{

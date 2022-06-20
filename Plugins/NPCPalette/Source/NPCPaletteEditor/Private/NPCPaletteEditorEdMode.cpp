@@ -307,7 +307,10 @@ void FNPCPaletteEdMode::ClearPlacedAssetActor()
 
 				ANPCPaletteGizmoActor* GizmoActor = Cast<ANPCPaletteGizmoActor>(actorIter);
 
-				check(GizmoActor);
+				if(!GizmoActor)
+				{
+					continue;
+				}
 
 				Data.m_IDEntity = GizmoActor->m_RowID;
 

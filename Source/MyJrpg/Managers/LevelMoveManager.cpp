@@ -29,8 +29,6 @@ void ULevelMoveManager::OpenMyLevel(FName zoneData)
 
 void ULevelMoveManager::OpenLevel(FName zoneData)
 {
-	UMyGameInstance::Get->m_GameRule = nullptr;
-
 	if(m_ZoneData)
 	{
 		FName ID = GetCrntZoneID();
@@ -44,8 +42,6 @@ void ULevelMoveManager::OpenLevel(FName zoneData)
 
 void ULevelMoveManager::OpenMyLevel(const FZoneDataRow& zoneData)
 {
-	UMyGameInstance::Get->m_GameRule = nullptr;
-	
 	m_ZoneData = &zoneData;
 
 	UGameplayStatics::OpenLevel(this,m_ZoneData->m_MapName);
@@ -58,11 +54,6 @@ void ULevelMoveManager::OnOpenWorldLevelComplete()
 		return;
 	}
 	
-	if(m_ZoneData->m_ClassGameRule->IsValidLowLevel())
-	{
-		UMyGameInstance::Get->m_GameRule = NewObject<UGameRuleBase>(this, m_ZoneData->m_ClassGameRule);
-	}
-
 	UMyGameInstance::Get->m_ZoneInst->SpawnZone(GetCrntZoneID(), *GetZoneDataCurrent());
 
 	UMyGameInstance::Get->m_EquipManager->UpdateEquip();

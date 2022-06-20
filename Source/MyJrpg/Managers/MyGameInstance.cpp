@@ -120,6 +120,8 @@ void UMyGameInstance::Init()
 	
 	m_AryStorage.Reset();
 
+	TestModeSetting();
+	
 	if(UMyLib::IsTestMode())
 	{
 		PRINTF("TestMode: True");
@@ -133,7 +135,7 @@ void UMyGameInstance::Init()
 
 void UMyGameInstance::TestModeSetting()
 {
-	m_Inven->AddItem(FItemSpec(TEXT("Wood01"),1));
+	m_Inven->AddItem(FItemSpec(TEXT("THSword01"),0),true);
 }
 
 void UMyGameInstance::StartGame()

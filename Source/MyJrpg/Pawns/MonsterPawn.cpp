@@ -275,8 +275,6 @@ void AMonsterPawn::Dead()
 	
 	Super::Dead();
 
-	UMyGameInstance::Get->m_GameRule->OnMonsterDead(this);
-
 	m_SpeechBubbleComp->SetVisibility(false);
 }
 
@@ -286,27 +284,6 @@ void AMonsterPawn::OnDeathAnimEnd()
 	
 	GetSkMesh()->SetCollisionEnabled(ECollisionEnabled::QueryOnly);
 }
-
-void AMonsterPawn::SetFocusedTarget(IFocusable* target)
-{
-	if (target)
-	{
-		switch (UMyGameInstance::Get->m_TeamKarma->GetUnitKarma(this))
-		{
-		case EKarma::Neutral:
-			Speech(TEXT("처신 잘하라고"));
-			break;
-		case EKarma::Friendly:
-			Speech(TEXT("좋은 아침이야~!"));
-			break;
-		case EKarma::Hate:
-			Speech(TEXT("넌 뒤졌어"));
-			break;
-		}
-	}
-	Super::SetFocusedTarget(target);
-}
-
 
 bool AMonsterPawn::TakeDmg(float amount, ACombatUnitPawn* attacker)
 {
@@ -361,7 +338,7 @@ void AMonsterPawn::OnInteract()
 	UMyLib::GetPlayer()->SetInteracting(true);
 	
 	UMyLib::GetPlayer()->RequestInteract(this,FVoidVoid::CreateUObject(this,&AMonsterPawn::OnRequestMoveDone),25);
-}
+} 
 
 FText AMonsterPawn::GetTextInteract()
 {
