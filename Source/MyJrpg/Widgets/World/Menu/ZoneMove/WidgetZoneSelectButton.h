@@ -7,6 +7,7 @@
 #include "WidgetZoneMonsterElement.h"
 #include "Blueprint/UserWidget.h"
 #include "Components/Image.h"
+#include "Components/ScrollBox.h"
 #include "Components/TextBlock.h"
 #include "MyJrpg/DataTables/ZoneData.h"
 #include "MyJrpg/Widgets/World/CommonElements/WidgetBaseElement.h"
@@ -35,9 +36,9 @@ protected:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (BindWidget))
 	UTextBlock* m_TextMapDesc;
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (BindWidget))
-	UHorizontalBox* m_HoriMonsterParents;
+	UScrollBox* m_HoriMonsterParents;
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (BindWidget))
-	UHorizontalBox* m_HoriItemParents;
+	UScrollBox* m_HoriItemParents;
 
 	const FZoneDataRow* m_ZoneData;
 

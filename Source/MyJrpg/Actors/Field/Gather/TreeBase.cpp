@@ -111,47 +111,27 @@ void ATreeBase::OnInteract()
 void ATreeBase::OnArrived()
 {
 	m_Player->PlayAnimMontage(m_GatherAsset->m_AnimGatherMotion);
-	
-	m_CrntToolID = m_GatherAsset->m_bIsAxe ? m_Player->TryShowAxe() : m_CrntToolID = m_Player->TryShowPickAxe();
+
+	for(const FName& ToolID : m_GatherAsset->m_AryGatherToolID)
+	{
+		m_CrntToolID = m_Player->TryShowAxe(ToolID);
+		if(m_CrntToolID)
+		{
+			break;
+		}
+	}
 }
 
 void ATreeBase::OnTakeChopping()
 {
-	if(m_CrntToolID)
-	{
-		if(m_GatherAsset->m_bIsAxe)
-		{
-			if(m_CrntToolID->m_ID == TEXT("Axe01"))
-			{
-				m_nTreeHp -= 3;
-				UMyGameInstance::Get->m_PlayerStatManager->AddExp(4);
-			}
-			else
-			{
-				m_nTreeHp -= 6;
-				UMyGameInstance::Get->m_PlayerStatManager->AddExp(8);
-			}
-		}
-		else
-		{
-			if(m_CrntToolID->m_ID == TEXT("Pickaxe01"))
-			{
-				m_nTreeHp -= 3;
-				UMyGameInstance::Get->m_PlayerStatManager->AddExp(4);
-			}
-			else
-			{
-				m_nTreeHp -= 6;
-				UMyGameInstance::Get->m_PlayerStatManager->AddExp(8);
-			}
-		}
+	const FStatGroup& StatEquip = UMyLib::GetItemData(m_CrntToolID->m_ID).m_EquipStats;
+		
+	m_nTreeHp -= StatEquip.m_Dmg;
+		
+	UMyGameInstance::Get->m_PlayerStatManager->AddExp(StatEquip.m_Dmg * 1.2f);
 
-		UMyLib::ReduceDurability(*m_CrntToolID, 1);
-	}
-	else
-	{
-		m_nTreeHp--;
-	}
+	UMyLib::ReduceDurability(*m_CrntToolID, 1);
+	
 	if(m_nTreeHp<=0)
 	{
 		OnGatherDone();
@@ -192,8 +172,10 @@ FVector ATreeBase::GetNavAgentLocation() const
 
 void ATreeBase::CreateSetDeathCurve(float fullLength)
 {
-	m_CurveDeathAnim = FFloatCurve(); 
+	m_CurveDeathAnim = FFloatCurve();
+	
 	m_CurveDeathAnim.UpdateOrAddKey(1, 0);
+	
 	m_CurveDeathAnim.UpdateOrAddKey(0, fullLength);
 }
 
@@ -269,5 +251,18 @@ FText ATreeBase::GetTextInteract()
 
 bool ATreeBase::IsInteractable()
 {
-	return UMyLib::GetEquip()->HasSpace(FItemSpec(m_DataRow->m_ItemGather.RowName,m_DataRow->m_nItemGatherCount));
+	bool HasEquip = false;
+	
+	for(const FName& ToolID : m_GatherAsset->m_AryGatherToolID)
+	{
+		HasEquip = m_Player->GetAnyItemHave(ToolID) != nullptr;
+		if(HasEquip)
+		{
+			break;
+		}
+	}
+	
+	bool InvenSpace = UMyLib::GetEquip()->HasSpace(FItemSpec(m_DataRow->m_ItemGather.RowName,m_DataRow->m_nItemGatherCount));
+	
+	return HasEquip && InvenSpace;
 }

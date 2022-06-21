@@ -14,13 +14,7 @@ class MYJRPG_API UBI_StorageSearch : public UBI_Storage
 {
 	GENERATED_BODY()
 
-public:
-	UBI_StorageSearch();
-
 protected:
-	UPROPERTY(VisibleAnywhere)
-   	UAnimMontage* m_Anim;
-	
 	bool m_bIsSearched;
 
 protected:

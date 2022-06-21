@@ -28,21 +28,12 @@ void UMyGameInstance::IterateItemTableToRegister()
 	TArray<const FItemDataRow *> AryItemRows;
 	
 	UItemData::GetItemTable->GetAllRows("",AryItemRows);
+	
 	TArray<FName> AryItemNames =  UItemData::GetItemTable->GetRowNames();
 
 	int Iter = -1;
 	while (++Iter < AryItemRows.Num())
 	{
-		const auto& DropDatas = AryItemRows[Iter]->m_AryDropDatas;
-		
-		if(DropDatas.Num() > 0)
-		{
-			for(const auto& Drop : DropDatas)
-			{
-				m_RewardManager->AddDropItemData(Drop, AryItemNames[Iter]);
-			}
-		}
-
 		const auto& CraftDatas = AryItemRows[Iter]->m_AryCostItem;
 
 		if(CraftDatas.Num() > 0)

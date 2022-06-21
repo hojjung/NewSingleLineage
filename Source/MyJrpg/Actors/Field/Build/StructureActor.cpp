@@ -156,7 +156,13 @@ bool AStructureActor::IsUpgradeable()
 
 void AStructureActor::OnInteract()
 {
-	UMyLib::GetPlayer()->RequestInteract(this,FVoidVoid::CreateUObject(this,&AStructureActor::OnArrived),1);
+	float R = 0;
+	
+	float H = 0;
+	
+	GetSimpleCollisionCylinder(R, H);
+	
+	UMyLib::GetPlayer()->RequestInteract(this,FVoidVoid::CreateUObject(this,&AStructureActor::OnArrived), R + 50);
 }
 
 void AStructureActor::OnArrived()

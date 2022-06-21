@@ -39,6 +39,7 @@ void UMyAnimInstance::UpdateMoveFlag()
 	m_bIsMoving=m_Owner->IsMoving();
 	m_bIsSneaking=m_Owner->IsSneak();
 	m_Stance=m_Owner->GetStance();
+	m_bIsLooting=m_Owner->IsLooting();
 }
 
 bool UMyAnimInstance::IsStance(EStanceType t) const

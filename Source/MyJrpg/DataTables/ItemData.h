@@ -231,7 +231,7 @@ public:
 	FColorDataHandle m_ColorHandle;
 	UPROPERTY(EditAnywhere, meta=(EditCondition = "m_ItemType == EEquipSlotType::None", EditConditionHides))
 	TSoftObjectPtr<UStaticMesh> m_ItemDropMesh;
-	UPROPERTY(EditAnywhere, meta=(EditCondition = "m_ItemDropMesh.Get()", EditConditionHides))
+	UPROPERTY(EditAnywhere, meta=(EditCondition = "!m_ItemDropMesh.ToSoftObjectPath().IsNull()", EditConditionHides))
 	float m_fItemDropMeshScale = 1.f;
 	UPROPERTY(EditAnywhere, meta=(EditCondition = "m_ItemType != EEquipSlotType::None && m_ItemType != EEquipSlotType::Weapon", EditConditionHides))
 	TSoftObjectPtr<USkeletalMesh> m_ArmorMesh;

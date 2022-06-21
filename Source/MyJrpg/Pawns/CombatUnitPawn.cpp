@@ -318,6 +318,10 @@ EStanceType ACombatUnitPawn::GetStance()
 	return m_Stance; 
 }
 
+bool ACombatUnitPawn::IsLooting()
+{
+	return false;
+}
 
 
 void ACombatUnitPawn::Dead()

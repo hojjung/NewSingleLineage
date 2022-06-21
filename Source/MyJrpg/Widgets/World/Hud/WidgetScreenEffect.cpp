@@ -63,7 +63,7 @@ void UWidgetScreenEffect::ShowFadeOut(float t, const FVoidVoid& onFadeOutEnd)
 
 	IsFadeOut = true;
 	
-	m_ImgBlack->SetVisibility(ESlateVisibility::Visible);
+	m_ImgBlack->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
 
 	m_fFadeOutTimer = 0;
 	

@@ -40,11 +40,6 @@ void UWidgetZoneSelectButton::CreateMonsters()
 		{
 			const FNpcUnitEntityRow* NpcEntity = Data.m_EntityParentTable->FindRow<FNpcUnitEntityRow>(Data.m_IDEntity, "");
 	
-			if(m_SetMonsters.Contains(NpcEntity))
-			{
-				continue;
-			}
-	
 			m_SetMonsters.Add(NpcEntity);			
 		}
 	}
@@ -57,21 +52,22 @@ void UWidgetZoneSelectButton::CreateMonsters()
 	
 		SelectButton->SetUnit(Unit);
 		//출현 몬스터
-		m_HoriMonsterParents->AddChildToHorizontalBox(SelectButton);
+		m_HoriMonsterParents->AddChild(SelectButton);
 	}
 }
 
 void UWidgetZoneSelectButton::CreateZoneElement(const TArray<FDropRewardItem>& AryItems)
 {
-	
 	for(const FDropRewardItem& Data : AryItems)
 	{
-		if(m_SetRewardItems.Contains(Data.m_Item.RowName))
-		{
-			return;
-		}
+		bool AlreadyAdd = false;
 		
-		m_SetRewardItems.Add(Data.m_Item.RowName);
+		m_SetRewardItems.Add(Data.m_Item.RowName, &AlreadyAdd);
+
+		if(AlreadyAdd)
+		{
+			continue;
+		}
 		
 		UWidgetZoneItemElement* SelectButton = CreateWidget<UWidgetZoneItemElement>(this,m_ClassItem);
 
@@ -89,13 +85,6 @@ void UWidgetZoneSelectButton::CreateItems()
 
 	m_SetRewardItems.Reset();
 	
-	const TArray<FDropRewardItem>* AryDropItems = UMyGameInstance::Get->m_RewardManager->GetDropItems(m_ZoneData->m_RowKey);
-
-	if(AryDropItems && AryDropItems->Num() > 0)
-	{
-		CreateZoneElement(*AryDropItems);	
-	}
-	
 	for(const FNpcUnitEntityRow* Unit : m_SetMonsters)
 	{
 		CreateZoneElement(Unit->m_AryDropItem);
@@ -105,7 +94,7 @@ void UWidgetZoneSelectButton::CreateItems()
 
 	for(UWidgetZoneItemElement* Ele : m_AryZoneElements)
 	{
-		m_HoriItemParents->AddChildToHorizontalBox(Ele);
+		m_HoriItemParents->AddChild(Ele);
 	}
 }
 

@@ -326,8 +326,8 @@ FPathFollowingRequestResult ABaseUnitPawn::MoveToActor(AActor* target, float acc
 	MoveReq.SetAllowPartialPath(true);
 	MoveReq.SetNavigationFilter(UNavigationQueryFilter::StaticClass());
 	MoveReq.SetAcceptanceRadius(acceptRadius);
-	MoveReq.SetReachTestIncludesAgentRadius(true);
-	MoveReq.SetReachTestIncludesGoalRadius(true);
+	MoveReq.SetReachTestIncludesAgentRadius(false);
+	MoveReq.SetReachTestIncludesGoalRadius(false);
 	MoveReq.SetCanStrafe(true);
 
 	return MoveTo(MoveReq);

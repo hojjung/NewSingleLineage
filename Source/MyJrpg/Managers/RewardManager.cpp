@@ -45,18 +45,11 @@ void URewardManager::ReceiveQuestReward(const FQuestReward& qReward)
 
 void URewardManager::RequestMonsterReward(AMonsterPawn* mobPawn)
 {
-	const FName& ZoneId = UMyGameInstance::Get->m_LevelMoveManager->GetCrntZoneID();
-
 	const FNpcUnitEntityRow* NpcUnit = UUnitEntityData::GetNpcUnitTable->FindRow<FNpcUnitEntityRow>(mobPawn->GetEntityID(), "");
 
 	TArray<FDropRewardItem> DropReward = NpcUnit->m_AryDropItem;
 	
 	DropObtain(mobPawn->GetInven(), DropReward);
-	
-	const TArray<FDropRewardItem>* AryDropDatas = UMyGameInstance::Get->m_RewardManager->GetDropItems(ZoneId);
-	
-	if(AryDropDatas)
-		DropObtain(mobPawn->GetInven(), *AryDropDatas);
 }
 
 void URewardManager::DropObtain(UInventory* inven , const TArray<FDropRewardItem>& items)
@@ -123,25 +116,4 @@ void URewardManager::OnMonsterDead(AMonsterPawn* monster)
 	m_OnExpGold.Broadcast(monster->GetRewardExp());
 	
 	RequestMonsterReward(monster);
-}
-
-void URewardManager::AddDropItemData(const FDropData& drop, const FName& itemID)
-{
-	if(m_MapDropItems.Contains(drop.m_ZoneUniqueID))
-	{
-		m_MapDropItems[drop.m_ZoneUniqueID].Emplace(FDropRewardItem(itemID, drop.m_nExpectDropCount));
-		return;
-	}
-
-	FDropRewardItem DropItem (itemID, drop.m_nExpectDropCount);
-	m_MapDropItems.Emplace(drop.m_ZoneUniqueID, TArray<FDropRewardItem>(&DropItem,1));
-}
-
-const TArray<FDropRewardItem>* URewardManager::GetDropItems(FName zoneID) const
-{
-	if(!m_MapDropItems.Contains(zoneID))
-	{
-		return nullptr;
-	}
-	return &m_MapDropItems[zoneID];
 }

@@ -2,16 +2,10 @@
 #include "MyJrpg/MyLib.h"
 #include "MyJrpg/Managers/MyGameInstance.h"
 
-UBI_StorageSearch::UBI_StorageSearch()
-{
-	static ConstructorHelpers::FObjectFinder<UAnimMontage> FoundAnim(TEXT("AnimMontage'/Game/09_SharedAnimations/Loot_Anim_Set/Loot_Corpse_GrabItem_Montage.Loot_Corpse_GrabItem_Montage'"));
-	m_Anim = FoundAnim.Object;
-}
-
 void UBI_StorageSearch::OnSearchEnd()
 {
 	m_bIsSearched = true;
-	m_Player->SetInteracting(false);
+	m_Player->CancelInteract();
 	UMyGameInstance::Get->m_PlayerStatManager->AddExp(12);
 	Super::OnInteract();
 }
@@ -74,7 +68,7 @@ void UBI_StorageSearch::OnInteract()
 	}
 	if(!m_bIsSearched)
 	{
-		m_Player->WaitInteract(m_Anim, 4.f,FVoidVoid::CreateUObject(this, &UBI_StorageSearch::OnSearchEnd));
+		m_Player->WaitInteract(4.f,FVoidVoid::CreateUObject(this, &UBI_StorageSearch::OnSearchEnd));
 		return ;
 	}
 	Super::OnInteract();

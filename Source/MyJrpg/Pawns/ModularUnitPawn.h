@@ -93,9 +93,7 @@ public:
 
 	FItemSpec* GetAnyItemHave(FName id);
 
-	FItemSpec* TryShowPickAxe();
-
-	FItemSpec* TryShowAxe();
+	FItemSpec* TryShowAxe(FName id);
 
 	UStaticMeshComponent* GetLeftWeaponMesh() const;
 	

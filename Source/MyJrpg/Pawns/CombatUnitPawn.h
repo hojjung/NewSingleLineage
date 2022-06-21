@@ -159,4 +159,6 @@ public:
 	EPathFollowingRequestResult::Type ChaseTarget();
 
 	virtual EStanceType GetStance();
+	
+	virtual bool IsLooting();
 };

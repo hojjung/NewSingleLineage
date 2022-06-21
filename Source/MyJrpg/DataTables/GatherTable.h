@@ -39,7 +39,7 @@ public://Visual
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
 	USoundBase* m_SoundGatherEnd;
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
-	bool m_bIsAxe = true;
+	TArray<FName> m_AryGatherToolID;
 	
 	virtual FPrimaryAssetId GetPrimaryAssetId() const override
 	{

@@ -40,7 +40,7 @@ void UWidgetZoneSelectPanel::CreateButtons()
 	}
 
 	m_ScrollWorld->SetVisibility(ESlateVisibility::Collapsed);
-
+ 
 	m_ScrollSpecial->SetVisibility(ESlateVisibility::Collapsed);
 
 	m_ScrollBoss->SetVisibility(ESlateVisibility::Collapsed);

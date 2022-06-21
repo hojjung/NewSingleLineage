@@ -39,6 +39,8 @@ public:
 	UPROPERTY(Transient,VisibleAnywhere,BlueprintReadWrite)
 	bool m_bIsSneaking;
 	UPROPERTY(Transient,VisibleAnywhere,BlueprintReadWrite)
+	bool m_bIsLooting;
+	UPROPERTY(Transient,VisibleAnywhere,BlueprintReadWrite)
 	EStanceType m_Stance;	
 public:
 	virtual void NativeBeginPlay() override;

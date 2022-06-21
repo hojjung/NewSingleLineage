@@ -396,15 +396,14 @@ bool AMyPlayerPawn::GetInteracting() const
 	return m_bIsInteracting;
 }
 
-void AMyPlayerPawn::WaitInteract(UAnimMontage* am, float interactTime, const FVoidVoid& delegate)
+void AMyPlayerPawn::WaitInteract(float interactTime, const FVoidVoid& delegate)
 {
 	SetInteracting(true);
-	PlayAnimMontage(am);
 	GetWorldTimerManager().SetTimer(m_WaitInteractTimer,delegate,interactTime,false);
 	UMyLib::GetCanvas()->GetWaitInteract()->ShowInteract(interactTime);
 }
 
-void AMyPlayerPawn::RequestInteract(AActor* target, const FVoidVoid& delegate ,float r)
+void AMyPlayerPawn::RequestInteract(AActor* target, const FVoidVoid& delegate, float r)
 {
 	FPathFollowingRequestResult Result = MoveToActor(target, r);
 
@@ -473,10 +472,14 @@ void AMyPlayerPawn::ClearCameraOffset()
 	m_DissolveCam->SetRelativeLocation(FVector(0,0,0));
 }
 
-
-void AMyPlayerPawn::OnNotifyTrigger(const FName& name)
+bool AMyPlayerPawn::IsLooting()
 {
-	if(name == TEXT("BaseAttack"))
+	return m_WaitInteractTimer.IsValid();
+}
+
+void AMyPlayerPawn::OnNotifyTrigger(const FName& id)
+{
+	if(id == TEXT("BaseAttack"))
 	{
 		if(!CheckTargetRange())
 		{
@@ -493,7 +496,7 @@ void AMyPlayerPawn::OnNotifyTrigger(const FName& name)
 	}
 	else
 	{
-		m_OnSkillTrigger.Broadcast(name);
+		m_OnSkillTrigger.Broadcast(id);
 	}
 }
 
@@ -591,7 +594,7 @@ bool AMyPlayerPawn::CheckTargetRange()
 	{
 		return false; 
 	}
-	float DistSqr = FVector::DistSquared(GetActorLocation(), GetFocusedActorLocation());
+	float DistSqr = FVector::DistSquared2D(GetActorLocation(), GetFocusedActorLocation());
 
 	return DistSqr <= GetAttackRangeSqr();
 }

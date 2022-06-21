@@ -141,7 +141,7 @@ public:
 	
 	virtual bool TakeDmg(float amount, ACombatUnitPawn* attacker) override;
 
-	virtual void OnNotifyTrigger(const FName& name) override;
+	virtual void OnNotifyTrigger(const FName& id) override;
 	
 	void TakeHeal(float v);
 	
@@ -167,7 +167,7 @@ public:
 
 	bool GetInteracting() const;
 	
-	void WaitInteract(UAnimMontage* am, float interactTime, const FVoidVoid& delegate);
+	void WaitInteract(float interactTime, const FVoidVoid& delegate);
 
 	void RequestInteract(AActor* target, const FVoidVoid& delegate, float r = 250.f);
 
@@ -181,5 +181,7 @@ public:
 	void SetCameraOffset(const FVector2D& vector_2d);
 
 	void ClearCameraOffset();
+
+	virtual bool IsLooting() override;
 };
 

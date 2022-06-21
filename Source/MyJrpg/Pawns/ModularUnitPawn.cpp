@@ -186,7 +186,7 @@ void AModularUnitPawn::SpawnEquipActor(const FWeaponData& weaponData)
 {
 	m_Stance = weaponData.m_Stance;
 
-	if(weaponData.m_MeshLeft)
+	if(!weaponData.m_MeshLeft.ToSoftObjectPath().IsNull())
 	{
 		m_CacheLeftHand = weaponData.m_MeshLeft.LoadSynchronous();
 		if(m_ActorLeftHand.Get())
@@ -219,7 +219,7 @@ void AModularUnitPawn::SpawnEquipActor(const FWeaponData& weaponData)
 		}
 	}
 
-	if(weaponData.m_MeshRight)
+	if(!weaponData.m_MeshRight.ToSoftObjectPath().IsNull())
 	{
 		m_CacheRightHand = weaponData.m_MeshRight.LoadSynchronous();
 
@@ -308,28 +308,15 @@ FItemSpec* AModularUnitPawn::GetAnyItemHave(FName id)
 	return itemSpec;
 }
 
-FItemSpec* AModularUnitPawn::TryShowPickAxe()
+FItemSpec* AModularUnitPawn::TryShowAxe(FName id)
 {
-	FItemSpec *itemSpec = GetAnyItemHave(TEXT("Pickaxe01"));
-	if(!itemSpec)
-		itemSpec = GetAnyItemHave(TEXT("Pickaxe02"));
+	FItemSpec *itemSpec = GetAnyItemHave(id);
+	
 	if(itemSpec)
 	{
 		HideWeapon();
-		m_MeshRightHand->SetStaticMesh(m_Pickaxe);
-	}
-	return itemSpec;
-}
-
-FItemSpec* AModularUnitPawn::TryShowAxe()
-{
-	FItemSpec *itemSpec = GetAnyItemHave(TEXT("Axe01"));
-	if(!itemSpec)
-		itemSpec = GetAnyItemHave(TEXT("Axe02"));
-	if(itemSpec)
-	{
-		HideWeapon();
-		m_MeshRightHand->SetStaticMesh(m_Axe);
+		UStaticMesh* StMeshEquip = UMyLib::GetItemData(itemSpec->m_ID).m_WeaponData.m_MeshRight.LoadSynchronous(); 
+		m_MeshRightHand->SetStaticMesh(StMeshEquip);
 	}
 	return itemSpec;
 }

@@ -30,9 +30,6 @@ public:
 	FOnMonsterDead m_OnMonsterDead;
 
 protected:
-	TMap<FName,TArray<FDropRewardItem>> m_MapDropItems;
-
-protected:
 	void ReceiveQuestReward(const FQuestReward& qReward);
 
 	void DropObtain(UInventory* inven , const TArray<FDropRewardItem>& items);
@@ -43,8 +40,4 @@ public:
 	bool RequestQuestReward(const TArray<FQuestReward>& aryQuest);
 
 	void OnMonsterDead(AMonsterPawn* monster);
-	
-	void AddDropItemData(const FDropData& drop, const FName& itemID);
-
-	const TArray<FDropRewardItem>* GetDropItems(FName zoneID) const;
 };
