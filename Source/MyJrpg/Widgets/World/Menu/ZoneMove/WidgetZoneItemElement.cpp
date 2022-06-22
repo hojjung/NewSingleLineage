@@ -2,13 +2,11 @@
 
 #include "MyJrpg/MyLib.h"
 
-void UWidgetZoneItemElement::SetZone(const FDropRewardItem& data)
+void UWidgetZoneItemElement::SetZone(const FName& itemID)
 {
-	m_ID = data.m_Item.RowName;
+	m_ID = itemID;
 	
-	m_ItemRow = data.m_Item.GetRow<FItemDataRow>("");
-
-	m_nCntDrop = data.m_nExpectDropCount;
+	m_ItemRow = &UMyLib::GetItemData(m_ID);
 
 	check(m_ItemRow);
 
@@ -19,11 +17,6 @@ void UWidgetZoneItemElement::SetZone(const FDropRewardItem& data)
 	m_ElementBase->SetFocusable(false);
 
 	m_ElementBase->m_OnHold.AddUObject(this,&UWidgetZoneItemElement::OnHold);
-}
-
-int UWidgetZoneItemElement::GetSortValue() const
-{
-	return m_nCntDrop;
 }
 
 void UWidgetZoneItemElement::OnHold(UWidgetBaseElement* ele)

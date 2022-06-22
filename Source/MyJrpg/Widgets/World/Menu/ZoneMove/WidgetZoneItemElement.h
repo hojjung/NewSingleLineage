@@ -23,15 +23,11 @@ protected:
 protected:
 	const FItemDataRow* m_ItemRow;
 
-	int m_nCntDrop;
-
 	FName m_ID;
 
 protected:
 	void OnHold(UWidgetBaseElement* ele);
 	
 public:
-	void SetZone(const FDropRewardItem& data);
-
-	int GetSortValue() const;
+	void SetZone(const FName& itemID);
 };

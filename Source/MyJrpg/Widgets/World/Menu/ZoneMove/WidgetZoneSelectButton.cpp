@@ -1,4 +1,7 @@
 #include "WidgetZoneSelectButton.h"
+
+#include "Components/ScrollBoxSlot.h"
+#include "MyJrpg/DataTables/GatherTable.h"
 #include "MyJrpg/Managers/MyGameInstance.h"
 #include "MyJrpg/Managers/RewardManager.h"
 
@@ -23,11 +26,9 @@ void UWidgetZoneSelectButton::OnClose()
 	SetVisibility(ESlateVisibility::Collapsed);	
 }
 
-void UWidgetZoneSelectButton::CreateMonsters()
+void UWidgetZoneSelectButton::SetItemsInSet()
 {
-	m_HoriMonsterParents->ClearChildren();
-
-	m_SetMonsters.Reset();
+	m_SetRewardItems.Reset();
 	
 	if(!m_ZoneData->m_SpawnDataNpc)
 	{
@@ -39,62 +40,60 @@ void UWidgetZoneSelectButton::CreateMonsters()
 		if(Data.m_EntityParentTable->RowStruct->IsChildOf(FNpcUnitEntityRow::StaticStruct()))
 		{
 			const FNpcUnitEntityRow* NpcEntity = Data.m_EntityParentTable->FindRow<FNpcUnitEntityRow>(Data.m_IDEntity, "");
-	
-			m_SetMonsters.Add(NpcEntity);			
+
+			for(const FDropRewardItem& DropItem : NpcEntity->m_AryDropItem)
+			{
+				m_SetRewardItems.Add(DropItem.m_Item.RowName);			
+			}
+		}
+		else if(Data.m_EntityParentTable->RowStruct->IsChildOf(FGatherDataRow::StaticStruct()))
+		{
+			const FGatherDataRow* GatherEntity = Data.m_EntityParentTable->FindRow<FGatherDataRow>(Data.m_IDEntity, "");
+
+			m_SetRewardItems.Add(GatherEntity->m_ItemGather.RowName);
+		}
+		else if(Data.m_EntityParentTable->RowStruct->IsChildOf(FBuildDataRow::StaticStruct()))
+		{
+			const FBuildDataRow* BuildEntity = Data.m_EntityParentTable->FindRow<FBuildDataRow>(Data.m_IDEntity, "");
+
+			if(!BuildEntity->m_ClassInter->IsChildOf(UBI_StorageSearch::StaticClass()))
+			{
+				continue;
+			}
+			const TArray<FString>& Items = BuildEntity->m_AryInteractVariable;
+			if(Items.Num() % 2 != 0 && Items.Num() >= 3)
+			{
+				int Iter = 1;
+				while (Iter < Items.Num())
+				{
+					FName ItemID = *Items[Iter];
+
+					m_SetRewardItems.Add(ItemID);
+					
+					Iter+=2;
+				}
+			}
 		}
 	}
 	
-	m_SetMonsters.Sort([](const FNpcUnitEntityRow& LHS, const FNpcUnitEntityRow& RHS)  { return LHS.m_fExp > RHS.m_fExp; });
-	
-	for(const FNpcUnitEntityRow* Unit : m_SetMonsters)
-	{
-		UWidgetZoneMonsterElement* SelectButton = CreateWidget<UWidgetZoneMonsterElement>(this,m_ClassMonster);
-	
-		SelectButton->SetUnit(Unit);
-		//출현 몬스터
-		m_HoriMonsterParents->AddChild(SelectButton);
-	}
+	m_SetRewardItems.Sort([](const FName& LHS, const FName& RHS)  { return LHS.FastLess(RHS); });
 }
 
-void UWidgetZoneSelectButton::CreateZoneElement(const TArray<FDropRewardItem>& AryItems)
+void UWidgetZoneSelectButton::CreateZoneElement()
 {
-	for(const FDropRewardItem& Data : AryItems)
+	m_HoriItemParents->ClearChildren();
+	
+	for(const FName& Data : m_SetRewardItems)
 	{
-		bool AlreadyAdd = false;
-		
-		m_SetRewardItems.Add(Data.m_Item.RowName, &AlreadyAdd);
-
-		if(AlreadyAdd)
-		{
-			continue;
-		}
-		
 		UWidgetZoneItemElement* SelectButton = CreateWidget<UWidgetZoneItemElement>(this,m_ClassItem);
 
 		SelectButton->SetZone(Data);
 
-		m_AryZoneElements.Add(SelectButton);
-	}
-}
+		UPanelSlot* PanelSlotWant = m_HoriItemParents->AddChild(SelectButton);
 
-void UWidgetZoneSelectButton::CreateItems()
-{
-	m_HoriItemParents->ClearChildren();
-
-	m_AryZoneElements.Reset();
-
-	m_SetRewardItems.Reset();
-	
-	for(const FNpcUnitEntityRow* Unit : m_SetMonsters)
-	{
-		CreateZoneElement(Unit->m_AryDropItem);
-	}
-
-	m_AryZoneElements.Sort([](const UWidgetZoneItemElement& ll, const UWidgetZoneItemElement& rr){return ll.GetSortValue() > rr.GetSortValue();});
-
-	for(UWidgetZoneItemElement* Ele : m_AryZoneElements)
-	{
-		m_HoriItemParents->AddChild(Ele);
+		UScrollBoxSlot* ScrollPanelSlot = Cast<UScrollBoxSlot>(PanelSlotWant);
+		
+		ScrollPanelSlot->SetPadding(FMargin(0,30,0,0));
 	}
 }
 
@@ -104,9 +103,9 @@ void UWidgetZoneSelectButton::SetZone()
 
 	m_TextMapDesc->SetText(m_ZoneData->m_Desc);
 
-	CreateMonsters();
+	SetItemsInSet();
 	
-	CreateItems();
+	CreateZoneElement();
 }
 
 void UWidgetZoneSelectButton::MoveToZone()

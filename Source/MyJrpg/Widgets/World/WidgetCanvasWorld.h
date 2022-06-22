@@ -70,8 +70,6 @@ protected:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (BindWidget))
 	UButton* m_BtnCraft;
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (BindWidget))
-	UButton* m_BtnMapMove;
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (BindWidget))
 	UButton* m_BtnSkill;
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (BindWidget))
 	UButton* m_BtnQuest;
@@ -107,8 +105,6 @@ protected:
 	UWidgetShopPanel* m_ShopPanel;
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (BindWidget))
 	UWidgetStorage* m_StoragePanel;
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (BindWidget))
-	UWidgetZoneSelectPanel* m_ZonePanel;
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (BindWidget))
 	UWidgetQuestPanel* m_QuestPanel;
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (BindWidget))
@@ -193,8 +189,6 @@ public:
 	void OpenCraft();
 	UFUNCTION()
 	void OpenShop(const FName& traderID);
-	UFUNCTION()
-	void OpenZone();
 	UFUNCTION()
 	void OpenPet();
 	UFUNCTION()

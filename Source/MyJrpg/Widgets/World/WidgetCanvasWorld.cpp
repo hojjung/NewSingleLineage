@@ -49,8 +49,6 @@ void UWidgetCanvasWorld::NativeOnInitialized()
 
 	m_BtnQuest->OnClicked.AddDynamic(this,&UWidgetCanvasWorld::OpenQuest);
 
-	m_BtnMapMove->OnClicked.AddDynamic(this,&UWidgetCanvasWorld::OpenZone);
-
 	m_Calculator->SetVisibility(ESlateVisibility::Collapsed);
 
 	UMyGameInstance::Get->m_LevelMoveManager->m_OnLvelMoveComp.AddUObject(this, &UWidgetCanvasWorld::OnZoneMove);
@@ -145,11 +143,6 @@ void UWidgetCanvasWorld::OpenStorage(UInventory* storage)
 {
 	m_StoragePanel->SetTargetInven(storage);
 	m_StoragePanel->OpenPanel();
-}
-
-void UWidgetCanvasWorld::OpenZone()
-{
-	m_ZonePanel->OpenPanel();
 }
 
 void UWidgetCanvasWorld::OpenPet()

@@ -24,8 +24,6 @@ class MYJRPG_API UWidgetZoneSelectButton : public UUserWidget
 
 protected:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
-	TSubclassOf<UWidgetZoneMonsterElement> m_ClassMonster;
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
 	TSubclassOf<UWidgetZoneItemElement> m_ClassItem;
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (BindWidget))
 	UButton* m_BtnClose;
@@ -36,25 +34,17 @@ protected:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (BindWidget))
 	UTextBlock* m_TextMapDesc;
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (BindWidget))
-	UScrollBox* m_HoriMonsterParents;
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (BindWidget))
 	UScrollBox* m_HoriItemParents;
 
 	const FZoneDataRow* m_ZoneData;
 
-	TSet<const FNpcUnitEntityRow*> m_SetMonsters;
-
 	TSet<FName> m_SetRewardItems;
 	
-	UPROPERTY()
-	TArray<UWidgetZoneItemElement*> m_AryZoneElements;
 	
 protected:
-	void CreateMonsters();
+	void SetItemsInSet();
 
-	void CreateItems();
-
-	void CreateZoneElement(const TArray<FDropRewardItem>& AryItems);
+	void CreateZoneElement();
 
 	virtual void NativeOnInitialized() override;
 	
