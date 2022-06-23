@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "Components/BoxComponent.h"
 #include "GameFramework/Actor.h"
 #include "IndoorBase.generated.h"
 
@@ -12,15 +13,19 @@ class MYJRPG_API AIndoorBase : public AActor
 	GENERATED_BODY()
 	
 public:	
-	// Sets default values for this actor's properties
-	AIndoorBase();
+	AIndoorBase();//관통 메테리얼은 직접
 
 protected:
-	// Called when the game starts or when spawned
+	UPROPERTY(VisibleAnywhere)
+	UBoxComponent* m_BoxIndoor;
+	UPROPERTY(EditAnywhere,BlueprintReadWrite)
+	TArray<UStaticMeshComponent*> m_AryRoofs;
+protected:
 	virtual void BeginPlay() override;
-
-public:	
-	// Called every frame
-	virtual void Tick(float DeltaTime) override;
-
+	
+public:
+	UFUNCTION()
+	void OnTriggerStart(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor,UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
+	UFUNCTION()
+	void OnTriggerEnd(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex);
 };

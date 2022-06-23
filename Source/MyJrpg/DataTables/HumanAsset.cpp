@@ -5,7 +5,7 @@
 USkeletalMesh* UHumanAsset::GetSkMesh() const
 {
 	FSkeletalMeshMergeParams MergeParam;
-	MergeParam.Skeleton = m_BodyMesh->GetSkeleton();
+	MergeParam.Skeleton = m_BodyMesh ? m_BodyMesh->GetSkeleton() : m_TorsoArmorMesh->GetSkeleton();
 	MergeParam.MeshesToMerge.Init(nullptr,(int)EBodyIndex::Len + 1);
 	MergeParam.MeshesToMerge[(int)EBodyIndex::Len] = m_BodyMesh;
 	MergeParam.MeshesToMerge[(int)EBodyIndex::Head] = m_HeadMesh;

@@ -1,27 +1,45 @@
-// Fill out your copyright notice in the Description page of Project Settings.
-
-
 #include "IndoorBase.h"
+#include "MyJrpg/MyLib.h"
+#include "NavAreas/NavArea_Null.h"
 
-// Sets default values
 AIndoorBase::AIndoorBase()
 {
- 	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
-	PrimaryActorTick.bCanEverTick = true;
-
+	PrimaryActorTick.bCanEverTick = false;
+	m_BoxIndoor = CreateDefaultSubobject<UBoxComponent>(TEXT("m_BoxIndoor"));
+	RootComponent = m_BoxIndoor; 
+	m_BoxIndoor->SetCollisionProfileName(TEXT("Trigger"));
+	m_BoxIndoor->SetRelativeLocation(FVector(0,0,25));
+	m_BoxIndoor->SetVisibility(false);
+	m_BoxIndoor->SetCanEverAffectNavigation(false);
+	m_BoxIndoor->AreaClass = UNavArea_Null::StaticClass();
 }
 
-// Called when the game starts or when spawned
 void AIndoorBase::BeginPlay()
 {
 	Super::BeginPlay();
-	
+
+	m_BoxIndoor->OnComponentBeginOverlap.AddDynamic(this, &AIndoorBase::OnTriggerStart);
+	m_BoxIndoor->OnComponentEndOverlap.AddDynamic(this, &AIndoorBase::OnTriggerEnd);
 }
 
-// Called every frame
-void AIndoorBase::Tick(float DeltaTime)
+void AIndoorBase::OnTriggerStart(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor,UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
-	Super::Tick(DeltaTime);
+	if(OtherActor != UMyLib::GetPlayer())
+		return;
 
+	for(UStaticMeshComponent* StMesh : m_AryRoofs)
+	{
+		StMesh->SetVisibility(false);
+	}
 }
 
+void AIndoorBase::OnTriggerEnd(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex)
+{
+	if(OtherActor != UMyLib::GetPlayer())
+		return;
+
+	for(UStaticMeshComponent* StMesh : m_AryRoofs)
+	{
+		StMesh->SetVisibility(true);
+	}
+}

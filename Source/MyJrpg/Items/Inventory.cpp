@@ -513,10 +513,12 @@ void UInventory::OnDropItem(int myIndex, UInventory* other, int other_index)
 
 	if (MyItem.m_ID.IsNone()) //빈슬롯이면 그냥 진행
 	{
-		AddSlot(myIndex, OtherItem);
-		AddItemKey(OtherItemData,OtherItem.m_ID,myIndex);
 		other->ClearSlot(other_index);
 		other->RemoveItemKey(OtherItemData,OtherItem.m_ID,other_index);
+
+		AddSlot(myIndex, OtherItem);
+		AddItemKey(OtherItemData,OtherItem.m_ID,myIndex);
+		
 		UpdateInventory();
 		other->UpdateInventory();
 		return;
@@ -552,13 +554,14 @@ void UInventory::OnDropItem(int myIndex, UInventory* other, int other_index)
 	}
 	else
 	{
+		other->RemoveItemKey(OtherItemData,OtherItem.m_ID,other_index);
+		RemoveItemKey(MyItemData,MyItem.m_ID,myIndex);
+		
 		AddSlot(myIndex, OtherItem);
 		AddItemKey(OtherItemData,OtherItem.m_ID,myIndex);
-		other->RemoveItemKey(OtherItemData,OtherItem.m_ID,other_index);
 		
 		other->AddSlot(other_index, MyItem);
 		other->AddItemKey(MyItemData, MyItem.m_ID, other_index);
-		RemoveItemKey(MyItemData,MyItem.m_ID,myIndex);
 	}
 	UpdateInventory();
 	other->UpdateInventory();

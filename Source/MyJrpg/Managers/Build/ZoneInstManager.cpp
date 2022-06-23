@@ -174,6 +174,10 @@ TArray<FZoneActorTransform> UZoneInstManager::CreateBuildInst(const UNPCPaletteD
 {
 	TArray<FZoneActorTransform> AryZones;
 
+	if(!npcAssets)
+	{
+		return AryZones;
+	}
 	for(const FNPCSpawnData& SpawnData : npcAssets->m_ArySpawnDatas)
 	{
 		FZoneActorTransform NewBuildInst;
