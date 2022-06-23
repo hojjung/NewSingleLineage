@@ -60,4 +60,6 @@ public:
 	bool IsStance(EStanceType t) const;
 	UFUNCTION(BlueprintCallable, Category = "My Stance",meta = (BlueprintThreadSafe))
 	bool IsNotStance(EStanceType t) const;
+	UFUNCTION(BlueprintCallable, Category = "My Stance",meta = (BlueprintThreadSafe))
+	int GetStanceIndex() const;
 };

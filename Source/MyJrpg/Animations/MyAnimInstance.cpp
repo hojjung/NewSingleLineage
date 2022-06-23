@@ -51,3 +51,12 @@ bool UMyAnimInstance::IsNotStance(EStanceType t) const
 {
 	return m_Stance != t;
 }
+
+int UMyAnimInstance::GetStanceIndex() const
+{
+	if(m_bIsLooting)
+	{
+		return (int)EStanceType::Length;
+	}
+	return (int)m_Stance;
+}

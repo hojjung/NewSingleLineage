@@ -245,7 +245,7 @@ void AMyPlayerPawn::RequestAttack()
 	ACombatUnitPawn* FocusActor = GetFocusedTarget<ACombatUnitPawn>();
 	if(!FocusActor)
 	{
-		TryAttack();
+		TryAttack_External();
 		return;
 	}
 	
@@ -254,7 +254,12 @@ void AMyPlayerPawn::RequestAttack()
 
 void AMyPlayerPawn::TryAttack_External()
 {
-	TryAttack();
+	float Len = TryAttack();
+
+	if(Len > 0.f && IsSneak())
+	{
+		SetSneak();
+	}
 }
 
 bool AMyPlayerPawn::IsManualMoving()
@@ -376,13 +381,11 @@ void AMyPlayerPawn::SetSneak()
 
 	if(m_bIsSneaking)
 	{
-		m_Movement->m_fSpeedMultiple = 0.65f;
-		HideWeapon();
+		m_Movement->m_fSpeedMultiple = 0.68f;
 	}
 	else
 	{
 		m_Movement->m_fSpeedMultiple = 1.f;
-		ShowWeapon();
 	}
 }
 

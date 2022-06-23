@@ -162,7 +162,7 @@ void AStructureActor::OnInteract()
 	
 	GetSimpleCollisionCylinder(R, H);
 	
-	UMyLib::GetPlayer()->RequestInteract(this,FVoidVoid::CreateUObject(this,&AStructureActor::OnArrived), R + 50);
+	UMyLib::GetPlayer()->RequestInteract(this,FVoidVoid::CreateUObject(this,&AStructureActor::OnArrived), R + 80);
 }
 
 void AStructureActor::OnArrived()
