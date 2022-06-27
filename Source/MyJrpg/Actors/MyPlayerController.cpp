@@ -18,6 +18,8 @@ AMyPlayerController::AMyPlayerController()
 	SetHidden(false);
 
 	m_bUseFlick = false;
+
+	
 }
 
 void AMyPlayerController::BeginPlay()

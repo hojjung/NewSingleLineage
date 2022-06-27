@@ -39,7 +39,7 @@ protected:
 	void OnActorVisible(AActor* actorTarget, bool isVisible);
 
 	virtual void NativeOnInitialized() override;
-	
+
 public:
 	virtual void NativeTick(const FGeometry& MyGeometry, float InDeltaTime) override;
 };

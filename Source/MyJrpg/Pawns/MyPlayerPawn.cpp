@@ -39,13 +39,6 @@ AMyPlayerPawn::AMyPlayerPawn(const FObjectInitializer& objInit):Super(objInit)
 	m_TopCamera->SetupAttachment(m_DissolveCam);
 	m_TopCamera->FieldOfView = 65.f;
 	//
-	m_MapCamera = CreateDefaultSubobject<UCameraComponent>(TEXT("m_MapCamera"));
-	m_MapCamera->SetupAttachment(RootComponent);
-	m_MapCamera->OrthoWidth = 2800;
-	m_MapCamera->SetProjectionMode(ECameraProjectionMode::Orthographic);
-	m_MapCamera->SetRelativeRotation(FRotator(-90, -45.f, 0.f));
-	m_MapCamera->SetRelativeLocation(FVector(0,0,2000));
-	//
 	m_AryTargetingObjectType.Reset();
 	m_AryTargetingObjectType.Add(EObjectTypeQuery::ObjectTypeQuery3);
 	m_bOnceMoveLock = false;

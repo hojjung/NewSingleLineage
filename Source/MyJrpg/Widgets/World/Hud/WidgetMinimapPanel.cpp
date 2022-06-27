@@ -63,8 +63,8 @@ void UWidgetMinimapPanel::NativeTick(const FGeometry& MyGeometry, float InDeltaT
 		FVector Loc = TupleActorWidgetPair.Key->GetActorLocation();
 
 		FVector2D ScreenLoc;//화면상의 위치
-		
-		UWidgetLayoutLibrary::ProjectWorldLocationToWidgetPosition(m_PlCon.Get(), Loc, ScreenLoc, false);
+
+		UGameplayStatics::ProjectWorldToScreen(m_PlCon.Get(), Loc, ScreenLoc);
 
 		FVector2D NewScaleSize = m_RatioSize * ScreenLoc;
 

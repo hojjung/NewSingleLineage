@@ -45,12 +45,13 @@ APreviewActor::APreviewActor()
 	m_Capture = CreateDefaultSubobject<USceneCaptureComponent2D>("Capture2D");
 	m_Capture->SetupAttachment(m_Spring);
 	static ConstructorHelpers::FObjectFinder<UTextureRenderTarget2D> FoundTexture(TEXT("TextureRenderTarget2D'/Game/03_VisualEffect/T_PlayerVisual.T_PlayerVisual'"));
-	m_CaptureTexture = FoundTexture.Object;
+	m_Capture->TextureTarget = FoundTexture.Object;
 	m_Capture->PrimitiveRenderMode = ESceneCapturePrimitiveRenderMode::PRM_UseShowOnlyList;
 	m_Capture->CaptureSource = ESceneCaptureSource::SCS_SceneColorHDR;
 	m_Capture->SetTickableWhenPaused(true);
 	m_Capture->ProjectionType = ECameraProjectionMode::Perspective;
 	m_Capture->FOVAngle = 60.f;
+	m_Capture->PostProcessBlendWeight = 0.f;
 	//
 	m_Light = CreateDefaultSubobject<UPointLightComponent>("m_Light");
 	m_Light->SetupAttachment(RootComponent);
@@ -79,10 +80,6 @@ APreviewActor::APreviewActor()
 void APreviewActor::BeginPlay()
 {
 	Super::BeginPlay();
-
-	m_Capture->TextureTarget = m_CaptureTexture;
-	
-	m_Capture->PostProcessBlendWeight = 0.f;
 
 	m_Capture->ShowOnlyActors.Add(this);
 

@@ -41,9 +41,6 @@ protected:
 	TWeakObjectPtr<AAttachedWeapon> m_ActorRightHand;
 	
 protected:
-	UPROPERTY()
-	UTextureRenderTarget2D* m_CaptureTexture;
-
 	FDelegateHandle Handle1;
 
 	FDelegateHandle Handle2;

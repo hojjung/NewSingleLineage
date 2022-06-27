@@ -43,8 +43,6 @@ protected:
 	UCameraDissolve* m_DissolveCam;
 	UPROPERTY(VisibleAnywhere)
 	UCameraComponent* m_TopCamera;
-	UPROPERTY(VisibleAnywhere)
-	UCameraComponent* m_MapCamera;
 	UPROPERTY()
 	FVector m_Input;
 	UPROPERTY()
