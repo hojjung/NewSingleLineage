@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "BaseUnitPawn.h"
+#include "Components/MinimapIconComp.h"
 #include "Logics/BulletPool.h"
 #include "MyJrpg/DataTables/UnitEntityData.h"
 #include "MyJrpg/Interfaces/Focusable.h"
@@ -22,7 +23,7 @@ public:
 	
 protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
-	UStaticMeshComponent* m_IconMeshComp;
+	UMinimapIconComp* m_IconComp;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 	UStaticMeshComponent* m_ShadowMeshComp;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
@@ -164,5 +165,5 @@ public:
 	
 	virtual bool IsLooting();
 
-	virtual UStaticMeshComponent* GetIconMeshComp() override;
+	virtual UMinimapIconComp* GetIconMeshComp() override;
 };

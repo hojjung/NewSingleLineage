@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "MyJrpg/Pawns/Components/MinimapIconComp.h"
 #include "UObject/Interface.h"
 #include "Focusable.generated.h"
 
@@ -47,5 +48,5 @@ public:
 		return FText::FromString(TEXT("None"));
 	};
 
-	virtual UStaticMeshComponent* GetIconMeshComp() = 0;
+	virtual UMinimapIconComp* GetIconMeshComp() = 0;
 };

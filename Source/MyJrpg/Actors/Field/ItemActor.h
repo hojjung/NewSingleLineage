@@ -6,6 +6,7 @@
 #include "GameFramework/Actor.h"
 #include "MyJrpg/Interfaces/Focusable.h"
 #include "MyJrpg/Items/Inventory.h"
+#include "MyJrpg/Pawns/Components/MinimapIconComp.h"
 #include "ItemActor.generated.h"
 
 class UBillboardComponent;
@@ -19,7 +20,7 @@ public:
 
 protected:
 	UPROPERTY(VisibleAnywhere)
-	UStaticMeshComponent* m_IconMeshComp;
+	UMinimapIconComp* m_IconMeshComp;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 	UBillboardComponent* m_BillboardIcon;
 	UPROPERTY(VisibleAnywhere)
@@ -58,6 +59,6 @@ public:
 
 	virtual bool IsInteractable() override;
 
-	virtual UStaticMeshComponent* GetIconMeshComp() override;
+	virtual UMinimapIconComp* GetIconMeshComp() override;
 };
 

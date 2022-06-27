@@ -19,7 +19,7 @@ public:
 
 private:
 	UPROPERTY(VisibleAnywhere)
-	UStaticMeshComponent* m_IconMeshComp;
+	UMinimapIconComp* m_IconMeshComp;
 	UPROPERTY(VisibleAnywhere)
 	UCapsuleComponent* m_Capsule;
 	UPROPERTY(VisibleAnywhere)
@@ -87,5 +87,5 @@ public:
 
 	virtual bool IsInteractable() override;
 
-	virtual UStaticMeshComponent* GetIconMeshComp() override;
+	virtual UMinimapIconComp* GetIconMeshComp() override;
 };

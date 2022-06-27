@@ -21,15 +21,8 @@ AStructureActor::AStructureActor()
 	m_MeshComp->bReceivesDecals = false;
 	m_MeshComp->SetMobility(EComponentMobility::Movable);
 	//
-	m_IconMeshComp = CreateDefaultSubobject<UStaticMeshComponent>("m_IconMeshComp");
+	m_IconMeshComp = CreateDefaultSubobject<UMinimapIconComp>("m_IconMeshComp");
 	m_IconMeshComp->SetupAttachment(RootComponent);
-	m_IconMeshComp->SetRelativeLocation(FVector(0,0,1800.f));
-	m_IconMeshComp->SetCollisionEnabled(ECollisionEnabled::NoCollision);
-	m_IconMeshComp->SetCanEverAffectNavigation(false);
-	m_IconMeshComp->bReceivesDecals = false;
-	static ConstructorHelpers::FObjectFinder<UStaticMesh> FoundIconMesh(
-		TEXT("StaticMesh'/Game/03_VisualEffect/SM_Icon.SM_Icon'"));
-	m_IconMeshComp->SetStaticMesh(FoundIconMesh.Object);
 }
 
 void AStructureActor::SetBuildData(const FBuildDataRow& data)
@@ -64,6 +57,8 @@ void AStructureActor::SetBuildData(const FBuildDataRow& data)
 	}
 
 	m_WidgetComp->Init();
+
+	m_IconMeshComp->SetRotationOffset(FRotator(0,-45,0));
 }
 
 void AStructureActor::EndPlay(const EEndPlayReason::Type EndPlayReason)
@@ -217,7 +212,7 @@ FText AStructureActor::GetTextInteract()
 	return NSLOCTEXT("AStructureActor","Control","조작");
 }
 
-UStaticMeshComponent* AStructureActor::GetIconMeshComp()
+UMinimapIconComp* AStructureActor::GetIconMeshComp()
 {
 	return m_IconMeshComp;
 }

@@ -35,5 +35,5 @@ void AMinimapCam::BeginPlay()
 
 void AMinimapCam::AddTrackIcon(IFocusable* icon)
 {
-	m_Capture->ShowOnlyComponents.Add(icon->GetIconMeshComp());
+	m_Capture->ShowOnlyComponents.Add(icon->GetIconMeshComp()->GetMeshComp());
 }
