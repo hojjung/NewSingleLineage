@@ -26,6 +26,10 @@ void UZoneInstManager::SpawnZone(const FName& id, const FZoneDataRow& zoneData)
 	m_Gather.Reset();
 	
 	m_Build.Reset();
+
+	m_MinimapManager = NewObject<UMinimapManager>(this);
+
+	m_MinimapManager->Init();
 	
 	FZoneSerialData* BuildInst = m_MapBuildInsts.Find(id);
 	
@@ -153,19 +157,30 @@ void UZoneInstManager::SpawnActors(const FZoneSerialData& zoneInst, bool isInit)
 		switch (ZoneActorEle.m_nType)
 		{
 		case EActorType::Npc:
-			SpawnNpcActor(ZoneActorEle, Index, zoneInst);
+			{
+				AMonsterPawn* MobPawn = SpawnNpcActor(ZoneActorEle, Index, zoneInst);
+				m_MinimapManager->AddTrackActor(MobPawn);
+			}
 			break;
 		case EActorType::Item:
-			SpawnItemActor(ZoneActorEle, Index, zoneInst,isInit);
+			{
+				AItemActor* ItemActor = SpawnItemActor(ZoneActorEle, Index, zoneInst, isInit);
+				m_MinimapManager->AddTrackActor(ItemActor);
+			}
 			break;
 		case EActorType::Gather:
-			SpawnGatherActor(ZoneActorEle, Index, zoneInst,isInit);
+			{
+				ATreeBase* GatherActor = SpawnGatherActor(ZoneActorEle, Index, zoneInst, isInit);
+				m_MinimapManager->AddTrackActor(GatherActor);
+			}
 			break;
 		case EActorType::Build:
-			SpawnBuildActor(ZoneActorEle, Index, zoneInst);
+			{
+				AStructureActor* BuildActor = SpawnBuildActor(ZoneActorEle, Index, zoneInst);
+				m_MinimapManager->AddTrackActor(BuildActor);
+			}
 			break;
 		}
-
 		Index++;
 	}
 }
@@ -385,6 +400,8 @@ IFocusable* UZoneInstManager::GetNearProp(FVector callerLoc, float range, UClass
 			continue;
 		}
 
+		m_OnActorVisible.ExecuteIfBound(FocusActor, m_MinimapManager->IsVisible(FocusActor));
+
 		IFocusable* FocusInter = Cast<IFocusable>(Focus.GetObject());
 		
 		if(!FocusInter->IsInteractable())
@@ -479,6 +496,8 @@ ACombatUnitPawn* UZoneInstManager::GetNearNpc(FVector callerLoc, float range, co
 		{
 			continue;
 		}
+		
+		m_OnActorVisible.ExecuteIfBound(Pawn.Get(), m_MinimapManager->IsVisible(Pawn.Get()));
 
 		float Length = MAX_flt;
 

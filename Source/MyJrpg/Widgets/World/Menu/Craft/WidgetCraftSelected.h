@@ -17,7 +17,7 @@ class MYJRPG_API UWidgetCraftSelected : public UUserWidget
 	GENERATED_BODY()
 
 protected:
-	UPROPERTY(EditDefaultsOnly)
+	UPROPERTY(EditDefaultsOnly,BlueprintReadOnly)
 	TSubclassOf<UWidgetCraftCostElement> m_ClassCost; 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (BindWidget))
 	UWidgetBaseElement* m_Icon;
