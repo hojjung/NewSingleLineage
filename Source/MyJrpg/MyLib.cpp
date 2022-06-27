@@ -528,3 +528,15 @@ bool UMyLib::AddItemAll(FItemSpec& items, bool newItem)
 	}
 	return false;	
 }
+
+void UMyLib::PrintErrorText(const FString& string)
+{
+	if(GetMapCanvas())
+	{
+		GetMapCanvas()->PrintErrorText(string);
+	}
+	else if(GetCanvas())
+	{
+		GetCanvas()->PrintErrorText(string);
+	}
+}

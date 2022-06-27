@@ -429,6 +429,16 @@
 			"Name": "EasyAdsPro",
 			"Enabled": false,
 			"MarketplaceURL": "com.epicgames.launcher://ue/marketplace/content/75a64f8d7e4a46d99bb9721375bf23c4"
+		},
+		{
+			"Name": "AsyncLoadingScreen",
+			"Enabled": true,
+			"MarketplaceURL": "com.epicgames.launcher://ue/marketplace/product/01f39767dc6b4290877f38365787cbf8"
+		},
+		{
+			"Name": "MinimapPlugin",
+			"Enabled": true,
+			"MarketplaceURL": "com.epicgames.launcher://ue/marketplace/content/ad08325742e24fb0836391bca25c72bb"
 		}
 	]
 }

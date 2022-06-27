@@ -204,7 +204,7 @@ public:
 
 	void OpenEnchant();
 	
-	void ShowSkillFail(const FString& string);
+	void PrintErrorText(const FString& string);
 
 	void ShowZone(const FText& nameT);
 

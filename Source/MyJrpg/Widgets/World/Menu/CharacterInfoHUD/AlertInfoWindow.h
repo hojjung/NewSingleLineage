@@ -30,5 +30,5 @@ protected:
 	UAlertInfoElement* GetTextElement();
 	
 public:
-	void ShowSkillFail(const FString& reason);
+	void PrintErrorText(const FString& reason);
 };

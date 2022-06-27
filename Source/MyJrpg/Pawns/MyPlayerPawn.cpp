@@ -593,7 +593,7 @@ bool AMyPlayerPawn::IsSneak() const
 
 bool AMyPlayerPawn::CheckTargetRange()
 {
-	if(!GetFocusedTarget<>())
+	if(!GetFocusedTarget<ACombatUnitPawn>())
 	{
 		return false; 
 	}

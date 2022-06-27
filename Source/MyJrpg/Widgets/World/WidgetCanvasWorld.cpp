@@ -194,9 +194,9 @@ void UWidgetCanvasWorld::OpenEnchant()
 	m_Enchant->Open();
 }
 
-void UWidgetCanvasWorld::ShowSkillFail(const FString& string)
+void UWidgetCanvasWorld::PrintErrorText(const FString& string)
 {
-	m_AlertInfoWindow->ShowSkillFail(string);
+	m_AlertInfoWindow->PrintErrorText(string);
 }
 
 void UWidgetCanvasWorld::ShowZone(const FText& nameT)

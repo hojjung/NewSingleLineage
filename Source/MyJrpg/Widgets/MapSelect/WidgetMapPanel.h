@@ -6,6 +6,7 @@
 #include "WidgetMapBtn.h"
 #include "Blueprint/UserWidget.h"
 #include "Components/CanvasPanel.h"
+#include "MyJrpg/Widgets/World/Menu/CharacterInfoHUD/AlertInfoWindow.h"
 #include "MyJrpg/Widgets/World/Menu/Craft/WidgetCraftPanel.h"
 #include "MyJrpg/Widgets/World/Menu/Equipment/WidgetEquipInvenPanel.h"
 #include "MyJrpg/Widgets/World/Menu/Inventory/WidgetItemInfo.h"
@@ -21,6 +22,8 @@ class MYJRPG_API UWidgetMapPanel : public UUserWidget
 	GENERATED_BODY()
 
 protected:
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (BindWidget))
+	UAlertInfoWindow* m_AlertInfoWindow;
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (BindWidget))
 	UCanvasPanel* m_CanvasMap;
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (BindWidget))
@@ -40,6 +43,8 @@ public:
 	virtual void NativeOnInitialized() override;
 	
 	void OpenItemInfoData(const FItemDataRow& item_data_row);
+	
+	void PrintErrorText(const FString& string);
 
 protected:
 	void OnClick(const FName& zoneID);

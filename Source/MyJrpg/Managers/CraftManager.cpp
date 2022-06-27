@@ -67,6 +67,7 @@ bool UCraftManager::CheckCraftable()
 {
 	if(!m_CrntItemData)
 	{
+		UMyLib::PrintErrorText(NSLOCTEXT("UCraftManager","EmptyData","선택된 아이템 없음").ToString());
 		return false;
 	}
 	if(UMyLib::IsTestMode())
@@ -78,7 +79,7 @@ bool UCraftManager::CheckCraftable()
 	
 	if(!IsMatrialEnough)
 	{
-		PRINTF("UCraftManager::No MatrialEnough");
+		UMyLib::PrintErrorText(NSLOCTEXT("UCraftManager","Lack of Material","재료 부족").ToString());
 		return false;
 	}
 	//공간체크
@@ -86,7 +87,7 @@ bool UCraftManager::CheckCraftable()
 	
 	if(!IsInvHasSpace)
 	{
-		PRINTF("UCraftManager::No InvenSpace");
+		UMyLib::PrintErrorText(NSLOCTEXT("UCraftManager","No Inven Space","가방 공간없음").ToString());
 		return false;
 	}
 	return true;

@@ -38,6 +38,11 @@ void UWidgetMapPanel::OpenItemInfoData(const FItemDataRow& item_data_row)
 	m_ItemInfo->SetInfoItemData(item_data_row);
 }
 
+void UWidgetMapPanel::PrintErrorText(const FString& string)
+{
+	m_AlertInfoWindow->PrintErrorText(string);
+}
+
 void UWidgetMapPanel::OnClick(const FName& zoneID)
 {
 	m_ZoneSelect->SetVisibility(ESlateVisibility::SelfHitTestInvisible);

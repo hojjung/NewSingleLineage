@@ -126,17 +126,51 @@ void UMyGameInstance::Init()
 
 void UMyGameInstance::TestModeSetting()
 {
+	// m_Inven->AddItem(FItemSpec(TEXT("ArmorHelmet03"),0),true);
+	// m_Inven->AddItem(FItemSpec(TEXT("ArmorHand03"),0),true);
+	// m_Inven->AddItem(FItemSpec(TEXT("ArmorLeg03"),0),true);
+	// m_Inven->AddItem(FItemSpec(TEXT("ArmorTorso03"),0),true);
+	// m_Inven->AddItem(FItemSpec(TEXT("Belt02"),0),true);
+	// m_Inven->AddItem(FItemSpec(TEXT("Axe02"),0),true);
+	// m_Inven->AddItem(FItemSpec(TEXT("Bag02"),0),true);
+	// m_Inven->AddItem(FItemSpec(TEXT("Torch"),0),true);
+	// m_Inven->AddItem(FItemSpec(TEXT("Potion01"),14),true);
+	// m_Inven->AddItem(FItemSpec(TEXT("Pickaxe02"),0),true);
+	m_Inven->AddItem(FItemSpec(TEXT("OHSword01"),0),true);
+	m_Inven->AddItem(FItemSpec(TEXT("OHSword02"),0),true);
+	m_Inven->AddItem(FItemSpec(TEXT("OHSword03"),0),true);
+	m_Inven->AddItem(FItemSpec(TEXT("OHSword04"),0),true);
+	m_Inven->AddItem(FItemSpec(TEXT("Shield01"),0),true);
+	m_Inven->AddItem(FItemSpec(TEXT("Shield02"),0),true);
+	m_Inven->AddItem(FItemSpec(TEXT("Shield03"),0),true);
+	m_Inven->AddItem(FItemSpec(TEXT("Shield04"),0),true);
+	m_Inven->AddItem(FItemSpec(TEXT("Dual01"),0),true);
+	m_Inven->AddItem(FItemSpec(TEXT("Dual02"),0),true);
+	m_Inven->AddItem(FItemSpec(TEXT("Dual03"),0),true);
+	m_Inven->AddItem(FItemSpec(TEXT("Dual04"),0),true);
 	m_Inven->AddItem(FItemSpec(TEXT("THSword01"),0),true);
-	m_Inven->AddItem(FItemSpec(TEXT("ArmorHelmet03"),0),true);
-	m_Inven->AddItem(FItemSpec(TEXT("ArmorHand03"),0),true);
-	m_Inven->AddItem(FItemSpec(TEXT("ArmorLeg03"),0),true);
-	m_Inven->AddItem(FItemSpec(TEXT("ArmorTorso03"),0),true);
-	m_Inven->AddItem(FItemSpec(TEXT("Belt02"),0),true);
-	m_Inven->AddItem(FItemSpec(TEXT("Axe02"),0),true);
-	m_Inven->AddItem(FItemSpec(TEXT("Bag02"),0),true);
-	m_Inven->AddItem(FItemSpec(TEXT("Torch"),0),true);
-	m_Inven->AddItem(FItemSpec(TEXT("Potion01"),14),true);
-	m_Inven->AddItem(FItemSpec(TEXT("Pickaxe02"),0),true);
+	m_Inven->AddItem(FItemSpec(TEXT("THSword02"),0),true);
+	m_Inven->AddItem(FItemSpec(TEXT("THSword03"),0),true);
+	m_Inven->AddItem(FItemSpec(TEXT("THSword04"),0),true);
+	m_Inven->AddItem(FItemSpec(TEXT("Spear01"),0),true);
+	m_Inven->AddItem(FItemSpec(TEXT("Spear02"),0),true);
+	m_Inven->AddItem(FItemSpec(TEXT("Spear03"),0),true);
+	m_Inven->AddItem(FItemSpec(TEXT("Spear04"),0),true);
+	m_Inven->AddItem(FItemSpec(TEXT("Bow01"),0),true);
+	m_Inven->AddItem(FItemSpec(TEXT("Bow02"),0),true);
+	m_Inven->AddItem(FItemSpec(TEXT("Bow03"),0),true);
+	m_Inven->AddItem(FItemSpec(TEXT("Bow04"),0),true);
+	m_Inven->AddItem(FItemSpec(TEXT("Pistol01"),0),true);
+	m_Inven->AddItem(FItemSpec(TEXT("Pistol02"),0),true);
+	m_Inven->AddItem(FItemSpec(TEXT("Rifle01"),0),true);
+	m_Inven->AddItem(FItemSpec(TEXT("Rifle02"),0),true);
+	m_Inven->AddItem(FItemSpec(TEXT("Rifle03"),0),true);
+	m_Inven->AddItem(FItemSpec(TEXT("MagicWand01"),0),true);
+	m_Inven->AddItem(FItemSpec(TEXT("MagicWand02"),0),true);
+	m_Inven->AddItem(FItemSpec(TEXT("MagicWand03"),0),true);
+	m_Inven->AddItem(FItemSpec(TEXT("MagicWand04"),0),true);
+	m_Inven->AddItem(FItemSpec(TEXT("MagicWand05"),0),true);
+	m_Inven->AddItem(FItemSpec(TEXT("Gauntlet01"),0),true);
 	
 }
 

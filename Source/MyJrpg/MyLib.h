@@ -117,4 +117,6 @@ public:
 	static bool RemoveItemAll(const FName& id, int stLv);
 	
 	static bool AddItemAll(FItemSpec& items, bool newItem);
+
+	static void PrintErrorText(const FString& string);
 };
