@@ -46,4 +46,6 @@ public:
 	{
 		return FText::FromString(TEXT("None"));
 	};
+
+	virtual UStaticMeshComponent* GetIconMeshComp() = 0;
 };

@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "MyJrpg/Actors/MinimapCam.h"
 #include "MyJrpg/Actors/Field/Build/StructureActor.h"
 #include "MyJrpg/Actors/Field/Gather/TreeBase.h"
 #include "MyJrpg/DataTables/ZoneData.h"
@@ -76,6 +77,8 @@ protected:
 	TArray<TScriptInterface<IFocusable>> m_AryFocusActors;
 
 protected:
+	TWeakObjectPtr<AMinimapCam> m_MiniMapCam;
+	
 	TMap<FName,FZoneSerialData> m_MapBuildInsts;//위치값 밖에 저장이안되는데
 
 	TArray<TWeakObjectPtr<AMonsterPawn>> m_Npc;

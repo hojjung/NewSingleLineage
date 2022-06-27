@@ -19,6 +19,8 @@ public:
 
 protected:
 	UPROPERTY(VisibleAnywhere)
+	UStaticMeshComponent* m_IconMeshComp;
+	UPROPERTY(VisibleAnywhere)
 	UBuildWidgetCompo* m_WidgetComp;
 	UPROPERTY(VisibleAnywhere)
 	UStaticMeshComponent* m_MeshComp;
@@ -61,4 +63,6 @@ public:
 	UInventory* GetItemHolder();
 
 	virtual FText GetTextInteract() override;
+
+	virtual UStaticMeshComponent* GetIconMeshComp() override;
 };

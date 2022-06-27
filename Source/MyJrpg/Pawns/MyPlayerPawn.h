@@ -183,5 +183,7 @@ public:
 	void ClearCameraOffset();
 
 	virtual bool IsLooting() override;
+	
+	UCameraComponent* GetCameraComp();
 };
 

@@ -27,6 +27,13 @@ void UZoneInstManager::SpawnZone(const FName& id, const FZoneDataRow& zoneData)
 	
 	m_Build.Reset();
 
+	FActorSpawnParameters Param;
+	Param.bNoFail = false;
+	
+	m_MiniMapCam = GetWorld()->SpawnActor<AMinimapCam>(Param);
+
+	m_MiniMapCam->AddTrackIcon(UMyLib::GetPlayer());
+
 	m_MinimapManager = NewObject<UMinimapManager>(this);
 
 	m_MinimapManager->Init();
@@ -159,25 +166,25 @@ void UZoneInstManager::SpawnActors(const FZoneSerialData& zoneInst, bool isInit)
 		case EActorType::Npc:
 			{
 				AMonsterPawn* MobPawn = SpawnNpcActor(ZoneActorEle, Index, zoneInst);
-				m_MinimapManager->AddTrackActor(MobPawn);
+				m_MiniMapCam->AddTrackIcon(MobPawn);
 			}
 			break;
 		case EActorType::Item:
 			{
 				AItemActor* ItemActor = SpawnItemActor(ZoneActorEle, Index, zoneInst, isInit);
-				m_MinimapManager->AddTrackActor(ItemActor);
+				m_MiniMapCam->AddTrackIcon(ItemActor);
 			}
 			break;
 		case EActorType::Gather:
 			{
 				ATreeBase* GatherActor = SpawnGatherActor(ZoneActorEle, Index, zoneInst, isInit);
-				m_MinimapManager->AddTrackActor(GatherActor);
+				m_MiniMapCam->AddTrackIcon(GatherActor);
 			}
 			break;
 		case EActorType::Build:
 			{
 				AStructureActor* BuildActor = SpawnBuildActor(ZoneActorEle, Index, zoneInst);
-				m_MinimapManager->AddTrackActor(BuildActor);
+				m_MiniMapCam->AddTrackIcon(BuildActor);
 			}
 			break;
 		}

@@ -30,14 +30,14 @@ AMyPlayerPawn::AMyPlayerPawn(const FObjectInitializer& objInit):Super(objInit)
 
 	m_DissolveCam = CreateDefaultSubobject<UCameraDissolve>(TEXT("CamDissolve00"));
 	m_DissolveCam->SetupAttachment(RootComponent);
-	m_DissolveCam->SetRelativeRotation(FRotator(-45, -45.f, 0.f)); //-45.f
-	m_DissolveCam->TargetArmLength = 1500; //1375
+	m_DissolveCam->SetRelativeRotation(FRotator(-55, -45.f, 0.f)); //-45.f
+	m_DissolveCam->TargetArmLength = 900; //1375
 	m_DissolveCam->m_SocketOffset = FVector(0,0,-50);
 	m_DissolveCam->CameraLagSpeed=30;
 	//
 	m_TopCamera = CreateDefaultSubobject<UCameraComponent>(TEXT("m_TopCamera"));
 	m_TopCamera->SetupAttachment(m_DissolveCam);
-	m_TopCamera->FieldOfView = 65.f;
+	m_TopCamera->FieldOfView = 90.f;
 	//
 	m_AryTargetingObjectType.Reset();
 	m_AryTargetingObjectType.Add(EObjectTypeQuery::ObjectTypeQuery3);
@@ -478,6 +478,11 @@ void AMyPlayerPawn::ClearCameraOffset()
 bool AMyPlayerPawn::IsLooting()
 {
 	return m_WaitInteractTimer.IsValid();
+}
+
+UCameraComponent* AMyPlayerPawn::GetCameraComp()
+{
+	return m_TopCamera;
 }
 
 void AMyPlayerPawn::OnNotifyTrigger(const FName& id)

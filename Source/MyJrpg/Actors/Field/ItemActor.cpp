@@ -30,6 +30,17 @@ AItemActor::AItemActor()
 	//AnimMontage'/Game/09_SharedAnimations/Loot_Anim_Set/Loot_Corpse_GrabItem_Montage.Loot_Corpse_GrabItem_Montage'
 	static ConstructorHelpers::FObjectFinder<UAnimMontage> FoundAnim(TEXT("AnimMontage'/Game/09_SharedAnimations/Loot_Anim_Set/Loot_Corpse_GrabItem_Montage.Loot_Corpse_GrabItem_Montage'"));
 	m_Anim = FoundAnim.Object;
+	//
+	m_IconMeshComp = CreateDefaultSubobject<UStaticMeshComponent>("m_IconMeshComp");
+	m_IconMeshComp->SetupAttachment(RootComponent);
+	m_IconMeshComp->SetRelativeLocation(FVector(0,0,1800.f));
+	m_IconMeshComp->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+	m_IconMeshComp->SetCanEverAffectNavigation(false);
+	m_IconMeshComp->bReceivesDecals = false;
+	m_IconMeshComp->SetOwnerNoSee(true);
+	static ConstructorHelpers::FObjectFinder<UStaticMesh> FoundIconMesh(
+		TEXT("StaticMesh'/Game/03_VisualEffect/SM_Icon.SM_Icon'"));
+	m_IconMeshComp->SetStaticMesh(FoundIconMesh.Object);
 }
 
 void AItemActor::EndPlay(const EEndPlayReason::Type EndPlayReason)
@@ -144,4 +155,9 @@ FText AItemActor::GetTextInteract()
 bool AItemActor::IsInteractable()
 {
 	return UMyLib::GetEquip()->HasSpace(GetItemSpec());
+}
+
+UStaticMeshComponent* AItemActor::GetIconMeshComp()
+{
+	return m_IconMeshComp;
 }

@@ -19,6 +19,8 @@ public:
 
 private:
 	UPROPERTY(VisibleAnywhere)
+	UStaticMeshComponent* m_IconMeshComp;
+	UPROPERTY(VisibleAnywhere)
 	UCapsuleComponent* m_Capsule;
 	UPROPERTY(VisibleAnywhere)
 	UStaticMeshComponent* m_ShadowMeshComp;
@@ -84,4 +86,6 @@ public:
 	virtual FText GetTextInteract() override;
 
 	virtual bool IsInteractable() override;
+
+	virtual UStaticMeshComponent* GetIconMeshComp() override;
 };

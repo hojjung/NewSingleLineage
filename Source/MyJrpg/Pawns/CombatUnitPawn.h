@@ -22,6 +22,8 @@ public:
 	
 protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+	UStaticMeshComponent* m_IconMeshComp;
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 	UStaticMeshComponent* m_ShadowMeshComp;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 	USceneComponent* m_BulletTarget;
@@ -161,4 +163,6 @@ public:
 	virtual EStanceType GetStance();
 	
 	virtual bool IsLooting();
+
+	virtual UStaticMeshComponent* GetIconMeshComp() override;
 };

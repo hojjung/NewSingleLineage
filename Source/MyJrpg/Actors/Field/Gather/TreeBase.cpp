@@ -62,6 +62,17 @@ ATreeBase::ATreeBase()
 	m_ShadowMeshComp->SetRelativeLocation(FVector(0,0,-88));
 	m_ShadowMeshComp->bReceivesDecals = false;
 	m_nTreeHp = 3;
+	//
+	m_IconMeshComp = CreateDefaultSubobject<UStaticMeshComponent>("m_IconMeshComp");
+	m_IconMeshComp->SetupAttachment(RootComponent);
+	m_IconMeshComp->SetRelativeLocation(FVector(0,0,1800.f));
+	m_IconMeshComp->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+	m_IconMeshComp->SetCanEverAffectNavigation(false);
+	m_IconMeshComp->bReceivesDecals = false;
+	m_IconMeshComp->SetOwnerNoSee(true);
+	static ConstructorHelpers::FObjectFinder<UStaticMesh> FoundIconMesh(
+		TEXT("StaticMesh'/Game/03_VisualEffect/SM_Icon.SM_Icon'"));
+	m_IconMeshComp->SetStaticMesh(FoundIconMesh.Object);
 }
 //(X=0.000005,Y=20.000000,Z=-10.000000) btm
 //
@@ -265,4 +276,9 @@ bool ATreeBase::IsInteractable()
 	bool InvenSpace = UMyLib::GetEquip()->HasSpace(FItemSpec(m_DataRow->m_ItemGather.RowName,m_DataRow->m_nItemGatherCount));
 	
 	return HasEquip && InvenSpace;
+}
+
+UStaticMeshComponent* ATreeBase::GetIconMeshComp()
+{
+	return m_IconMeshComp;
 }

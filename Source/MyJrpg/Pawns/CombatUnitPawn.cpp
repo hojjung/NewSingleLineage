@@ -29,6 +29,17 @@ ACombatUnitPawn::ACombatUnitPawn(const FObjectInitializer& objInit):Super(objIni
 
 	m_BulletTarget = CreateDefaultSubobject<USceneComponent>(TEXT("m_BulletTarget"));
 	m_BulletTarget->SetupAttachment(RootComponent);
+	//
+	m_IconMeshComp = CreateDefaultSubobject<UStaticMeshComponent>("m_IconMeshComp");
+	m_IconMeshComp->SetupAttachment(RootComponent);
+	m_IconMeshComp->SetRelativeLocation(FVector(0,0,1800.f));
+	m_IconMeshComp->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+	m_IconMeshComp->SetCanEverAffectNavigation(false);
+	m_IconMeshComp->bReceivesDecals = false;
+	m_IconMeshComp->SetOwnerNoSee(true);
+	static ConstructorHelpers::FObjectFinder<UStaticMesh> FoundIconMesh(
+		TEXT("StaticMesh'/Game/03_VisualEffect/SM_Icon.SM_Icon'"));
+	m_IconMeshComp->SetStaticMesh(FoundIconMesh.Object);
 }
 
 bool ACombatUnitPawn::TryHit(const FStatGroup& other)
@@ -321,6 +332,11 @@ EStanceType ACombatUnitPawn::GetStance()
 bool ACombatUnitPawn::IsLooting()
 {
 	return false;
+}
+
+UStaticMeshComponent* ACombatUnitPawn::GetIconMeshComp()
+{
+	return m_IconMeshComp;
 }
 
 

@@ -18,6 +18,8 @@ public:
 	AItemActor();
 
 protected:
+	UPROPERTY(VisibleAnywhere)
+	UStaticMeshComponent* m_IconMeshComp;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 	UBillboardComponent* m_BillboardIcon;
 	UPROPERTY(VisibleAnywhere)
@@ -55,5 +57,7 @@ public:
 	virtual FText GetTextInteract() override;
 
 	virtual bool IsInteractable() override;
+
+	virtual UStaticMeshComponent* GetIconMeshComp() override;
 };
 

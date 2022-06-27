@@ -20,6 +20,16 @@ AStructureActor::AStructureActor()
 	m_MeshComp->SetupAttachment(RootComponent);
 	m_MeshComp->bReceivesDecals = false;
 	m_MeshComp->SetMobility(EComponentMobility::Movable);
+	//
+	m_IconMeshComp = CreateDefaultSubobject<UStaticMeshComponent>("m_IconMeshComp");
+	m_IconMeshComp->SetupAttachment(RootComponent);
+	m_IconMeshComp->SetRelativeLocation(FVector(0,0,1800.f));
+	m_IconMeshComp->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+	m_IconMeshComp->SetCanEverAffectNavigation(false);
+	m_IconMeshComp->bReceivesDecals = false;
+	static ConstructorHelpers::FObjectFinder<UStaticMesh> FoundIconMesh(
+		TEXT("StaticMesh'/Game/03_VisualEffect/SM_Icon.SM_Icon'"));
+	m_IconMeshComp->SetStaticMesh(FoundIconMesh.Object);
 }
 
 void AStructureActor::SetBuildData(const FBuildDataRow& data)
@@ -205,6 +215,11 @@ UInventory* AStructureActor::GetItemHolder()
 FText AStructureActor::GetTextInteract()
 {
 	return NSLOCTEXT("AStructureActor","Control","조작");
+}
+
+UStaticMeshComponent* AStructureActor::GetIconMeshComp()
+{
+	return m_IconMeshComp;
 }
 
 bool AStructureActor::IsEraseable()
