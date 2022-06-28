@@ -125,5 +125,7 @@ public:
 	ACombatUnitPawn* GetNearNpc(FVector callerLoc, float range, const TSet<ACombatUnitPawn*>* ignore = nullptr, bool excludeDead = false);
 
 	void GetNearNpcs(const ABaseUnitPawn* caller, TArray<ACombatUnitPawn*>& outAry, float range,const TSet<ACombatUnitPawn*>* ignore = nullptr);
+
+	void AddTrackIcon(IFocusable* icon);
 };
 

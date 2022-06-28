@@ -40,6 +40,8 @@ public://Visual
 	USoundBase* m_SoundGatherEnd;
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
 	TArray<FName> m_AryGatherToolID;
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
+	UTexture2D* m_MapIcon;
 
 	virtual FPrimaryAssetId GetPrimaryAssetId() const override
 	{

@@ -2,6 +2,7 @@
 
 #include "MyJrpg/MyLib.h"
 #include "MyJrpg/DataTables/BuildData.h"
+#include "MyJrpg/Managers/MyGameInstance.h"
 
 AStructureActor::AStructureActor()
 {
@@ -44,6 +45,8 @@ void AStructureActor::SetBuildData(const FBuildDataRow& data)
 
 	GetComponents(m_AryMeshCompos);
 
+	m_AryMeshCompos.Remove(m_IconMeshComp->GetMeshComp());
+
 	m_AryAryMats.Reset(5);
 	
 	for(UMeshComponent* MeshComp : m_AryMeshCompos)
@@ -55,11 +58,25 @@ void AStructureActor::SetBuildData(const FBuildDataRow& data)
 			m_AryMeshComposColl.Add(MeshComp);
 		}
 	}
-
 	m_WidgetComp->Init();
+}
 
+void AStructureActor::ConfirmBuild(UInventory* inven)
+{
+	m_WidgetComp->SetVisibility(false);
+
+	SetMat(nullptr);
+
+	SetActorEnableCollision(true);
+	//
+	if(m_BuildData->m_ClassInter->IsValidLowLevel())
+	{
+		m_BuildInteract = NewObject<UBuildInteractBase>(this, m_BuildData->m_ClassInter);
+		m_BuildInteract->Init(m_BuildData->m_AryInteractVariable,inven);
+	}
+	
 	m_IconMeshComp->SetRotationOffset(FRotator(0,-45,0));
-
+	
 	m_IconMeshComp->SetIcon(m_BuildData->m_MapIcon);
 }
 
@@ -114,20 +131,6 @@ void AStructureActor::ShowBuildWidget(bool b)
 	m_WidgetComp->ShowBuildWidget(b);
 }
 
-void AStructureActor::ConfirmBuild(UInventory* inven)
-{
-	m_WidgetComp->SetVisibility(false);
-
-	SetMat(nullptr);
-
-	SetActorEnableCollision(true);
-	//
-	if(m_BuildData->m_ClassInter->IsValidLowLevel())
-	{
-		m_BuildInteract = NewObject<UBuildInteractBase>(this, m_BuildData->m_ClassInter);
-		m_BuildInteract->Init(m_BuildData->m_AryInteractVariable,inven);
-	}
-}
 
 void AStructureActor::ShowSelect(bool b)
 {
@@ -175,6 +178,13 @@ void AStructureActor::OnInteract()
 void AStructureActor::OnArrived()
 {
 	m_BuildInteract->OnInteract();
+}
+
+void AStructureActor::BeginPlay()
+{
+	Super::BeginPlay();
+
+	UMyGameInstance::Get->m_ZoneInst->AddTrackIcon(this);
 }
 
 bool AStructureActor::IsInteractImplemented()

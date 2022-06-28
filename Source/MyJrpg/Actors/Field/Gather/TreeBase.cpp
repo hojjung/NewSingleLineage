@@ -98,9 +98,9 @@ void ATreeBase::SetEntity(const FName& id, const FGatherDataRow& data, AMyPlayer
 
 	m_bUsePhysics = m_DataRow->m_bUsePhysics;
 
-	m_IconMeshComp->SetRotationOffset(FRotator(0,135,0));
+	m_IconMeshComp->SetRotationOffset(FRotator(0,45,0));
 
-	m_IconMeshComp->SetIcon(m_DataRow->m_Icon.LoadSynchronous());
+	m_IconMeshComp->SetIcon(m_GatherAsset->m_MapIcon);
 }
 
 void ATreeBase::OnInteract()
@@ -229,6 +229,12 @@ void ATreeBase::EndPlay(const EEndPlayReason::Type EndPlayReason)
 	Super::EndPlay(EndPlayReason);
 
 	m_GatherAsset.Reset();
+}
+
+void ATreeBase::BeginPlay()
+{
+	Super::BeginPlay();
+	UMyGameInstance::Get->m_ZoneInst->AddTrackIcon(this);
 }
 
 void ATreeBase::GetMoveGoalReachTest(const AActor* MovingActor, const FVector& MoveOffset, FVector& GoalOffset,float& GoalRadius, float& GoalHalfHeight) const

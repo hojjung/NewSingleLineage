@@ -1,5 +1,7 @@
 #include "MinimapIconComp.h"
 
+#include "MyJrpg/Managers/MyGameInstance.h"
+
 UMinimapIconComp::UMinimapIconComp(const FObjectInitializer& ObjectInitializer): Super(ObjectInitializer)
 {
 	PrimaryComponentTick.bCanEverTick = true;
@@ -85,10 +87,9 @@ UStaticMeshComponent* UMinimapIconComp::GetMeshComp()
 
 void UMinimapIconComp::SetIcon(UTexture2D* wantIcon)
 {
-	UMaterialInstanceDynamic* DynMaterial = UMaterialInstanceDynamic::Create(m_IconMeshComp->GetMaterial(0), this);
+	auto* MatDynamic = UMaterialInstanceDynamic::Create(m_IconMeshComp->GetMaterial(0), this);
 	
-	m_IconMeshComp->SetMaterial(0, DynMaterial);
+	MatDynamic->SetTextureParameterValue(TEXT("Icon"),wantIcon);
 	
-	DynMaterial->SetTextureParameterValue(TEXT("Icon"),wantIcon);
-	
+	m_IconMeshComp->SetMaterial(0, MatDynamic);
 }

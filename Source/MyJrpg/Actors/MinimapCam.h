@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "MinimapCompParent.h"
 #include "GameFramework/Actor.h"
 #include "MyJrpg/MyLib.h"
 #include "MinimapCam.generated.h"
@@ -20,6 +21,8 @@ public:
 protected:
 	UPROPERTY(VisibleAnywhere,BlueprintReadWrite)
 	USceneCaptureComponent2D* m_Capture;
+	UPROPERTY(VisibleAnywhere,BlueprintReadWrite)
+	UMinimapCompParent* m_ParentComp;
 	
 protected:
 	virtual void BeginPlay() override;

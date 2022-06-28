@@ -36,7 +36,8 @@ protected:
 	
 protected:
 	virtual void EndPlay(const EEndPlayReason::Type EndPlayReason) override;
-	
+
+	virtual void BeginPlay() override;
 public:
 	void Init(FName itemID, int countOrLevel);//그럼 어떻게 스택 아이템 처리?
 

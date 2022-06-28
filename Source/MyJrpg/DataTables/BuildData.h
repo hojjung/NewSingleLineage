@@ -48,6 +48,8 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	TSoftObjectPtr<UStaticMesh> m_Mesh;
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+	UTexture2D* m_MapIcon;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	FVector m_Offset;
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (UIMin = "0.1"))
 	float m_fScale = 1.f;
@@ -57,6 +59,4 @@ public:
 	FName m_NextUpgradeActorID;
 	UPROPERTY(EditDefaultsOnly,BlueprintReadOnly)
 	int m_nMaxOwnedCount = 0;
-	UPROPERTY(EditDefaultsOnly,BlueprintReadOnly)
-	UTexture2D* m_MapIcon;
 };

@@ -42,6 +42,12 @@ void AItemActor::EndPlay(const EEndPlayReason::Type EndPlayReason)
 	m_MeshItem->SetStaticMesh(nullptr);
 }
 
+void AItemActor::BeginPlay()
+{
+	Super::BeginPlay();
+	UMyGameInstance::Get->m_ZoneInst->AddTrackIcon(this);
+}
+
 void AItemActor::Init(FName itemID, int countOrLevel)
 {
 	m_NavProp.AgentHeight = 88;

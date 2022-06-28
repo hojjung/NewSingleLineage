@@ -96,6 +96,7 @@ void AMonsterPawn::BeginPlay()
 {
 	Super::BeginPlay();
 	AttachWeapons();
+	UMyGameInstance::Get->m_ZoneInst->AddTrackIcon(this);
 }
 void AMonsterPawn::SetEntity(const FName& id,const FNpcUnitEntityRow& unitEntityRow)
 {
