@@ -2,6 +2,7 @@
 
 #include "Components/MyMovement.h"
 #include "Logics/AI/AI_Logic/AI_LogicBase.h"
+#include "Logics/AI/AI_Logic/Logic_Flee.h"
 #include "Logics/AI/AI_Sensor/Sensor_LogicBase.h"
 #include "MyJrpg/MyLib.h"
 #include "MyJrpg/Managers/MyGameInstance.h"
@@ -82,6 +83,13 @@ AMonsterPawn::AMonsterPawn(const FObjectInitializer& obj): Super(obj.SetDefaultS
 	m_MeshBackHand->PrimaryComponentTick.TickGroup = TG_PrePhysics;
 	m_MeshBackHand->CanCharacterStepUpOn = ECanBeCharacterBase::ECB_No;
 	m_MeshBackHand->bReceivesDecals = false;
+
+	static ConstructorHelpers::FObjectFinder<UTexture2D>
+	FoundIcon(TEXT("Texture2D'/Game/Sprites/UI/Arrow_Ene.Arrow_Ene'"));
+	m_MinimapIcon = FoundIcon.Object;
+	static ConstructorHelpers::FObjectFinder<UTexture2D>
+	FoundIcon2(TEXT("Texture2D'/Game/Sprites/UI/Arrow_NAtk.Arrow_NAtk'"));
+	m_IconNonAttack = FoundIcon2.Object;
 }
 
 void AMonsterPawn::BeginPlay()
@@ -357,4 +365,16 @@ bool AMonsterPawn::IsInteractable()
 void AMonsterPawn::OnRequestMoveDone()
 {
 	UMyLib::GetCanvas()->StartPickPocket(this);
+}
+
+void AMonsterPawn::SetIcon()
+{
+	if(m_AiFsm->GetClass() == ULogic_Flee::StaticClass() || !UMyGameInstance::Get->m_TeamKarma->IsFoe(this))
+	{
+		m_IconComp->SetIcon(m_IconNonAttack);	
+	}
+	else
+	{
+		m_IconComp->SetIcon(m_MinimapIcon);
+	}
 }

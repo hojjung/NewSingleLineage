@@ -19,6 +19,8 @@ public:
 	AMonsterPawn(const FObjectInitializer& obj);
 
 protected:
+	UPROPERTY()
+	UTexture2D* m_IconNonAttack;
 	UPROPERTY(VisibleAnywhere)
 	UStaticMeshComponent* m_MeshRightHand;
 	UPROPERTY(VisibleAnywhere)
@@ -64,6 +66,8 @@ protected:
 	virtual void OnDeathAnimEnd() override;
 
 	void OnRequestMoveDone();
+
+	virtual void SetIcon() override;
 	
 public:
 	void Speech(FText text);

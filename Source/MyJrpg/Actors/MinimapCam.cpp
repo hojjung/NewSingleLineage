@@ -18,7 +18,7 @@ AMinimapCam::AMinimapCam()//TextureRenderTarget2D'/Game/03_VisualEffect/T_Minima
 	m_Capture->CaptureSource = ESceneCaptureSource::SCS_SceneColorHDR;
 	m_Capture->SetTickableWhenPaused(true);
 	m_Capture->ProjectionType = ECameraProjectionMode::Orthographic;
-	m_Capture->OrthoWidth = 2300;
+	m_Capture->OrthoWidth = 2350;
 	m_Capture->PostProcessBlendWeight = 0.f;
 	static ConstructorHelpers::FObjectFinder<UTextureRenderTarget2D> Found(TEXT("TextureRenderTarget2D'/Game/03_VisualEffect/T_Minimap.T_Minimap'"));
 	m_Capture->TextureTarget = Found.Object;

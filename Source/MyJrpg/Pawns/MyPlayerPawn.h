@@ -33,6 +33,7 @@ public:
 
 	FOnPlayerFocusTarget m_OnFocus;
 	
+
 public:
 	AMyPlayerPawn(const FObjectInitializer& objInit);
 

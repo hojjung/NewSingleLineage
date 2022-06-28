@@ -59,6 +59,8 @@ void AStructureActor::SetBuildData(const FBuildDataRow& data)
 	m_WidgetComp->Init();
 
 	m_IconMeshComp->SetRotationOffset(FRotator(0,-45,0));
+
+	m_IconMeshComp->SetIcon(m_BuildData->m_MapIcon);
 }
 
 void AStructureActor::EndPlay(const EEndPlayReason::Type EndPlayReason)

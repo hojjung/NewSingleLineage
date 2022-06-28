@@ -257,4 +257,5 @@ public:
 	TArray<FName> m_AryTraderIDs;
 	UPROPERTY(EditDefaultsOnly)
 	TArray<FDropData> m_AryDropDatas;
+	
 };

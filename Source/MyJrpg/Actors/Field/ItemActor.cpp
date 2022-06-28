@@ -69,7 +69,9 @@ void AItemActor::Init(FName itemID, int countOrLevel)
 		m_BillboardIcon->SetSprite(t);
 	}
 
-	m_IconMeshComp->SetRotationOffset(FRotator(0,-45,0));
+	m_IconMeshComp->SetRotationOffset(FRotator(0,135,0));
+
+	m_IconMeshComp->SetIcon(ItemData.m_Icon.LoadSynchronous());
 }
 
 void AItemActor::OnInteract()

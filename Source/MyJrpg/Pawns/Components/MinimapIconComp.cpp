@@ -82,3 +82,13 @@ UStaticMeshComponent* UMinimapIconComp::GetMeshComp()
 {
 	return m_IconMeshComp;
 }
+
+void UMinimapIconComp::SetIcon(UTexture2D* wantIcon)
+{
+	UMaterialInstanceDynamic* DynMaterial = UMaterialInstanceDynamic::Create(m_IconMeshComp->GetMaterial(0), this);
+	
+	m_IconMeshComp->SetMaterial(0, DynMaterial);
+	
+	DynMaterial->SetTextureParameterValue(TEXT("Icon"),wantIcon);
+	
+}

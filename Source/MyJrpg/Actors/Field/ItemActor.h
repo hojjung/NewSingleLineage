@@ -27,6 +27,7 @@ protected:
 	UStaticMeshComponent* m_MeshItem;
 	UPROPERTY(VisibleAnywhere)
 	UAnimMontage* m_Anim;
+	
 	FName m_OwnerID;
 
 	FItemSpec m_ItemSpec;

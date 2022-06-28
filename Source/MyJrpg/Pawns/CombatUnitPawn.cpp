@@ -34,6 +34,11 @@ ACombatUnitPawn::ACombatUnitPawn(const FObjectInitializer& objInit):Super(objIni
 	m_IconComp->SetupAttachment(RootComponent);
 }
 
+void ACombatUnitPawn::SetIcon()
+{
+	m_IconComp->SetIcon(m_MinimapIcon);
+}
+
 bool ACombatUnitPawn::TryHit(const FStatGroup& other)
 {
 	int Accu = other.m_nAccu + 1;
@@ -125,6 +130,7 @@ void ACombatUnitPawn::SetEntity(const FName& id, const FNpcUnitEntityRow& unitEn
 		m_Interaction = NewObject<UInteractBase>(this,unitEntityRow.m_ClassInteract);
 		m_Interaction->Init(unitEntityRow.m_InteractVariable);
 	}
+	SetIcon();
 }
 
 void ACombatUnitPawn::Tick(float DeltaSeconds)
@@ -330,7 +336,6 @@ UMinimapIconComp* ACombatUnitPawn::GetIconMeshComp()
 {
 	return m_IconComp;
 }
-
 
 void ACombatUnitPawn::Dead()
 {

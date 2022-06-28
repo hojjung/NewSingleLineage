@@ -40,7 +40,7 @@ public://Visual
 	USoundBase* m_SoundGatherEnd;
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
 	TArray<FName> m_AryGatherToolID;
-	
+
 	virtual FPrimaryAssetId GetPrimaryAssetId() const override
 	{
 		return FPrimaryAssetId("Gather", GetFName());

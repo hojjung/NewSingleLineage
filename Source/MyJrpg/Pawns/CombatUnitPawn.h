@@ -22,6 +22,8 @@ public:
 	DECLARE_MULTICAST_DELEGATE(FOnHpChanged);
 	
 protected:
+	UPROPERTY()
+	UTexture2D* m_MinimapIcon;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 	UMinimapIconComp* m_IconComp;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
@@ -66,6 +68,8 @@ protected:
 	EStanceType m_Stance;
 	
 protected:
+	virtual void SetIcon();
+	
 	bool TryHit(const FStatGroup& other);
 
 	float GetCriticalDmg(float amount);

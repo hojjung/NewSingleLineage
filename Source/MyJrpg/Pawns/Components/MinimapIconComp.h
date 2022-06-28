@@ -37,4 +37,6 @@ public:
 	void SetRotationOffset(FRotator rot);
 
 	UStaticMeshComponent* GetMeshComp();
+
+	void SetIcon(UTexture2D* wantIcon);
 };

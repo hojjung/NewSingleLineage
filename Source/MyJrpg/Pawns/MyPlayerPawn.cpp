@@ -30,7 +30,7 @@ AMyPlayerPawn::AMyPlayerPawn(const FObjectInitializer& objInit):Super(objInit)
 
 	m_DissolveCam = CreateDefaultSubobject<UCameraDissolve>(TEXT("CamDissolve00"));
 	m_DissolveCam->SetupAttachment(RootComponent);
-	m_DissolveCam->SetRelativeRotation(FRotator(-55, -45.f, 0.f)); //-45.f
+	m_DissolveCam->SetRelativeRotation(FRotator(-50, -45.f, 0.f)); //-45.f
 	m_DissolveCam->TargetArmLength = 900; //1375
 	m_DissolveCam->m_SocketOffset = FVector(0,0,-50);
 	m_DissolveCam->CameraLagSpeed=30;
@@ -46,6 +46,10 @@ AMyPlayerPawn::AMyPlayerPawn(const FObjectInitializer& objInit):Super(objInit)
 	m_ShadowMeshComp->SetRelativeScale3D(FVector(4));
 
 	m_bIsInteracting = false;
+
+	static ConstructorHelpers::FObjectFinder<UTexture2D>
+	FoundIcon(TEXT("Texture2D'/Game/Sprites/UI/Arrow_Pl.Arrow_Pl'"));
+	m_MinimapIcon = FoundIcon.Object;
 
 	SetAttackRange(250);
 }
@@ -107,6 +111,8 @@ void AMyPlayerPawn::SetPlayerEntity()
 	UMyGameInstance::Get->m_PlayerStatManager->UpdateStat();
 	
 	m_StatGroup.m_Hp = m_StatGroup.m_MaxHp;
+
+	SetIcon();
 }
 
 void AMyPlayerPawn::MoveForward(float AxisValue)

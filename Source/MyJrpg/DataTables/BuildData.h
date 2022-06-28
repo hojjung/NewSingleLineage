@@ -56,5 +56,7 @@ public:
 	UPROPERTY(EditDefaultsOnly,BlueprintReadOnly)
 	FName m_NextUpgradeActorID;
 	UPROPERTY(EditDefaultsOnly,BlueprintReadOnly)
-	int m_nMaxOwnedCount = 0; 
+	int m_nMaxOwnedCount = 0;
+	UPROPERTY(EditDefaultsOnly,BlueprintReadOnly)
+	UTexture2D* m_MapIcon;
 };
