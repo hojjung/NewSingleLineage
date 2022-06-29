@@ -40,6 +40,8 @@ public:
 
 	void OpenLevel(FName zoneData);
 
+	void OpenLevelOnPlayerDead(FName zoneData);
+
 	void OnOpenWorldLevelComplete();
 	
 	bool IsGameStart();

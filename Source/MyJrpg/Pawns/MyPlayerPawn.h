@@ -154,6 +154,8 @@ public:
 
 	virtual void OnDeathAnimEnd() override;
 
+	virtual void Dead() override;
+
 	void CreateRangeBullet(UParticleSystem* effectBullet);
 
 	void RemoveBulletPool();

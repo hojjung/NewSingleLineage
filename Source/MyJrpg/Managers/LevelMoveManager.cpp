@@ -40,6 +40,19 @@ void ULevelMoveManager::OpenLevel(FName zoneData)
 	UGameplayStatics::OpenLevel(this,zoneData);
 }
 
+void ULevelMoveManager::OpenLevelOnPlayerDead(FName zoneData)
+{
+	if(m_ZoneData)
+	{
+		FName ID = GetCrntZoneID();
+		
+		UMyGameInstance::Get->m_ZoneInst->SaveActorsOnPlayerDead(ID);
+	}
+	m_ZoneData = nullptr;
+
+	UGameplayStatics::OpenLevel(this,zoneData);	
+}
+
 void ULevelMoveManager::OpenMyLevel(const FZoneDataRow& zoneData)
 {
 	m_ZoneData = &zoneData;

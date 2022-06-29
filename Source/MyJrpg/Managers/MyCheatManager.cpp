@@ -46,3 +46,8 @@ void UMyCheatManager::TryCompleteQuest(FName id)
 {
 	
 }
+
+void UMyCheatManager::KillPlayer()
+{
+	UMyLib::GetPlayer()->TakeDmg(9999999,nullptr);
+}

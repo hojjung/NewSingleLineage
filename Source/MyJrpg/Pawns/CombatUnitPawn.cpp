@@ -391,26 +391,33 @@ bool ACombatUnitPawn::TakeDmg(float amount, ACombatUnitPawn* attacker)
 {
 	ETextType TextType = ETextType::NormalRight;
 	
-	if(!TryHit(attacker->GetStat()))
+	if(attacker && !TryHit(attacker->GetStat()))
 	{
 		ShowPopupText(0,ETextType::Miss);
 		return false;
 	}
 
-	amount = attacker->GetRandomDmg(amount);
-
-	float CriDmg = attacker->GetCriticalDmg(amount);
-	
-	if(CriDmg)
+	if(attacker)
 	{
-		amount = CriDmg;
+		amount = attacker->GetRandomDmg(amount);
+		
+	}
+
+	if (attacker)
+	{
+		float CriDmg = attacker->GetCriticalDmg(amount);
+
+		if (CriDmg)
+		{
+			amount = CriDmg;
+		}
 	}
 
 	float ReducDmg = GetReductDmg(amount);
 
 	if (ReducDmg <= 0)
 	{
-		ShowPopupText(0,ETextType::Immune);
+		ShowPopupText(0,TextType);
 		return false;
 	}
 	ShowPopupText(amount,TextType);

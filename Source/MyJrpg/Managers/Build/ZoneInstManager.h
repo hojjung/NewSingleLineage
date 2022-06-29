@@ -103,11 +103,15 @@ protected:
 	void InitZone(const FName& id, const FZoneDataRow& zoneData);
 
 	void SpawnActors(const FZoneSerialData& zoneInst, bool isInit);
+
+	FZoneSerialData& GetCurentZoneSerialData();
+
+	void AddPlayerAllItem(UInventory* inven);
 	
 public:
 	void SpawnZone(const FName& id, const FZoneDataRow& zoneData);
 
-	void SaveActors(const FName& id);
+	int SaveActors(const FName& id);
 
 	void AddBuildActor(AStructureActor* buildActor);
 
@@ -127,5 +131,7 @@ public:
 	void GetNearNpcs(const ABaseUnitPawn* caller, TArray<ACombatUnitPawn*>& outAry, float range,const TSet<ACombatUnitPawn*>* ignore = nullptr);
 
 	void AddTrackIcon(IFocusable* icon);
+	
+	void SaveActorsOnPlayerDead(const FName& id);
 };
 

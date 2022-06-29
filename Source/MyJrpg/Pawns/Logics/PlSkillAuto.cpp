@@ -39,7 +39,7 @@ void UPlSkillAuto::TryUseWaitQue()
 
 void UPlSkillAuto::Tick(float deltaTime)
 {
-	if (!m_Pl->IsAlive() || !m_bAutoUse)
+	if (!m_bAutoUse ||!m_Pl->IsAlive())
 	{
 		return;
 	}

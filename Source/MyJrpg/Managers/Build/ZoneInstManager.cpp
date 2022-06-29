@@ -48,18 +48,13 @@ void UZoneInstManager::SpawnZone(const FName& id, const FZoneDataRow& zoneData)
 	SpawnActors(*BuildInst, false);
 }
 
-void UZoneInstManager::SaveActors(const FName& id)
+int UZoneInstManager::SaveActors(const FName& id)
 {
 	FZoneSerialData* BuildInst = m_MapBuildInsts.Find(id);
 
-	if(!BuildInst)
-	{
-		return;
-	}
-
-	int Index = 0;
+	*BuildInst = FZoneSerialData();
 	
-	BuildInst->m_AryZoneActorTrans.Reset();
+	int Index = 0;
 
 	for(TWeakObjectPtr<AMonsterPawn> ActorEle : m_Npc)
 	{
@@ -141,6 +136,8 @@ void UZoneInstManager::SaveActors(const FName& id)
 		
 		BuildInst->m_AryZoneActorTrans.Add(ZoneData);
 	}
+
+	return Index;
 }
 
 void UZoneInstManager::AddBuildActor(AStructureActor* buildActor)
@@ -185,6 +182,80 @@ void UZoneInstManager::SpawnActors(const FZoneSerialData& zoneInst, bool isInit)
 			break;
 		}
 		Index++;
+	}
+}
+
+FZoneSerialData& UZoneInstManager::GetCurentZoneSerialData()
+{
+	FName CrntZoneID = UMyGameInstance::Get->m_LevelMoveManager->GetCrntZoneID();
+	
+	FZoneSerialData* BuildInst = m_MapBuildInsts.Find(CrntZoneID);
+	
+	return *BuildInst;
+}
+
+void UZoneInstManager::AddPlayerAllItem(UInventory* inven)
+{
+	UEquipManager* Equip = UMyLib::GetEquip();
+	
+	TArray<FItemSpec> AryTotalItems;
+	
+	AryTotalItems.Reserve(100);
+
+	if(!Equip->GetQuickSlotItem().m_ID.IsNone())
+	{
+		AryTotalItems.Add(Equip->GetQuickSlotItem());
+	}
+
+	if(Equip->GetBag())
+	{
+		for(const FItemSpec& ItemInInven : Equip->GetBag()->GetAryItems())
+		{
+			if(ItemInInven.m_ID.IsNone())
+			{
+				continue;
+			}
+			AryTotalItems.Add(ItemInInven);
+		}
+	}
+
+	if(Equip->GetBelt())
+	{
+		for(const FItemSpec& ItemInInven : Equip->GetBelt()->GetAryItems())
+		{
+			if(ItemInInven.m_ID.IsNone())
+			{
+				continue;
+			}
+			AryTotalItems.Add(ItemInInven);
+		}
+	}
+
+	for(const FItemSpec& ItemInInven : UMyLib::GetPlayerInven()->GetAryItems())
+	{
+		if(ItemInInven.m_ID.IsNone())
+		{
+			continue;
+		}
+		AryTotalItems.Add(ItemInInven);
+	}
+
+	for(int i = 0; i < (int)EEquipSlotType::Length; i++)
+	{
+		const FItemSpec& ItemInEquip = Equip->GetEquipAry()[i];
+		
+		if(ItemInEquip.m_ID.IsNone())
+		{
+			continue;
+		}
+		AryTotalItems.Add(ItemInEquip);
+	}
+	
+	inven->Init(AryTotalItems.Num(),NSLOCTEXT("UZoneInstManager","Player Tomb","플레이어 시체"));
+
+	for(FItemSpec& ItemToAdd : AryTotalItems)
+	{
+		inven->AddItem(ItemToAdd,false);
 	}
 }
 
@@ -581,4 +652,32 @@ void UZoneInstManager::GetNearNpcs(const ABaseUnitPawn* caller, TArray<ACombatUn
 void UZoneInstManager::AddTrackIcon(IFocusable* icon)
 {
 	m_MiniMapCam->AddTrackIcon(icon);
+}
+
+void UZoneInstManager::SaveActorsOnPlayerDead(const FName& id)
+{
+	UInventory* DeadInven = NewObject<UInventory>(UMyGameInstance::Get);
+	
+	AddPlayerAllItem(DeadInven);
+	
+	if(DeadInven->IsInvenEmpty())
+	{
+		return;
+	}
+
+	int Index = SaveActors(id);
+
+	AActor* Pl = UMyLib::GetPlayer();
+	
+	FZoneSerialData& ZoneSerialData = GetCurentZoneSerialData();
+
+	FZoneActorTransform ZoneData;
+	ZoneData.m_nType = EActorType::Build;
+	ZoneData.m_IDEntity = TEXT("PlayerTomb");
+	ZoneData.m_SpawnPosition = Pl->GetActorLocation();
+	ZoneData.m_SpawnRotation = Pl->GetActorRotation();
+	ZoneSerialData.m_AryZoneActorTrans.Add(ZoneData);
+	
+	TStrongObjectPtr<UInventory> ItemHolder(DeadInven);
+	ZoneSerialData.m_MapItemHolders.Add(Index, ItemHolder);	
 }
