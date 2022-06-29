@@ -244,6 +244,11 @@ void AMonsterPawn::SetDeadBody()
 	GetSkMesh()->SetAnimation(m_EntityAsset->m_DeathMontage);
 	float AnimLength = m_EntityAsset->m_DeathMontage->GetPlayLength() * 0.85f;
 	GetSkMesh()->SetPosition(AnimLength);
+	//
+	if(!IsInteractable())
+	{
+		m_IconComp->SetVisibility(false);
+	}
 }
 
 void AMonsterPawn::PlayHitFlash()
@@ -285,6 +290,13 @@ void AMonsterPawn::Dead()
 	Super::Dead();
 
 	m_SpeechBubbleComp->SetVisibility(false);
+
+	UMyGameInstance::Get->m_RewardManager->OnMonsterDead(this);
+	
+	if(!IsInteractable())
+	{
+		m_IconComp->SetVisibility(false, true);
+	}
 }
 
 void AMonsterPawn::OnDeathAnimEnd()
