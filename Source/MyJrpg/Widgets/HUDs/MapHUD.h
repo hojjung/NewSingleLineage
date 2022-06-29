@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "BaseHUD.h"
 #include "GameFramework/HUD.h"
 #include "MyJrpg/Widgets/MapSelect/WidgetMapPanel.h"
 #include "MyJrpg/Widgets/World/WidgetCanvasWorld.h"
@@ -12,7 +13,7 @@
  * 
  */
 UCLASS()
-class MYJRPG_API AMapHUD : public AHUD
+class MYJRPG_API AMapHUD : public ABaseHUD
 {
 	GENERATED_BODY()
 
@@ -30,6 +31,8 @@ protected:
 
 public:
 	UWidgetMapPanel* GetCanvas();
+
+	virtual void PrintErrorText(const FString& str) override;
 };
 
 

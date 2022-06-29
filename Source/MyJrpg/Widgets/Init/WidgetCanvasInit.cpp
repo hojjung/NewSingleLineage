@@ -12,6 +12,11 @@ void UWidgetCanvasInit::NativeOnInitialized()
 	m_WidgetConfirm->SetVisibility(ESlateVisibility::Collapsed);
 }
 
+void UWidgetCanvasInit::PrintErrorText(const FString& str)
+{
+	m_AlertInfoWindow->PrintErrorText(str);
+}
+
 FReply UWidgetCanvasInit::NativeOnTouchEnded(const FGeometry& InGeometry, const FPointerEvent& InGestureEvent)
 {
 	Super::NativeOnTouchEnded(InGeometry, InGestureEvent);

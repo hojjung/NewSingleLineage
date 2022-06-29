@@ -28,6 +28,8 @@ protected:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (BindWidget))
 	UMaterialProgressBar* m_DurGauge;
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (BindWidget))
+	UImage* m_ImgWeapon;
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (BindWidget))
 	UButton* m_BtnAttack;//Main 3 //공격버튼은 유닛에게 언제나 있을수있음
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (BindWidget))
 	UButton* m_BtnSneak;//sub all
@@ -35,6 +37,8 @@ protected:
 	UButton* m_BtnAuto;//sub all
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (BindWidget))
 	UImage* m_ImgUseAuto;
+	UPROPERTY(EditDefaultsOnly)
+	UTexture2D* m_DefaultPunch;
 protected:
 	UPROPERTY()
 	AMyPlayerPawn* m_Pl;

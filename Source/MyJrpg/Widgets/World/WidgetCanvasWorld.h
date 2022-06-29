@@ -7,6 +7,7 @@
 #include "Components/WrapBox.h"
 #include "Hud/WidgetGameOver.h"
 #include "Hud/WidgetLevelUp.h"
+#include "Hud/WidgetMinimapPanel.h"
 #include "Hud/WidgetScreenEffect.h"
 #include "Hud/WidgetWaitInteract.h"
 #include "Menu/CharacterInfoHUD/AlertInfoWindow.h"
@@ -83,6 +84,8 @@ protected:
 	UButton* m_BtnCollec;
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (BindWidget))
 	UButton* m_BtnBuild;
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (BindWidget))
+	UWidgetMinimapPanel* m_Minimap;
 	
 	//
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (BindWidget))

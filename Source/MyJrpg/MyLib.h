@@ -119,4 +119,6 @@ public:
 	static bool AddItemAll(FItemSpec& items, bool newItem);
 
 	static void PrintErrorText(const FString& string);
+
+	static void PrintErrorText(FText&& tt);
 };

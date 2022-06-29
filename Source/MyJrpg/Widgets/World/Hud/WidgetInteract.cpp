@@ -30,6 +30,8 @@ void UWidgetInteract::NativeOnInitialized()
 	OnEquipChanged();
 
 	m_ImgUseAuto->SetVisibility(ESlateVisibility::Collapsed);
+
+	m_ImgWeapon->SetVisibility(ESlateVisibility::HitTestInvisible);
 }
 
 void UWidgetInteract::HideDur()
@@ -113,9 +115,17 @@ void UWidgetInteract::OnEquipChanged()
 	if(Item.m_ID.IsNone())
 	{
 		HideDur();
+		m_ImgWeapon->SetBrushFromTexture(m_DefaultPunch);
 		return;
 	}
+	
+	const FItemDataRow& ItemData = UMyLib::GetItemData(Item.m_ID);
+	
 	int Dur = (float)UMyLib::GetItemData(Item.m_ID).m_nDurability;
+	
 	float Per = (float)Item.m_nDurability / (float)Dur;
+	
 	ShowDur(Per);
+	
+	m_ImgWeapon->SetBrushFromSoftTexture(ItemData.m_Icon);
 }

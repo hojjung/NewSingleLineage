@@ -407,11 +407,6 @@ IFocusable* UZoneInstManager::GetNearProp(FVector callerLoc, float range, UClass
 
 		IFocusable* FocusInter = Cast<IFocusable>(Focus.GetObject());
 		
-		if(!FocusInter->IsInteractable())
-		{
-			continue;
-		}
-
 		float Length = MAX_flt;
 
 		FNavLocation EndPoint;
@@ -495,7 +490,7 @@ ACombatUnitPawn* UZoneInstManager::GetNearNpc(FVector callerLoc, float range, co
 
 	for (TWeakObjectPtr<AMonsterPawn>& Pawn : m_Npc)
 	{
-		if (!Pawn.Get() || (excludeDead && !Pawn->IsAlive()) || Pawn->IsHidden() || (ignore && (*ignore).Contains(Pawn.Get())) || !Pawn->IsInteractable())
+		if (!Pawn.Get() || (excludeDead && !Pawn->IsAlive()) || Pawn->IsHidden() || (ignore && (*ignore).Contains(Pawn.Get())))
 		{
 			continue;
 		}
@@ -519,7 +514,7 @@ ACombatUnitPawn* UZoneInstManager::GetNearNpc(FVector callerLoc, float range, co
 			Length = FVector::DistSquared2D(StartPoint, EndPoint);
 		}
 
-		if (range > 0 && range < Length)
+		if (range > 0 && range < Length)//900, 실제 거리 1300
 		{
 			continue;
 		}

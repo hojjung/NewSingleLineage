@@ -28,32 +28,6 @@ void UBadwordTable::ChatFilterBadWord(FString& outChatWant)
 
 bool UBadwordTable::NicknameHasBadWord(const FString& nameWant)
 {
-	const TArray<TCHAR>& AryChar = nameWant.GetCharArray();
-
-	for (TCHAR wChar : AryChar)
-	{
-		if (L' ' <= wChar && wChar <= L'/') //특수문자 잡기
-		{
-			return true;
-		}
-		if (L':' <= wChar && wChar <= L'@') //특수문자 잡기
-		{
-			return true;
-		}
-		if (L'[' <= wChar && wChar <= L'`') //특수문자 잡기
-		{
-			return true;
-		}
-		if (L'{' <= wChar && wChar <= L'~') //특수문자 잡기
-		{
-			return true;
-		}
-		if (L'ㄱ' <= wChar && wChar <= L'ㅣ')//미완성한글 잡기
-		{
-			return true;
-		}
-	}
-
 	for (auto* BadWord : m_AryBadwordList)
 	{
 		if (nameWant.Contains(*BadWord->m_Badword))
@@ -62,4 +36,34 @@ bool UBadwordTable::NicknameHasBadWord(const FString& nameWant)
 		}
 	}
 	return false;
+}
+
+bool UBadwordTable::NicknameHasNonChar(const FString& nameWant)
+{
+	const TArray<TCHAR>& AryChar = nameWant.GetCharArray();
+
+	for (TCHAR wChar : AryChar)
+	{
+		if (L' ' <= wChar && wChar <= L'/') //특수문자 잡기
+			{
+			return true;
+			}
+		if (L':' <= wChar && wChar <= L'@') //특수문자 잡기
+			{
+			return true;
+			}
+		if (L'[' <= wChar && wChar <= L'`') //특수문자 잡기
+			{
+			return true;
+			}
+		if (L'{' <= wChar && wChar <= L'~') //특수문자 잡기
+			{
+			return true;
+			}
+		if (L'ㄱ' <= wChar && wChar <= L'ㅣ')//미완성한글 잡기
+			{
+			return true;
+			}
+	}
+return false;
 }

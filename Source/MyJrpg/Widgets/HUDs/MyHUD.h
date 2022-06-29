@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "BaseHUD.h"
 #include "GameFramework/HUD.h"
 #include "MyJrpg/Widgets/World/WidgetCanvasWorld.h"
 
@@ -12,7 +13,7 @@
  * 
  */
 UCLASS()
-class MYJRPG_API AMyHUD : public AHUD
+class MYJRPG_API AMyHUD : public ABaseHUD
 {
 	GENERATED_BODY()
 
@@ -29,5 +30,6 @@ public:
 	virtual void BeginPlay() override;
 
 	UWidgetCanvasWorld* GetCanvas();
-	
+
+	virtual void PrintErrorText(const FString& str) override;
 };

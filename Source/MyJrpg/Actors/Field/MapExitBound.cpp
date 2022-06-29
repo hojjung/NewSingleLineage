@@ -48,7 +48,7 @@ void AMapExitBound::BeginPlay()
 void AMapExitBound::OnTriggerStart(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor,
                                    UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
-	if(OtherActor != UMyLib::GetPlayer())
+	if(OtherActor != UMyLib::GetPlayer() || UMyLib::GetPlayer()->IsUseFsm())
 		return;
 
 	UMyLib::GetCanvas()->GetScreenEffect()->ShowFadeOut(4,FVoidVoid::CreateUObject(this, &AMapExitBound::MoveToMapLevel));

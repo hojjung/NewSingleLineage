@@ -34,6 +34,7 @@ AItemActor::AItemActor()
 	//
 	m_IconMeshComp = CreateDefaultSubobject<UMinimapIconComp>("m_IconMeshComp");
 	m_IconMeshComp->SetupAttachment(RootComponent);
+	m_IconMeshComp->SetRelativeScale3D(FVector(0.7f));
 }
 
 void AItemActor::EndPlay(const EEndPlayReason::Type EndPlayReason)
@@ -89,10 +90,6 @@ void AItemActor::OnInteract()
 
 void AItemActor::OnArrived()
 {
-	if(!UMyLib::GetEquip()->HasSpace(m_ItemSpec))
-	{
-		return;
-	}
 	UMyLib::GetPlayer()->PlayAnimMontage(m_Anim);
 }
 
@@ -100,20 +97,7 @@ void AItemActor::OnObtain()//주변에서 누가 보고있으면
 {
 	UMyLib::GetPlayer()->SetInteracting(false);
 	UMyLib::GetPlayer()->SetFocusedTarget(nullptr);
-	
-	if(HasOwnerTeamID())
-	{
-		switch (UMyGameInstance::Get->m_TeamKarma->GetUnitKarma(m_OwnerID))
-		{
-		case EKarma::Friendly:
-			break;
-		case EKarma::Neutral:
-		case EKarma::Hate:
-			UMyGameInstance::Get->m_TeamKarma->DecreaseKarma(m_OwnerID, 30);
-			break;
-		}
-	}
-	
+
 	if(UMyLib::GetEquip()->AddItem(m_ItemSpec))
 	{
 		UMyGameInstance::Get->m_PlayerStatManager->AddExp(3);
@@ -158,7 +142,7 @@ FText AItemActor::GetTextInteract()
 
 bool AItemActor::IsInteractable()
 {
-	return UMyLib::GetEquip()->HasSpace(GetItemSpec());
+	return true;
 }
 
 UMinimapIconComp* AItemActor::GetIconMeshComp()

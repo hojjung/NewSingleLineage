@@ -7,6 +7,7 @@
 #include "WidgetConfirm.h"
 #include "Blueprint/UserWidget.h"
 #include "Components/Button.h"
+#include "MyJrpg/Widgets/World/Menu/CharacterInfoHUD/AlertInfoWindow.h"
 
 #include "WidgetCanvasInit.generated.h"
 
@@ -21,6 +22,8 @@ class MYJRPG_API UWidgetCanvasInit : public UUserWidget
 
 protected:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (BindWidget))
+	UAlertInfoWindow* m_AlertInfoWindow;
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (BindWidget))
 	UWidgetConfirm* m_WidgetConfirm;
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (BindWidget))
 	UImage* m_ImgBlinkText;
@@ -29,6 +32,8 @@ protected:
 	
 public:
 	virtual void NativeOnInitialized() override;
+	
+	void PrintErrorText(const FString& str);
 
 protected:
 	virtual FReply NativeOnTouchEnded(const FGeometry& InGeometry, const FPointerEvent& InGestureEvent) override;

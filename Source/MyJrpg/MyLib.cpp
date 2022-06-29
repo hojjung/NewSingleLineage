@@ -505,38 +505,19 @@ bool UMyLib::RemoveItemAll(const FName& id, int stLv)
 
 bool UMyLib::AddItemAll(FItemSpec& items, bool newItem)
 {
-	if (UMyLib::GetPlayerInven()->AddItem(items, newItem))
-	{
-		return true;
-	}
-	
 	UEquipManager* Equip = UMyGameInstance::Get->m_EquipManager;
-	
-	if(Equip->GetBag())
-	{
-		if (Equip->GetBag()->AddItem(items, newItem))
-		{
-			return true;
-		}
-	}
-	if(Equip->GetBelt())
-	{
-		if (Equip->GetBelt()->AddItem(items, newItem))
-		{
-			return true;
-		}
-	}
-	return false;	
+
+	return Equip->AddItem(items, newItem);
 }
 
 void UMyLib::PrintErrorText(const FString& string)
 {
-	if(GetMapCanvas())
-	{
-		GetMapCanvas()->PrintErrorText(string);
-	}
-	else if(GetCanvas())
-	{
-		GetCanvas()->PrintErrorText(string);
-	}
+	ABaseHUD *hud = Cast<ABaseHUD>(UGameplayStatics::GetPlayerController( GetUWorld(),0)->GetHUD());
+	
+	hud->PrintErrorText(string);
+}
+
+void UMyLib::PrintErrorText(FText&& tt)
+{
+	PrintErrorText(tt.ToString());
 }

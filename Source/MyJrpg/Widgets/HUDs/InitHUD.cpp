@@ -22,3 +22,8 @@ void AInitHUD::BeginPlay()
 	}
 
 }
+
+void AInitHUD::PrintErrorText(const FString& str)
+{
+	m_Canvas->PrintErrorText(str);
+}

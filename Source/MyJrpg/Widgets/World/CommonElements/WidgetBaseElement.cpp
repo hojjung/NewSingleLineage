@@ -167,6 +167,8 @@ void UWidgetBaseElement::Clear()
 	
 	m_ImgItemIcon->SetVisibility(ESlateVisibility::Collapsed);
 
+	m_ImgItemIcon->SetBrushFromTexture(nullptr);
+
 	HideTextStackLv();
 
 	SetFocusable(false);
@@ -294,7 +296,14 @@ void UWidgetBaseElement::SetItem(const FItemSpec& itemSpec)
 			HideTextStackLv();
 		}
 
-		ShowDurBar((float)itemSpec.m_nDurability / (float)Data.m_nDurability);
+		if(Data.m_nDurability<=0)
+		{
+			HideDurBar();
+		}
+		else
+		{
+			ShowDurBar((float)itemSpec.m_nDurability / (float)Data.m_nDurability);
+		}
 	}
 	else
 	{

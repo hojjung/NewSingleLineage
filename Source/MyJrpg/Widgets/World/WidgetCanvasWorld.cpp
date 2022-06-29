@@ -73,7 +73,10 @@ void UWidgetCanvasWorld::ToggleMenu()
 	if(m_WrapboxMenu->IsVisible())
 	{
 		if(m_bIsBuildable)
-			m_BtnBuild->SetVisibility(ESlateVisibility::Visible);
+		{
+			m_BtnBuild->SetVisibility(ESlateVisibility::Collapsed);	
+		}
+		m_Minimap->SetVisibility(ESlateVisibility::HitTestInvisible);
 		m_WrapboxMenu->SetVisibility(ESlateVisibility::HitTestInvisible);
 		UBUITween::Create(m_WrapboxMenu,0.1f)
 		.FromOpacity(1)
@@ -89,7 +92,10 @@ void UWidgetCanvasWorld::ToggleMenu()
 	else
 	{
 		if(m_bIsBuildable)
-			m_BtnBuild->SetVisibility(ESlateVisibility::Collapsed);
+		{
+			m_BtnBuild->SetVisibility(ESlateVisibility::Visible);
+		}
+		m_Minimap->SetVisibility(ESlateVisibility::Collapsed);
 		m_WrapboxMenu->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
 		UBUITween::Create(m_WrapboxMenu,0.1f)
 		.FromOpacity(0)

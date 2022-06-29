@@ -26,3 +26,8 @@ UWidgetCanvasWorld* AMyHUD::GetCanvas()
 	return m_Canvas;
 }
 
+void AMyHUD::PrintErrorText(const FString& str)
+{
+	GetCanvas()->PrintErrorText(str);
+}
+

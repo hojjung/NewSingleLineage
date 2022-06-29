@@ -65,6 +65,7 @@ ATreeBase::ATreeBase()
 	//
 	m_IconMeshComp = CreateDefaultSubobject<UMinimapIconComp>("m_IconMeshComp");
 	m_IconMeshComp->SetupAttachment(RootComponent);
+	m_IconMeshComp->SetRelativeScale3D(FVector(1.3f));
 }
 
 void ATreeBase::SetEntity(const FName& id, const FGatherDataRow& data, AMyPlayerPawn* pl, const int *hpPtr )
@@ -116,6 +117,12 @@ void ATreeBase::OnInteract()
 
 void ATreeBase::OnArrived()
 {
+	if(!IsInteractable())
+	{
+		m_Player->SetInteracting(false);
+		UMyLib::PrintErrorText(NSLOCTEXT("ATreeBase","No Tool","적합한 도구가 없음"));
+		return;
+	}
 	m_Player->PlayAnimMontage(m_GatherAsset->m_AnimGatherMotion);
 
 	for(const FName& ToolID : m_GatherAsset->m_AryGatherToolID)

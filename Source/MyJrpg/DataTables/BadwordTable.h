@@ -26,6 +26,8 @@ public:
 	void ChatFilterBadWord(FString& outChatWant);
 
 	bool NicknameHasBadWord(const FString& nameWant);
+	
+	bool NicknameHasNonChar(const FString& nameWant);
 };
 
 

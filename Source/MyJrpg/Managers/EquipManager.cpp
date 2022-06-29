@@ -346,7 +346,12 @@ bool UEquipManager::AddItem(FItemSpec& addItem, bool newEquipItem)
 			}	
 		}
 	}
+	//
+	FText NoSpace =  NSLOCTEXT("UEquipManager","Inven No Space","-가방에 공간이 없습니다");
 	
+	FString Str = FString::Printf(TEXT("%s%s"),*ItemData.m_ShowingName.ToString(), *NoSpace.ToString());
+	
+	UMyLib::PrintErrorText(Str);
 	return false;
 }
 
