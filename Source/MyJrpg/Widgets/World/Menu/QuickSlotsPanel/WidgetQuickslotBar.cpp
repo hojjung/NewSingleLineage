@@ -10,6 +10,29 @@
 #include "MyJrpg/Managers/MyGameInstance.h"
 #include "MyJrpg/Widgets/World/Menu/Inventory/WidgetInventory.h"
 
+void UWidgetQuickslotBar::NativeOnInitialized()
+{
+	Super::NativeOnInitialized();
+	
+	m_InvenHolder = UMyLib::GetEquip()->GetBeltHolder();
+	
+	UMyGameInstance::Get->m_EquipManager->m_OnEquipChanged.AddUObject(this, &UWidgetQuickslotBar::OnBeltEquipChanged);
+	
+	OnBeltEquipChanged();
+
+	m_QuickSlot->m_OnFocus.AddUObject(this,&UWidgetQuickslotBar::OnClickQuick);
+	
+	m_QuickSlot->SetIndex(0);
+
+	m_QuickSlot->SetDragable(false);
+
+	m_QuickSlot->SetHoldable(false);
+
+	UMyGameInstance::Get->m_EquipManager->GetQuickInven()->m_OnInvenChanged.AddUObject(this, &UWidgetQuickslotBar::UpdateQuickOne);
+	
+	UpdateQuickOne();
+}
+
 void UWidgetQuickslotBar::CreateBeltSlots()
 {
 	USpacer* RightSpace = NewObject<USpacer>(this);
@@ -40,17 +63,6 @@ void UWidgetQuickslotBar::CreateBeltSlots()
 
 		m_AryQuickSlot[i]->SetHoldable(false);
 	}
-
-}
-
-void UWidgetQuickslotBar::NativeOnInitialized()
-{
-	Super::NativeOnInitialized();
-	
-	m_InvenHolder = UMyLib::GetEquip()->GetBeltHolder();
-	
-	UMyGameInstance::Get->m_EquipManager->m_OnEquipChanged.AddUObject(this, &UWidgetQuickslotBar::OnBeltEquipChanged);
-	OnBeltEquipChanged();
 }
 
 void UWidgetQuickslotBar::NativeDestruct()
@@ -86,6 +98,35 @@ void UWidgetQuickslotBar::OnClick(UWidgetBaseElement* ele)
 		break;
 	}
 }
+
+void UWidgetQuickslotBar::OnClickQuick(UWidgetBaseElement* ele)
+{
+	ele->SetMyUnFocus();
+	
+	UInventory* Quick = UMyGameInstance::Get->m_EquipManager->GetQuickInven();
+
+	const FItemSpec& ItemQuick = UMyGameInstance::Get->m_EquipManager->GetQuickSlotItem();
+
+	FName ID = ItemQuick.m_ID;
+
+	const FItemDataRow& ItemData = UMyLib::GetItemData(ID);
+
+	EItemType Type = UMyLib::GetItemType(ItemData);
+	
+	switch (Type)
+	{
+	case EItemType::Consume:
+		UMyGameInstance::Get->m_QuickManager->ExeItem(ItemData.m_ClassExeItem,Quick,0,1);
+		break;
+	case EItemType::Equip:
+		UMyLib::GetEquip()->Equip(ItemData.m_ItemType,Quick,0);
+		break;
+	default:
+		break;
+	}
+	UpdateQuickOne();
+}
+
 void UWidgetQuickslotBar::OnBeltEquipChanged()
 {
 	UInventory* Belt = *m_InvenHolder;
@@ -121,6 +162,18 @@ void UWidgetQuickslotBar::UpdateQuickSlots()
 		SetItem(m_AryQuickSlot[Index], Item);
 		Index++;
 	}
+}
+
+void UWidgetQuickslotBar::UpdateQuickOne()
+{
+	const FItemSpec& Item = UMyLib::GetEquip()->GetQuickSlotItem();
+
+	if(Item.m_ID.IsNone())
+	{
+		m_QuickSlot->Clear();
+		return;
+	}
+	SetItem(m_QuickSlot, Item);
 }
 
 void UWidgetQuickslotBar::SetItem(UWidgetBaseElement* target, const FItemSpec& itemSpec)

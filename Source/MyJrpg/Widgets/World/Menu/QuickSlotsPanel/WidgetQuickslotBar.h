@@ -25,8 +25,10 @@ protected:
 	TSubclassOf<UWidgetBaseElement> m_ClassWidgetItemEle;
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (BindWidget))
 	UHorizontalBox* m_ScrollBarQuickSlot;
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (BindWidget))
+	UWidgetBaseElement* m_QuickSlot;
 	UPROPERTY()
-	TArray< UWidgetBaseElement*> m_AryQuickSlot;
+	TArray<UWidgetBaseElement*> m_AryQuickSlot;
 
 	UInventory** m_InvenHolder;
 	
@@ -39,6 +41,8 @@ protected:
 
 	void OnClick(UWidgetBaseElement* ele);
 
+	void OnClickQuick(UWidgetBaseElement* ele);
+
 	void SetItem(UWidgetBaseElement* target, const FItemSpec& itemSpec);
 
 	void Clear();
@@ -46,4 +50,6 @@ protected:
 	void OnBeltEquipChanged();
 	
 	void UpdateQuickSlots();
+
+	void UpdateQuickOne();
 };

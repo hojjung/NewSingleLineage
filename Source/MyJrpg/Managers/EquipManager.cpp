@@ -12,6 +12,10 @@ void UEquipManager::Init()
 	
 	while (++Iter < Len)
 		m_AryEqupSlots[Iter] = FItemSpec();
+
+	m_QuickItem = NewObject<UInventory>(this);
+
+	m_QuickItem->Init(1,NSLOCTEXT("UEquipManager","m_QuickItem","퀵슬롯"));
 }
 
 void UEquipManager::Equip(EEquipSlotType slotWant,UInventory* inven, int invenIndex)
@@ -360,4 +364,13 @@ FItemSpec* UEquipManager::FindItemInEquip(FName id)
 		}
 	}
 	return nullptr;
+}
+const FItemSpec& UEquipManager::GetQuickSlotItem() const
+{
+	return m_QuickItem->GetItemRef(0);
+}
+
+UInventory* UEquipManager::GetQuickInven()
+{
+	return m_QuickItem;
 }

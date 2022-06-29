@@ -3,6 +3,7 @@
 #include "CoreMinimal.h"
 #include "Blueprint/UserWidget.h"
 #include "MyJrpg/Widgets/World/CommonElements/WidgetBaseElement.h"
+#include "MyJrpg/Widgets/World/Menu/Inventory/WidgetInventory.h"
 #include "WidgetEquipPanel.generated.h"
 
 class AModularUnitPawn;
@@ -36,6 +37,8 @@ protected:
 	UWidgetBaseElement* m_Belt;
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (BindWidget))
 	UWidgetBaseElement* m_Bag;
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (BindWidget))
+	UWidgetInventory* m_Quick;
 	UPROPERTY()
 	TArray<UWidgetBaseElement*> m_AryEquips;
 
@@ -51,7 +54,6 @@ protected:
 	bool TryUnequip(EEquipSlotType t);
 	
 	void UnFocusCurrent();
-	
 
 	virtual void NativeOnInitialized() override;
 

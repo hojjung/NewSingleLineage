@@ -49,6 +49,8 @@ void UWidgetEquipPanel::NativeOnInitialized()
 	}
 
 	m_Preview->Init(UMyGameInstance::Get->m_PreviewActorManager);
+
+	m_Quick->Init(UMyGameInstance::Get->m_EquipManager->GetQuickInven());
 }
 
 FReply UWidgetEquipPanel::NativeOnMouseButtonDown(const FGeometry& InGeometry, const FPointerEvent& InMouseEvent)
@@ -71,6 +73,8 @@ void UWidgetEquipPanel::Open()
 	UpdateSlots();
 
 	UMyGameInstance::Get->m_PreviewActorManager->ShowPawn();
+
+	m_Quick->OpenPanel();
 }
 
 void UWidgetEquipPanel::Close()
@@ -78,6 +82,8 @@ void UWidgetEquipPanel::Close()
 	m_Equip->m_OnEquipChanged.Remove(m_Handle);
 
 	UMyGameInstance::Get->m_PreviewActorManager->HidePawn();
+
+	m_Quick->ClosePanel();
 }
 
 void UWidgetEquipPanel::UnFocusCurrent()

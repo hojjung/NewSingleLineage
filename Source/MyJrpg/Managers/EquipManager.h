@@ -42,7 +42,8 @@ protected:
 	UInventory* m_BagInven;
 	UPROPERTY()
 	UInventory* m_BeltSlots;
-
+	UPROPERTY()
+	UInventory* m_QuickItem;
 	
 protected:
 	void EquipOption(int index, const FItemSpec& itemWant);
@@ -116,4 +117,9 @@ public:
 	bool AddItem(FItemSpec&& addItem, bool newEquipItem = false);
 	
 	FItemSpec* FindItemInEquip(FName id);
+
+public:
+	const FItemSpec& GetQuickSlotItem() const;
+
+	UInventory* GetQuickInven();
 };

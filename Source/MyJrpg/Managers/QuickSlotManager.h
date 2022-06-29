@@ -19,7 +19,10 @@ class MYJRPG_API UQuickSlotManager : public UObject
 
 protected:
 	TMap<TSubclassOf<UItemExecuteBase>, TStrongObjectPtr<UItemExecuteBase>> m_MapItemExe;
-	
+
+	UPROPERTY()
+	UInventory* m_QuickItem;
+
 public:
 	void RegisterItem(TSubclassOf<UItemExecuteBase> exe);
 
