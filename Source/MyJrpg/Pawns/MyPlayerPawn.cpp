@@ -31,7 +31,7 @@ AMyPlayerPawn::AMyPlayerPawn(const FObjectInitializer& objInit):Super(objInit)
 	m_DissolveCam = CreateDefaultSubobject<UCameraDissolve>(TEXT("CamDissolve00"));
 	m_DissolveCam->SetupAttachment(RootComponent);
 	m_DissolveCam->SetRelativeRotation(FRotator(-50, -45.f, 0.f)); //-45.f
-	m_DissolveCam->TargetArmLength = 1000; //1375
+	m_DissolveCam->TargetArmLength = 870; //1375
 	m_DissolveCam->m_SocketOffset = FVector(0,0,-50);
 	m_DissolveCam->CameraLagSpeed=30;
 	//
@@ -516,6 +516,10 @@ void AMyPlayerPawn::OnNotifyTrigger(const FName& id)
 
 bool AMyPlayerPawn::TakeDmg(float amount, ACombatUnitPawn* attacker)
 {
+	if(!IsAlive())
+	{
+		return false;
+	}
 	UMyGameInstance::Get->m_PlayerStatManager->OnPlTookDmg(amount);
 	
 	if (m_bIsInvincible)

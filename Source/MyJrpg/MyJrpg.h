@@ -60,6 +60,10 @@ namespace FGlobalVariable
 
 	static const float HERO_DEFAULT_SPEED = 460.f;
 
+	static const float HUNGER_DELAY = 3.f;
+	
+	static const float HUNGER_DAMAGE = 0.1f;
+
 	static const int INVEN_SIZE = 14;//42//14
 
 	static const int STORAGE_SIZE = 24;

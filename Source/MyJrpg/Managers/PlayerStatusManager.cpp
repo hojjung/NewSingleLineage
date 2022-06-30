@@ -9,6 +9,16 @@
 void UPlayerStatusManager::Init()
 {
 	//m_BaseStatGroup
+	m_fStarvDamageTimer = 0;
+	
+	m_fHungerTimer = 0;
+	
+	m_fHunger = 1;
+
+	m_fDelayHunger = FGlobalVariable::HUNGER_DELAY;
+
+	m_fDamageHunger = FGlobalVariable::HUNGER_DAMAGE;
+	
 	m_nExp = 0;
 
 	m_nMaxExp = 10;
@@ -28,7 +38,36 @@ void UPlayerStatusManager::Init()
 	UpdateStat();
 }
 
-void UPlayerStatusManager::Tick(float deltaTime)
+void UPlayerStatusManager::HungerTick(float deltaTime)
+{
+	m_fHungerTimer += deltaTime;
+
+	if(m_fHungerTimer >= m_fDelayHunger)
+	{
+		m_fHungerTimer = 0;
+
+		SubHunger(m_fDamageHunger);
+	}
+}
+
+void UPlayerStatusManager::TryTakeStarvDamage(float deltaTime)
+{
+	if(m_fHunger <= 0)
+	{
+		m_fStarvDamageTimer += deltaTime;
+
+		if(m_fStarvDamageTimer > 1)
+		{
+			float Dmg = GetStat().m_MaxHp * 0.04f;
+
+			UMyLib::GetPlayer()->TakeDmg(Dmg, nullptr);
+			
+			m_fStarvDamageTimer = 0;
+		}
+	}
+}
+
+void UPlayerStatusManager::BuffTick(float deltaTime)
 {
 	for (int32 i = m_AryBuff.Num() - 1; i >= 0; --i)
 	{
@@ -53,6 +92,15 @@ void UPlayerStatusManager::Tick(float deltaTime)
 	}
 }
 
+void UPlayerStatusManager::Tick(float deltaTime)
+{
+	HungerTick(deltaTime);
+
+	TryTakeStarvDamage(deltaTime);
+	
+	BuffTick(deltaTime);
+}
+
 void UPlayerStatusManager::UpdateStat()
 {
 	FStatGroup ResultStatGroup = (m_BaseStatGroup + m_AddStatGroup) * m_MultipleStatGroup;
@@ -65,6 +113,24 @@ void UPlayerStatusManager::UpdateStat()
 	}
 
 	m_OnStatChanged.Broadcast();
+}
+
+void UPlayerStatusManager::AddHunger(float am)
+{
+	m_fHunger += am;
+
+	m_fHunger = FMath::Min(m_fHunger, 100.f);
+	
+	m_OnHungerChanged.Broadcast(m_fHunger);
+}
+
+void UPlayerStatusManager::SubHunger(float am)
+{
+	m_fHunger -= am;
+
+	m_fHunger = FMath::Max(m_fHunger, 0.f);
+	
+	m_OnHungerChanged.Broadcast(m_fHunger);
 }
 
 void UPlayerStatusManager::OnMonsterKilled(AMonsterPawn* deadMonster)
@@ -277,4 +343,15 @@ void UPlayerStatusManager::OnPlayerDead(const ACombatUnitPawn* killer)
 const TSoftObjectPtr<UHumanAsset>& UPlayerStatusManager::GetUnitAsset() const
 {
 	return m_BaseBodyWhite;
+}
+
+float UPlayerStatusManager::GetHungerHP()
+{
+	return m_fHunger;
+}
+
+void UPlayerStatusManager::ResetPlayerStatus()
+{
+	
+	m_fHunger = 100;
 }

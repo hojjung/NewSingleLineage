@@ -31,11 +31,15 @@ protected:
 
 	DECLARE_MULTICAST_DELEGATE_OneParam(FOnTookDmg, float);
 
+	DECLARE_MULTICAST_DELEGATE_OneParam(FOnHungerTick, float);
+
 	DECLARE_MULTICAST_DELEGATE(FOnStatChanged);
 
 	DECLARE_MULTICAST_DELEGATE_OneParam(FOnExpEarned, float);
 
 public:
+	FOnHungerTick m_OnHungerChanged;
+	
 	FOnMonsterPawn m_OnMonsterKilled;
 
 	FOnPlayerPawn m_OnPlayerAttack;
@@ -65,6 +69,16 @@ protected:
 
 	int m_nLevel;
 
+	float m_fHunger;
+
+	float m_fDelayHunger;
+
+	float m_fDamageHunger;
+
+	float m_fHungerTimer;
+
+	float m_fStarvDamageTimer;
+
 	FStatGroup m_BaseStatGroup;
 
 	FStatGroup m_AddStatGroup;
@@ -81,13 +95,25 @@ protected://버프 아이템은 따로 뭔갈 안가질거임,남는시간?
 	TSoftObjectPtr<UHumanAsset> m_BaseBodyWhite;
 
 	TSoftObjectPtr<UHumanAsset> m_BaseBodyBlack;
+
+protected:
+	void HungerTick(float deltaTime);
+	
+	void TryTakeStarvDamage(float deltaTime);
+	
+	void BuffTick(float deltaTime);
 	
 public:
 	void Init();
-	
+
 	void Tick(float deltaTime);
 
 	void UpdateStat();
+
+	void AddHunger(float am);
+
+	void SubHunger(float am);
+	
 public://quest and special, delegates
 	void OnMonsterKilled(AMonsterPawn* deadMonster);//플레이어가 몬스터 처치시
 
@@ -149,5 +175,9 @@ public:
 	void OnPlayerDead(const ACombatUnitPawn* killer);
 	
 	const TSoftObjectPtr<UHumanAsset>& GetUnitAsset() const;
+
+	float GetHungerHP();
+
+	void ResetPlayerStatus();
 };
 

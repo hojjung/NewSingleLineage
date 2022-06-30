@@ -11,12 +11,14 @@ void UWidgetGameOver::NativeOnInitialized()
 
 void UWidgetGameOver::OnReturnVillage()
 {
+	UMyGameInstance::Get->m_PlayerStatManager->ResetPlayerStatus();
+	
 	UMyGameInstance::Get->m_LevelMoveManager->OpenMyLevel(TEXT("PlayerHome"), true);
 }
 
 void UWidgetGameOver::SetKiller(const ACombatUnitPawn* killer)
 {
-	FString Str = FString::Printf(TEXT("%s의 공격으로 사망"),killer ? *killer->GetPawnName().ToString() : TEXT("Manager"));
+	FString Str = FString::Printf(TEXT("%s의 공격으로 사망"),killer ? *killer->GetPawnName().ToString() : *NSLOCTEXT("UWidgetGameOver","Starv","굶주림").ToString());
 
 	m_TextDeadReason->SetText(FText::FromString(Str));
 }

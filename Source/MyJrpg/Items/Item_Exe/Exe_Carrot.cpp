@@ -1,8 +1,11 @@
 #include "Exe_Carrot.h"
 #include "MyJrpg/MyLib.h"
+#include "MyJrpg/Managers/MyGameInstance.h"
 
 void UExe_Carrot::Use(FItemSpec& item, UInventory* inven) const
 {
+	UMyGameInstance::Get->m_PlayerStatManager->AddHunger(3);
+	
 	float HealV = 3;
 
 	UMyLib::GetPlayer()->TakeHeal(HealV);
