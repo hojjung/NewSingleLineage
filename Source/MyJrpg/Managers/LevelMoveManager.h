@@ -34,13 +34,9 @@ protected:
 public:
 	void StartGame();
 
-	void OpenMyLevel(const FZoneDataRow& zoneData);
+	void OpenMyLevel(const FZoneDataRow& zoneData, bool isPlayerDead = false);
 
-	void OpenMyLevel(FName zoneData);
-
-	void OpenLevel(FName zoneData);
-
-	void OpenLevelOnPlayerDead(FName zoneData);
+	void OpenMyLevel(FName zoneData, bool isPlayerDead = false);
 
 	void OnOpenWorldLevelComplete();
 	

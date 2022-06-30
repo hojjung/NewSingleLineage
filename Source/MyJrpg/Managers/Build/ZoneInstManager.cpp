@@ -60,7 +60,6 @@ int UZoneInstManager::SaveActors(const FName& id)
 	{
 		if(!ActorEle.Get() || !ActorEle->IsAlive() && ActorEle->GetInven()->IsInvenEmpty())
 		{
-			Index++;
 			continue;
 		}
 
@@ -84,7 +83,6 @@ int UZoneInstManager::SaveActors(const FName& id)
 	{
 		if(!ActorEle.Get())
 		{
-			Index++;
 			continue;
 		}
 		FZoneActorTransform ZoneData;
@@ -104,7 +102,6 @@ int UZoneInstManager::SaveActors(const FName& id)
 	{
 		if(!ActorEle.Get())
 		{
-			Index++;
 			continue;
 		}
 		FZoneActorTransform ZoneData;
@@ -135,8 +132,9 @@ int UZoneInstManager::SaveActors(const FName& id)
 		ZoneData.m_SpawnRotation = ActorEle->GetActorRotation();
 		
 		BuildInst->m_AryZoneActorTrans.Add(ZoneData);
+		Index++;
 	}
-
+	
 	return Index;
 }
 
@@ -444,7 +442,7 @@ void UZoneInstManager::RemoveFocusActor(UObject* want)
 	m_AryFocusActors.Remove(Focus);
 }
 
-IFocusable* UZoneInstManager::GetNearProp(FVector callerLoc, float range, UClass* ignoreClass)
+IFocusable* UZoneInstManager::GetNearProp(FVector callerLoc, float range, UClass* ignoreClass, bool excludeNotInteractable)
 {
 	float MAX_Dist = MAX_flt;
 
@@ -477,6 +475,11 @@ IFocusable* UZoneInstManager::GetNearProp(FVector callerLoc, float range, UClass
 		m_OnActorVisible.ExecuteIfBound(FocusActor, m_MinimapManager->IsVisible(FocusActor));
 
 		IFocusable* FocusInter = Cast<IFocusable>(Focus.GetObject());
+
+		if(excludeNotInteractable && !FocusInter->IsInteractable())
+		{
+			continue;//벨수 없는 나무를 스킵한다 
+		}
 		
 		float Length = MAX_flt;
 
@@ -511,11 +514,23 @@ IFocusable* UZoneInstManager::GetNearProp(FVector callerLoc, float range, UClass
 	return NearPawn;
 }
 
-IFocusable* UZoneInstManager::GetNearTarget(FVector callerLoc, float range, UClass* ignoreClass, bool excludeDead)
+IFocusable* UZoneInstManager::GetNearTarget(FVector callerLoc, float range, bool isUseAuto)
 {
-	ACombatUnitPawn* Pawn = GetNearNpc(callerLoc, range, nullptr, excludeDead);
+	bool ExcludeNotInteractable = false;
 	
-	IFocusable* Prop = GetNearProp(callerLoc, range, ignoreClass);
+	bool ExcludeDead = false;
+	
+	UClass* IgnoreClass = nullptr;
+	
+	if(isUseAuto)
+	{
+		IgnoreClass = AStructureActor::StaticClass();
+		ExcludeDead = true;
+		ExcludeNotInteractable = true;
+	}
+	ACombatUnitPawn* Pawn = GetNearNpc(callerLoc, range, nullptr, ExcludeDead);
+	
+	IFocusable* Prop = GetNearProp(callerLoc, range, IgnoreClass, ExcludeNotInteractable);
 	
 	AActor* FocusActor = Cast<AActor>(Prop);
 
@@ -654,8 +669,50 @@ void UZoneInstManager::AddTrackIcon(IFocusable* icon)
 	m_MiniMapCam->AddTrackIcon(icon);
 }
 
+void UZoneInstManager::RemovePlayerTomb()
+{
+	if(!m_PlayerTombZoneID.IsNone())
+	{
+		int Index = 0;
+		
+		if(m_PlayerTombZoneID == UMyGameInstance::Get->m_LevelMoveManager->GetCrntZoneID())
+		{
+			for(TWeakObjectPtr<AStructureActor> CurrentBuildActor : m_Build)
+			{
+				if(CurrentBuildActor->GetBuildData().m_RowID == TEXT("PlayerTomb"))
+				{
+					break;
+				}
+				Index++;
+			}
+			m_Build.RemoveAt(Index);
+		}
+		
+		Index = 0;
+		
+		FZoneSerialData* PlZOneData = m_MapBuildInsts.Find(m_PlayerTombZoneID);
+		
+		for(const FZoneActorTransform& ZoneTans : PlZOneData->m_AryZoneActorTrans)
+		{
+			if(ZoneTans.m_IDEntity == TEXT("PlayerTomb"))
+			{
+				break;
+			}
+			Index++;
+		}
+		PlZOneData->m_MapItemHolders.Remove(Index);
+
+		PlZOneData->m_AryZoneActorTrans.RemoveAt(Index);
+	}
+	m_PlayerTombZoneID = NAME_None;
+}
+
 void UZoneInstManager::SaveActorsOnPlayerDead(const FName& id)
 {
+	RemovePlayerTomb();
+
+	m_PlayerTombZoneID = id;
+	
 	UInventory* DeadInven = NewObject<UInventory>(UMyGameInstance::Get);
 	
 	AddPlayerAllItem(DeadInven);
@@ -668,14 +725,14 @@ void UZoneInstManager::SaveActorsOnPlayerDead(const FName& id)
 	int Index = SaveActors(id);
 
 	AActor* Pl = UMyLib::GetPlayer();
-	
+
 	FZoneSerialData& ZoneSerialData = GetCurentZoneSerialData();
 
 	FZoneActorTransform ZoneData;
 	ZoneData.m_nType = EActorType::Build;
 	ZoneData.m_IDEntity = TEXT("PlayerTomb");
 	ZoneData.m_SpawnPosition = Pl->GetActorLocation();
-	ZoneData.m_SpawnRotation = Pl->GetActorRotation();
+	ZoneData.m_SpawnRotation = FRotator(0,0,0);
 	ZoneSerialData.m_AryZoneActorTrans.Add(ZoneData);
 	
 	TStrongObjectPtr<UInventory> ItemHolder(DeadInven);

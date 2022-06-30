@@ -13,6 +13,15 @@ void UInventory::Init(int size, FText invenName)
 	m_AryTotalItems.Init(FItemSpec(), m_nInvenMaxSize);
 }
 
+void UInventory::ClearAllInven()
+{
+	for(FItemSpec& Item : m_AryTotalItems)
+	{
+		Item = FItemSpec();
+	}
+	m_MapItemKeyCount.Reset();
+}
+
 bool UInventory::GetEmptyIndex(int& out) const
 {
 	int Iter = 0;

@@ -63,5 +63,5 @@ void AMapExitBound::OnTriggerEnd(UPrimitiveComponent* OverlappedComponent, AActo
 
 void AMapExitBound::MoveToMapLevel()
 {
-	UMyGameInstance::Get->m_LevelMoveManager->OpenLevel(TEXT("MapSelect"));
+	UMyGameInstance::Get->m_LevelMoveManager->OpenMyLevel(TEXT("MapSelect"));
 }

@@ -15,46 +15,39 @@
 //첫로드는 게이트 정보 필요없음
 void ULevelMoveManager::StartGame()
 {
+	m_ZoneData = nullptr;
+	
 	m_bIsGameStart = true;
 	
 	OpenMyLevel(TEXT("PlayerHome"));
 }
 
-void ULevelMoveManager::OpenMyLevel(FName zoneData)
+void ULevelMoveManager::OpenMyLevel(FName zoneData, bool isPlayerDead)
 {
 	const FZoneDataRow* DataRow = UZoneData::GetZoneTable->FindRow<FZoneDataRow>(zoneData, "");
 	
-	OpenMyLevel(*DataRow);
+	OpenMyLevel(*DataRow, isPlayerDead);
 }
 
-void ULevelMoveManager::OpenLevel(FName zoneData)
+void ULevelMoveManager::OpenMyLevel(const FZoneDataRow& zoneData, bool isPlayerDead)
 {
 	if(m_ZoneData)
 	{
 		FName ID = GetCrntZoneID();
-		
-		UMyGameInstance::Get->m_ZoneInst->SaveActors(ID);
+
+		if(isPlayerDead)
+		{
+			UMyGameInstance::Get->m_ZoneInst->SaveActorsOnPlayerDead(ID);
+			
+			UMyLib::GetPlayerInven()->ClearAllInven();
+			
+			UMyLib::GetEquip()->ClearAllEquipment();
+		}
+		else
+		{
+			UMyGameInstance::Get->m_ZoneInst->SaveActors(ID);
+		}
 	}
-	m_ZoneData = nullptr;
-
-	UGameplayStatics::OpenLevel(this,zoneData);
-}
-
-void ULevelMoveManager::OpenLevelOnPlayerDead(FName zoneData)
-{
-	if(m_ZoneData)
-	{
-		FName ID = GetCrntZoneID();
-		
-		UMyGameInstance::Get->m_ZoneInst->SaveActorsOnPlayerDead(ID);
-	}
-	m_ZoneData = nullptr;
-
-	UGameplayStatics::OpenLevel(this,zoneData);	
-}
-
-void ULevelMoveManager::OpenMyLevel(const FZoneDataRow& zoneData)
-{
 	m_ZoneData = &zoneData;
 
 	UGameplayStatics::OpenLevel(this,m_ZoneData->m_MapName);

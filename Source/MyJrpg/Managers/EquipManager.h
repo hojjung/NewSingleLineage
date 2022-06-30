@@ -122,4 +122,7 @@ public:
 	const FItemSpec& GetQuickSlotItem() const;
 
 	UInventory* GetQuickInven();
+	void ClearEquipSlots();
+
+	void ClearAllEquipment();
 };

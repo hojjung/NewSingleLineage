@@ -6,12 +6,7 @@
 
 void UEquipManager::Init()
 {
-	int Iter = -1;
-	
-	int Len = (int)EEquipSlotType::Length;
-	
-	while (++Iter < Len)
-		m_AryEqupSlots[Iter] = FItemSpec();
+	ClearEquipSlots();
 
 	m_QuickItem = NewObject<UInventory>(this);
 
@@ -380,4 +375,23 @@ const FItemSpec& UEquipManager::GetQuickSlotItem() const
 UInventory* UEquipManager::GetQuickInven()
 {
 	return m_QuickItem;
+}
+
+void UEquipManager::ClearEquipSlots()
+{
+	int Iter = -1;
+	int Len = (int)EEquipSlotType::Length;
+	while (++Iter < Len)
+		m_AryEqupSlots[Iter] = FItemSpec();
+}
+
+void UEquipManager::ClearAllEquipment()
+{
+	ClearEquipSlots();
+	
+	GetQuickInven()->ClearAllInven();
+	
+	m_BagInven = nullptr;
+	
+	m_BeltSlots = nullptr;
 }

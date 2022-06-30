@@ -81,6 +81,8 @@ protected:
 	
 	TMap<FName,FZoneSerialData> m_MapBuildInsts;//위치값 밖에 저장이안되는데
 
+	FName m_PlayerTombZoneID;
+
 	TArray<TWeakObjectPtr<AMonsterPawn>> m_Npc;
 
 	TArray<TWeakObjectPtr<AItemActor>> m_Item;
@@ -122,16 +124,17 @@ public:
 
 	void RemoveFocusActor(UObject* want);
 	
-	IFocusable* GetNearProp(FVector callerLoc, float range = 0, UClass* ignoreClass = nullptr);
+	IFocusable* GetNearProp(FVector callerLoc, float range = 0, UClass* ignoreClass = nullptr, bool excludeNotInteractable = false);
 
-	IFocusable* GetNearTarget(FVector callerLoc, float range = 0, UClass* ignoreClass = nullptr, bool excludeDead = false);
+	IFocusable* GetNearTarget(FVector callerLoc, float range = 0, bool isUseAuto = false);
 
 	ACombatUnitPawn* GetNearNpc(FVector callerLoc, float range, const TSet<ACombatUnitPawn*>* ignore = nullptr, bool excludeDead = false);
 
 	void GetNearNpcs(const ABaseUnitPawn* caller, TArray<ACombatUnitPawn*>& outAry, float range,const TSet<ACombatUnitPawn*>* ignore = nullptr);
 
 	void AddTrackIcon(IFocusable* icon);
-	
+	void RemovePlayerTomb();
+
 	void SaveActorsOnPlayerDead(const FName& id);
 };
 

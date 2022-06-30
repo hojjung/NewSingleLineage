@@ -23,14 +23,7 @@ void USensor_Player::UpdateAISensing()
 	
 	IFocusable* Target = nullptr;
 
-	if(m_PlayerOwner->IsUseFsm())
-	{
-		Target = UMyGameInstance::Get->m_ZoneInst->GetNearTarget(Loc, 1300, AStructureActor::StaticClass(), true);
-	}
-	else
-	{
-		Target = UMyGameInstance::Get->m_ZoneInst->GetNearTarget(Loc, 1300, nullptr, false);
-	}
+	Target = UMyGameInstance::Get->m_ZoneInst->GetNearTarget(Loc, 1300, m_PlayerOwner->IsUseFsm());
 	
 	if(Target)
 	{

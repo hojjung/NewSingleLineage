@@ -81,6 +81,8 @@ public:
 	}
 	
 	virtual void Init(int size, FText invenName);
+
+	void ClearAllInven();
 	
 	int GetInvenSize() const;
 	

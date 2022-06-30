@@ -573,13 +573,6 @@ void AMyPlayerPawn::OnDeathAnimEnd()
 	UMyGameInstance::Get->m_PlayerStatManager->OnPlayerDead(m_LastAttacker.Get());
 }
 
-void AMyPlayerPawn::Dead()
-{
-	Super::Dead();
-
-	UMyGameInstance::Get->m_LevelMoveManager->OpenLevelOnPlayerDead(TEXT("PlayerHome"));
-}
-
 void AMyPlayerPawn::CreateRangeBullet(UParticleSystem* effectBullet)
 {
 	RemoveBulletPool();

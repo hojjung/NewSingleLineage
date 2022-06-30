@@ -75,7 +75,7 @@ void AStructureActor::ConfirmBuild(UInventory* inven)
 		m_BuildInteract->Init(m_BuildData->m_AryInteractVariable,inven);
 	}
 	
-	m_IconMeshComp->SetRotationOffset(FRotator(0,-45,0));
+	m_IconMeshComp->SetRotationOffset(FRotator(0,45,0));
 	
 	m_IconMeshComp->SetIcon(m_BuildData->m_MapIcon);
 }
