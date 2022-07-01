@@ -57,8 +57,6 @@ public:
 
 	const FItemSpec& GetItemSpec() const;
 
-	virtual FText GetTextInteract() override;
-
 	virtual bool IsInteractable() override;
 
 	virtual UMinimapIconComp* GetIconMeshComp() override;

@@ -43,9 +43,9 @@ public:
 		return true;
 	};
 
-	virtual FText GetTextInteract()
+	virtual bool IsFocusable()
 	{
-		return FText::FromString(TEXT("None"));
+		return true;
 	};
 
 	virtual UMinimapIconComp* GetIconMeshComp() = 0;

@@ -13,7 +13,7 @@ void UPlayerStatusManager::Init()
 	
 	m_fHungerTimer = 0;
 	
-	m_fHunger = 1;
+	m_fHunger = 100;
 
 	m_fDelayHunger = FGlobalVariable::HUNGER_DELAY;
 

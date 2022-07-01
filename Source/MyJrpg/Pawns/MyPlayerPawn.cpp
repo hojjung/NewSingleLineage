@@ -266,6 +266,7 @@ void AMyPlayerPawn::TryAttack_External()
 	{
 		SetSneak();
 	}
+	SetInteracting(false);
 }
 
 bool AMyPlayerPawn::IsManualMoving()
@@ -282,6 +283,7 @@ void AMyPlayerPawn::SetAutoCombat(bool useAuto)
 		StopMove();
 		CancelInteract();
 	}
+	SetFocusedTarget(nullptr);
 }
 
 void AMyPlayerPawn::ShowIndicator(IFocusable* target)
@@ -536,6 +538,8 @@ bool AMyPlayerPawn::TakeDmg(float amount, ACombatUnitPawn* attacker)
 	UMyGameInstance::Get->m_PlayerStatManager->OnPlHpChanged(this);
 
 	m_LastAttacker = attacker;
+
+	UMyGameInstance::Get->m_EquipManager->TakeDurDmg(1);
 	
 	return true;
 }

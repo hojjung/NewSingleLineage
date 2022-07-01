@@ -63,7 +63,5 @@ public:
 
 	UInventory* GetItemHolder();
 
-	virtual FText GetTextInteract() override;
-
 	virtual UMinimapIconComp* GetIconMeshComp() override;
 };

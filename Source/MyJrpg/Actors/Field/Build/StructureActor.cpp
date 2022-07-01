@@ -219,11 +219,6 @@ UInventory* AStructureActor::GetItemHolder()
 	return m_BuildInteract->GetItemHolder();
 }
 
-FText AStructureActor::GetTextInteract()
-{
-	return NSLOCTEXT("AStructureActor","Control","조작");
-}
-
 UMinimapIconComp* AStructureActor::GetIconMeshComp()
 {
 	return m_IconMeshComp;

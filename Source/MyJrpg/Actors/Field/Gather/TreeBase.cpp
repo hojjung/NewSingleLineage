@@ -263,11 +263,6 @@ int ATreeBase::GetHP()
 	return m_nTreeHp;
 }
 
-FText ATreeBase::GetTextInteract()
-{
-	return NSLOCTEXT("ATreeBase","Gather","채집");
-}
-
 bool ATreeBase::IsInteractable()
 {
 	bool HasEquip = false;

@@ -527,6 +527,7 @@ IFocusable* UZoneInstManager::GetNearTarget(FVector callerLoc, float range, bool
 		IgnoreClass = AStructureActor::StaticClass();
 		ExcludeDead = true;
 		ExcludeNotInteractable = true;
+		range = 0;
 	}
 	ACombatUnitPawn* Pawn = GetNearNpc(callerLoc, range, nullptr, ExcludeDead);
 	
@@ -576,7 +577,7 @@ ACombatUnitPawn* UZoneInstManager::GetNearNpc(FVector callerLoc, float range, co
 
 	for (TWeakObjectPtr<AMonsterPawn>& Pawn : m_Npc)
 	{
-		if (!Pawn.Get() || (excludeDead && !Pawn->IsAlive()) || Pawn->IsHidden() || (ignore && (*ignore).Contains(Pawn.Get())))
+		if (!Pawn.Get() || (excludeDead && !Pawn->IsAlive()) || Pawn->IsHidden() || (ignore && (*ignore).Contains(Pawn.Get())) || !Pawn->IsFocusable())
 		{
 			continue;
 		}

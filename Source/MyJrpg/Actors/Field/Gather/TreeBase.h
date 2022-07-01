@@ -85,8 +85,6 @@ public:
 	
 	int GetHP();
 
-	virtual FText GetTextInteract() override;
-
 	virtual bool IsInteractable() override;
 
 	virtual UMinimapIconComp* GetIconMeshComp() override;

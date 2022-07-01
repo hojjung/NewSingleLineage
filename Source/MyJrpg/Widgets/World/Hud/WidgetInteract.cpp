@@ -60,10 +60,6 @@ void UWidgetInteract::ShowInteract(IFocusable* focus)
 	}
 	
 	m_BtnInteract->SetVisibility(ESlateVisibility::Visible);
-
-	FText InterText = focus->GetTextInteract();
-	
-	m_TextInteract->SetText(InterText);
 }
 
 void UWidgetInteract::OnInteract()

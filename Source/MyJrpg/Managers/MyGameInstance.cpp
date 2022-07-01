@@ -142,6 +142,9 @@ void UMyGameInstance::TestModeSetting()
 	m_Inven->AddItem(FItemSpec(TEXT("Bow01"),0),true);
 	m_Inven->AddItem(FItemSpec(TEXT("MagicWand01"),0),true);
 	m_Inven->AddItem(FItemSpec(TEXT("Gauntlet01"),0),true);
+	m_Inven->AddItem(FItemSpec(TEXT("Pistol01"),0),true);
+	m_Inven->AddItem(FItemSpec(TEXT("Rifle01"),0),true);
+	m_Inven->AddItem(FItemSpec(TEXT("THSword01"),0),true);
 }
 
 void UMyGameInstance::StartGame()
@@ -157,10 +160,10 @@ void UMyGameInstance::LoadComplete(const float LoadTime, const FString& MapName)
 	{
 		m_LevelMoveManager->OnOpenWorldLevelComplete();
 	}
-	else
-	{
-		StartGame();
-	}
+	// else
+	// {
+	// 	StartGame();
+	// }
 }
 
 FString UMyGameInstance::GetPlayerName()

@@ -93,14 +93,16 @@ public:
 	void SetHp(int hp);
 	
 	void SetInven(UInventory* inven);
+	
+	void HideIcon();
 
 	void SetDeadBody();
 
 	virtual void OnInteract() override;
 
-	virtual FText GetTextInteract() override;
-
 	virtual bool IsInteractable() override;
+
+	virtual bool IsFocusable() override;
 };
 
 

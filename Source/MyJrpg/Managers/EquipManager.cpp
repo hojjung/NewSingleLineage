@@ -395,3 +395,13 @@ void UEquipManager::ClearAllEquipment()
 	
 	m_BeltSlots = nullptr;
 }
+
+void UEquipManager::TakeDurDmg(int am)
+{
+	int Iter = 1;
+	int Len = (int)EEquipSlotType::Length;
+	while (++Iter < Len)
+	{
+		ReduceDurability((EEquipSlotType)Iter,am);
+	}
+}

@@ -227,6 +227,11 @@ void AMonsterPawn::SetInven(UInventory* inven)
 	m_Inven = inven;
 }
 
+void AMonsterPawn::HideIcon()
+{
+	m_IconComp->SetVisibility(false);
+}
+
 void AMonsterPawn::SetDeadBody()
 {
 	if(m_Pool)
@@ -247,7 +252,7 @@ void AMonsterPawn::SetDeadBody()
 	//
 	if(!IsInteractable())
 	{
-		m_IconComp->SetVisibility(false);
+		HideIcon();
 	}
 }
 
@@ -361,11 +366,6 @@ void AMonsterPawn::OnInteract()
 	UMyLib::GetPlayer()->RequestInteract(this,FVoidVoid::CreateUObject(this,&AMonsterPawn::OnRequestMoveDone),25);
 } 
 
-FText AMonsterPawn::GetTextInteract()
-{
-	return NSLOCTEXT("AMonsterPawn","Loot","살펴보기");
-}
-
 bool AMonsterPawn::IsInteractable()
 {
 	if(IsAlive())
@@ -373,6 +373,11 @@ bool AMonsterPawn::IsInteractable()
 		return true;
 	}
 	return m_Inven && !m_Inven->IsInvenEmpty();
+}
+
+bool AMonsterPawn::IsFocusable()
+{
+	return IsInteractable();
 }
 
 void AMonsterPawn::OnRequestMoveDone()
