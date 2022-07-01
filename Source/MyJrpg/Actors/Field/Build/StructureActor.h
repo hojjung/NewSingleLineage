@@ -55,8 +55,6 @@ public:
 
 	virtual void OnInteract() override;
 
-	virtual bool IsInteractImplemented() override;
-
 	virtual FVector GetNavAgentLocation() const override;
 
 	virtual void GetMoveGoalReachTest(const AActor* MovingActor, const FVector& MoveOffset, FVector& GoalOffset,float& GoalRadius, float& GoalHalfHeight) const override;
@@ -64,4 +62,6 @@ public:
 	UInventory* GetItemHolder();
 
 	virtual UMinimapIconComp* GetIconMeshComp() override;
+
+	virtual bool IsFocusable() override;
 };

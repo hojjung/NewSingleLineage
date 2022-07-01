@@ -39,6 +39,8 @@ public:
 	FName m_RowID = TEXT("Same As Key");
 	UPROPERTY(EditDefaultsOnly,BlueprintReadOnly)
 	EBuildType m_BuildType;
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
+	bool m_bIsFocusable = true;
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	TSubclassOf<UBuildInteractBase> m_ClassInter = nullptr;
 	UPROPERTY(EditAnywhere, meta=(EditCondition = "m_ClassInter != nullptr", EditConditionHides))

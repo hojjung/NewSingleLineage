@@ -33,11 +33,6 @@ class MYJRPG_API IFocusable
 public:
 	virtual void OnInteract() {};
 
-	virtual bool IsInteractImplemented()
-	{
-		return true;
-	};
-
 	virtual bool IsInteractable()
 	{
 		return true;

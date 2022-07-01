@@ -187,11 +187,6 @@ void AStructureActor::BeginPlay()
 	UMyGameInstance::Get->m_ZoneInst->AddTrackIcon(this);
 }
 
-bool AStructureActor::IsInteractImplemented()
-{
-	return m_BuildInteract != nullptr;
-}
-
 FVector AStructureActor::GetNavAgentLocation() const
 {
 	float R = 0;
@@ -222,6 +217,11 @@ UInventory* AStructureActor::GetItemHolder()
 UMinimapIconComp* AStructureActor::GetIconMeshComp()
 {
 	return m_IconMeshComp;
+}
+
+bool AStructureActor::IsFocusable()
+{
+	return m_BuildData->m_bIsFocusable && m_BuildInteract != nullptr;
 }
 
 bool AStructureActor::IsEraseable()

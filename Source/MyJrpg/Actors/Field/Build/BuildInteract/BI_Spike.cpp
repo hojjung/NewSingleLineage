@@ -10,7 +10,7 @@ void UBI_Spike::Init(const TArray<FString>& variable, UInventory* inven)
 	AActor* Owner = Cast<AActor>(GetOuter());
 
 	FTransform Trans;
-	USphereComponent* Sphere = Cast<USphereComponent>(Owner->AddComponentByClass(USphereComponent::StaticClass(), true, Trans, true));
+	USphereComponent* Sphere = Cast<USphereComponent>(Owner->AddComponentByClass(USphereComponent::StaticClass(), false, Trans, false));
 
 	Sphere->SetCollisionProfileName(TEXT("Trigger"));
 	Sphere->SetRelativeLocation(FVector(0,0,25));
@@ -28,12 +28,12 @@ void UBI_Spike::OnTriggerStart(UPrimitiveComponent* OverlappedComponent, AActor*
 	if(OtherActor == UMyLib::GetPlayer())
 		return;
 
-	Cast<AMonsterPawn>(OtherActor)->TakeDmg(33,nullptr);
+	Cast<AMonsterPawn>(OtherActor)->TakeDmg(15,nullptr);
 }
 
 void UBI_Spike::OnTriggerEnd(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex)
 {
 	if(OtherActor == UMyLib::GetPlayer())
 		return;
-	
+	Cast<AMonsterPawn>(OtherActor)->TakeDmg(15,nullptr);
 }

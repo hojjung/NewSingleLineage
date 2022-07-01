@@ -144,7 +144,7 @@ void UZoneInstManager::AddBuildActor(AStructureActor* buildActor)
 
 	IFocusable* Focus = Cast<IFocusable>(buildActor);
 
-	if(Focus && Focus->IsInteractImplemented())
+	if(Focus && Focus->IsFocusable())
 	{
 		UMyGameInstance::Get->m_ZoneInst->AddFocusActor(buildActor);
 	}
