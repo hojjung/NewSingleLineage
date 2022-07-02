@@ -49,8 +49,8 @@ APreviewActor::APreviewActor()
 	m_Capture->PrimitiveRenderMode = ESceneCapturePrimitiveRenderMode::PRM_UseShowOnlyList;
 	m_Capture->CaptureSource = ESceneCaptureSource::SCS_SceneColorHDR;
 	m_Capture->SetTickableWhenPaused(true);
-	m_Capture->ProjectionType = ECameraProjectionMode::Perspective;
-	m_Capture->FOVAngle = 60.f;
+	m_Capture->ProjectionType = ECameraProjectionMode::Orthographic;
+	m_Capture->OrthoWidth = 190.f;
 	m_Capture->PostProcessBlendWeight = 0.f;
 	//
 	m_Light = CreateDefaultSubobject<UPointLightComponent>("m_Light");

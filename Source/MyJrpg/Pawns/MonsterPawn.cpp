@@ -229,7 +229,7 @@ void AMonsterPawn::SetInven(UInventory* inven)
 
 void AMonsterPawn::HideIcon()
 {
-	m_IconComp->SetVisibility(false);
+	m_IconComp->SetVisibility(false, true);
 }
 
 void AMonsterPawn::SetDeadBody()
@@ -300,7 +300,7 @@ void AMonsterPawn::Dead()
 	
 	if(!IsInteractable())
 	{
-		m_IconComp->SetVisibility(false, true);
+		HideIcon();
 	}
 }
 

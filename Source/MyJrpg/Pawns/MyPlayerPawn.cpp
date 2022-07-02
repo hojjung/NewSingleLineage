@@ -581,25 +581,6 @@ void AMyPlayerPawn::OnDeathAnimEnd()
 	UMyGameInstance::Get->m_PlayerStatManager->OnPlayerDead(m_LastAttacker.Get());
 }
 
-void AMyPlayerPawn::CreateRangeBullet(UParticleSystem* effectBullet)
-{
-	RemoveBulletPool();
-	
-	m_Pool = NewObject<UBulletPool>(this);
-	
-	m_Pool->InitPool(GetStat().m_Dmg,12,effectBullet,this,0.3f);
-}
-
-void AMyPlayerPawn::RemoveBulletPool()
-{
-	if(!m_Pool)
-	{
-		return;
-	}
-	m_Pool->KillAll();
-	m_Pool = nullptr;
-}
-
 bool AMyPlayerPawn::IsRange()
 {
 	return UMyGameInstance::Get->m_EquipManager->IsRangeStance();

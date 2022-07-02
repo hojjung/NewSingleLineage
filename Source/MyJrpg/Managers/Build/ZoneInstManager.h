@@ -6,8 +6,6 @@
 #include "MyJrpg/Actors/MinimapCam.h"
 #include "MyJrpg/Actors/Field/Build/StructureActor.h"
 #include "MyJrpg/Actors/Field/Gather/TreeBase.h"
-#include "MyJrpg/DataTables/ZoneData.h"
-#include "MyJrpg/Managers/MinimapManager.h"
 #include "MyJrpg/Pawns/MonsterPawn.h"
 #include "UObject/NoExportTypes.h"
 #include "ZoneInstManager.generated.h"
@@ -65,14 +63,7 @@ class MYJRPG_API UZoneInstManager : public UObject
 {
 	GENERATED_BODY()
 
-public:
-	DECLARE_DELEGATE_TwoParams(FOnActorVisible, AActor*, bool);
-
-	FOnActorVisible m_OnActorVisible;
-	
 protected:
-	UPROPERTY()
-	UMinimapManager* m_MinimapManager;
 	UPROPERTY()
 	TArray<TScriptInterface<IFocusable>> m_AryFocusActors;
 

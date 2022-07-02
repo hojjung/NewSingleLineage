@@ -18,11 +18,11 @@ AMinimapCam::AMinimapCam()//TextureRenderTarget2D'/Game/03_VisualEffect/T_Minima
 	m_Capture->SetRelativeRotation(FRotator(-90,0,0));
 	m_Capture->PrimitiveRenderMode = ESceneCapturePrimitiveRenderMode::PRM_UseShowOnlyList;
 	m_Capture->CaptureSource = ESceneCaptureSource::SCS_SceneColorHDR;
-	m_Capture->SetTickableWhenPaused(true);
 	m_Capture->ProjectionType = ECameraProjectionMode::Orthographic;
+	m_Capture->SetTickableWhenPaused(true);
 	m_Capture->OrthoWidth = 2650;
 	m_Capture->PostProcessBlendWeight = 0.f;
-	static ConstructorHelpers::FObjectFinder<UTextureRenderTarget2D> Found(TEXT("TextureRenderTarget2D'/Game/03_VisualEffect/T_Minimap.T_Minimap'"));
+	static ConstructorHelpers::FObjectFinder<UTextureRenderTarget2D> Found(TEXT("TextureRenderTarget2D'/Game/03_VisualEffect/T_PlayerVisual.T_PlayerVisual'"));
 	m_Capture->TextureTarget = Found.Object;
 }
 

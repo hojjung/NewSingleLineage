@@ -58,7 +58,7 @@ namespace FGlobalVariable
 {
 	static const int LEVEL_MAX = 100;
 
-	static const float HERO_DEFAULT_SPEED = 350.f;
+	static const float HERO_DEFAULT_SPEED = 390.f;
 
 	static const float HUNGER_DELAY = 3.f;
 	

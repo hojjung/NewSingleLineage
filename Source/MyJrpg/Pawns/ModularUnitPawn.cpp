@@ -92,6 +92,12 @@ void AModularUnitPawn::TrySpawnBullets(const FItemDataRow& Itemdata)
 		
 		m_Pool->InitPool(GetStat().m_Dmg,5,Itemdata.m_WeaponData.m_BulletEffect,this,Itemdata.m_WeaponData.m_fBulletScale);
 	}
+	else if(m_Pool)
+	{
+		m_Pool->KillAll();
+		
+		m_Pool = nullptr;
+	}
 }
 
 void AModularUnitPawn::TryKillBullets()

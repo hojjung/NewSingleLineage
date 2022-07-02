@@ -34,10 +34,6 @@ void UZoneInstManager::SpawnZone(const FName& id, const FZoneDataRow& zoneData)
 
 	AddTrackIcon(UMyLib::GetPlayer());
 
-	m_MinimapManager = NewObject<UMinimapManager>(this);
-
-	m_MinimapManager->Init();
-	
 	FZoneSerialData* BuildInst = m_MapBuildInsts.Find(id);
 	
 	if (!BuildInst)
@@ -472,8 +468,6 @@ IFocusable* UZoneInstManager::GetNearProp(FVector callerLoc, float range, UClass
 			continue;
 		}
 
-		m_OnActorVisible.ExecuteIfBound(FocusActor, m_MinimapManager->IsVisible(FocusActor));
-
 		IFocusable* FocusInter = Cast<IFocusable>(Focus.GetObject());
 
 		if(excludeNotInteractable && !FocusInter->IsInteractable())
@@ -582,8 +576,6 @@ ACombatUnitPawn* UZoneInstManager::GetNearNpc(FVector callerLoc, float range, co
 			continue;
 		}
 		
-		m_OnActorVisible.ExecuteIfBound(Pawn.Get(), m_MinimapManager->IsVisible(Pawn.Get()));
-
 		float Length = MAX_flt;
 
 		FNavLocation EndPoint;

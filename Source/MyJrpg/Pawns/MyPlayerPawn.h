@@ -154,10 +154,6 @@ public:
 
 	virtual void OnDeathAnimEnd() override;
 
-	void CreateRangeBullet(UParticleSystem* effectBullet);
-
-	void RemoveBulletPool();
-
 	virtual bool IsRange() override;
 
 	virtual bool IsSneak() const override;

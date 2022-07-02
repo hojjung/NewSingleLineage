@@ -24,6 +24,7 @@ void UWidgetPickpocketPanel::OnWithdrawAll()
 	if(m_StoragePanel->GetInven()->IsInvenEmpty())
 	{
 		ClosePanel();
+		
 		if(!GetCurrentTargetPawn()->IsInteractable())
 		{
 			GetCurrentTargetPawn()->HideIcon();
