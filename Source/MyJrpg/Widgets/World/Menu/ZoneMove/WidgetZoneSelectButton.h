@@ -35,6 +35,14 @@ protected:
 	UTextBlock* m_TextMapDesc;
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (BindWidget))
 	UScrollBox* m_HoriItemParents;
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (BindWidget))
+	UProgressBar* m_BarSkull;
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (BindWidget))
+	UProgressBar* m_BarWood;
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (BindWidget))
+	UProgressBar* m_BarRock;
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (BindWidget))
+	UProgressBar* m_BarItem;
 
 	const FZoneDataRow* m_ZoneData;
 
@@ -47,6 +55,8 @@ protected:
 	void CreateZoneElement();
 
 	virtual void NativeOnInitialized() override;
+
+	void SetBarGauge(UProgressBar* bar, int amount);
 	
 public:
 	void Init(const FZoneDataRow& zone_data);

@@ -12,6 +12,23 @@ void UWidgetZoneSelectButton::NativeOnInitialized()
 	m_BtnEnterZone->OnClicked.AddDynamic(this,&UWidgetZoneSelectButton::MoveToZone);
 
 	m_BtnClose->OnClicked.AddDynamic(this,&UWidgetZoneSelectButton::OnClose);
+
+	m_BarSkull->SetVisibility(ESlateVisibility::HitTestInvisible);
+	
+	m_BarWood->SetVisibility(ESlateVisibility::HitTestInvisible);
+
+	m_BarRock->SetVisibility(ESlateVisibility::HitTestInvisible);
+
+	m_BarItem->SetVisibility(ESlateVisibility::HitTestInvisible);
+}
+
+void UWidgetZoneSelectButton::SetBarGauge(UProgressBar* bar, int amount)
+{
+	float Value = (amount * 0.25f) + 0.04f;
+
+	Value = FMath::Clamp(Value, 0.f, 1.f);
+
+	bar->SetPercent(Value);
 }
 
 void UWidgetZoneSelectButton::Init(const FZoneDataRow& zone_data)
@@ -19,6 +36,11 @@ void UWidgetZoneSelectButton::Init(const FZoneDataRow& zone_data)
 	m_ZoneData = &zone_data;
 
 	SetZone();
+
+	SetBarGauge(m_BarSkull, m_ZoneData->m_nLevelMob);
+	SetBarGauge(m_BarWood, m_ZoneData->m_nLevelWood);
+	SetBarGauge(m_BarRock, m_ZoneData->m_nLevelRock);
+	SetBarGauge(m_BarItem, m_ZoneData->m_nLevelItem);
 }
 
 void UWidgetZoneSelectButton::OnClose()

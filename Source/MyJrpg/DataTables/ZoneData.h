@@ -43,4 +43,12 @@ public:
 	FName m_MapName;
 	UPROPERTY(EditDefaultsOnly,BlueprintReadOnly)
 	UNPCPaletteDataAsset* m_SpawnDataNpc;
+	UPROPERTY(EditDefaultsOnly,BlueprintReadOnly)
+	int m_nLevelMob = 1;
+	UPROPERTY(EditDefaultsOnly,BlueprintReadOnly)
+	int m_nLevelWood = 1;
+	UPROPERTY(EditDefaultsOnly,BlueprintReadOnly)
+	int m_nLevelRock = 1;
+	UPROPERTY(EditDefaultsOnly,BlueprintReadOnly)
+	int m_nLevelItem = 1;
 };
