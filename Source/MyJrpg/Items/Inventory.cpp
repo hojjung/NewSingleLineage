@@ -484,33 +484,38 @@ bool UInventory::ReduceDurability(const FItemSpec& item, int dur)
 
 void UInventory::ReduceDurability(int index, int dur)//Equip은따로있는데?
 {
+	if(UMyLib::GetItemData(m_AryTotalItems[index].m_ID).m_nDurability <= 0)
+	{
+		return;//원래 내구도가 존재하지 않는 아이템
+	}
 	m_AryTotalItems[index].m_nDurability -= dur;
 	if(m_AryTotalItems[index].m_nDurability < 1)
 	{
+		RemoveItemKey(m_AryTotalItems[index].m_ID,index);
 		ClearSlot(index);
 	}
 	m_OnInvenChanged.Broadcast();
 	UMyGameInstance::Get->m_EquipManager->UpdateDur();
 }
 
-bool UInventory::MoveItem(int myIndex, UInventory* targetInvenToAdd)
-{
-	FItemSpec Item = GetItemConstRef(myIndex);
-	
-	if(Item.m_ID.IsNone())
-	{
-		return false;
-	}
-
-	if(!targetInvenToAdd-AddItem(Item))
-	{
-		return false;
-	}
-
-	ClearSlot(myIndex);
-	
-	return true;
-}
+// bool UInventory::MoveItem(int myIndex, UInventory* targetInvenToAdd)
+// {
+// 	FItemSpec Item = GetItemConstRef(myIndex);
+// 	
+// 	if(Item.m_ID.IsNone())
+// 	{
+// 		return false;
+// 	}
+//
+// 	if(!targetInvenToAdd-AddItem(Item))
+// 	{
+// 		return false;
+// 	}
+//
+// 	ClearSlot(myIndex);
+// 	
+// 	return true;
+// }
 
 void UInventory::OnDropItem(int myIndex, UInventory* other, int other_index)
 {

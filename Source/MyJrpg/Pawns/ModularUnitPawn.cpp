@@ -309,7 +309,7 @@ FItemSpec* AModularUnitPawn::GetAnyItemHave(FName id)
 	itemSpec = Equip->FindItemInEquip(id);
 	if(!itemSpec)
 	{
-		return UMyLib::FindItemAllInven(id, -1);; 
+		itemSpec = UMyLib::FindItemAllInven(id, -1); 
 	}
 	return itemSpec;
 }

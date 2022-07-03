@@ -135,9 +135,9 @@ void ULogic_Flee::OnFlee()
 	}
 	FVector RunDir = (m_Owner->GetActorLocation() - m_Owner->GetFocusedTarget<AActor>()->GetActorLocation()).GetSafeNormal2D();
 
-	float RandDistLen = FMath::RandRange(1500,3000);
+	float RandDistLen = FMath::RandRange(750,1500);
 
-	float RandRad = FMath::RandRange(1700,2400);
+	float RandRad = FMath::RandRange(800,1200);
 
 	RunDir *= RandDistLen;
 

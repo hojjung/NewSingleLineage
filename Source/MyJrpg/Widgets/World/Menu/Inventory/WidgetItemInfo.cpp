@@ -42,6 +42,8 @@ void UWidgetItemInfo::OnClose()
 	m_CollecTargetItemID = NAME_None;
 	
 	m_nCollecIndex = INDEX_NONE;
+
+	m_ItemSpec = nullptr;
 }
 
 void UWidgetItemInfo::OnErase()
@@ -165,6 +167,12 @@ void UWidgetItemInfo::SetItemInfo(FItemSpec& item, UInventory* inven)
 	UpdateEraseBtn();
 	UpdateEnchantBtn();
 	UpdateSplitBtn();
+
+	EItemType Type = UMyLib::GetItemType(ItemData);
+	if(Type == EItemType::Consume || Type == EItemType::Equip)
+	{
+		m_BtnUse->SetVisibility(ESlateVisibility::Visible);
+	}
 }
 
 void UWidgetItemInfo::SetInfoItemData(const FItemDataRow& data_row)
@@ -191,21 +199,11 @@ void UWidgetItemInfo::SetInfoItemData(const FItemDataRow& data_row)
 	{
 		m_VertItemOptions->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
 		m_TextItemEffectTitle->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
-
-		if(m_ItemSpec)
-		{
-			m_BtnUse->SetVisibility(ESlateVisibility::Visible);
-		}
 	}
 	else
 	{
 		m_VertItemOptions->SetVisibility(ESlateVisibility::Collapsed);
 		m_TextItemEffectTitle->SetVisibility(ESlateVisibility::Collapsed);
-
-		if(m_ItemSpec)
-		{
-			m_BtnUse->SetVisibility(ESlateVisibility::Visible);
-		}
 	}
 	
 	m_TextItemDesc->SetText(data_row.m_Desc);

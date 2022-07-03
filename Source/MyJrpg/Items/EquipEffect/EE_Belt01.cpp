@@ -6,7 +6,7 @@ void UEE_Belt01::Equip()
 {
 	Super::Equip();
 	
-	UMyGameInstance::Get->m_EquipManager->EquipBelt(4);
+	UMyGameInstance::Get->m_EquipManager->EquipBelt(3);
 }
 
 void UEE_Belt01::UnEquip()

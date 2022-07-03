@@ -537,7 +537,7 @@ IFocusable* UZoneInstManager::GetNearTarget(FVector callerLoc, float range, bool
 
 		float Dist1 = FVector::DistSquared2D(Loc1, callerLoc);
 
-		float Dist2 = FVector::DistSquared2D(Loc2, callerLoc) + (Pawn->IsAlive() ? 562500 : 0 );
+		float Dist2 = FVector::DistSquared2D(Loc2, callerLoc) + (Pawn->IsAlive() ? 250000 : 0 );
 
 		float ARange = UMyLib::GetPlayer()->GetAttackRangeSqr(); 
 		

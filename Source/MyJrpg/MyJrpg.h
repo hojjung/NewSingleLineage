@@ -64,7 +64,7 @@ namespace FGlobalVariable
 	
 	static const float HUNGER_DAMAGE = 0.1f;
 
-	static const int INVEN_SIZE = 14;//42//14
+	static const int INVEN_SIZE = 12;//42//14
 
 	static const int STORAGE_SIZE = 24;
 

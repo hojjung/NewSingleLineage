@@ -126,25 +126,7 @@ void UMyGameInstance::Init()
 
 void UMyGameInstance::TestModeSetting()
 {
-	// m_Inven->AddItem(FItemSpec(TEXT("ArmorHelmet03"),0),true);
-	// m_Inven->AddItem(FItemSpec(TEXT("ArmorHand03"),0),true);
-	// m_Inven->AddItem(FItemSpec(TEXT("ArmorLeg03"),0),true);
-	// m_Inven->AddItem(FItemSpec(TEXT("ArmorTorso03"),0),true);
-	m_Inven->AddItem(FItemSpec(TEXT("Belt02"),0),true);
-	// m_Inven->AddItem(FItemSpec(TEXT("Axe02"),0),true);
-	// m_Inven->AddItem(FItemSpec(TEXT("Bag02"),0),true);
-	// m_Inven->AddItem(FItemSpec(TEXT("Torch"),0),true);
-	// m_Inven->AddItem(FItemSpec(TEXT("Potion01"),14),true);
-	// m_Inven->AddItem(FItemSpec(TEXT("Pickaxe02"),0),true);
-	m_Inven->AddItem(FItemSpec(TEXT("OHSword01"),0),true);
-	m_Inven->AddItem(FItemSpec(TEXT("Shield01"),0),true);
-	m_Inven->AddItem(FItemSpec(TEXT("Dual01"),0),true);
-	m_Inven->AddItem(FItemSpec(TEXT("Bow01"),0),true);
-	m_Inven->AddItem(FItemSpec(TEXT("MagicWand01"),0),true);
-	m_Inven->AddItem(FItemSpec(TEXT("Gauntlet01"),0),true);
-	m_Inven->AddItem(FItemSpec(TEXT("Pistol01"),0),true);
-	m_Inven->AddItem(FItemSpec(TEXT("Rifle01"),0),true);
-	m_Inven->AddItem(FItemSpec(TEXT("THSword01"),0),true);
+	//m_Inven->AddItem(FItemSpec(TEXT("THSword01"),0),true);
 }
 
 void UMyGameInstance::StartGame()
@@ -160,10 +142,6 @@ void UMyGameInstance::LoadComplete(const float LoadTime, const FString& MapName)
 	{
 		m_LevelMoveManager->OnOpenWorldLevelComplete();
 	}
-	// else
-	// {
-	// 	StartGame();
-	// }
 }
 
 FString UMyGameInstance::GetPlayerName()

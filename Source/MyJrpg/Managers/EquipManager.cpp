@@ -257,6 +257,10 @@ void UEquipManager::ReduceDurability(EEquipSlotType t, int amount)
 	{
 		return;
 	}
+	if(UMyLib::GetItemData(GetEquipItem(t).m_ID).m_nDurability <= 0)
+	{
+		return;//원래 내구도가 존재하지 않는 아이템
+	}
 	GetEquipItem(t).m_nDurability -= amount;
 
 	UpdateDur();

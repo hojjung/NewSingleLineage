@@ -116,8 +116,6 @@ public:
 
 	void ReduceDurability(int index, int dur);
 
-	bool MoveItem(int myIndex, UInventory* targetInvenToAdd);
-	
 	void OnDropItem(int myIndex, UInventory* other, int other_index);
 
 	void SetStLv(int index, int stLv);
