@@ -25,7 +25,7 @@ protected:
 	UPROPERTY()
 	UWorldWidgetStruct* m_Widget;
 
-	EBuildType m_Type;
+	bool m_bCanRotate;
 	
 public:
 	void Init();

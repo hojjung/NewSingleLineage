@@ -521,3 +521,10 @@ void UMyLib::PrintErrorText(FText&& tt)
 {
 	PrintErrorText(tt.ToString());
 }
+
+void UMyLib::OpenItemInfo(const FItemDataRow& itemData)
+{
+	ABaseHUD *hud = Cast<ABaseHUD>(UGameplayStatics::GetPlayerController( GetUWorld(),0)->GetHUD());
+
+	hud->OpenItemInfo(itemData);
+}

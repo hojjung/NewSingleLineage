@@ -121,4 +121,6 @@ public:
 	static void PrintErrorText(const FString& string);
 
 	static void PrintErrorText(FText&& tt);
+	
+	static void OpenItemInfo(const FItemDataRow& itemData);
 };

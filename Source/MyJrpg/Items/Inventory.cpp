@@ -256,24 +256,6 @@ void UInventory::ClearSlot(int index)
 	m_AryTotalItems[index].m_nDurability = 0;
 }
 
-void UInventory::RegisterQuickItemExe(const FItemDataRow& itemData)
-{
-	if(!itemData.m_ClassExeItem->IsValidLowLevel())
-	{
-		return;
-	}
-	UMyGameInstance::Get->m_QuickManager->RegisterItem(itemData.m_ClassExeItem);
-}
-
-void UInventory::UnregisterQuickItemExe(const FItemDataRow& itemData)
-{
-	if(!itemData.m_ClassExeItem->IsValidLowLevel())
-	{
-		return;
-	}
-	UMyGameInstance::Get->m_QuickManager->UnregisterItem(itemData.m_ClassExeItem);
-}
-
 void UInventory::AddItemKey(const FItemDataRow& itemData,FName id, int index)
 {
 	TSet<int>* FoundIndexSets = m_MapItemKeyCount.Find(id);
@@ -285,7 +267,7 @@ void UInventory::AddItemKey(const FItemDataRow& itemData,FName id, int index)
 	TSet<int> NewIndexSet;
 	NewIndexSet.Add(index);
 	m_MapItemKeyCount.Emplace(id,NewIndexSet);
-	RegisterQuickItemExe(itemData);
+	m_OnItemAdded.Broadcast(itemData);
 }
 
 void UInventory::RemoveItemKey(const FItemDataRow& itemData,FName id, int index)//인덱스가 존재하는 칸을 없애는거
@@ -297,7 +279,7 @@ void UInventory::RemoveItemKey(const FItemDataRow& itemData,FName id, int index)
 	if(FoundIndexSets->Num() < 1)
 	{
 		m_MapItemKeyCount.Remove(id);
-		UnregisterQuickItemExe(itemData);
+		m_OnItemRemoved.Broadcast(itemData);
 	}
 }
 

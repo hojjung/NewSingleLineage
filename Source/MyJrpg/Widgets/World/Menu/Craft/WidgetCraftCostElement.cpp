@@ -57,11 +57,7 @@ void UWidgetCraftCostElement::OnHold(UWidgetBaseElement* ele)
 {
 	ele->SetMyUnFocus();
 	
-	FItemSpec ItemSpec;
+	const FItemDataRow& ItemData = UMyLib::GetItemData(m_CraftData->m_ItemDataRowHandle.RowName);
 	
-	ItemSpec.m_ID = m_CraftData->m_ItemDataRowHandle.RowName;
-
-	ItemSpec.m_nLvStack = m_CraftData->m_nStackOrLevel;
-
-	UMyLib::GetCanvas()->OpenItemInfo(ItemSpec,nullptr);
+	UMyLib::OpenItemInfo(ItemData);
 }

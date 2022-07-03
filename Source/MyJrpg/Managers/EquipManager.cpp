@@ -11,6 +11,9 @@ void UEquipManager::Init()
 	m_QuickItem = NewObject<UInventory>(this);
 
 	m_QuickItem->Init(1,NSLOCTEXT("UEquipManager","m_QuickItem","퀵슬롯"));
+
+	m_QuickItem->m_OnItemAdded.AddUObject(UMyGameInstance::Get->m_QuickManager, &UQuickSlotManager::RegisterQuickItemExe);
+	m_QuickItem->m_OnItemRemoved.AddUObject(UMyGameInstance::Get->m_QuickManager, &UQuickSlotManager::UnregisterQuickItemExe);
 }
 
 void UEquipManager::Equip(EEquipSlotType slotWant,UInventory* inven, int invenIndex)
@@ -187,6 +190,9 @@ void UEquipManager::EquipBag(int i)
 	m_BagInven->Init(i, NSLOCTEXT("UEquipManager","Bag","가방"));
 
 	m_BagInven->UpdateInventory();
+
+	m_BagInven->m_OnItemAdded.AddUObject(UMyGameInstance::Get->m_QuickManager, &UQuickSlotManager::RegisterQuickItemExe);
+	m_BagInven->m_OnItemRemoved.AddUObject(UMyGameInstance::Get->m_QuickManager, &UQuickSlotManager::UnregisterQuickItemExe);
 }
 
 void UEquipManager::UnequipBag()
@@ -201,6 +207,9 @@ void UEquipManager::EquipBelt(int i)
 	m_BeltSlots->Init(i,NSLOCTEXT("UEquipManager","Belt","벨트"));
 
 	m_BeltSlots->UpdateInventory();
+	
+	m_BeltSlots->m_OnItemAdded.AddUObject(UMyGameInstance::Get->m_QuickManager, &UQuickSlotManager::RegisterQuickItemExe);
+	m_BeltSlots->m_OnItemRemoved.AddUObject(UMyGameInstance::Get->m_QuickManager, &UQuickSlotManager::UnregisterQuickItemExe);
 }
 
 void UEquipManager::UnequipBelt()

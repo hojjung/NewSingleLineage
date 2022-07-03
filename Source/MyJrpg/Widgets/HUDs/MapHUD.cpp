@@ -29,3 +29,8 @@ void AMapHUD::PrintErrorText(const FString& str)
 {
 	GetCanvas()->PrintErrorText(str);
 }
+
+void AMapHUD::OpenItemInfo(const FItemDataRow& item_data)
+{
+	GetCanvas()->OpenItemInfoData(item_data);
+}

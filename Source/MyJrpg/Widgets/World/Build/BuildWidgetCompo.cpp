@@ -25,18 +25,18 @@ void UBuildWidgetCompo::Init()
 	AStructureActor* Owner = GetOwner<AStructureActor>();
 	m_Widget = Cast<UWorldWidgetStruct>(GetUserWidgetObject());
 	m_Widget->SetOwnerActor(Owner);
-	m_Type = Owner->GetBuildData().m_BuildType;
+	m_bCanRotate = Owner->GetBuildData().m_bSupportRotate;
 }
 
 void UBuildWidgetCompo::ShowBuildWidget(bool b)
 {
 	m_Widget->ShowBuildWidget(b);
-	m_Widget->ShowRotation(b && m_Type == EBuildType::Furniture);
+	m_Widget->ShowRotation(b && m_bCanRotate);
 }
 
 void UBuildWidgetCompo::ShowSelect(bool b)
 {
 	SetVisibility(b);
 	m_Widget->ShowSelect(b);
-	m_Widget->ShowRotation(b && m_Type == EBuildType::Furniture);
+	m_Widget->ShowRotation(b && m_bCanRotate);
 }

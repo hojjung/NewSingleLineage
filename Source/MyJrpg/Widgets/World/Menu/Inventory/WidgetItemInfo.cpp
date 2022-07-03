@@ -43,7 +43,7 @@ void UWidgetItemInfo::OnClose()
 	
 	m_nCollecIndex = INDEX_NONE;
 
-	m_ItemSpec = nullptr;
+	//m_ItemSpec = nullptr;//
 }
 
 void UWidgetItemInfo::OnErase()

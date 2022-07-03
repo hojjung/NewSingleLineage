@@ -33,6 +33,8 @@ public:
 	UWidgetMapPanel* GetCanvas();
 
 	virtual void PrintErrorText(const FString& str) override;
+
+	virtual void OpenItemInfo(const FItemDataRow& item_data) override;
 };
 
 

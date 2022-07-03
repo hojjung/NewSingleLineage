@@ -42,8 +42,14 @@ class MYJRPG_API UInventory : public UObject
 	
 public:
 	DECLARE_MULTICAST_DELEGATE(FOnInvenChanged);
+
+	DECLARE_MULTICAST_DELEGATE_OneParam(FOnItemAddRemove, const FItemDataRow&);
 	
 	FOnInvenChanged m_OnInvenChanged;
+
+	FOnItemAddRemove m_OnItemAdded;
+
+	FOnItemAddRemove m_OnItemRemoved;
 	
 protected://
 	int m_nInvenMaxSize;
@@ -55,14 +61,9 @@ protected://
 	FText m_InvenName;
 
 protected:
-
 	void AddItemStack(const FItemDataRow& itemData, int index, int& lvCnt, FName id, int maxStack);
 
 	void RemoveItemStack(const FItemDataRow& itemData, int index, int& stackCnt);
-	
-	void RegisterQuickItemExe(const FItemDataRow& itemData);
-
-	void UnregisterQuickItemExe(const FItemDataRow& itemData);
 
 public:
 	FORCEINLINE const TArray<FItemSpec>& GetAryItems() const

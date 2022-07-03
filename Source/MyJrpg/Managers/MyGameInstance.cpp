@@ -99,6 +99,8 @@ void UMyGameInstance::Init()
 	m_SkillManager->Init();
 	m_EquipManager->Init();
 	m_Inven->Init(FGlobalVariable::INVEN_SIZE,NSLOCTEXT("UMyGameInstance","Inven","소지품"));
+	m_Inven->m_OnItemAdded.AddUObject(UMyGameInstance::Get->m_QuickManager, &UQuickSlotManager::RegisterQuickItemExe);
+	m_Inven->m_OnItemRemoved.AddUObject(UMyGameInstance::Get->m_QuickManager, &UQuickSlotManager::UnregisterQuickItemExe);
 	m_QuestManager->Init();
 	m_CurrencyManager->Init(0);
 	m_PlayerStatManager->Init();

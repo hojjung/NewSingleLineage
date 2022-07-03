@@ -40,6 +40,8 @@ public:
 	UPROPERTY(EditDefaultsOnly,BlueprintReadOnly)
 	EBuildType m_BuildType;
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
+	bool m_bSupportRotate = true;
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
 	bool m_bIsFocusable = true;
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	TSubclassOf<UBuildInteractBase> m_ClassInter = nullptr;

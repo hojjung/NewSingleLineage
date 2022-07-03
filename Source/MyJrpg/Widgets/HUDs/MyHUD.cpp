@@ -31,3 +31,8 @@ void AMyHUD::PrintErrorText(const FString& str)
 	GetCanvas()->PrintErrorText(str);
 }
 
+void AMyHUD::OpenItemInfo(const FItemDataRow& item_data)
+{
+	GetCanvas()->OpenItemInfoData(item_data);
+}
+

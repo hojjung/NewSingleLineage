@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/HUD.h"
+#include "MyJrpg/DataTables/ItemData.h"
 #include "BaseHUD.generated.h"
 
 /**
@@ -18,6 +19,8 @@ public:
 	virtual void PrintErrorText(const FString& str);
 
 	void PrintErrorText(FText&& tt);
+	
+	virtual void OpenItemInfo(const FItemDataRow& item_data);
 };
 
 

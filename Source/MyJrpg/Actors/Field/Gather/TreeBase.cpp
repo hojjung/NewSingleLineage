@@ -165,6 +165,8 @@ void ATreeBase::OnGatherDone()
 	
 	if(m_bUsePhysics)
 		m_MeshTree->SetSimulatePhysics(true);
+
+	m_IconMeshComp->SetVisibility(false, true);
 }
 
 void ATreeBase::OnHarvestMotionDone()
