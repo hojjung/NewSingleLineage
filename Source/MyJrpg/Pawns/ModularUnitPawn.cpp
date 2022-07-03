@@ -53,7 +53,6 @@ void AModularUnitPawn::LoadSetSkMeshAnim(TSoftObjectPtr<UUnitEntityAsset> asset)
 	AttachWeapons();
 	
 	m_MergeParam.Skeleton = m_EntityAsset->m_BodyMesh->GetSkeleton();
-	m_MergeParam.bSkeletonBefore = true;
 	m_MergeParam.MeshesToMerge.Init(nullptr,(int)EBodyIndex::Len + 1);
 	m_MergeParam.MeshesToMerge[(int)EBodyIndex::Len] = m_EntityAsset->m_BodyMesh;
 
@@ -185,9 +184,7 @@ void AModularUnitPawn::UpdateEquipActor()
 
 	m_BodyMesh->SetSkeletalMesh(SkMeshMerged,true);
 
-	FVector Loc = m_BodyMesh->GetSocketLocation(TEXT("RightHandSocket"));
-
-	PRINTF("m_BodyMesh RightHandSocket Loc :%s", *Loc.ToString());
+	AttachWeapons();
 	
 	UMyGameInstance::Get->m_PreviewActorManager->Update(this);
 	UpdateMorpthTarget();

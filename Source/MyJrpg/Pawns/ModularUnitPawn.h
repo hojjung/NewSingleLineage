@@ -78,7 +78,7 @@ protected:
 	void AttachWeapons();
 
 	virtual void LoadSetSkMeshAnim(TSoftObjectPtr<UUnitEntityAsset> asset) override;
-	
+
 protected:
 	void UpdateEquipActor();
 

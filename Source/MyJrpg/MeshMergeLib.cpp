@@ -128,5 +128,8 @@ USkeletalMesh* UMeshMergeLib::MergeMeshes(const FSkeletalMeshMergeParams& Params
 		UE_LOG(LogTemp, Warning, TEXT("Found Duplicates: %s"),
 		       *((Total != UniqueTotal) ? FString("True") : FString("False")));
 	}
+	
+	BaseMesh->RebuildSocketMap();
+	
 	return BaseMesh;
 }
