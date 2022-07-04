@@ -113,18 +113,26 @@ FVector2D UZoneMoveManager::GetPlayerIconPos()
 
 float UZoneMoveManager::GetEulerAngle(const FName& dst)
 {
-	FVector2D SrcPos = m_MapZoneBtns[m_CurrentID]->GetPos();
+	FVector2D SrcPos = m_MapZoneBtns[m_CurrentID]->GetPos().GetSafeNormal();
 	
-	FVector2D DstPos = m_MapZoneBtns[dst]->GetPos();
-	
-	float Ang1 = FMath::Atan2(SrcPos.X, SrcPos.Y);
-	
-	float Ang2 = FMath::Atan2(DstPos.X, DstPos.Y);
-	
-	float Ang = FMath::RadiansToDegrees(Ang1 - Ang2);
+	FVector2D DstPos = m_MapZoneBtns[dst]->GetPos().GetSafeNormal();
 
-	Ang += 90.f;
-	//if(Ang > 180.0f) Ang -= 360.0f; else if(Ang < -180.0f) Ang += 360.0f;
+	float Angle = FMath::RadiansToDegrees(FMath::Acos(FVector2D::DotProduct(SrcPos.GetSafeNormal(), DstPos.GetSafeNormal())));
 
-	return Ang;
+	PRINTF("1 Angle  %.1f", Angle);
+	
+	PRINTF("2 Angle  %.1f", Angle);
+	//이거쓰지말기?
+
+	return Angle;
+}
+
+bool UZoneMoveManager::IsMoving()
+{
+	return !m_DestZoneID.IsNone();
+}
+
+bool UZoneMoveManager::IsRunning()
+{
+	return m_bIsRunning;
 }

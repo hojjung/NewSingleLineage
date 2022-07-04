@@ -166,19 +166,29 @@ void UWidgetZoneSelectButton::MoveToZone()
 
 void UWidgetZoneSelectButton::OnWalk()
 {
+	if(UMyGameInstance::Get->m_ZoneMove->IsMoving())
+	{
+		return;
+	}
 	UMyGameInstance::Get->m_ZoneMove->StartMove(false, m_fWalkTime, m_ZoneData->m_RowKey);
+	OnClose();
 }
 
 void UWidgetZoneSelectButton::OnRun()
 {
+	if(UMyGameInstance::Get->m_ZoneMove->IsMoving())
+	{
+		return;
+	}
 	UMyGameInstance::Get->m_ZoneMove->StartMove(true, m_fRunTime, m_ZoneData->m_RowKey);
+	OnClose();
 }
 
 void UWidgetZoneSelectButton::GetRunStaminaCostTime(int& staminaCost, float& timeSpan)
 {
 	staminaCost = m_fDist / 30.f; 
 
-	timeSpan = m_fDist / 30.f;
+	timeSpan = 1.f;
 }
 
 void UWidgetZoneSelectButton::GetWalkTime(float& timeSpan)

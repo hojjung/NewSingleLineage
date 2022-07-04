@@ -70,4 +70,8 @@ public:
 	FVector2D GetPlayerIconPos();
 	
 	float GetEulerAngle(const FName& dst);
+
+	bool IsMoving();
+
+	bool IsRunning();
 };
