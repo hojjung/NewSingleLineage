@@ -1,5 +1,13 @@
-// Fill out your copyright notice in the Description page of Project Settings.
-
-
 #include "ZoneMoveManager.h"
 
+void UZoneMoveManager::Init()
+{
+	m_nZoneStamina  = 100;
+	
+	
+}
+
+void UZoneMoveManager::Tick(float deltaTime)
+{
+	//recharge stamina
+}

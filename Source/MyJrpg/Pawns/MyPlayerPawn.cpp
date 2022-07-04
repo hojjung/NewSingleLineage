@@ -24,7 +24,7 @@ AMyPlayerPawn::AMyPlayerPawn(const FObjectInitializer& objInit):Super(objInit)
 	m_bCanMoveInSkill = false;
 	m_bIsInvincible = false;
 	m_bIsSneaking = false;
-	m_bUseFsmTick = false;
+	m_bUseFsmTick = false;	
 
 	m_Capsule->SetCollisionEnabled(ECollisionEnabled::QueryOnly);
 
