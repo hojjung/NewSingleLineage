@@ -30,3 +30,13 @@ void UWidgetMapBtn::OnClick()
 {
 	m_OnClick.ExecuteIfBound(m_ZoneID);
 }
+
+FName UWidgetMapBtn::GetZoneID()
+{
+	return  m_ZoneID;
+}
+
+FVector2D UWidgetMapBtn::GetPos()
+{
+	return Cast<UCanvasPanelSlot>( Slot)->GetPosition();
+}

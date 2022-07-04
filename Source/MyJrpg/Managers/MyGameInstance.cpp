@@ -93,6 +93,8 @@ void UMyGameInstance::Init()
 
 	m_ZoneInst = NewObject<UZoneInstManager>(this);
 
+	m_ZoneMove = NewObject<UZoneMoveManager>(this);
+
 	m_BuildManager->Init();
 	m_ItemCollecManager->Init();
 	m_PetManager->Init();
@@ -106,6 +108,7 @@ void UMyGameInstance::Init()
 	m_PlayerStatManager->Init();
 	m_BadwordTable->Init();
 	m_TeamKarma->Init();
+	m_ZoneMove->Init();
 	//
 	IterateItemTableToRegister();
 

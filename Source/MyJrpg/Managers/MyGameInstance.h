@@ -16,6 +16,7 @@
 #include "QuickSlotManager.h"
 #include "ShopManager.h"
 #include "SkillManager.h"
+#include "ZoneMoveManager.h"
 #include "Build/ZoneInstManager.h"
 #include "Engine/GameInstance.h"
 #include "MyJrpg/Actors/MyPlayerController.h"
@@ -93,7 +94,8 @@ public:
 	UItemConvertManager* m_ItemConvertManager;
 	UPROPERTY()
 	UZoneInstManager* m_ZoneInst;
-	
+	UPROPERTY()
+	UZoneMoveManager* m_ZoneMove;
 public:
 	TWeakObjectPtr<AMyPlayerPawn> m_Player;
 	

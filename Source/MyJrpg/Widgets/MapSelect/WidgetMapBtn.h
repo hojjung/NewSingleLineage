@@ -32,10 +32,14 @@ protected:
 	virtual void NativePreConstruct() override;
 	
 	virtual void NativeOnInitialized() override;
-
+	
 public:
 	UFUNCTION()
 	void OnClick();
+
+	FName GetZoneID();
+
+	FVector2D GetPos();
 };
 
 

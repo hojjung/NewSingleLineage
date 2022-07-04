@@ -1,10 +1,13 @@
 #include "WidgetMapPanel.h"
 
+#include "MyJrpg/Managers/MyGameInstance.h"
 #include "MyJrpg/Widgets/World/Menu/Craft/WidgetCraftPanel.h"
 
 void UWidgetMapPanel::NativeOnInitialized()
 {
 	Super::NativeOnInitialized();
+
+	UMyGameInstance::Get->m_ZoneMove->ClearWidgetMap();
 
 	TArray<UWidget*> AryWidgets = m_CanvasMap->GetAllChildren();
 
@@ -16,6 +19,8 @@ void UWidgetMapPanel::NativeOnInitialized()
 			continue;
 
 		Btn->m_OnClick.BindUObject(this, &UWidgetMapPanel::OnClick);
+		
+		UMyGameInstance::Get->m_ZoneMove->AddMapBtn(Btn->GetZoneID(),Btn);
 	}
 
 	m_ZoneSelect->SetVisibility(ESlateVisibility::Collapsed);
@@ -31,6 +36,17 @@ void UWidgetMapPanel::NativeOnInitialized()
 	m_BtnCraft->OnClicked.AddDynamic(this, &UWidgetMapPanel::OnOpenCraft);
 
 	m_BtnInven->OnClicked.AddDynamic(this, &UWidgetMapPanel::OnOpenInven);
+
+
+	m_MoveBar->SetVisibility(ESlateVisibility::Collapsed);
+
+	m_PlayerIcon->SetVisibility(ESlateVisibility::Collapsed);
+
+	UMyGameInstance::Get->m_ZoneMove->m_OnMoveStart.AddUObject(this, &UWidgetMapPanel::SetMoveBar);
+	
+	UMyGameInstance::Get->m_ZoneMove->m_OnMoveTick.AddUObject(this, &UWidgetMapPanel::OnMove);
+
+	UMyGameInstance::Get->m_ZoneMove->m_OnMoveEnd.AddUObject(this, &UWidgetMapPanel::OnMoveEnd);
 }
 
 void UWidgetMapPanel::OpenItemInfoData(const FItemDataRow& item_data_row)
@@ -74,6 +90,35 @@ void UWidgetMapPanel::OnOpenInven()
 void UWidgetMapPanel::OnOpenCraft()
 {
 	m_CraftPanel->OpenPanel();
+}
+
+void UWidgetMapPanel::SetMoveBar(const FName& dst, float dist)
+{
+	m_MoveBar->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
+
+	m_PlayerIcon->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
+	
+	FVector2D BarPos =  UMyGameInstance::Get->m_ZoneMove->GetBarPos(dst);
+
+	Cast<UCanvasPanelSlot>(m_MoveBar->Slot)->SetPosition(BarPos);
+
+	Cast<UCanvasPanelSlot>(m_MoveBar->Slot)->SetSize(FVector2D(dist,75));
+
+	float EuletAngle = UMyGameInstance::Get->m_ZoneMove->GetEulerAngle(dst);;
+
+	m_MoveBar->SetRenderTransformAngle(EuletAngle);
+}
+
+void UWidgetMapPanel::OnMove()
+{
+	FVector2D IconPos = UMyGameInstance::Get->m_ZoneMove->GetPlayerIconPos();
+	
+	Cast<UCanvasPanelSlot>(m_PlayerIcon->Slot)->SetPosition(IconPos);
+}
+
+void UWidgetMapPanel::OnMoveEnd()
+{
+	m_MoveBar->SetVisibility(ESlateVisibility::Collapsed);
 }
 
 FReply UWidgetMapPanel::NativeOnTouchMoved(const FGeometry& InGeometry, const FPointerEvent& InGestureEvent)

@@ -28,7 +28,7 @@ protected:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (BindWidget))
 	UButton* m_BtnClose;
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (BindWidget))
-	UButton* m_BtnEnterZone;
+	UButton* m_BtnEnter;
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (BindWidget))
 	UTextBlock* m_TextMapName;
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (BindWidget))
@@ -43,12 +43,29 @@ protected:
 	UProgressBar* m_BarRock;
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (BindWidget))
 	UProgressBar* m_BarItem;
-
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (BindWidget))
+	UButton* m_BtnRun;
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (BindWidget))
+	UButton* m_BtnWalk;
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (BindWidget))
+	UTextBlock* m_TextRunCost;
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (BindWidget))
+	UTextBlock* m_TextRunTimeSpan;
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (BindWidget))
+	UTextBlock* m_TextWalkTimeSpan;
+	
 	const FZoneDataRow* m_ZoneData;
 
 	TSet<FName> m_SetRewardItems;
 	
-	
+	int m_RunCost;
+
+	float m_fWalkTime;
+
+	float m_fRunTime;
+
+	float m_fDist;
+
 protected:
 	void SetItemsInSet();
 
@@ -59,6 +76,12 @@ protected:
 	void SetBarGauge(UProgressBar* bar, int amount);
 	
 	void SetPlayerHome();
+
+	void GetRunStaminaCostTime(int& staminaCost, float& timeSpan);
+
+	void GetWalkTime(float& timeSpan);
+
+	void UpdateBtnText();
 	
 public:
 	void Init(const FZoneDataRow& zone_data);
@@ -68,5 +91,9 @@ public:
 	void OnClose();
 	UFUNCTION()
 	void MoveToZone();
+	UFUNCTION()
+	void OnWalk();
+	UFUNCTION()
+	void OnRun();
 };
  

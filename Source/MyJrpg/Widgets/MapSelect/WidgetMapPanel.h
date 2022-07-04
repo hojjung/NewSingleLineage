@@ -39,6 +39,10 @@ protected:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (BindWidget))
 	UWidgetCraftPanel* m_CraftPanel;
 	TWeakObjectPtr<UCanvasPanelSlot> m_PanelSlot;
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (BindWidget))
+	UProgressBar* m_MoveBar;
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (BindWidget))
+	UImage* m_PlayerIcon;
 public:
 	virtual void NativeOnInitialized() override;
 	
@@ -60,4 +64,10 @@ public:
 	void OnOpenInven();
 	UFUNCTION()
 	void OnOpenCraft();
+
+	void SetMoveBar(const FName& dst, float dist);
+
+	void OnMove();
+
+	void OnMoveEnd();
 };

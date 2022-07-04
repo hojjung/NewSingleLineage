@@ -9,7 +9,7 @@ void UWidgetZoneSelectButton::NativeOnInitialized()
 {
 	Super::NativeOnInitialized();
 
-	m_BtnEnterZone->OnClicked.AddDynamic(this,&UWidgetZoneSelectButton::MoveToZone);
+	m_BtnEnter->OnClicked.AddDynamic(this,&UWidgetZoneSelectButton::MoveToZone);
 
 	m_BtnClose->OnClicked.AddDynamic(this,&UWidgetZoneSelectButton::OnClose);
 
@@ -20,6 +20,10 @@ void UWidgetZoneSelectButton::NativeOnInitialized()
 	m_BarRock->SetVisibility(ESlateVisibility::HitTestInvisible);
 
 	m_BarItem->SetVisibility(ESlateVisibility::HitTestInvisible);
+
+	m_BtnRun->OnClicked.AddDynamic(this,&UWidgetZoneSelectButton::OnRun);
+
+	m_BtnWalk->OnClicked.AddDynamic(this,&UWidgetZoneSelectButton::OnWalk);
 }
 
 void UWidgetZoneSelectButton::SetBarGauge(UProgressBar* bar, int amount)
@@ -51,6 +55,7 @@ void UWidgetZoneSelectButton::Init(const FZoneDataRow& zone_data)
 	if(m_ZoneData->m_RowKey == TEXT("PlayerHome"))
 	{
 		SetPlayerHome();
+		UpdateBtnText();
 		return;
 	}
 
@@ -67,7 +72,8 @@ void UWidgetZoneSelectButton::Init(const FZoneDataRow& zone_data)
 	SetBarGauge(m_BarRock, m_ZoneData->m_nLevelRock);
 	
 	SetBarGauge(m_BarItem, m_ZoneData->m_nLevelItem);
-	
+
+	UpdateBtnText();
 }
 
 void UWidgetZoneSelectButton::OnClose()
@@ -156,4 +162,75 @@ void UWidgetZoneSelectButton::SetZone()
 void UWidgetZoneSelectButton::MoveToZone()
 {
 	UMyGameInstance::Get->m_LevelMoveManager->OpenMyLevel(*m_ZoneData);
+}
+
+void UWidgetZoneSelectButton::OnWalk()
+{
+	UMyGameInstance::Get->m_ZoneMove->StartMove(false, m_fWalkTime, m_ZoneData->m_RowKey);
+}
+
+void UWidgetZoneSelectButton::OnRun()
+{
+	UMyGameInstance::Get->m_ZoneMove->StartMove(true, m_fRunTime, m_ZoneData->m_RowKey);
+}
+
+void UWidgetZoneSelectButton::GetRunStaminaCostTime(int& staminaCost, float& timeSpan)
+{
+	staminaCost = m_fDist / 30.f; 
+
+	timeSpan = m_fDist / 30.f;
+}
+
+void UWidgetZoneSelectButton::GetWalkTime(float& timeSpan)
+{
+	timeSpan = m_fDist * 3.5f;
+}
+
+void UWidgetZoneSelectButton::UpdateBtnText()
+{
+	if(UMyGameInstance::Get->m_ZoneMove->IsZoneAlreadyIn(m_ZoneData->m_RowKey))
+	{
+		m_BtnEnter->SetVisibility(ESlateVisibility::Visible);
+		
+		m_BtnRun->SetVisibility(ESlateVisibility::Collapsed);
+
+		m_BtnWalk->SetVisibility(ESlateVisibility::Collapsed);
+
+		m_TextWalkTimeSpan->SetVisibility(ESlateVisibility::Collapsed);
+
+		m_TextRunTimeSpan->SetVisibility(ESlateVisibility::Collapsed);
+
+		//들어가기 버튼이 있어야함
+		return;
+	}
+	
+	m_fDist = UMyGameInstance::Get->m_ZoneMove->GetDist(m_ZoneData->m_RowKey);
+
+	m_BtnEnter->SetVisibility(ESlateVisibility::Collapsed);
+	
+	m_BtnRun->SetVisibility(ESlateVisibility::Visible);
+
+	m_BtnWalk->SetVisibility(ESlateVisibility::Visible);
+
+	m_TextWalkTimeSpan->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
+
+	m_TextRunTimeSpan->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
+	
+	GetRunStaminaCostTime(m_RunCost, m_fRunTime);
+
+	GetWalkTime(m_fWalkTime);
+
+	m_TextRunCost->SetText(FText::AsNumber(m_RunCost));
+
+	const FString& CultName = FInternationalization::Get().GetCurrentCulture().Get().GetName();
+	
+	FCulturePtr Culture = FInternationalization::Get().GetCulture(CultName);
+	
+	FTimespan Run(0,0,m_fRunTime);
+	
+	m_TextRunTimeSpan->SetText(FText::AsTimespan(Run, Culture));
+
+	FTimespan Walk(0,0,m_fWalkTime);
+	
+	m_TextWalkTimeSpan->SetText(FText::AsTimespan(Walk, Culture));
 }
