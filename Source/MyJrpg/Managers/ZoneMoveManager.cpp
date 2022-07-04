@@ -101,7 +101,11 @@ FVector2D UZoneMoveManager::GetBarPos(const FName& dst)
 FVector2D UZoneMoveManager::GetPlayerIconPos()
 {
 	FVector2D SrcPos = m_MapZoneBtns[m_CurrentID]->GetPos();
-	
+
+	if(m_DestZoneID.IsNone())
+	{
+		return SrcPos;
+	}
 	FVector2D DstPos = m_MapZoneBtns[m_DestZoneID]->GetPos();
 
 	float Percent = GetMovePercent();
@@ -113,18 +117,31 @@ FVector2D UZoneMoveManager::GetPlayerIconPos()
 
 float UZoneMoveManager::GetEulerAngle(const FName& dst)
 {
-	FVector2D SrcPos = m_MapZoneBtns[m_CurrentID]->GetPos().GetSafeNormal();
+	FVector2D SrcPos = m_MapZoneBtns[m_CurrentID]->GetPos();
 	
-	FVector2D DstPos = m_MapZoneBtns[dst]->GetPos().GetSafeNormal();
+	FVector2D DstPos = m_MapZoneBtns[dst]->GetPos();
 
-	float Angle = FMath::RadiansToDegrees(FMath::Acos(FVector2D::DotProduct(SrcPos.GetSafeNormal(), DstPos.GetSafeNormal())));
+	FVector Start = FVector(SrcPos.X, SrcPos.Y, 0.0f);
+	FVector Dest = FVector(DstPos.X, DstPos.Y, 0.0f);
+	FVector Dir = Dest - Start;
+	FVector GoalDirection = Dir.GetSafeNormal();
+	//노말라이징한 두개의 백터를 dot한다.
+	////여기서 축을 Z축으로 하기 위해 두백터의 Z값을 0.0f로 넣어 주었다.
+	float dot = FVector::DotProduct(FVector::ForwardVector, GoalDirection);
+	float AcosAngle = FMath::Acos(dot);
+	// dot한 값을 아크코사인 계산해 주면 0 ~ 180도 사이의 값 (0 ~ 1)의 양수 값만 나온다.
+	float angle = FMath::RadiansToDegrees(AcosAngle);
+	//그값은 degrees 값인데 이것에 1라디안을 곱해주면 60분법의 도가 나온다.
+	////여기서 두 백터를 크로스 하여 회전할 축을 얻게 된다.
+	/////이 크로스 백터는 Axis회전의 회전축이 되며 , 그 양수 음수로 회전 방향 왼쪽(음수), 오른쪽(양수)를 알수 있다.
+	FVector cross = FVector::CrossProduct(FVector::ForwardVector, GoalDirection);
 
-	PRINTF("1 Angle  %.1f", Angle);
-	
-	PRINTF("2 Angle  %.1f", Angle);
-	//이거쓰지말기?
-
-	return Angle;
+	if (cross.Z < 0)
+	{
+		angle = -angle;
+	}
+		
+	return angle;
 }
 
 bool UZoneMoveManager::IsMoving()

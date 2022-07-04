@@ -43,6 +43,7 @@ protected:
 	UProgressBar* m_MoveBar;
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (BindWidget))
 	UImage* m_PlayerIcon;
+	
 public:
 	virtual void NativeOnInitialized() override;
 	

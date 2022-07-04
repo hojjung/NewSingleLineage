@@ -40,13 +40,13 @@ void UWidgetMapPanel::NativeOnInitialized()
 
 	m_MoveBar->SetVisibility(ESlateVisibility::Collapsed);
 
-	m_PlayerIcon->SetVisibility(ESlateVisibility::Collapsed);
-
 	UMyGameInstance::Get->m_ZoneMove->m_OnMoveStart.AddUObject(this, &UWidgetMapPanel::SetMoveBar);
 	
 	UMyGameInstance::Get->m_ZoneMove->m_OnMoveTick.AddUObject(this, &UWidgetMapPanel::OnMove);
 
 	UMyGameInstance::Get->m_ZoneMove->m_OnMoveEnd.AddUObject(this, &UWidgetMapPanel::OnMoveEnd);
+
+	OnMove();
 }
 
 void UWidgetMapPanel::OpenItemInfoData(const FItemDataRow& item_data_row)
@@ -102,7 +102,7 @@ void UWidgetMapPanel::SetMoveBar(const FName& dst, float dist)
 
 	Cast<UCanvasPanelSlot>(m_MoveBar->Slot)->SetPosition(BarPos);
 
-	Cast<UCanvasPanelSlot>(m_MoveBar->Slot)->SetSize(FVector2D(dist,75));
+	Cast<UCanvasPanelSlot>(m_MoveBar->Slot)->SetSize(FVector2D(dist,35));
 
 	float EuletAngle = UMyGameInstance::Get->m_ZoneMove->GetEulerAngle(dst);;
 

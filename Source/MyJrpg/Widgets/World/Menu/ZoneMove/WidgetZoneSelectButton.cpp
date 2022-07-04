@@ -24,6 +24,8 @@ void UWidgetZoneSelectButton::NativeOnInitialized()
 	m_BtnRun->OnClicked.AddDynamic(this,&UWidgetZoneSelectButton::OnRun);
 
 	m_BtnWalk->OnClicked.AddDynamic(this,&UWidgetZoneSelectButton::OnWalk);
+
+	UMyGameInstance::Get->m_ZoneMove->m_OnMoveEnd.AddUObject(this, &UWidgetZoneSelectButton::UpdateBtnText);
 }
 
 void UWidgetZoneSelectButton::SetBarGauge(UProgressBar* bar, int amount)
