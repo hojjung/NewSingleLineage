@@ -6,6 +6,7 @@
 #include "MyJrpg/Managers/MyCheatManager.h"
 #include "MyJrpg/Pawns/MyPlayerPawn.h"
 #include "MyJrpg/Widgets/WidgetComponents/InGameTextWidget.h"
+#include "MyJrpg/Widgets/World/CommonElements/WidgetConfirmPanel.h"
 
 AMyPlayerController::AMyPlayerController()
 {
@@ -69,7 +70,7 @@ void AMyPlayerController::ShowInGameWorldText(const FString& stringWant, const A
 void AMyPlayerController::SetupInputComponent()
 {
 	Super::SetupInputComponent();
-	InputComponent->BindAction("Exit", EInputEvent::IE_Pressed, this, &AMyPlayerController::ExitGame);
+	InputComponent->BindAction("Exit", EInputEvent::IE_Pressed, this, &AMyPlayerController::OpenExitPanel);
 	InputComponent->BindAction("MouseClick", EInputEvent::IE_Pressed, this, &AMyPlayerController::OnTouchPressed);
 
 	InputComponent->BindAction("MouseClick", EInputEvent::IE_Pressed, this, &AMyPlayerController::OnPressed);
@@ -91,6 +92,17 @@ void AMyPlayerController::Tick(float DeltaSeconds)
 	FVector2D Delta = (m_MousePos - OldPos).GetSafeNormal() * 50.f;
 	
 	m_OnFlick.Broadcast(Delta);
+}
+
+void AMyPlayerController::OpenExitPanel()
+{
+	UWidgetConfirmPanel::FOnClick Cancel;
+
+	UWidgetConfirmPanel::FOnClick Confirm = UWidgetConfirmPanel::FOnClick::CreateUObject(this,&AMyPlayerController::ExitGame); 
+
+	FString DescStrF = NSLOCTEXT("AMyPlayerController","OnExit","정말로 게임을 종료 하시겠습니까?").ToString();
+
+	UMyLib::GetCanvas()->GetConfirmPanel()->SetConfirmPanel(DescStrF,Cancel,Confirm);
 }
 
 void AMyPlayerController::ShowInGameWorldText(float number, ABaseUnitPawn* interactActor, ETextType dmgPopup)

@@ -58,6 +58,8 @@ protected:
 
 	void SetBarGauge(UProgressBar* bar, int amount);
 	
+	void SetPlayerHome();
+	
 public:
 	void Init(const FZoneDataRow& zone_data);
 	

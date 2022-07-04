@@ -34,7 +34,6 @@ AItemActor::AItemActor()
 	//
 	m_IconMeshComp = CreateDefaultSubobject<UMinimapIconComp>("m_IconMeshComp");
 	m_IconMeshComp->SetupAttachment(RootComponent);
-	m_IconMeshComp->SetRelativeScale3D(FVector(0.7f));
 }
 
 void AItemActor::EndPlay(const EEndPlayReason::Type EndPlayReason)

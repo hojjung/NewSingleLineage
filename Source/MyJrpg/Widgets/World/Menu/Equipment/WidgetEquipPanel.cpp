@@ -23,9 +23,18 @@ void UWidgetEquipPanel::NativeOnInitialized()
 	m_AryEquips.Add(m_Leg);
 	m_AryEquips.Add(m_Ring);
 	m_AryEquips.Add(m_Neckless);
-	m_AryEquips.Add(m_EarRing);
 	m_AryEquips.Add(m_Belt);
 	m_AryEquips.Add(m_Bag);
+	m_AryEquipDefaults.Add(nullptr);
+	m_AryEquipDefaults.Add(m_WeaponDefault);
+	m_AryEquipDefaults.Add(m_HeadDefault);
+	m_AryEquipDefaults.Add(m_TorsoDefault);
+	m_AryEquipDefaults.Add(m_HandDefault);
+	m_AryEquipDefaults.Add(m_LegDefault);
+	m_AryEquipDefaults.Add(m_RingDefault);
+	m_AryEquipDefaults.Add(m_NecklessDefault);
+	m_AryEquipDefaults.Add(m_BeltDefault);
+	m_AryEquipDefaults.Add(m_BagDefault);
 	//
 	int Iter = 0;
 	for (UWidgetBaseElement* Ele : m_AryEquips)
@@ -51,6 +60,23 @@ void UWidgetEquipPanel::NativeOnInitialized()
 	m_Preview->Init(UMyGameInstance::Get->m_PreviewActorManager);
 
 	m_Quick->Init(UMyGameInstance::Get->m_EquipManager->GetQuickInven());
+
+	UMyGameInstance::Get->m_EquipManager->GetQuickInven()->m_OnInvenChanged.AddUObject(this, &UWidgetEquipPanel::UpdateQuickSlot);
+}
+
+void UWidgetEquipPanel::UpdateQuickSlot()
+{
+	const TArray<FItemSpec>& AryItems = UMyGameInstance::Get->m_EquipManager->GetQuickInven()->GetAryItems();
+
+	for(const FItemSpec& Item : AryItems)
+	{
+		if (Item.m_ID.IsNone())
+		{
+			m_QuickDefault->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
+			continue;
+		}
+		m_QuickDefault->SetVisibility(ESlateVisibility::Collapsed);
+	}
 }
 
 FReply UWidgetEquipPanel::NativeOnMouseButtonDown(const FGeometry& InGeometry, const FPointerEvent& InMouseEvent)
@@ -105,10 +131,14 @@ void UWidgetEquipPanel::UpdateSlots()
 		if (EquippedItems[i].m_ID.IsNone())
 		{
 			if(m_AryEquips[i])
+			{
 				m_AryEquips[i]->Clear();
+				m_AryEquipDefaults[i]->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
+			}
 			continue;
 		}
 		UpdateElement(m_AryEquips[i], EquippedItems[i]);
+		m_AryEquipDefaults[i]->SetVisibility(ESlateVisibility::Collapsed);
 	}
 
 	UnFocusCurrent();

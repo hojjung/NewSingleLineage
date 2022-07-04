@@ -31,16 +31,43 @@ void UWidgetZoneSelectButton::SetBarGauge(UProgressBar* bar, int amount)
 	bar->SetPercent(Value);
 }
 
+void UWidgetZoneSelectButton::SetPlayerHome()
+{
+	SetZone();
+
+	m_BarSkull->GetParent()->SetVisibility(ESlateVisibility::Collapsed);
+	
+	m_BarWood->GetParent()->SetVisibility(ESlateVisibility::Collapsed);
+
+	m_BarRock->GetParent()->SetVisibility(ESlateVisibility::Collapsed);
+
+	m_BarItem->GetParent()->SetVisibility(ESlateVisibility::Collapsed);
+}
+
 void UWidgetZoneSelectButton::Init(const FZoneDataRow& zone_data)
 {
 	m_ZoneData = &zone_data;
 
+	if(m_ZoneData->m_RowKey == TEXT("PlayerHome"))
+	{
+		SetPlayerHome();
+		return;
+	}
+
 	SetZone();
 
+	SetItemsInSet();
+	
+	CreateZoneElement();
+
 	SetBarGauge(m_BarSkull, m_ZoneData->m_nLevelMob);
+	
 	SetBarGauge(m_BarWood, m_ZoneData->m_nLevelWood);
+	
 	SetBarGauge(m_BarRock, m_ZoneData->m_nLevelRock);
+	
 	SetBarGauge(m_BarItem, m_ZoneData->m_nLevelItem);
+	
 }
 
 void UWidgetZoneSelectButton::OnClose()
@@ -124,10 +151,6 @@ void UWidgetZoneSelectButton::SetZone()
 	m_TextMapName->SetText(m_ZoneData->m_ShowingName);
 
 	m_TextMapDesc->SetText(m_ZoneData->m_Desc);
-
-	SetItemsInSet();
-	
-	CreateZoneElement();
 }
 
 void UWidgetZoneSelectButton::MoveToZone()

@@ -20,28 +20,48 @@ protected:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (BindWidget))
 	UWidgetBaseElement* m_Weapon;
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (BindWidget))
+	UImage* m_WeaponDefault;
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (BindWidget))
 	UWidgetBaseElement* m_Head;
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (BindWidget))
+	UImage* m_HeadDefault;
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (BindWidget))
 	UWidgetBaseElement* m_Torso;
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (BindWidget))
+	UImage* m_TorsoDefault;
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (BindWidget))
 	UWidgetBaseElement* m_Hand;
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (BindWidget))
+	UImage* m_HandDefault;
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (BindWidget))
 	UWidgetBaseElement* m_Leg;
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (BindWidget))
-	UWidgetBaseElement* m_EarRing;
+	UImage* m_LegDefault;
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (BindWidget))
 	UWidgetBaseElement* m_Ring;
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (BindWidget))
+	UImage* m_RingDefault;
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (BindWidget))
 	UWidgetBaseElement* m_Neckless;
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (BindWidget))
+	UImage* m_NecklessDefault;
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (BindWidget))
 	UWidgetBaseElement* m_Belt;
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (BindWidget))
+	UImage* m_BeltDefault;
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (BindWidget))
 	UWidgetBaseElement* m_Bag;
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (BindWidget))
+	UImage* m_BagDefault;
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (BindWidget))
 	UWidgetInventory* m_Quick;
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (BindWidget))
+	UImage* m_QuickDefault;
 	UPROPERTY()
 	TArray<UWidgetBaseElement*> m_AryEquips;
-
+	UPROPERTY()
+	TArray<UImage*> m_AryEquipDefaults;
+	
 	EItemType m_FocusType;
 
 	FDelegateHandle m_Handle;
@@ -71,6 +91,8 @@ protected:
 
 	void OnHold(UWidgetBaseElement* ele);
 
+	void UpdateQuickSlot();
+
 public:
 	void UpdateSlots();
 	
@@ -78,5 +100,4 @@ public:
 
 	void Close();
 };
-
 

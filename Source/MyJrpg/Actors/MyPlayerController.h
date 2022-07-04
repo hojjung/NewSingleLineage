@@ -58,6 +58,8 @@ protected:
 
 	virtual void Tick(float DeltaSeconds) override;
 
+	void OpenExitPanel();
+
 	void ExitGame();
 
 	void OnPressed();
