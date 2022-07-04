@@ -1,6 +1,14 @@
 #include "WidgetHunger.h"
 
+#include "MyJrpg/WidgetAnimLib.h"
 #include "MyJrpg/Managers/MyGameInstance.h"
+
+void UWidgetHunger::NativePreConstruct()
+{
+	Super::NativePreConstruct();
+
+	ShowNumber(m_bShowNumber);
+}
 
 void UWidgetHunger::NativeOnInitialized()
 {
@@ -17,9 +25,10 @@ void UWidgetHunger::NativeOnInitialized()
 
 void UWidgetHunger::UpdateHunger(float hungerHp)
 {
-	m_TextHunger->SetText(FText::AsNumber((int)hungerHp));
-
+	float OldPercent = m_BarHunger->Percent;
+	
 	float Percent = 0;
+	
 	if(hungerHp > 0.f)
 	{
 		Percent = hungerHp / 100.f;
@@ -33,6 +42,23 @@ void UWidgetHunger::UpdateHunger(float hungerHp)
 	else
 	{
 		SetColorAndOpacity(FLinearColor::White);
+	}
+
+	if(m_TextHunger->IsVisible())
+	{
+		m_TextHunger->SetText(FText::AsNumber((int)hungerHp));
+
+		FLinearColor ColorW;
+		
+		if(OldPercent < Percent)
+		{
+			ColorW =  FLinearColor::Green;
+		}
+		else
+		{
+			ColorW =  FLinearColor::Red;
+		}
+		UWidgetAnimLib::PlayTextAnim(m_TextHunger, ColorW,0.5f);
 	}
 }
 

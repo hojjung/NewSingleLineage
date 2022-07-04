@@ -14,6 +14,7 @@
 #include "Menu/Collection/WidgetCollecPanelParent.h"
 #include "Menu/Dialogue/WidgetLogWindow.h"
 #include "Menu/Enchant/WidgetEnchantBase.h"
+#include "Menu/Equipment/WidgetStatHealth.h"
 #include "Menu/ItemInteract/WidgetItemConvert.h"
 #include "Menu/Pet/WidgetPetPanel.h"
 #include "Menu/Pickpocket/WidgetPickpocketPanel.h"
@@ -55,7 +56,7 @@ protected:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (BindWidget))
 	UAlertInfoWindow* m_AlertInfoWindow;
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (BindWidget))
-	UWidgetLevelHealthInfo* m_LevelHealth;
+	UWidgetStatHealth* m_StatHealth;
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (BindWidget))
 	UWidgetQuickslotBar* m_QuickBar;
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (BindWidget))

@@ -4,38 +4,32 @@
 
 #include "CoreMinimal.h"
 #include "Blueprint/UserWidget.h"
-#include "Components/ProgressBar.h"
-#include "Components/SizeBox.h"
-#include "Components/Slider.h"
-#include "Components/TextBlock.h"
-#include "WidgetHunger.generated.h"
+#include "MyJrpg/Widgets/World/CommonElements/WidgetHunger.h"
+#include "MyJrpg/Widgets/World/Menu/CharacterInfoHUD/WidgetLevelHealthInfo.h"
+#include "WidgetStatHealth.generated.h"
 
 /**
  * 
  */
 UCLASS()
-class MYJRPG_API UWidgetHunger : public UUserWidget
+class MYJRPG_API UWidgetStatHealth : public UUserWidget
 {
 	GENERATED_BODY()
 
 protected:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (BindWidget))
-	UProgressBar* m_BarHunger;
-	
+	UWidgetLevelHealthInfo* m_LevelHealth;
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (BindWidget))
-	UTextBlock* m_TextHunger;
+	USizeBox* m_HungerSize;
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (BindWidget))
+	UWidgetHunger* m_Hunger;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (ExposeOnSpawn))
 	bool m_bShowNumber = true;
-	
+
 protected:
 	virtual void NativePreConstruct() override;
-	
-	virtual void NativeOnInitialized() override;
 
-	void UpdateHunger(float hungerHp);
-	
-public:
-	void ShowNumber(bool b);
-	
+	virtual void NativeOnInitialized() override;
 };
+
 
