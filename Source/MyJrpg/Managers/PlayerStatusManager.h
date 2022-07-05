@@ -25,7 +25,7 @@ protected:
 	
 	DECLARE_MULTICAST_DELEGATE_OneParam(FOnMonsterPawn,AMonsterPawn*);
 	
-	DECLARE_MULTICAST_DELEGATE_OneParam(FOnPlayerPawn,const AMyPlayerPawn*);
+	DECLARE_MULTICAST_DELEGATE_OneParam(FOnPlayerPawn, const FStatGroup&);
 
 	DECLARE_MULTICAST_DELEGATE_OneParam(FOnBuffChanged,UBuff_Base*);
 
@@ -85,6 +85,8 @@ protected:
 
 	FStatGroup m_MultipleStatGroup;
 
+	FStatGroup m_CurrentStat;
+
 protected://버프 아이템은 따로 뭔갈 안가질거임,남는시간?
 	TMap<TSubclassOf<UBuff_Base>,float> m_MapBuffDur;
 	
@@ -117,9 +119,7 @@ public:
 public://quest and special, delegates
 	void OnMonsterKilled(AMonsterPawn* deadMonster);//플레이어가 몬스터 처치시
 
-	void OnAttack(const AMyPlayerPawn* playerPawn);//플레이어가 공격시
-
-	void OnPlHpChanged(const AMyPlayerPawn* playerPawn);//플레이어 피격시
+	void OnPlHpChanged(const FStatGroup& stat);//플레이어 피격시const FStatGroup& stat
 
 	void OnPlTookDmg(float dmg);
 
@@ -179,5 +179,9 @@ public:
 	float GetHungerHP();
 
 	void ResetPlayerStatus();
+	
+	void SubDmgFromHp(float dmg);
+	
+	void AddHp(float dmg);
 };
 

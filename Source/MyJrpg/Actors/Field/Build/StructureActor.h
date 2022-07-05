@@ -39,8 +39,6 @@ protected:
 
 	void OnArrived();
 
-	virtual void BeginPlay() override;
-	
 public:
 	virtual const FBuildDataRow& GetBuildData() const ;
 	virtual void SetBuildData(const FBuildDataRow& data);

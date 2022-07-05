@@ -52,8 +52,6 @@ protected:
 	TScriptInterface<IFocusable> m_FocusedTarget;//TScriptInterface<IInteractable>
 	
 	FSkillTrigger m_OnSkillTrigger;
-	
-	FStatGroup m_StatGroup;
 
 	FName m_TeamID;
 	
@@ -66,6 +64,8 @@ protected:
 	bool m_bCanUseSkill;
 
 	EStanceType m_Stance;
+
+	FStatGroup m_StatGroup;
 	
 protected:
 	virtual void SetIcon();
@@ -87,6 +87,8 @@ protected:
 	virtual UAnimMontage* GetBaseAttackMontage();
 
 	virtual void ShowPopupText(float nbr, ETextType t);
+
+	virtual void SubDmgFromHp(float dmg);
 
 public:
 	virtual void SetEntity(const FName& id, const FNpcUnitEntityRow& unitEntityRow) override;
@@ -148,7 +150,7 @@ public:
 public:
 	FSkillTrigger& GetSkillTriggerDelegate();
 
-	const FStatGroup& GetStat() const;
+	virtual const FStatGroup& GetStat() const;
 
 	virtual bool IsRangeMode();
 

@@ -36,8 +36,6 @@ protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 	UWidgetSpeechBubbleComp* m_SpeechBubbleComp;
 	UPROPERTY()
-	float m_fMaxHp;
-	UPROPERTY()
 	float m_fExp;
 	UPROPERTY()
 	FVector m_SpawnPoint;
@@ -49,6 +47,8 @@ protected:
 	UInventory* m_Inven;
 
 	FName m_TalkID;
+
+	FStatGroup m_StatGroup;
 	
 protected:
 	virtual void BeginPlay() override;
@@ -68,7 +68,7 @@ protected:
 	void OnRequestMoveDone();
 
 	virtual void SetIcon() override;
-	
+
 public:
 	void Speech(FText text);
 
@@ -90,8 +90,6 @@ public:
 
 	UInventory* GetInven();
 	
-	void SetHp(int hp);
-	
 	void SetInven(UInventory* inven);
 	
 	void HideIcon();
@@ -103,6 +101,8 @@ public:
 	virtual bool IsInteractable() override;
 
 	virtual bool IsFocusable() override;
+	
+	void SetHp(int hp);
 };
 
 

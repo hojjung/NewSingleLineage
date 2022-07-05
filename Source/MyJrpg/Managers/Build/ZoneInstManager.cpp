@@ -10,6 +10,7 @@
 void UZoneInstManager::InitZone(const FName& id, const FZoneDataRow& zoneData)
 {
 	FZoneSerialData NewSerialData;
+	
 	NewSerialData.m_AryZoneActorTrans = CreateBuildInst(zoneData.m_SpawnDataNpc);
 	
 	FZoneSerialData& BuildAdded = m_MapBuildInsts.Emplace(id, NewSerialData);
@@ -73,7 +74,7 @@ int UZoneInstManager::SaveActors(const FName& id)
 	*BuildInst = FZoneSerialData();
 	
 	UMyGameInstance::Get->m_SpawnEvent->SaveSpawnEvent(*BuildInst);
-	
+
 	int Index = 0;
 
 	for(TWeakObjectPtr<AMonsterPawn> ActorEle : m_Npc)
@@ -297,6 +298,27 @@ void UZoneInstManager::AddPlayerAllItem(UInventory* inven)
 	for(FItemSpec& ItemToAdd : AryTotalItems)
 	{
 		inven->AddItem(ItemToAdd,false);
+	}
+}
+
+void UZoneInstManager::ResetZone()
+{
+	TArray<FName> AryRemove;
+	
+	AryRemove.Reserve(10);
+	
+	for(const auto& ZoneData : m_MapBuildInsts)
+	{
+		if((!m_PlayerTombZoneID.IsNone() && ZoneData.Key == m_PlayerTombZoneID) || ZoneData.Key == TEXT("PlayerHome"))
+		{
+			continue;
+		}
+		AryRemove.Add(ZoneData.Key);
+	}
+
+	for(FName RemoveKey : AryRemove)
+	{
+		m_MapBuildInsts.Remove(RemoveKey);
 	}
 }
 

@@ -102,8 +102,12 @@ private:
 
 	void TryAttack_External();
 
+private:
+	virtual void SubDmgFromHp(float dmg) override;
 
 public:
+	virtual const FStatGroup& GetStat() const override;
+	
 	void CancelInteract();
 	
 	virtual void SetFocusedTarget(IFocusable* target) override;
@@ -129,6 +133,8 @@ public://Combat
 
 	virtual void PlayTookHitMontage() override;
 
+	virtual bool IsAlive() override;
+	
 public:
 	void SetSkillUsing(bool b);
 

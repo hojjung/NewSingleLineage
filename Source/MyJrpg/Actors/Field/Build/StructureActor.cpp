@@ -78,6 +78,10 @@ void AStructureActor::ConfirmBuild(UInventory* inven)
 	m_IconMeshComp->SetRotationOffset(FRotator(0,45,0));
 	
 	m_IconMeshComp->SetIcon(m_BuildData->m_MapIcon);
+
+	m_IconMeshComp->SetLayerHeight((int)m_BuildData->m_BuildType * 50.f);
+	
+	UMyGameInstance::Get->m_ZoneInst->AddTrackIcon(this);
 }
 
 void AStructureActor::EndPlay(const EEndPlayReason::Type EndPlayReason)
@@ -178,13 +182,6 @@ void AStructureActor::OnInteract()
 void AStructureActor::OnArrived()
 {
 	m_BuildInteract->OnInteract();
-}
-
-void AStructureActor::BeginPlay()
-{
-	Super::BeginPlay();
-
-	UMyGameInstance::Get->m_ZoneInst->AddTrackIcon(this);
 }
 
 FVector AStructureActor::GetNavAgentLocation() const

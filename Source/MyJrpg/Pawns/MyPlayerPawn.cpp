@@ -52,6 +52,8 @@ AMyPlayerPawn::AMyPlayerPawn(const FObjectInitializer& objInit):Super(objInit)
 	m_MinimapIcon = FoundIcon.Object;
 
 	SetAttackRange(250);
+
+	m_IconComp->SetLayerHeight(500.f);
 }
 
 void AMyPlayerPawn::CreateFocusActor()
@@ -94,24 +96,7 @@ void AMyPlayerPawn::SetPlayerEntity()
 	m_AiSensor = NewObject<USensor_Player>(this,USensor_Player::StaticClass());
 	
 	m_AiSensor->Init(this);
-
-	FStatGroup DefaultStat;
-	DefaultStat.m_nAccu = 10;
-	DefaultStat.m_nAvoid = 0;
-	DefaultStat.m_MaxHp = 100;
-	DefaultStat.m_Dmg = 4;
-	DefaultStat.m_AtkPerSec = 0.8f;
-	DefaultStat.m_DmgReduce = 0;
-	DefaultStat.m_CriPer = 0.1f;
-	DefaultStat.m_CriDmg = 1.5f;
-	DefaultStat.m_MoveSpeed = FGlobalVariable::HERO_DEFAULT_SPEED;
 	
-	UMyGameInstance::Get->m_PlayerStatManager->SetBaseStat(DefaultStat);
-	
-	UMyGameInstance::Get->m_PlayerStatManager->UpdateStat();
-	
-	m_StatGroup.m_Hp = m_StatGroup.m_MaxHp;
-
 	SetIcon();
 }
 
@@ -269,6 +254,16 @@ void AMyPlayerPawn::TryAttack_External()
 	SetInteracting(false);
 }
 
+void AMyPlayerPawn::SubDmgFromHp(float dmg)
+{
+	UMyGameInstance::Get->m_PlayerStatManager->SubDmgFromHp(dmg);
+}
+
+const FStatGroup& AMyPlayerPawn::GetStat() const
+{
+	return UMyGameInstance::Get->m_PlayerStatManager->GetStat();
+}
+
 bool AMyPlayerPawn::IsManualMoving()
 {
 	return IsInputMoving();// || m_PFComp->GetStatus()==EPathFollowingStatus::Moving
@@ -324,6 +319,13 @@ void AMyPlayerPawn::PlayTookHitMontage()
 	//not use
 }
 
+bool AMyPlayerPawn::IsAlive()
+{
+	float Hp = UMyGameInstance::Get->m_PlayerStatManager->GetStat().m_Hp;
+	
+	return Hp > 0.f;
+}
+
 void AMyPlayerPawn::SetSkillUsing(bool b)
 {
 	m_bIsSkillUsing = b;
@@ -346,13 +348,7 @@ bool AMyPlayerPawn::CanMoveInSkill()
 
 void AMyPlayerPawn::UpdateStat(const FStatGroup& stat_group)
 {
-	float HpPercent = GetHpPercent();
-	
-	m_StatGroup = stat_group;
-
-	m_StatGroup.m_Hp = m_StatGroup.m_MaxHp * HpPercent;
-
-	m_Movement->MaxSpeed = m_StatGroup.m_MoveSpeed;
+	m_Movement->MaxSpeed = stat_group.m_MoveSpeed;
 }
 
 void AMyPlayerPawn::DealBaseMeleeAttack()
@@ -369,9 +365,7 @@ void AMyPlayerPawn::DealBaseMeleeAttack()
 		return ;
 	}
 		
-	UMyGameInstance::Get->m_PlayerStatManager->OnAttack(this);
-
-	Pawn->TakeDmg(m_StatGroup.m_Dmg,this);
+	Pawn->TakeDmg(GetStat().m_Dmg,this);
 
 	UMyGameInstance::Get->m_EquipManager->ReduceDurability(EEquipSlotType::Weapon,1);
 }
@@ -535,8 +529,6 @@ bool AMyPlayerPawn::TakeDmg(float amount, ACombatUnitPawn* attacker)
 		return false;
 	}
 
-	UMyGameInstance::Get->m_PlayerStatManager->OnPlHpChanged(this);
-
 	m_LastAttacker = attacker;
 
 	UMyGameInstance::Get->m_EquipManager->TakeDurDmg(1);
@@ -548,11 +540,7 @@ void AMyPlayerPawn::TakeHeal(float v)
 {
 	UMyLib::GetPlayerCon()->ShowInGameWorldText(v,this,ETextType::PlayerTookHeal);
 
-	m_StatGroup.m_Hp += v;
-
-	m_StatGroup.m_Hp = FMath::Min(m_StatGroup.m_Hp,m_StatGroup.m_MaxHp);
-
-	UMyGameInstance::Get->m_PlayerStatManager->OnPlHpChanged(this);
+	UMyGameInstance::Get->m_PlayerStatManager->AddHp(v);
 }
 
 void AMyPlayerPawn::TakeInvincible(float d)

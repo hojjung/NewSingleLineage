@@ -100,7 +100,13 @@ void AMonsterPawn::BeginPlay()
 }
 void AMonsterPawn::SetEntity(const FName& id,const FNpcUnitEntityRow& unitEntityRow)
 {
+	m_StatGroup = unitEntityRow.m_StatTable;
+	
+	m_StatGroup.m_Hp = m_StatGroup.m_MaxHp;
+	
 	m_fAttackRange = unitEntityRow.m_fAtkRange;
+
+	m_Movement->MaxSpeed = m_StatGroup.m_MoveSpeed;
 	
 	Super::SetEntity(id,unitEntityRow);
 
@@ -117,8 +123,6 @@ void AMonsterPawn::SetEntity(const FName& id,const FNpcUnitEntityRow& unitEntity
 	m_SpawnPoint = GetActorLocation();
 
 	m_SpawnRot = GetActorRotation();
-
-	m_fMaxHp = m_StatGroup.m_MaxHp;
 
 	m_fExp = unitEntityRow.m_fExp;
 
@@ -207,13 +211,6 @@ const FName& AMonsterPawn::GetTalkID() const
 UInventory* AMonsterPawn::GetInven()
 {
 	return m_Inven;
-}
-
-void AMonsterPawn::SetHp(int hp)
-{
-	m_StatGroup.m_Hp = hp;
-	
-	m_PawnInfo->SetPawnInfo(this);
 }
 
 void AMonsterPawn::SetInven(UInventory* inven)
@@ -378,6 +375,13 @@ bool AMonsterPawn::IsInteractable()
 bool AMonsterPawn::IsFocusable()
 {
 	return IsInteractable();
+}
+
+void AMonsterPawn::SetHp(int hp)
+{
+	m_StatGroup.m_Hp = hp;
+	
+	m_PawnInfo->SetPawnInfo(this);
 }
 
 void AMonsterPawn::OnRequestMoveDone()

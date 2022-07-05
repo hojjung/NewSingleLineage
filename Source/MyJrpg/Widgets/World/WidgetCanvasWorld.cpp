@@ -37,13 +37,9 @@ void UWidgetCanvasWorld::NativeOnInitialized()
 
 	m_QuestAcceptPanel->SetVisibility(ESlateVisibility::Collapsed);
 	//Bind Event
-	m_BtnCollec->OnClicked.AddDynamic(this,&UWidgetCanvasWorld::OpenItemCollec);
-	
 	m_BtnMenu->OnClicked.AddDynamic(this,&UWidgetCanvasWorld::ToggleMenu);
 
 	m_BtnEquipInven->OnClicked.AddDynamic(this,&UWidgetCanvasWorld::OpenInventory);
-
-	m_BtnSkill->OnClicked.AddDynamic(this,&UWidgetCanvasWorld::OpenSkill);
 
 	m_BtnCraft->OnClicked.AddDynamic(this,&UWidgetCanvasWorld::OpenCraft);
 
@@ -58,12 +54,6 @@ void UWidgetCanvasWorld::NativeOnInitialized()
 	UMyGameInstance::Get->m_PlayerStatManager->m_OnLevelChanged.AddUObject(this, &UWidgetCanvasWorld::ShowLevelUpWindow);
 
 	UMyGameInstance::Get->m_PlayerStatManager->m_OnPlayerKilled.AddUObject(this, &UWidgetCanvasWorld::ShowGameOverWindow);
-
-	m_BtnSkin->OnClicked.AddDynamic(this,&UWidgetCanvasWorld::OpenSkin);
-	
-	m_BtnPet->OnClicked.AddDynamic(this,&UWidgetCanvasWorld::OpenPet);
-
-	
 }
 
 void UWidgetCanvasWorld::ToggleMenu()

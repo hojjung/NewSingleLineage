@@ -39,4 +39,6 @@ public:
 	UStaticMeshComponent* GetMeshComp();
 
 	void SetIcon(UTexture2D* wantIcon);
+
+	void SetLayerHeight(float h);
 };

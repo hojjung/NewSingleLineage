@@ -29,7 +29,5 @@ protected:
 
 	void UpdateLevel();
 
-	void UpdateHp(const AMyPlayerPawn* pl);
-
-	
+	void UpdateHp(const FStatGroup& stat);
 };

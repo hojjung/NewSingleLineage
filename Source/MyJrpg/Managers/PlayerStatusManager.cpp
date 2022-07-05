@@ -1,6 +1,7 @@
 #include "PlayerStatusManager.h"
 
 #include "MyAssetManager.h"
+#include "MyGameInstance.h"
 #include "MyJrpg/MyLib.h"
 #include "MyJrpg/DataTables/BuffTable.h"
 #include "MyJrpg/Items/Buff/Buff_Base.h"
@@ -35,6 +36,19 @@ void UPlayerStatusManager::Init()
 	
 	m_BaseBodyBlack = TSoftObjectPtr<UHumanAsset>(FSoftObjectPath(TEXT("HumanAsset'/Game/01_DataAssets/Humans/DefaultBlack.DefaultBlack'")));
 
+	FStatGroup DefaultStat;
+	DefaultStat.m_nAccu = 10;
+	DefaultStat.m_nAvoid = 0;
+	DefaultStat.m_MaxHp = 100;
+	DefaultStat.m_Dmg = 4;
+	DefaultStat.m_AtkPerSec = 0.8f;
+	DefaultStat.m_DmgReduce = 0;
+	DefaultStat.m_CriPer = 0.1f;
+	DefaultStat.m_CriDmg = 1.5f;
+	DefaultStat.m_MoveSpeed = FGlobalVariable::HERO_DEFAULT_SPEED;
+	
+	SetBaseStat(DefaultStat);
+	
 	UpdateStat();
 }
 
@@ -103,13 +117,25 @@ void UPlayerStatusManager::Tick(float deltaTime)
 
 void UPlayerStatusManager::UpdateStat()
 {
-	FStatGroup ResultStatGroup = (m_BaseStatGroup + m_AddStatGroup) * m_MultipleStatGroup;
+	float CHp = m_CurrentStat.m_Hp;
+	
+	m_CurrentStat = (m_BaseStatGroup + m_AddStatGroup) * m_MultipleStatGroup;
+
+	if(m_CurrentStat.m_MaxHp < CHp)
+	{
+		m_CurrentStat.m_Hp = m_CurrentStat.m_MaxHp;
+	}
+	else
+	{
+		m_CurrentStat.m_Hp = CHp;
+	}
+	m_OnPlayerHpChanged.Broadcast(m_CurrentStat);
 
 	AMyPlayerPawn* Pl = UMyLib::GetPlayer();
 
 	if (Pl)
 	{
-		Pl->UpdateStat(ResultStatGroup);
+		Pl->UpdateStat(m_CurrentStat);
 	}
 
 	m_OnStatChanged.Broadcast();
@@ -138,14 +164,9 @@ void UPlayerStatusManager::OnMonsterKilled(AMonsterPawn* deadMonster)
 	m_OnMonsterKilled.Broadcast(deadMonster);
 }
 
-void UPlayerStatusManager::OnAttack(const AMyPlayerPawn* playerPawn)
+void UPlayerStatusManager::OnPlHpChanged(const FStatGroup& stat)
 {
-	m_OnPlayerAttack.Broadcast(playerPawn);
-}
-
-void UPlayerStatusManager::OnPlHpChanged(const AMyPlayerPawn* playerPawn)
-{
-	m_OnPlayerHpChanged.Broadcast(playerPawn);
+	m_OnPlayerHpChanged.Broadcast(stat);
 }
 
 void UPlayerStatusManager::OnPlTookDmg(float dmg)
@@ -307,7 +328,7 @@ void UPlayerStatusManager::SubMultiAtkDmg(float v)
 
 const FStatGroup& UPlayerStatusManager::GetStat() const
 {
-	return UMyLib::GetPlayer()->GetStat();
+	return m_CurrentStat;
 }
 
 float UPlayerStatusManager::GetHpPer() const
@@ -352,6 +373,29 @@ float UPlayerStatusManager::GetHungerHP()
 
 void UPlayerStatusManager::ResetPlayerStatus()
 {
-	
 	m_fHunger = 100;
+
+	UpdateStat();
+	
+	m_CurrentStat.m_Hp = m_CurrentStat.m_MaxHp;
+
+	UMyGameInstance::Get->m_ZoneInst->ResetZone();
+}
+
+void UPlayerStatusManager::SubDmgFromHp(float dmg)
+{
+	m_CurrentStat.m_Hp -= dmg;
+
+	m_CurrentStat.m_Hp = FMath::Max(GetStat().m_Hp, 0.f);
+
+	m_OnPlayerHpChanged.Broadcast(GetStat());
+}
+
+void UPlayerStatusManager::AddHp(float dmg)
+{
+	m_CurrentStat.m_Hp += dmg;
+
+	m_CurrentStat.m_Hp = FMath::Min(GetStat().m_Hp,GetStat().m_MaxHp);
+
+	m_OnPlayerHpChanged.Broadcast(GetStat());
 }

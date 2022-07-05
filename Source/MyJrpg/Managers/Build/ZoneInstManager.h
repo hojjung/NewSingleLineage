@@ -107,6 +107,7 @@ protected:
 	FZoneSerialData& GetCurentZoneSerialData();
 
 	void AddPlayerAllItem(UInventory* inven);
+
 	
 public:
 	void SpawnZone(const FName& id, const FZoneDataRow& zoneData);
@@ -117,6 +118,8 @@ public:
 
 	AMonsterPawn* SpawnAdditionalNpcActor(const FUnitDataHandle& data);
 
+	void ResetZone();
+	
 public:
 	void AddFocusActor(UObject* want);
 	

@@ -93,3 +93,8 @@ void UMinimapIconComp::SetIcon(UTexture2D* wantIcon)
 	
 	m_IconMeshComp->SetMaterial(0, MatDynamic);
 }
+
+void UMinimapIconComp::SetLayerHeight(float h)
+{
+	m_IconMeshComp->SetRelativeLocation(FVector(0,0,1800.f - h));
+}

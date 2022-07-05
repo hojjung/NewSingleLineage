@@ -108,14 +108,9 @@ void ACombatUnitPawn::SetEntity(const FName& id, const FNpcUnitEntityRow& unitEn
 		m_AiSensor->Init(this);
 	}
 
-	m_StatGroup = unitEntityRow.m_StatTable;
-	m_StatGroup.m_Hp = m_StatGroup.m_MaxHp;
-
 	float Height = GetCapsule()->Bounds.BoxExtent.Z * 0.5f;
 	
 	m_BulletTarget->SetRelativeLocation(FVector(0,0,Height));
-
-	m_Movement->MaxSpeed = m_StatGroup.m_MoveSpeed;
 
 	m_TeamID = unitEntityRow.m_FriendTeamID;
 
@@ -187,11 +182,6 @@ void ACombatUnitPawn::PlayTookHitMontage()
 	
 		m_fHitAnimCD = FMath::RandRange(5.5f, 25.f);
 	}
-}
-
-bool ACombatUnitPawn::IsAlive()
-{
-	return m_StatGroup.m_Hp>0;
 }
 
 void ACombatUnitPawn::SetAttackRange(float range)
@@ -422,7 +412,7 @@ bool ACombatUnitPawn::TakeDmg(float amount, ACombatUnitPawn* attacker)
 	}
 	ShowPopupText(amount,TextType);
 	
-	m_StatGroup.m_Hp -= ReducDmg;
+	SubDmgFromHp(ReducDmg);
 
 	if(!IsAlive())
 	{
@@ -452,7 +442,7 @@ void ACombatUnitPawn::OnNotifyTrigger(const FName& name)
 			return;
 		}
 
-		Pawn->TakeDmg(m_StatGroup.m_Dmg,this);
+		Pawn->TakeDmg(GetStat().m_Dmg,this);
 	}
 	else
 	{
@@ -462,10 +452,18 @@ void ACombatUnitPawn::OnNotifyTrigger(const FName& name)
 
 float ACombatUnitPawn::GetHpPercent() const
 {
-	return  (float)m_StatGroup.m_Hp / (float)m_StatGroup.m_MaxHp;
+	return  (float)GetStat().m_Hp / (float)GetStat().m_MaxHp;
 }
 
 int ACombatUnitPawn::GetHp()
 {
-	return  m_StatGroup.m_Hp;
+	return  GetStat().m_Hp;
+}
+void ACombatUnitPawn::SubDmgFromHp(float dmg)
+{
+	m_StatGroup.m_Hp -= dmg;
+}
+bool ACombatUnitPawn::IsAlive()
+{
+	return m_StatGroup.m_Hp > 0;
 }
