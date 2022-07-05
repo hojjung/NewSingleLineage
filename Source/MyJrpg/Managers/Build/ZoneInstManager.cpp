@@ -17,6 +17,24 @@ void UZoneInstManager::InitZone(const FName& id, const FZoneDataRow& zoneData)
 	SpawnActors(BuildAdded, true);
 }
 
+void UZoneInstManager::StartEventSpawn(bool isInit, const FZoneDataRow& zoneData, const FZoneSerialData& data)
+{
+	if(zoneData.m_SpawnEventID.IsNone())
+	{
+		return;
+	}
+	const FSpawnDataRow& SpawnDataRow = *USpawnEventTable::GetSpawnEventTable->FindRow<FSpawnDataRow>(zoneData.m_SpawnEventID,"");
+	
+	if(isInit)
+	{
+		UMyGameInstance::Get->m_SpawnEvent->StartSpawn(SpawnDataRow);
+	}
+	else
+	{
+		UMyGameInstance::Get->m_SpawnEvent->StartSpawn(SpawnDataRow, data.m_fSpawnEventTimer, data.m_nSpawnEventIndex);
+	}
+}
+
 void UZoneInstManager::SpawnZone(const FName& id, const FZoneDataRow& zoneData)
 {
 	m_Npc.Reset();
@@ -39,9 +57,13 @@ void UZoneInstManager::SpawnZone(const FName& id, const FZoneDataRow& zoneData)
 	if (!BuildInst)
 	{
 		InitZone(id, zoneData);
+
+		StartEventSpawn(true, zoneData, *BuildInst);
 		return ;
 	}
 	SpawnActors(*BuildInst, false);
+
+	StartEventSpawn(false, zoneData, *BuildInst);
 }
 
 int UZoneInstManager::SaveActors(const FName& id)
@@ -49,6 +71,8 @@ int UZoneInstManager::SaveActors(const FName& id)
 	FZoneSerialData* BuildInst = m_MapBuildInsts.Find(id);
 
 	*BuildInst = FZoneSerialData();
+	
+	UMyGameInstance::Get->m_SpawnEvent->SaveSpawnEvent(*BuildInst);
 	
 	int Index = 0;
 
@@ -144,6 +168,29 @@ void UZoneInstManager::AddBuildActor(AStructureActor* buildActor)
 	{
 		UMyGameInstance::Get->m_ZoneInst->AddFocusActor(buildActor);
 	}
+}
+
+AMonsterPawn* UZoneInstManager::SpawnAdditionalNpcActor(const FUnitDataHandle& data)
+{
+	FVector PlPos = UMyLib::GetPlayer()->GetActorLocation();
+
+	FNavLocation ResultPos;
+	
+	UMyLib::GetNavSys()->GetRandomPointInNavigableRadius(PlPos, 2400.f, ResultPos);
+
+	FZoneSerialData& ZoneSerialData = GetCurentZoneSerialData();
+
+	FZoneActorTransform SpawnTrans;
+	SpawnTrans.m_nType = EActorType::Npc;
+	SpawnTrans.m_IDEntity = data.RowName;
+	SpawnTrans.m_SpawnPosition = ResultPos;
+	SpawnTrans.m_SpawnRotation = FRotator(0,FMath::RandRange(0, 360),0);
+
+	ZoneSerialData.m_AryZoneActorTrans.Add(SpawnTrans);
+	
+	int LastIndex = ZoneSerialData.m_AryZoneActorTrans.Num() - 1;
+	
+	return SpawnNpcActor(SpawnTrans,LastIndex, ZoneSerialData);
 }
 
 void UZoneInstManager::SpawnActors(const FZoneSerialData& zoneInst, bool isInit)

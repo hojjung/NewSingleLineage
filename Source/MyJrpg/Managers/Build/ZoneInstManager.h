@@ -6,6 +6,7 @@
 #include "MyJrpg/Actors/MinimapCam.h"
 #include "MyJrpg/Actors/Field/Build/StructureActor.h"
 #include "MyJrpg/Actors/Field/Gather/TreeBase.h"
+#include "MyJrpg/DataTables/SpawnEventTable.h"
 #include "MyJrpg/Pawns/MonsterPawn.h"
 #include "UObject/NoExportTypes.h"
 #include "ZoneInstManager.generated.h"
@@ -56,6 +57,10 @@ public:
 	TMap<int,int> m_MapGatherHp;
 
 	TMap<int,TStrongObjectPtr<UInventory>> m_MapItemHolders;
+
+	int m_nSpawnEventIndex;
+
+	float m_fSpawnEventTimer;
 };
 
 UCLASS()
@@ -94,6 +99,8 @@ protected:
 	TArray<FZoneActorTransform> CreateBuildInst(const UNPCPaletteDataAsset* npcAssets);
 	
 	void InitZone(const FName& id, const FZoneDataRow& zoneData);
+	
+	void StartEventSpawn(bool isInit, const FZoneDataRow& zoneData, const FZoneSerialData& data);
 
 	void SpawnActors(const FZoneSerialData& zoneInst, bool isInit);
 
@@ -107,6 +114,8 @@ public:
 	int SaveActors(const FName& id);
 
 	void AddBuildActor(AStructureActor* buildActor);
+
+	AMonsterPawn* SpawnAdditionalNpcActor(const FUnitDataHandle& data);
 
 public:
 	void AddFocusActor(UObject* want);
@@ -124,6 +133,7 @@ public:
 	void GetNearNpcs(const ABaseUnitPawn* caller, TArray<ACombatUnitPawn*>& outAry, float range,const TSet<ACombatUnitPawn*>* ignore = nullptr);
 
 	void AddTrackIcon(IFocusable* icon);
+	
 	void RemovePlayerTomb();
 
 	void SaveActorsOnPlayerDead(const FName& id);

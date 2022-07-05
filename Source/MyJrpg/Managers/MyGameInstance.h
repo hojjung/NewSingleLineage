@@ -16,6 +16,7 @@
 #include "QuickSlotManager.h"
 #include "ShopManager.h"
 #include "SkillManager.h"
+#include "SpawnEventManager.h"
 #include "ZoneMoveManager.h"
 #include "Build/ZoneInstManager.h"
 #include "Engine/GameInstance.h"
@@ -96,6 +97,8 @@ public:
 	UZoneInstManager* m_ZoneInst;
 	UPROPERTY()
 	UZoneMoveManager* m_ZoneMove;
+	UPROPERTY()
+	USpawnEventManager* m_SpawnEvent;
 public:
 	TWeakObjectPtr<AMyPlayerPawn> m_Player;
 	

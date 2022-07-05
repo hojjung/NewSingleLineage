@@ -94,6 +94,8 @@ void UMyGameInstance::Init()
 	m_ZoneInst = NewObject<UZoneInstManager>(this);
 
 	m_ZoneMove = NewObject<UZoneMoveManager>(this);
+	
+	m_SpawnEvent = NewObject<USpawnEventManager>(this);
 
 	m_BuildManager->Init();
 	m_ItemCollecManager->Init();
@@ -161,6 +163,7 @@ void UMyGameInstance::Tick(float deltaTime)
 	m_ChatManager->Tick(deltaTime);
 	m_SkillAuto->Tick(deltaTime);
 	m_ItemConvertManager->Tick(deltaTime);
+	m_SpawnEvent->Tick(deltaTime);
 }
 
 void UMyGameInstance::AddStorage(UInventory* inven)

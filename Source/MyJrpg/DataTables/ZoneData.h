@@ -42,6 +42,8 @@ public:
 	UPROPERTY(EditDefaultsOnly,BlueprintReadOnly)
 	FName m_MapName;
 	UPROPERTY(EditDefaultsOnly,BlueprintReadOnly)
+	FName m_SpawnEventID;
+	UPROPERTY(EditDefaultsOnly,BlueprintReadOnly)
 	UNPCPaletteDataAsset* m_SpawnDataNpc;
 	UPROPERTY(EditDefaultsOnly,BlueprintReadOnly)
 	int m_nLevelMob = 1;

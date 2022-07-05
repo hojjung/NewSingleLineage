@@ -38,12 +38,12 @@ void FMyJrpgEditorModule::StartupModule()
 {
 	FPropertyEditorModule& PropertyModule = FModuleManager::LoadModuleChecked<FPropertyEditorModule>("PropertyEditor");
 	
-	PropertyModule.RegisterCustomPropertyTypeLayout("MonsterUnitEntityRowHandle", FOnGetPropertyTypeCustomizationInstance::CreateStatic(&FDataTableRowHandleCustom::MakeInstance));
 	PropertyModule.RegisterCustomPropertyTypeLayout("ItemDataHandle", FOnGetPropertyTypeCustomizationInstance::CreateStatic(&FDataTableRowHandleCustom::MakeInstance));
 	PropertyModule.RegisterCustomPropertyTypeLayout("DropDataRowHandle", FOnGetPropertyTypeCustomizationInstance::CreateStatic(&FDataTableRowHandleCustom::MakeInstance));
 	PropertyModule.RegisterCustomPropertyTypeLayout("OptionDataHandle", FOnGetPropertyTypeCustomizationInstance::CreateStatic(&FDataTableRowHandleCustom::MakeInstance));
 	PropertyModule.RegisterCustomPropertyTypeLayout("ColorDataHandle", FOnGetPropertyTypeCustomizationInstance::CreateStatic(&FDataTableRowHandleCustom::MakeInstance));
 	PropertyModule.RegisterCustomPropertyTypeLayout("CurrencyDataHandle", FOnGetPropertyTypeCustomizationInstance::CreateStatic(&FDataTableRowHandleCustom::MakeInstance));
+	PropertyModule.RegisterCustomPropertyTypeLayout("UnitDataHandle", FOnGetPropertyTypeCustomizationInstance::CreateStatic(&FDataTableRowHandleCustom::MakeInstance));
 
 
 	m_OnDataTableChanged = MakeShared<OnDataTableChanged>();
@@ -61,12 +61,12 @@ void FMyJrpgEditorModule::ShutdownModule()
 {
 	FPropertyEditorModule& PropertyModule = FModuleManager::LoadModuleChecked<FPropertyEditorModule>("PropertyEditor");
 	
-	PropertyModule.UnregisterCustomPropertyTypeLayout("MonsterUnitEntityRowHandle");
 	PropertyModule.UnregisterCustomPropertyTypeLayout("ItemDataHandle");
 	PropertyModule.UnregisterCustomPropertyTypeLayout("DropDataRowHandle");
 	PropertyModule.UnregisterCustomPropertyTypeLayout("OptionDataHandle");
 	PropertyModule.UnregisterCustomPropertyTypeLayout("ColorDataHandle");
 	PropertyModule.UnregisterCustomPropertyTypeLayout("CurrencyDataHandle");
+	PropertyModule.UnregisterCustomPropertyTypeLayout("UnitDataHandle");
 
 	PropertyModule.NotifyCustomizationModuleChanged();
 }
