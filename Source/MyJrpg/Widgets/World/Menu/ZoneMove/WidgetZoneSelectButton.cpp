@@ -186,18 +186,6 @@ void UWidgetZoneSelectButton::OnRun()
 	OnClose();
 }
 
-void UWidgetZoneSelectButton::GetRunStaminaCostTime(int& staminaCost, float& timeSpan)
-{
-	staminaCost = m_fDist / 30.f; 
-
-	timeSpan = 1.f;
-}
-
-void UWidgetZoneSelectButton::GetWalkTime(float& timeSpan)
-{
-	timeSpan = m_fDist * 3.5f;
-}
-
 void UWidgetZoneSelectButton::UpdateBtnText()
 {
 	if(UMyGameInstance::Get->m_ZoneMove->IsZoneAlreadyIn(m_ZoneData->m_RowKey))
@@ -228,9 +216,9 @@ void UWidgetZoneSelectButton::UpdateBtnText()
 
 	m_TextRunTimeSpan->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
 	
-	GetRunStaminaCostTime(m_RunCost, m_fRunTime);
+	UMyGameInstance::Get->m_ZoneMove->GetRunStaminaCostTime(m_fDist,m_RunCost, m_fRunTime);
 
-	GetWalkTime(m_fWalkTime);
+	m_fWalkTime = UMyGameInstance::Get->m_ZoneMove->GetWalkTime(m_fDist);
 
 	m_TextRunCost->SetText(FText::AsNumber(m_RunCost));
 

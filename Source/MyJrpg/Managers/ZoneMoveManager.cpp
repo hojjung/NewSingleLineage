@@ -82,6 +82,17 @@ float UZoneMoveManager::GetDist(FName dst)
 	return Dist;
 }
 
+float UZoneMoveManager::GetDist(FVector2D loc)
+{
+	FVector2D SrcPos = loc;
+	
+	FVector2D DstPos = m_MapZoneBtns[m_DestZoneID]->GetPos();
+	
+	float Dist = FVector2D::Distance(DstPos, SrcPos);
+
+	return Dist;
+}
+
 bool UZoneMoveManager::IsZoneAlreadyIn(FName dst)
 {
 	return m_CurrentID == dst;
@@ -113,6 +124,13 @@ FVector2D UZoneMoveManager::GetPlayerIconPos()
 	FVector2D DirPos = (DstPos - SrcPos) * Percent; 
 		
 	return SrcPos + DirPos;
+}
+
+FVector2D UZoneMoveManager::GetDestPos()
+{
+	FVector2D DstPos = m_MapZoneBtns[m_DestZoneID]->GetPos();
+
+	return DstPos;
 }
 
 float UZoneMoveManager::GetEulerAngle(const FName& dst)
@@ -152,4 +170,26 @@ bool UZoneMoveManager::IsMoving()
 bool UZoneMoveManager::IsRunning()
 {
 	return m_bIsRunning;
+}
+
+float UZoneMoveManager::GetRemainTime()
+{
+	return m_fMaxDuration - m_fRemainDuration;
+}
+
+void UZoneMoveManager::GetRunStaminaCostTime(const float& distIn, int& outRunCost, float& outRunTime)
+{
+	outRunCost = distIn / 25.f; 
+
+	outRunTime = distIn / 30.f;
+}
+
+float UZoneMoveManager::GetWalkTime(const float& distIn)
+{
+	return distIn * 3.5f;
+}
+
+FName UZoneMoveManager::GetDestZoneID()
+{
+	return m_DestZoneID;
 }

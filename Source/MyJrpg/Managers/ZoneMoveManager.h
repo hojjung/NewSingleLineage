@@ -62,16 +62,28 @@ public:
 	float GetMovePercent();
 
 	float GetDist(FName dst);
+
+	float GetDist(FVector2D loc);
 	
 	bool IsZoneAlreadyIn(FName dst);
 	
 	FVector2D GetBarPos(const FName& dst);
 
 	FVector2D GetPlayerIconPos();
+
+	FVector2D GetDestPos();
 	
 	float GetEulerAngle(const FName& dst);
 
 	bool IsMoving();
 
 	bool IsRunning();
+
+	float GetRemainTime();
+
+	void GetRunStaminaCostTime(const float& distIn, int& outRunCost, float& outRunTime);
+
+	float GetWalkTime(const float& distIn);
+
+	FName GetDestZoneID();
 };

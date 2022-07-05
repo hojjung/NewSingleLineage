@@ -77,10 +77,6 @@ protected:
 	
 	void SetPlayerHome();
 
-	void GetRunStaminaCostTime(int& staminaCost, float& timeSpan);
-
-	void GetWalkTime(float& timeSpan);
-
 	void UpdateBtnText();
 	
 public:

@@ -40,13 +40,19 @@ void UWidgetMapPanel::NativeOnInitialized()
 
 	m_MoveBar->SetVisibility(ESlateVisibility::Collapsed);
 
+	m_BtnRun->OnClicked.AddDynamic(this, &UWidgetMapPanel::OnRunStart);
+
 	UMyGameInstance::Get->m_ZoneMove->m_OnMoveStart.AddUObject(this, &UWidgetMapPanel::SetMoveBar);
+	UMyGameInstance::Get->m_ZoneMove->m_OnMoveStart.AddUObject(this, &UWidgetMapPanel::OnWalkStart);
 	
 	UMyGameInstance::Get->m_ZoneMove->m_OnMoveTick.AddUObject(this, &UWidgetMapPanel::OnMove);
+	UMyGameInstance::Get->m_ZoneMove->m_OnMoveTick.AddUObject(this, &UWidgetMapPanel::OnWalkTick);
 
 	UMyGameInstance::Get->m_ZoneMove->m_OnMoveEnd.AddUObject(this, &UWidgetMapPanel::OnMoveEnd);
 
 	OnMove();
+	
+	m_BtnRun->SetVisibility(ESlateVisibility::Collapsed);
 }
 
 void UWidgetMapPanel::OpenItemInfoData(const FItemDataRow& item_data_row)
@@ -82,6 +88,47 @@ FReply UWidgetMapPanel::NativeOnTouchEnded(const FGeometry& InGeometry, const FP
 	return FReply::Handled();
 }
 
+void UWidgetMapPanel::OnWalkStart(const FName& dst, float dist)
+{
+	if(UMyGameInstance::Get->m_ZoneMove->IsRunning())
+	{
+		return;
+	}
+	m_BtnRun->SetVisibility(ESlateVisibility::Visible);
+	
+	FVector2D DestPos = UMyGameInstance::Get->m_ZoneMove->GetDestPos();
+
+	Cast<UCanvasPanelSlot>(m_BtnRun->Slot)->SetPosition(DestPos);
+}
+
+void UWidgetMapPanel::OnWalkTick()
+{
+	if(UMyGameInstance::Get->m_ZoneMove->IsRunning())
+	{
+		return;
+	}
+
+	FVector2D PlDest = Cast<UCanvasPanelSlot>(m_PlayerIcon->Slot)->GetPosition();
+
+	float Dist = UMyGameInstance::Get->m_ZoneMove->GetDist(PlDest);
+	
+	int Cost = 0;
+	
+	float Time = 0;
+	
+	UMyGameInstance::Get->m_ZoneMove->GetRunStaminaCostTime(Dist, Cost, Time);
+
+	m_TextRunCost->SetText(FText::AsNumber(Cost));
+
+	const FString& CultName = FInternationalization::Get().GetCurrentCulture().Get().GetName();
+	
+	FCulturePtr Culture = FInternationalization::Get().GetCulture(CultName);
+	
+	FTimespan Run(0,0,Time);
+	
+	m_TextRunTimeSpan->SetText(FText::AsTimespan(Run, Culture));
+}
+
 void UWidgetMapPanel::OnOpenInven()
 {
 	m_InvenEquip->OpenPanel();
@@ -90,6 +137,25 @@ void UWidgetMapPanel::OnOpenInven()
 void UWidgetMapPanel::OnOpenCraft()
 {
 	m_CraftPanel->OpenPanel();
+}
+
+void UWidgetMapPanel::OnRunStart()
+{
+	m_BtnRun->SetVisibility(ESlateVisibility::Collapsed);
+	
+	FVector2D PlDest = Cast<UCanvasPanelSlot>(m_PlayerIcon->Slot)->GetPosition();
+	
+	int Cost = 0;
+	
+	float Time = 0;
+
+	FName Dst = UMyGameInstance::Get->m_ZoneMove->GetDestZoneID();
+
+	float Dist = UMyGameInstance::Get->m_ZoneMove->GetDist(PlDest);
+	
+	UMyGameInstance::Get->m_ZoneMove->GetRunStaminaCostTime(Dist, Cost, Time);
+	
+	UMyGameInstance::Get->m_ZoneMove->StartMove(true, Time, Dst);
 }
 
 void UWidgetMapPanel::SetMoveBar(const FName& dst, float dist)
@@ -119,6 +185,8 @@ void UWidgetMapPanel::OnMove()
 void UWidgetMapPanel::OnMoveEnd()
 {
 	m_MoveBar->SetVisibility(ESlateVisibility::Collapsed);
+
+	m_BtnRun->SetVisibility(ESlateVisibility::Collapsed);
 }
 
 FReply UWidgetMapPanel::NativeOnTouchMoved(const FGeometry& InGeometry, const FPointerEvent& InGestureEvent)

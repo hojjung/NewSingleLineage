@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "WidgetMapBtn.h"
+#include "WidgetMapPlayerIcon.h"
 #include "Blueprint/UserWidget.h"
 #include "Components/CanvasPanel.h"
 #include "MyJrpg/Widgets/World/Menu/CharacterInfoHUD/AlertInfoWindow.h"
@@ -42,7 +43,13 @@ protected:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (BindWidget))
 	UProgressBar* m_MoveBar;
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (BindWidget))
-	UImage* m_PlayerIcon;
+	UWidgetMapPlayerIcon* m_PlayerIcon;
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (BindWidget))
+	UButton* m_BtnRun;
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (BindWidget))
+	UTextBlock* m_TextRunCost;
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (BindWidget))
+	UTextBlock* m_TextRunTimeSpan;
 	
 public:
 	virtual void NativeOnInitialized() override;
@@ -60,11 +67,17 @@ protected:
 
 	virtual FReply NativeOnTouchEnded(const FGeometry& InGeometry, const FPointerEvent& InGestureEvent) override;
 
+	void OnWalkStart(const FName& dst, float dist);
+
+	void OnWalkTick();
+
 public:
 	UFUNCTION()
 	void OnOpenInven();
 	UFUNCTION()
 	void OnOpenCraft();
+	UFUNCTION()
+	void OnRunStart();
 
 	void SetMoveBar(const FName& dst, float dist);
 
