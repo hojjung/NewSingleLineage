@@ -73,6 +73,7 @@ void FNPCPaletteEdMode::Exit()
 	ClearAssetsToPlace();
 
 	// Call parent implementation
+	m_CurrentAsset = nullptr;
 	FEdMode::Exit();
 }
 
@@ -267,9 +268,9 @@ void FNPCPaletteEdMode::OnSuccessActorPlaced(const FNPCPaletteItem& currentItem,
 
 	GizmoAcotr->m_RowID = currentItem.m_RowID;
 
-	GizmoAcotr->SetTextIcon(GetAssetName(currentItem.m_SelectedEntityRow), GetAssetIcon(currentItem.m_SelectedEntityRow));
-
 	GizmoAcotr->m_CurrentNPC = currentItem;
+	
+	GizmoAcotr->SetTextIcon(GetAssetName(currentItem.m_SelectedEntityRow), GetAssetIcon(currentItem.m_SelectedEntityRow));
 
 	m_MyPlacedActors.Add(GizmoAcotr);
 }
@@ -654,8 +655,36 @@ bool FNPCPaletteEdMode::IsCompatibleWith(FEditorModeID OtherModeID) const
 		OtherModeID == FNPCPaletteEdMode::EM_NPCPaletteEdModeId;
 }
 
+void FNPCPaletteEdMode::ActorsDuplicatedNotify(TArray<AActor*>& PreDuplicateSelection,
+	TArray<AActor*>& PostDuplicateSelection, bool bOffsetLocations)
+{
+	FEdMode::ActorsDuplicatedNotify(PreDuplicateSelection, PostDuplicateSelection, bOffsetLocations);
+
+	int Iter = 0;
+
+	while (Iter < PreDuplicateSelection.Num())
+	{
+		ANPCPaletteGizmoActor* GizmoAcotr = Cast<ANPCPaletteGizmoActor>(PreDuplicateSelection[Iter]);
+		if(!GizmoAcotr)
+		{
+			continue;
+		}
+		OnSuccessActorPlaced(GizmoAcotr->m_CurrentNPC ,PostDuplicateSelection[Iter]);
+		Iter++;
+	}
+}
+
+void FNPCPaletteEdMode::PostUndo()
+{
+	FEdMode::PostUndo();
+}
+
 void FNPCPaletteEdMode::StartPlacing(const TArray<FAssetData>& Assets, UActorFactory* Factory)
 {
+	if(!GetNPCAsset())
+	{
+		return;
+	}
 	const bool bNotifySelectNone = true;
 	const bool bDeselectBSPSurfs = true;
 	GEditor->SelectNone(bNotifySelectNone, bDeselectBSPSurfs);

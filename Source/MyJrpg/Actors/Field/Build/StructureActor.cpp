@@ -17,7 +17,7 @@ AStructureActor::AStructureActor()
 	m_MeshComp = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("m_MeshComp"));//22
 	m_MeshComp->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
 	m_MeshComp->CanCharacterStepUpOn = ECB_No;
-	m_MeshComp->SetCanEverAffectNavigation(false);
+	m_MeshComp->SetCanEverAffectNavigation(true);
 	m_MeshComp->SetupAttachment(RootComponent);
 	m_MeshComp->bReceivesDecals = false;
 	m_MeshComp->SetMobility(EComponentMobility::Movable);

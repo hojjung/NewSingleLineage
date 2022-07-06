@@ -16,6 +16,7 @@ ADoorActor::ADoorActor()
 	m_DoorTrigger->SetupAttachment(m_MeshComp);
 	m_DoorTrigger->SetCollisionProfileName(TEXT("Trigger"));
 	m_DoorTrigger->SetSphereRadius(250);
+	m_DoorTrigger->SetCanEverAffectNavigation(false);
 
 	PrimaryActorTick.bCanEverTick = true;
 

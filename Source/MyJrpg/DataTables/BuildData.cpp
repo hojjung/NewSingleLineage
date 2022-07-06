@@ -15,3 +15,17 @@ FBuildDataRow::FBuildDataRow(): m_BuildType()
 {
 	m_ClassActor = AStructureActor::StaticClass(); 
 }
+
+UStaticMesh* FBuildDataRow::GetStMesh()
+{
+	if(m_Mesh.ToSoftObjectPath().IsNull())
+	{
+		return nullptr;
+	}
+	return m_Mesh.LoadSynchronous();
+}
+
+float FBuildDataRow::GetMeshScale()
+{
+	return m_fScale;
+}

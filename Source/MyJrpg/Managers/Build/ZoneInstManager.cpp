@@ -469,7 +469,10 @@ AStructureActor* UZoneInstManager::SpawnBuildActor(const FZoneActorTransform& sp
 	
 	StructureActor->ConfirmBuild( InvenFound ? InvenFound->Get() : nullptr);
 
-	UMyGameInstance::Get->m_BuildManager->SetStructureGrid(StructureActor);
+	if(UMyGameInstance::Get->m_LevelMoveManager->GetCrntZoneID() == TEXT("PlayerHome"))
+	{
+		UMyGameInstance::Get->m_BuildManager->SetStructureGrid(StructureActor);
+	}
 
 	AddBuildActor(StructureActor);
 	

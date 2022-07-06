@@ -63,4 +63,8 @@ public:
 	FName m_NextUpgradeActorID;
 	UPROPERTY(EditDefaultsOnly,BlueprintReadOnly)
 	int m_nMaxOwnedCount = 0;
+
+	virtual UStaticMesh* GetStMesh() override;
+
+	virtual float GetMeshScale() override;
 };

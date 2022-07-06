@@ -39,6 +39,9 @@ public:
 	virtual bool ShouldDrawWidget() const override;
 	virtual bool UsesPropertyWidgets() const override;
 	virtual bool IsCompatibleWith(FEditorModeID OtherModeID) const override;
+
+	virtual void ActorsDuplicatedNotify(TArray<AActor*>& PreDuplicateSelection, TArray<AActor*>& PostDuplicateSelection, bool bOffsetLocations) override;
+	virtual void PostUndo() override;
 	// End of FEdMode interface
 
 public: //IPlacementMode

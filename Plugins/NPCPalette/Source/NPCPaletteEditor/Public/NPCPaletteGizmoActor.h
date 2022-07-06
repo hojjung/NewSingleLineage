@@ -34,6 +34,10 @@ public:
 	UArrowComponent* m_ArrowComponent;
 	UPROPERTY(VisibleAnywhere)
 	UWidgetComponent* m_WidgetComp;
+	UPROPERTY(VisibleAnywhere)
+	USkeletalMeshComponent* m_SkMesh;
+	UPROPERTY(VisibleAnywhere)
+	UStaticMeshComponent* m_StMesh;
 	UPROPERTY(VisibleAnywhere, Category="NPCPalette")
 	FName m_RowID;
 

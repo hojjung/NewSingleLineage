@@ -73,4 +73,8 @@ public:
 	FItemDataHandle m_ItemGather;
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
 	int m_nItemGatherCount = 1;
+
+	virtual UStaticMesh* GetStMesh() override;
+
+	virtual float GetMeshScale() override;
 };

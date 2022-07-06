@@ -152,4 +152,8 @@ public://스텟과 보상
 	UParticleSystem* m_TakeHitEffect;
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
 	USoundBase* m_TakeHitSound;
+
+	virtual USkeletalMesh* GetSkMesh() override;
+
+	virtual float GetMeshScale() override;
 };

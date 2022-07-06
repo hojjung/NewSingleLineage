@@ -9,3 +9,18 @@ UGatherTable::UGatherTable()
 	GetGatherTable = Found.Object;
 
 }
+
+UStaticMesh* FGatherDataRow::GetStMesh()
+{
+	if(m_GatherAsset.ToSoftObjectPath().IsNull())
+	{
+		return nullptr;
+	}
+	
+	return m_GatherAsset.LoadSynchronous()->m_TopMesh;
+}
+
+float FGatherDataRow::GetMeshScale()
+{
+	return m_fTopMeshScale;
+}

@@ -11,8 +11,6 @@ ANPCPaletteGizmoActor::ANPCPaletteGizmoActor(const FObjectInitializer& ObjectIni
 	GetCapsuleComponent()->SetShouldUpdatePhysicsVolume(false);
 
 	m_ArrowComponent = CreateEditorOnlyDefaultSubobject<UArrowComponent>(TEXT("Arrow"));
-
-	 
 	
 	if (!IsRunningCommandlet())
 	{
@@ -77,6 +75,21 @@ ANPCPaletteGizmoActor::ANPCPaletteGizmoActor(const FObjectInitializer& ObjectIni
 	m_WidgetComp->SetDrawAtDesiredSize(false);
 	m_WidgetComp->SetDrawSize(FVector2D(200.f,40.f));
 	m_WidgetComp->UpdateWidget();
+
+	m_SkMesh = CreateDefaultSubobject<USkeletalMeshComponent>("m_SkMesh");
+	m_SkMesh->SetupAttachment(RootComponent);
+	m_SkMesh->CanCharacterStepUpOn = ECB_No;
+	m_SkMesh->SetCanEverAffectNavigation(false);
+	m_SkMesh->bReceivesDecals = false;
+	m_SkMesh->SetRelativeLocation(FVector(0,0,-88));
+	m_SkMesh->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+
+	m_StMesh = CreateDefaultSubobject<UStaticMeshComponent>("m_StMesh");
+	m_StMesh->SetupAttachment(RootComponent);
+	m_StMesh->CanCharacterStepUpOn = ECB_No;
+	m_StMesh->SetCanEverAffectNavigation(false);
+	m_StMesh->bReceivesDecals = false;
+	m_StMesh->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 }
 
 /** Returns ArrowComponent subobject **/
@@ -90,4 +103,22 @@ void ANPCPaletteGizmoActor::SetTextIcon(FText tt, UTexture2D* ii)
 	{
 		GizmoWidget->SetImageAndText(ii,tt);
 	}
+	float R = 0;
+	
+	float H = 0;
+	if(m_CurrentNPC.m_SelectedEntityRow->GetSkMesh())
+	{
+		m_SkMesh->SetSkeletalMesh(m_CurrentNPC.m_SelectedEntityRow->GetSkMesh());
+		m_SkMesh->SetRelativeScale3D(FVector(m_CurrentNPC.m_SelectedEntityRow->GetMeshScale()));
+	}
+	else if(m_CurrentNPC.m_SelectedEntityRow->GetStMesh())
+	{
+		m_StMesh->SetStaticMesh(m_CurrentNPC.m_SelectedEntityRow->GetStMesh());
+		GetSimpleCollisionCylinder(R, H);
+		m_StMesh->SetRelativeLocation(FVector(0,0, H));
+		m_StMesh->SetRelativeScale3D(FVector(m_CurrentNPC.m_SelectedEntityRow->GetMeshScale()));
+	}
+	GetSimpleCollisionCylinder(R, H);
+
+	m_WidgetComp->SetRelativeLocation(FVector(0,0, H + 88));
 }

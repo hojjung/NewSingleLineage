@@ -18,7 +18,7 @@ public:
 	AMapExitBound();
 	
 protected:
-	UPROPERTY()
+	UPROPERTY(VisibleAnywhere)
 	UBoxComponent* m_CollBox;
 	UPROPERTY(VisibleAnywhere)
 	UTextRenderComponent* m_TextRender;

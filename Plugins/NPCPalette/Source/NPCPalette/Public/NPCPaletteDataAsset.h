@@ -3,6 +3,7 @@
 #include "CoreMinimal.h"
 
 #include "Engine/DataTable.h"
+#include "Engine/SkeletalMesh.h"
 #include "Engine/Texture2D.h"
 #include "UObject/NoExportTypes.h"
 #include "NPCPaletteDataAsset.generated.h"
@@ -19,6 +20,20 @@ public:
 	FText m_Desc;
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
 	TSoftObjectPtr<UTexture2D> m_Icon;
+
+	virtual UStaticMesh* GetStMesh()
+	{
+		return nullptr;
+	}
+	virtual USkeletalMesh* GetSkMesh()
+	{
+		return nullptr;
+	}
+	virtual float GetMeshScale()
+	{
+		return 1.f;
+	}
+	
 };
 
 USTRUCT()
