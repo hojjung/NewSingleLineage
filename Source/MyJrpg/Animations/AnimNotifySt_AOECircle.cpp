@@ -43,7 +43,7 @@ void UAnimNotifySt_AOECircle::NotifyBegin(USkeletalMeshComponent* MeshComp, UAni
 	m_MatDynamic->SetVectorParameterValue(TEXT("Color"), m_DecalColorWant);
 	m_MatDynamic->SetScalarParameterValue(TEXT("Value"), 0.f);
 
-	m_fDurationMax = TotalDuration;
+	m_fDurationMax = TotalDuration / Animation->RateScale;
 	
 	m_fTimer = 0;
 	//

@@ -88,7 +88,7 @@ protected:
 	TArray<TWeakObjectPtr<AStructureActor>> m_Build;
 
 protected:
-	AMonsterPawn* SpawnNpcActor(const FZoneActorTransform& spawnData, int index, const FZoneSerialData& serialData);
+	AMonsterPawn* SpawnNpcActor(const FZoneActorTransform& spawnData, int index, const FZoneSerialData& serialData, bool isInit);
 
 	AItemActor* SpawnItemActor(const FZoneActorTransform& spawn_data, int index, const FZoneSerialData& serialData, bool isInit);
 

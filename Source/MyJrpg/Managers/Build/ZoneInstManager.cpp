@@ -191,7 +191,7 @@ AMonsterPawn* UZoneInstManager::SpawnAdditionalNpcActor(const FUnitDataHandle& d
 	
 	int LastIndex = ZoneSerialData.m_AryZoneActorTrans.Num() - 1;
 	
-	return SpawnNpcActor(SpawnTrans,LastIndex, ZoneSerialData);
+	return SpawnNpcActor(SpawnTrans,LastIndex, ZoneSerialData, true);
 }
 
 void UZoneInstManager::SpawnActors(const FZoneSerialData& zoneInst, bool isInit)
@@ -204,7 +204,7 @@ void UZoneInstManager::SpawnActors(const FZoneSerialData& zoneInst, bool isInit)
 		{
 		case EActorType::Npc:
 			{
-				AMonsterPawn* MobPawn = SpawnNpcActor(ZoneActorEle, Index, zoneInst);
+				AMonsterPawn* MobPawn = SpawnNpcActor(ZoneActorEle, Index, zoneInst, isInit);
 			}
 			break;
 		case EActorType::Item:
@@ -361,14 +361,19 @@ TArray<FZoneActorTransform> UZoneInstManager::CreateBuildInst(const UNPCPaletteD
 	return AryZones;
 }
 
-AMonsterPawn* UZoneInstManager::SpawnNpcActor(const FZoneActorTransform& spawnData, int index, const FZoneSerialData& serialData)
+AMonsterPawn* UZoneInstManager::SpawnNpcActor(const FZoneActorTransform& spawnData, int index, const FZoneSerialData& serialData, bool isInit)
 {
 	FActorSpawnParameters Param;
 	Param.bNoFail = true;
 	Param.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
 
 	const FNpcUnitEntityRow* EntityRow = UUnitEntityData::GetNpcUnitTable->FindRow<FNpcUnitEntityRow>(spawnData.m_IDEntity, "");
-	
+
+	FRotator Rot;
+	if(isInit)
+	{
+		Rot = spawnData.m_SpawnRotation + FRotator(0,FMath::RandRange(0,360),0);
+	}
 	AMonsterPawn* NpcActor = UMyLib::GetUWorld()->SpawnActor<AMonsterPawn>(EntityRow->m_ClassActor, spawnData.m_SpawnPosition, spawnData.m_SpawnRotation, Param);
 	NpcActor->SetEntity(spawnData.m_IDEntity,*EntityRow);
 
