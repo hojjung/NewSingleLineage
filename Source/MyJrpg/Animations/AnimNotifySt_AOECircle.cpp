@@ -31,11 +31,32 @@ void UAnimNotifySt_AOECircle::NotifyBegin(USkeletalMeshComponent* MeshComp, UAni
 		m_StartDir = CPawn->GetActorForwardVector();
 	}
 	m_MatDynamic = UMaterialInstanceDynamic::Create(m_MatDecalTemplate, this);
-	m_Decal = NewObject<UDecalComponent>(MeshComp);
+
+	if(CPawn)
+	{
+		UDecalComponent* ReuseComp = Cast<UDecalComponent>(CPawn->FindComp(this));
+		if(!ReuseComp)
+		{
+			m_Decal = NewObject<UDecalComponent>(MeshComp);
+			CPawn->AddComp(this, m_Decal.Get());
+		}
+		else
+		{
+			m_Decal = ReuseComp;
+			m_Decal->SetVisibility(true);
+		}
+	}
+	else
+	{
+		m_Decal = NewObject<UDecalComponent>(MeshComp);
+	}
 	m_Decal->SetDecalMaterial(m_MatDynamic);
-	m_Decal->RegisterComponentWithWorld(MeshComp->GetWorld());
+	if(!m_Decal->IsRegistered())
+	{
+		m_Decal->RegisterComponentWithWorld(MeshComp->GetWorld());
+	}
 	m_Decal->AttachToComponent(MeshComp, FAttachmentTransformRules::KeepRelativeTransform);
-	m_Decal->SetRelativeRotation(FRotator(-90.f,m_RotYaw,0.f));//m_RotationOffset.Yaw
+	m_Decal->SetRelativeRotation(FRotator(-90.f,m_RotYaw,0.f));
 	m_Decal->DecalSize = FVector(256.f, m_Radius, m_Radius);
 
 	float RadDegree = FMath::Clamp(m_EulerAngle / 360.f, 0.f, 1.f);
@@ -96,7 +117,8 @@ void UAnimNotifySt_AOECircle::NotifyEnd(USkeletalMeshComponent* MeshComp, UAnimS
 {
 	if(m_Decal.IsValid())
 	{
-		m_Decal.Get()->DestroyComponent();
+		m_Decal->SetVisibility(false);
+		m_Decal = nullptr;
 	}
 	
 	ACombatUnitPawn* CPawn =  MeshComp->GetOwner<ACombatUnitPawn>();

@@ -471,3 +471,19 @@ FVector ABaseUnitPawn::GetNavAgentLocation() const
 {
 	return GetActorLocation() - FVector(0.f, 0.f, GetCapsule()->Bounds.BoxExtent.Z);
 }
+
+void ABaseUnitPawn::AddComp(UObject* key, UActorComponent* want)
+{
+	m_MapComp.Emplace(key, TStrongObjectPtr<UActorComponent>(want));
+}
+
+UActorComponent* ABaseUnitPawn::FindComp(UObject* key)
+{
+	TStrongObjectPtr<UActorComponent>* Found = m_MapComp.Find(key);
+
+	if(!Found)
+	{
+		return nullptr;
+	}
+	return Found->Get();
+}

@@ -31,6 +31,8 @@ protected:
 	
 	TSoftObjectPtr<UUnitEntityAsset> m_EntityAsset;
 
+	TMap<UObject*, TStrongObjectPtr<UActorComponent>> m_MapComp;
+
 	FTimerHandle m_MoveStopTimer;
 	
 	FText m_PawnName;
@@ -97,5 +99,9 @@ public:
 	void SetActorFeetLocation(FVector loc);
 
 	virtual FVector GetNavAgentLocation() const override;
+
+	void AddComp(UObject* key, UActorComponent* want);
+
+	UActorComponent* FindComp(UObject* key);
 };
 

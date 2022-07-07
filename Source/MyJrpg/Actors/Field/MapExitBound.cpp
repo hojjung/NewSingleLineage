@@ -16,7 +16,7 @@ AMapExitBound::AMapExitBound()
 	RootComponent = m_Decal;
 	m_Decal->SetRelativeRotation(FRotator(90,180,0));
 	m_Decal->SetDecalMaterial(FoundMesh.Object);
-	m_Decal->DecalSize = FVector(700,2048,375);
+	m_Decal->DecalSize = FVector(700,2048,200);
 	
 	m_CollBox = CreateDefaultSubobject<UBoxComponent>(TEXT("m_CollBox"));
 	m_CollBox->SetBoxExtent(m_Decal->DecalSize);
@@ -29,7 +29,7 @@ AMapExitBound::AMapExitBound()
 	
 	m_TextRender = CreateDefaultSubobject<UTextRenderComponent>(TEXT("m_TextRender"));
 	m_TextRender->SetupAttachment(RootComponent);
-	m_TextRender->SetWorldSize(350);
+	m_TextRender->SetWorldSize(250);
 	m_TextRender->SetHorizontalAlignment(EHorizTextAligment::EHTA_Center);
 	m_TextRender->SetVerticalAlignment(EVerticalTextAligment::EVRTA_TextCenter);
 	m_TextRender->SetText(  FText::FromString(TEXT("World Map")));

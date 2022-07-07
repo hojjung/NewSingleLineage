@@ -81,7 +81,30 @@ FString ULogic_Flee::CurrentState()
 
 void ULogic_Flee::OnIdle()
 {
-	
+	EPathFollowingStatus::Type Status = m_Owner->GetPfComp()->GetStatus();
+
+	if (m_fIdleTimer > 0.f)
+	{
+		m_fIdleTimer -= m_fDeltaTime;
+
+		return;
+	}
+
+	m_fIdleTimer = FMath::FRandRange(5.f, 7.f);
+
+	FNavLocation Result;
+
+	if (EPathFollowingStatus::Idle == Status)
+	{
+		if (!UMyLib::GetNavSys()->GetRandomPointInNavigableRadius(m_StartPoint, 1400.f, Result))
+		{
+			return;
+		}
+
+		m_Owner->MoveToLocation(Result);
+
+		m_fIdleTimer = FMath::FRandRange(3.f, 7.f);
+	}
 }
 
 void ULogic_Flee::OnFlee()
