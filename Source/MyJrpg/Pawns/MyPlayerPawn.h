@@ -79,8 +79,6 @@ protected:
 
 	FVoidVoid m_OnCancelInteract;
 
-	FVector2D m_Offset;
-
 private:
 	void CreateFocusActor();
 	
@@ -179,11 +177,11 @@ public:
 	void UnbindCancel();
 
 public:
-	FVector2D GetCameraOffset();
+	void StartBuildCam();
 	
-	void SetCameraOffset(const FVector2D& vector_2d);
+	void SetCameraOffset(const FVector2D& delta);
 
-	void ClearCameraOffset();
+	void EndBuildCam();
 
 	virtual bool IsLooting() override;
 	

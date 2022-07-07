@@ -32,7 +32,7 @@ AMyPlayerPawn::AMyPlayerPawn(const FObjectInitializer& objInit):Super(objInit)
 	m_DissolveCam->SetupAttachment(RootComponent);
 	m_DissolveCam->SetRelativeRotation(FRotator(-53, -45.f, 0.f)); //-45.f
 	m_DissolveCam->TargetArmLength = 730; //1375
-	m_DissolveCam->m_SocketOffset = FVector(0);
+	m_DissolveCam->m_SocketOffset = FVector(0,0,-30);
 	m_DissolveCam->CameraLagSpeed=30;
 	//
 	m_TopCamera = CreateDefaultSubobject<UCameraComponent>(TEXT("m_TopCamera"));
@@ -456,31 +456,35 @@ void AMyPlayerPawn::UnbindCancel()
 	m_OnCancelInteract.Unbind();
 }
 
-FVector2D AMyPlayerPawn::GetCameraOffset()
+void AMyPlayerPawn::StartBuildCam()
 {
-	return m_Offset;
+	m_DissolveCam->TargetArmLength = 1300; //1375
+
+	m_DissolveCam->SetRelativeRotation(FRotator(-70, -45.f, 0.f)); //-45.f
 }
 
-void AMyPlayerPawn::SetCameraOffset(const FVector2D& vector_2d)
+void AMyPlayerPawn::SetCameraOffset(const FVector2D& delta)
 {
-	m_Offset = vector_2d;
-
-	FVector2D NewLoc2D = m_Offset.GetRotated(45);
-
-	NewLoc2D.X = FMath::Clamp(NewLoc2D.X, -4400.f, 600.f);
-	NewLoc2D.Y = FMath::Clamp(NewLoc2D.Y, -2600.f, 2600.f);
+	FVector2D NewLoc2D = delta.GetRotated(45);
 	
-	FVector NewLoc = -FVector(NewLoc2D.X,NewLoc2D.Y, 0);
+	FVector NewLoc = -FVector(NewLoc2D.X, NewLoc2D.Y, 0);
 
-	m_DissolveCam->SetRelativeLocation(NewLoc);
+	m_DissolveCam->AddRelativeLocation(NewLoc);
 
+	FVector Loc = m_DissolveCam->GetComponentLocation();
+
+	Loc.X = FMath::Clamp(Loc.X, -2700.f, 2700.f);
+	
+	Loc.Y = FMath::Clamp(Loc.Y, -2700.f, 2700.f);
+
+	m_DissolveCam->SetWorldLocation(Loc);
 }
 
-void AMyPlayerPawn::ClearCameraOffset()
+void AMyPlayerPawn::EndBuildCam()
 {
-	m_Offset = FVector2D(0);
-	
-	m_DissolveCam->SetRelativeLocation(FVector(0,0,0));
+	m_DissolveCam->TargetArmLength = 730; //1375
+
+	m_DissolveCam->SetRelativeRotation(FRotator(-53, -45.f, 0.f)); //-45.f
 }
 
 bool AMyPlayerPawn::IsLooting()

@@ -64,7 +64,9 @@ void UWidgetBuildPanel::OnTouchWorld(const FHitResult& hit)
 void UWidgetBuildPanel::OpenPanel()
 {
 	Super::OpenPanel();
-
+	
+	m_Pl->StartBuildCam();
+	
 	UMyLib::GetPlayerCon()->EnableJoystick(false);
 	
 	UMyGameInstance::Get->m_BuildManager->StartBuilding();
@@ -97,7 +99,7 @@ void UWidgetBuildPanel::ClosePanel()
 {
 	Super::ClosePanel();
 	
-	m_Pl->ClearCameraOffset();
+	m_Pl->EndBuildCam();
 
 	OnClickStruct();
 
@@ -131,11 +133,7 @@ void UWidgetBuildPanel::ClosePanel()
 
 void UWidgetBuildPanel::OnFlick(const FVector2D& delta)
 {
-	FVector2D CamOff = m_Pl->GetCameraOffset();
-
-	CamOff += delta;
-
-	m_Pl->SetCameraOffset(CamOff);
+	m_Pl->SetCameraOffset(delta);
 }
 
 void UWidgetBuildPanel::OnClickStruct()
