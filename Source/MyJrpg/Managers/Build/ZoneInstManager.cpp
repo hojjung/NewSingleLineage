@@ -582,6 +582,8 @@ IFocusable* UZoneInstManager::GetNearProp(FVector callerLoc, float range, UClass
 
 IFocusable* UZoneInstManager::GetNearTarget(FVector callerLoc, float range, bool isUseAuto)
 {
+	AMyPlayerPawn* Pl = UMyLib::GetPlayer();
+	
 	bool ExcludeNotInteractable = false;
 	
 	bool ExcludeDead = false;
@@ -609,9 +611,9 @@ IFocusable* UZoneInstManager::GetNearTarget(FVector callerLoc, float range, bool
 
 		float Dist1 = FVector::DistSquared2D(Loc1, callerLoc);
 
-		float Dist2 = FVector::DistSquared2D(Loc2, callerLoc) + (Pawn->IsAlive() ? 250000 : 0 );
+		float Dist2 = FVector::DistSquared2D(Loc2, callerLoc) + (Pawn->IsAlive() && !Pl->IsSneak() ? 250000 : 0 );
 
-		float ARange = UMyLib::GetPlayer()->GetAttackRangeSqr(); 
+		float ARange = Pl->GetAttackRangeSqr(); 
 		
 		if(Dist1 <= ARange ||  Dist1 <= Dist2)
 		{

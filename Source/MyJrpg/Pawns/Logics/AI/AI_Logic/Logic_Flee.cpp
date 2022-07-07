@@ -47,35 +47,23 @@ void ULogic_Flee::SetIdle()
 	m_CurrentState = EFSM::Idle;
 
 	m_Owner->SetFocusedTarget(nullptr);
+
+	m_fFleeTimer  = 0.f;
 		
 	//m_Owner->StopMove();
 }
 
 void ULogic_Flee::CheckSetState()
 {
-	if (!m_Owner->GetFocusedTarget())
+	ACombatUnitPawn* TargetNPC =  Cast<ACombatUnitPawn>(m_Owner->GetFocusedTarget());
+	
+	if (!TargetNPC || !TargetNPC->IsAlive())
 	{
 		SetIdle();
 	}
 	else
 	{
-		ACombatUnitPawn* TargetNPC =  Cast<ACombatUnitPawn>(m_Owner->GetFocusedTarget());
-
-		if (!TargetNPC->IsAlive())
-		{
-			SetIdle();
-
-			return;
-		}
-
-		if ( m_CurrentState == EFSM::Flee && !CheckTargetRange(m_fAttackRangeSqr))
-		{
-			SetIdle();
-		}
-		else
-		{
-			m_CurrentState = EFSM::Flee;
-		}
+		m_CurrentState = EFSM::Flee;
 	}
 }
 
@@ -93,36 +81,7 @@ FString ULogic_Flee::CurrentState()
 
 void ULogic_Flee::OnIdle()
 {
-	EPathFollowingStatus::Type Status = m_Owner->GetPfComp()->GetStatus();
-
-	if (m_fIdleTimer > 0.f)
-	{
-		m_fIdleTimer -= m_fDeltaTime;
-
-		return;
-	}
-
-	int RandIndex = FMath::RandRange(0,4);
-
-	if(RandIndex == 0)
-	{
-		m_fIdleTimer = FMath::FRandRange(3.f, 7.f);
-		return;
-	}
-
-	FNavLocation Result;
-
-	if (EPathFollowingStatus::Idle == Status)
-	{
-		if (!UMyLib::GetNavSys()->GetRandomPointInNavigableRadius(m_StartPoint, 1400.f, Result))
-		{
-			return;
-		}
-
-		m_Owner->MoveToLocation(Result);
-
-		m_fIdleTimer = FMath::FRandRange(3.f, 7.f);
-	}
+	
 }
 
 void ULogic_Flee::OnFlee()

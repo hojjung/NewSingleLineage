@@ -55,7 +55,7 @@ bool ACombatUnitPawn::TryHit(const FStatGroup& other)
 
 void ACombatUnitPawn::HomingRotateToTarget(float speedTime)
 {
-	if (!GetFocusedTarget() || !m_bIsRotateable)
+	if (!GetFocusedTarget() || !m_bIsRotateable || !IsAlive())
 	{
 		return;
 	}

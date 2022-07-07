@@ -93,8 +93,12 @@ void UAnimNotifySt_AOECircle::NotifyEnd(USkeletalMeshComponent* MeshComp, UAnimS
 	{
 		m_Decal.Get()->DestroyComponent();
 	}
+	
 	ACombatUnitPawn* CPawn =  MeshComp->GetOwner<ACombatUnitPawn>();
-	if(CPawn)
+	
+	FAnimMontageInstance* CurrentMont = MeshComp->GetAnimInstance()->GetActiveMontageInstance();
+	
+	if(CPawn && CurrentMont->Montage == Animation)
 	{
 		CPawn->SetRotateAble(true);
 		
