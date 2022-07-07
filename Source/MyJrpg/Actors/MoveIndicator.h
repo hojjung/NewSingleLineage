@@ -18,4 +18,6 @@ protected:
 	UPROPERTY(VisibleAnywhere)
 	UDecalComponent* m_Decal;
 
+public:
+	void ResizeBound(INavAgentInterface* target);
 };

@@ -62,6 +62,8 @@ void UWidgetEquipPanel::NativeOnInitialized()
 	m_Quick->Init(UMyGameInstance::Get->m_EquipManager->GetQuickInven());
 
 	UMyGameInstance::Get->m_EquipManager->GetQuickInven()->m_OnInvenChanged.AddUObject(this, &UWidgetEquipPanel::UpdateQuickSlot);
+
+	UpdateQuickSlot();
 }
 
 void UWidgetEquipPanel::UpdateQuickSlot()

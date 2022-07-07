@@ -57,6 +57,8 @@ public:
 	FVector m_Offset;
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (UIMin = "0.1"))
 	float m_fScale = 1.f;
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (UIMin = "0.1"))
+	float m_fIndicatorRadius = 34.f;
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
 	float m_fRotYaw = 0.f;
 	UPROPERTY(EditDefaultsOnly,BlueprintReadOnly)

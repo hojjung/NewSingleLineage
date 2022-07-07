@@ -1,5 +1,6 @@
 #include "MoveIndicator.h"
 #include "Components/DecalComponent.h"
+#include "MyJrpg/MyJrpg.h"
 #include "UObject/ConstructorHelpers.h"
 
 AMoveIndicator::AMoveIndicator()
@@ -14,4 +15,11 @@ AMoveIndicator::AMoveIndicator()
 	m_Decal->SetupAttachment(RootComponent);
 	m_Decal->SetCanEverAffectNavigation(false);
 	m_Decal->DecalSize = FVector(512,128,128);
+}
+
+void AMoveIndicator::ResizeBound(INavAgentInterface* target)
+{
+	float NewX = target->GetNavAgentPropertiesRef().AgentRadius * 3.6f;
+	
+	m_Decal->DecalSize = FVector(512,NewX,NewX);
 }

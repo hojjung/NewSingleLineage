@@ -229,9 +229,9 @@ void AMyPlayerPawn::SetPlayerSkMeshDefault()
 
 void AMyPlayerPawn::RequestAttack()
 {
-	if (m_bIsSkillUsing)
+	if (m_bIsSkillUsing || IsMoving())
 	{
-		return ;
+		return;
 	}
 	ACombatUnitPawn* FocusActor = GetFocusedTarget<ACombatUnitPawn>();
 	if(!FocusActor)
@@ -239,7 +239,6 @@ void AMyPlayerPawn::RequestAttack()
 		TryAttack_External();
 		return;
 	}
-	
 	RequestInteract(FocusActor, FVoidVoid::CreateUObject(this, &AMyPlayerPawn::TryAttack_External),GetAttackRange());
 }
 
@@ -288,6 +287,10 @@ void AMyPlayerPawn::ShowIndicator(IFocusable* target)
 		m_FocusIndicator->SetActorHiddenInGame(true);
 		return;
 	}
+	if(GetFocusedTarget<>() == target)
+	{
+		return;
+	}
 	m_FocusIndicator->SetActorHiddenInGame(false);
 
 	INavAgentInterface* FocusActor = Cast<INavAgentInterface>(target);
@@ -295,10 +298,11 @@ void AMyPlayerPawn::ShowIndicator(IFocusable* target)
 	FVector Loc = FocusActor->GetNavAgentLocation();
 
 	FAttachmentTransformRules Rule(EAttachmentRule::KeepWorld,EAttachmentRule::KeepWorld,EAttachmentRule::KeepWorld,false);
-	
-	m_FocusIndicator->AttachToActor(Cast<AActor>(target), Rule);
 
+	AActor* TargetActor = Cast<AActor>(target);
+	m_FocusIndicator->AttachToActor(TargetActor, Rule);
 	m_FocusIndicator->SetActorLocation(Loc);
+	m_FocusIndicator->ResizeBound(FocusActor);
 }
 
 void AMyPlayerPawn::SetFocusedTarget(IFocusable* target)
@@ -307,6 +311,8 @@ void AMyPlayerPawn::SetFocusedTarget(IFocusable* target)
 	{
 		return;
 	}
+	ShowIndicator(target);
+	
 	Super::SetFocusedTarget(target);
 
 	m_OnFocus.Broadcast(Cast<IFocusable>(m_FocusedTarget.GetObject()));

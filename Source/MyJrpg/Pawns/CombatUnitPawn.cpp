@@ -10,7 +10,7 @@ ACombatUnitPawn::ACombatUnitPawn(const FObjectInitializer& objInit):Super(objIni
 {
 	m_fAttackCD=0;
    	m_fHitAnimCD = -1.f;
-   	m_fAttackMinCD = 0.25f;
+   	m_fAttackMinCD = 0.15f;
 	SetAttackRange(200);
 
 	m_bIsRotateable = true;
@@ -165,16 +165,9 @@ float ACombatUnitPawn::TryAttack()
 	{
 		float AnimMongLen = PlayBaseAttackAnim();
 
-		if (AnimMongLen > m_fAttackMinCD)
-		{
-			m_fAttackCD = AnimMongLen - 0.1f;
-		}
-		else
-		{
-			m_fAttackCD = m_fAttackMinCD;
-		}
+		m_fAttackCD = FMath::Max(AnimMongLen - 0.1f, m_fAttackMinCD);
 
-		return AnimMongLen;;
+		return AnimMongLen;
 	}
 
 	return 0.f;

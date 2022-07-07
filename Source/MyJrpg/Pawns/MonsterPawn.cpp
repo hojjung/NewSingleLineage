@@ -21,7 +21,7 @@ AMonsterPawn::AMonsterPawn(const FObjectInitializer& obj): Super(obj.SetDefaultS
 
 	m_HitParticle->SetRelativeLocation(FVector(0, 0, 0.f));
 	m_HitParticle->SetAutoActivate(false);
-	m_HitParticle->SetRelativeScale3D(FVector(1));
+	m_HitParticle->SetRelativeScale3D(FVector(0.5f));
 	m_HitParticle->Deactivate();
 	//PawnInfoWidget
 	m_PawnInfo = CreateDefaultSubobject<UWidgetPawnInfoComp>(TEXT("PawnInfoWidget"));

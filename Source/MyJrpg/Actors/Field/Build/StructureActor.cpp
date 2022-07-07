@@ -63,6 +63,9 @@ void AStructureActor::SetBuildData(const FBuildDataRow& data)
 
 void AStructureActor::ConfirmBuild(UInventory* inven)
 {
+	m_NavProp.AgentHeight = 88;
+	m_NavProp.AgentRadius = m_BuildData->m_fIndicatorRadius;
+	
 	m_WidgetComp->SetVisibility(false);
 
 	SetMat(nullptr);
@@ -219,6 +222,11 @@ UMinimapIconComp* AStructureActor::GetIconMeshComp()
 bool AStructureActor::IsFocusable()
 {
 	return m_BuildData->m_bIsFocusable && m_BuildInteract != nullptr;
+}
+
+const FNavAgentProperties& AStructureActor::GetNavAgentPropertiesRef() const
+{
+	return m_NavProp;
 }
 
 bool AStructureActor::IsEraseable()

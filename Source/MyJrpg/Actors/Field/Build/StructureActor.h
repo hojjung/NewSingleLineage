@@ -34,6 +34,8 @@ protected:
 	
 	const FBuildDataRow* m_BuildData;
 
+	FNavAgentProperties m_NavProp;
+
 protected:
 	virtual void EndPlay(const EEndPlayReason::Type EndPlayReason) override;
 
@@ -62,4 +64,6 @@ public:
 	virtual UMinimapIconComp* GetIconMeshComp() override;
 
 	virtual bool IsFocusable() override;
+
+	virtual const FNavAgentProperties& GetNavAgentPropertiesRef() const override;
 };
