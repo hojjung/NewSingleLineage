@@ -66,14 +66,16 @@ void UAnimNotifySt_AOECircle::NotifyTick(USkeletalMeshComponent* MeshComp, UAnim
 	Super::NotifyTick(MeshComp, Animation, FrameDeltaTime);
 }
 
-void UAnimNotifySt_AOECircle::TraceDamage(ACombatUnitPawn* CPawn)
+bool UAnimNotifySt_AOECircle::TraceDamage(ACombatUnitPawn* CPawn)
 {
 	TArray<AActor*> Hits;
 
 	if (!TraceSphere(CPawn, Hits, 0.f, m_Radius, m_TargetClass))
 	{
-		return;
+		return false;
 	}
+	bool HitCone = false;
+	
 	for (AActor* Mob : Hits)
 	{
 		if (Mob->GetClass() != m_TargetClass || !UMyLib::CheckAngle(m_StartDir, m_StartPos, Mob, m_EulerAngle))
@@ -81,10 +83,13 @@ void UAnimNotifySt_AOECircle::TraceDamage(ACombatUnitPawn* CPawn)
 			continue;
 		}
 
+		HitCone = true;
+
 		ACombatUnitPawn* CombatPawn = Cast<ACombatUnitPawn>(Mob);
 
 		CombatPawn->TakeDmg(m_fDamage, CPawn);
 	}
+	return HitCone;
 }
 
 void UAnimNotifySt_AOECircle::NotifyEnd(USkeletalMeshComponent* MeshComp, UAnimSequenceBase* Animation)
@@ -102,7 +107,12 @@ void UAnimNotifySt_AOECircle::NotifyEnd(USkeletalMeshComponent* MeshComp, UAnimS
 	{
 		CPawn->SetRotateAble(true);
 		
-		TraceDamage(CPawn);
+		bool Hit = TraceDamage(CPawn);
+
+		if(Hit && m_ClassCamShake->IsValidLowLevel())
+		{
+			UMyLib::GetPlayerCon()->ClientStartCameraShake(m_ClassCamShake);
+		}
 	}
 	
 	m_fTimer = 0;

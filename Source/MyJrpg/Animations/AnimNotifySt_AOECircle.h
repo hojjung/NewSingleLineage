@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "MatineeCameraShake.h"
 #include "Animation/AnimNotifies/AnimNotifyState.h"
 #include "Components/DecalComponent.h"
 #include "MyJrpg/Pawns/MonsterPawn.h"
@@ -20,6 +21,9 @@ public:
 	UAnimNotifySt_AOECircle(const FObjectInitializer& obj);
 
 protected:
+protected:
+	UPROPERTY(BlueprintReadOnly, EditAnywhere)
+	TSubclassOf<UMatineeCameraShake> m_ClassCamShake;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="AnimNotify")
 	float m_RotYaw;
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category="AnimNotify")
@@ -52,7 +56,8 @@ protected:
 	virtual void NotifyBegin(USkeletalMeshComponent * MeshComp, UAnimSequenceBase * Animation, float TotalDuration) override;
 	
 	virtual void NotifyTick(USkeletalMeshComponent * MeshComp, UAnimSequenceBase * Animation, float FrameDeltaTime) override;
-	void TraceDamage(ACombatUnitPawn* CPawn);
+	
+	bool TraceDamage(ACombatUnitPawn* CPawn);
 
 	virtual void NotifyEnd(USkeletalMeshComponent * MeshComp, UAnimSequenceBase * Animation) override;
 
