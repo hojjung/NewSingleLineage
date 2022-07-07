@@ -1,0 +1,129 @@
+#include "AnimNotifySt_AOECircle.h"
+#include "Animation/AnimNotifies/AnimNotifyState_Trail.h"
+#include "MyJrpg/MyLib.h"
+
+UAnimNotifySt_AOECircle::UAnimNotifySt_AOECircle(const FObjectInitializer& obj): Super(obj)
+{
+	static ConstructorHelpers::FObjectFinder<UMaterialInterface> FoundMat(TEXT("Material'/Game/03_VisualEffect/Decals/MAT_AOE_Circle.MAT_AOE_Circle'"));
+	
+	m_MatDecalTemplate = FoundMat.Object;
+
+	m_DecalColorWant = FLinearColor::Red;
+
+	m_fTimer = 0;
+
+	m_fDurationMax = 0;
+
+	m_fDamage = 30.f;
+
+	m_RotYaw = 90.f;
+}
+
+void UAnimNotifySt_AOECircle::NotifyBegin(USkeletalMeshComponent* MeshComp, UAnimSequenceBase* Animation, float TotalDuration)
+{
+	ACombatUnitPawn* CPawn =  MeshComp->GetOwner<ACombatUnitPawn>();
+	if(CPawn)
+	{
+		CPawn->SetRotateAble(false);
+		
+		m_StartPos = CPawn->GetActorLocation();
+
+		m_StartDir = CPawn->GetActorForwardVector();
+	}
+	m_MatDynamic = UMaterialInstanceDynamic::Create(m_MatDecalTemplate, this);
+	m_Decal = NewObject<UDecalComponent>(MeshComp);
+	m_Decal->SetDecalMaterial(m_MatDynamic);
+	m_Decal->RegisterComponentWithWorld(MeshComp->GetWorld());
+	m_Decal->AttachToComponent(MeshComp, FAttachmentTransformRules::KeepRelativeTransform);
+	m_Decal->SetRelativeRotation(FRotator(-90.f,m_RotYaw,0.f));//m_RotationOffset.Yaw
+	m_Decal->DecalSize = FVector(256.f, m_Radius, m_Radius);
+
+	float RadDegree = FMath::Clamp(m_EulerAngle / 360.f, 0.f, 1.f);
+	m_MatDynamic->SetScalarParameterValue(TEXT("RadianAngle"), RadDegree);
+	m_MatDynamic->SetVectorParameterValue(TEXT("Color"), m_DecalColorWant);
+	m_MatDynamic->SetScalarParameterValue(TEXT("Value"), 0.f);
+
+	m_fDurationMax = TotalDuration;
+	
+	m_fTimer = 0;
+	//
+	Super::NotifyBegin(MeshComp, Animation, TotalDuration);
+}
+
+void UAnimNotifySt_AOECircle::NotifyTick(USkeletalMeshComponent* MeshComp, UAnimSequenceBase* Animation,
+	float FrameDeltaTime)
+{
+	m_fTimer += FrameDeltaTime;
+
+	float Percent = 0.f;
+	
+	if(m_fTimer > 0.f)
+	{
+		Percent = m_fTimer / m_fDurationMax;
+	}
+	m_MatDynamic->SetScalarParameterValue(TEXT("Value"), Percent);
+	
+	Super::NotifyTick(MeshComp, Animation, FrameDeltaTime);
+}
+
+void UAnimNotifySt_AOECircle::TraceDamage(ACombatUnitPawn* CPawn)
+{
+	TArray<AActor*> Hits;
+
+	if (!TraceSphere(CPawn, Hits, 0.f, m_Radius, m_TargetClass))
+	{
+		return;
+	}
+	for (AActor* Mob : Hits)
+	{
+		if (Mob->GetClass() != m_TargetClass || !UMyLib::CheckAngle(m_StartDir, m_StartPos, Mob, m_EulerAngle))
+		{
+			continue;
+		}
+
+		ACombatUnitPawn* CombatPawn = Cast<ACombatUnitPawn>(Mob);
+
+		CombatPawn->TakeDmg(m_fDamage, CPawn);
+	}
+}
+
+void UAnimNotifySt_AOECircle::NotifyEnd(USkeletalMeshComponent* MeshComp, UAnimSequenceBase* Animation)
+{
+	if(m_Decal.IsValid())
+	{
+		m_Decal.Get()->DestroyComponent();
+	}
+	ACombatUnitPawn* CPawn =  MeshComp->GetOwner<ACombatUnitPawn>();
+	if(CPawn)
+	{
+		CPawn->SetRotateAble(true);
+		
+		TraceDamage(CPawn);
+	}
+	
+	m_fTimer = 0;
+	
+	m_fDurationMax = 0.f;
+
+	m_MatDynamic = nullptr;
+
+	Super::NotifyEnd(MeshComp, Animation);
+}
+
+bool UAnimNotifySt_AOECircle::TraceSphere(ACombatUnitPawn* instigator, TArray<AActor*>& outHits, float range, float radius, TSubclassOf<ACombatUnitPawn> classFilter)
+{
+	FVector StartTrace = instigator->GetActorLocation() +(instigator->GetActorForwardVector() * range);
+	
+	return TraceSphere(instigator, outHits, StartTrace, radius, classFilter);
+}
+
+bool UAnimNotifySt_AOECircle::TraceSphere(ACombatUnitPawn* instigator, TArray<AActor*>& outHits, FVector start, float radius,TSubclassOf<ACombatUnitPawn> classFilter)
+{
+	//DrawDebugSphere(GetWorld(),start,radius,12,FColor::Red,false,1);
+	if(!UMyLib::SphereOverlapActors(instigator,instigator->GetActorRotation(),start,radius,
+		instigator->GetTraceObjTypes(),classFilter,instigator->GetTraceIgnoredActors(),outHits))
+	{
+		return false;
+	}
+	return true;
+}

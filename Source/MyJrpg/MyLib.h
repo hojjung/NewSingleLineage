@@ -84,6 +84,8 @@ public:
 
 	static bool CheckAngle(const AActor* center, const AActor* target, float angle);
 
+	static bool CheckAngle(const FVector centerDir,const FVector centerPos, const AActor* target, float angle);
+
 	static void ShowSkillFail(FString reason);
 
 	static bool BoxOverlapActors(UObject* WorldContextObject, FRotator rot, const FVector BoxPos, FVector BoxExtent, const TArray<TEnumAsByte<EObjectTypeQuery> > & ObjectTypes, UClass* ActorClassFilter, const TArray<AActor*>& ActorsToIgnore, TArray<AActor*>& OutActors);

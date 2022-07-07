@@ -227,6 +227,21 @@ bool UMyLib::CheckAngle(const AActor* center, const AActor* target, float angle)
 	return ((SelfToOtherDir | MyFacingDir) >= PeripheralVisionCosine);
 }
 
+bool UMyLib::CheckAngle(const FVector centerDir,const FVector centerPos, const AActor* target, float angle)
+{
+	FVector const OtherLoc = target->GetActorLocation();
+	
+	const FVector& ActorDirection = (OtherLoc - centerPos).GetSafeNormal();
+	
+	const float DotProduct = FVector::DotProduct(ActorDirection, centerDir);
+
+	const float LowerLimit =  FMath::Cos(FMath::DegreesToRadians(angle / 2));
+	
+	constexpr float UpperLimit = 1.0f;
+			
+	return DotProduct >= LowerLimit && DotProduct <= UpperLimit;
+}
+
 void UMyLib::ShowSkillFail(FString reason)
 {
 //	GetCanvas()->ShowSkillFail(reason);

@@ -12,7 +12,8 @@ ACombatUnitPawn::ACombatUnitPawn(const FObjectInitializer& objInit):Super(objIni
    	m_fHitAnimCD = -1.f;
    	m_fAttackMinCD = 0.25f;
 	SetAttackRange(200);
-	
+
+	m_bIsRotateable = true;
 	m_bUseFsmTick = true;
 	m_bCanUseSkill = true;
 	//
@@ -54,7 +55,7 @@ bool ACombatUnitPawn::TryHit(const FStatGroup& other)
 
 void ACombatUnitPawn::HomingRotateToTarget(float speedTime)
 {
-	if (!GetFocusedTarget())
+	if (!GetFocusedTarget() || !m_bIsRotateable)
 	{
 		return;
 	}
@@ -71,6 +72,11 @@ void ACombatUnitPawn::HomingRotateToTarget(float speedTime)
 	}
 
 	SetActorRotation(NewRot);
+}
+
+void ACombatUnitPawn::SetRotateAble(bool b)
+{
+	m_bIsRotateable = b;
 }
 
 float ACombatUnitPawn::PlayBaseAttackAnim()
@@ -178,6 +184,7 @@ void ACombatUnitPawn::PlayTookHitMontage()
 {
 	if (m_EntityAsset->m_TookHitMontage && m_fHitAnimCD < 0.f)
 	{
+		SetRotateAble(true);
 		PlayAnimMontage(m_EntityAsset->m_TookHitMontage, 1);
 	
 		m_fHitAnimCD = FMath::RandRange(5.5f, 25.f);

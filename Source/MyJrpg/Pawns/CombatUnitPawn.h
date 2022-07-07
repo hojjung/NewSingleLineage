@@ -62,6 +62,7 @@ protected:
 	float m_fAttackRangeSqr;
 	bool m_bUseFsmTick;
 	bool m_bCanUseSkill;
+	bool m_bIsRotateable;
 
 	EStanceType m_Stance;
 
@@ -96,6 +97,8 @@ public:
 	virtual void Tick(float DeltaSeconds) override;
 	
 	void HomingRotateToTarget(float speedTime = 5.5f);
+
+	void SetRotateAble(bool b);
 	
 public://took dmg	
 	virtual bool TakeDmg(float amount,ACombatUnitPawn* attacker);

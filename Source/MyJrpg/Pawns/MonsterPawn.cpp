@@ -315,6 +315,7 @@ bool AMonsterPawn::TakeDmg(float amount, ACombatUnitPawn* attacker)
 		return false;
 	}
 	
+	
 	if(!m_PawnInfo->IsVisible())
 	{
 		m_PawnInfo->SetVisibility(true);
