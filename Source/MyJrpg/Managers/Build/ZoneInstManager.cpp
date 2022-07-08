@@ -741,6 +741,11 @@ void UZoneInstManager::AddTrackIcon(IFocusable* icon)
 	m_MiniMapCam->AddTrackIcon(icon);
 }
 
+void UZoneInstManager::AddTrackIcon(UMeshComponent* mesh)
+{
+	m_MiniMapCam->AddTrackIcon(mesh);
+}
+
 void UZoneInstManager::RemovePlayerTomb()
 {
 	if(!m_PlayerTombZoneID.IsNone())

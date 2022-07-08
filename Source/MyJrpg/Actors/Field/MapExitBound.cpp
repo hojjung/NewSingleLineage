@@ -8,7 +8,7 @@
 // Sets default values
 AMapExitBound::AMapExitBound()
 {
-	PrimaryActorTick.bCanEverTick = false;
+	PrimaryActorTick.bCanEverTick = true;
 	
 	static ConstructorHelpers::FObjectFinder<UMaterialInterface> FoundMesh(TEXT("Material'/Game/03_VisualEffect/MAT_Exit.MAT_Exit'"));
 
@@ -35,6 +35,14 @@ AMapExitBound::AMapExitBound()
 	m_TextRender->SetText(  FText::FromString(TEXT("World Map")));
 	m_TextRender->SetRelativeLocation(FVector(1,0,0));
 	m_TextRender->CastShadow = false;
+
+	m_IconMeshComp = CreateDefaultSubobject<UMinimapIconComp>("m_IconMeshComp");
+	m_IconMeshComp->SetupAttachment(RootComponent);
+	m_IconMeshComp->SetRelativeRotation(FRotator(-90,0,0));
+	static ConstructorHelpers::FObjectFinder<UTexture2D>
+	FoundIcon(TEXT("Texture2D'/Game/Sprites/Dummy/Ex.Ex'"));
+
+	m_Icon =  FoundIcon.Object;
 }
 
 void AMapExitBound::BeginPlay()
@@ -43,6 +51,10 @@ void AMapExitBound::BeginPlay()
 	m_CollBox->SetBoxExtent(m_Decal->DecalSize);
 	m_CollBox->OnComponentBeginOverlap.AddDynamic(this, &AMapExitBound::OnTriggerStart);
 	m_CollBox->OnComponentEndOverlap.AddDynamic(this, &AMapExitBound::OnTriggerEnd);
+	//
+	//m_IconMeshComp->SetRotationOffset(FRotator(0,45,0));
+	
+	GetWorldTimerManager().SetTimer(m_Timer, this, &AMapExitBound::SetMinimap,1.5f,false);
 }
 
 void AMapExitBound::OnTriggerStart(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor,
@@ -64,4 +76,21 @@ void AMapExitBound::OnTriggerEnd(UPrimitiveComponent* OverlappedComponent, AActo
 void AMapExitBound::MoveToMapLevel()
 {
 	UMyGameInstance::Get->m_LevelMoveManager->OpenMyLevel(TEXT("MapSelect"));
+}
+
+void AMapExitBound::SetMinimap()
+{
+	m_IconMeshComp->SetIcon(m_Icon);
+	
+	m_IconMeshComp->SetLayerHeight(0.f);
+
+	UMyGameInstance::Get->m_ZoneInst->AddTrackIcon(m_IconMeshComp->GetMeshComp());
+
+	FVector NewScale;
+
+	NewScale.X = m_Decal->DecalSize.Z / 205.f;
+	NewScale.Y = m_Decal->DecalSize.Y / 205.f;
+	NewScale.Z = 1.f;
+	
+	m_IconMeshComp->SetWorldScale3D(NewScale);
 }

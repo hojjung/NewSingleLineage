@@ -136,6 +136,8 @@ public:
 	void GetNearNpcs(const ABaseUnitPawn* caller, TArray<ACombatUnitPawn*>& outAry, float range,const TSet<ACombatUnitPawn*>* ignore = nullptr);
 
 	void AddTrackIcon(IFocusable* icon);
+
+	void AddTrackIcon(UMeshComponent* mesh);
 	
 	void RemovePlayerTomb();
 

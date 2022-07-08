@@ -7,6 +7,7 @@
 #include "Components/TextRenderComponent.h"
 #include "Engine/StaticMeshActor.h"
 #include "GameFramework/Actor.h"
+#include "MyJrpg/Pawns/Components/MinimapIconComp.h"
 #include "MapExitBound.generated.h"
 
 UCLASS()
@@ -24,11 +25,19 @@ protected:
 	UTextRenderComponent* m_TextRender;
 	UPROPERTY(VisibleAnywhere)
 	UDecalComponent* m_Decal;
+	UPROPERTY(VisibleAnywhere)
+	UMinimapIconComp* m_IconMeshComp;
+	UPROPERTY()
+	UTexture2D* m_Icon;
+
+	FTimerHandle m_Timer;
 	
 protected:
 	virtual void BeginPlay() override;
 
 	void MoveToMapLevel();
+
+	void SetMinimap();
 
 public:
 	UFUNCTION()

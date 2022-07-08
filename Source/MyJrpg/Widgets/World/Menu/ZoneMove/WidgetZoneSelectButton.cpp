@@ -182,6 +182,10 @@ void UWidgetZoneSelectButton::OnRun()
 	{
 		return;
 	}
+	if(!UMyGameInstance::Get->m_ZoneMove->TryPurchaseStamina(m_RunCost))
+	{
+		return;
+	}
 	UMyGameInstance::Get->m_ZoneMove->StartMove(true, m_fRunTime, m_ZoneData->m_RowKey);
 	OnClose();
 }

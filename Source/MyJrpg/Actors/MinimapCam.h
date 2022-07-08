@@ -29,4 +29,6 @@ protected:
 
 public:
 	void AddTrackIcon(IFocusable* icon);
+
+	void AddTrackIcon(UMeshComponent* mesh);
 };

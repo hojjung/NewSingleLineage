@@ -19,6 +19,8 @@ class MYJRPG_API UZoneMoveManager : public UObject
 	GENERATED_BODY()
 
 public:
+	DECLARE_MULTICAST_DELEGATE_OneParam(FOnStamina, float);
+	
 	DECLARE_MULTICAST_DELEGATE_TwoParams(FMoveStart, const FName& , float);
 
 	DECLARE_MULTICAST_DELEGATE(FOnMoveTick);
@@ -28,6 +30,8 @@ public:
 	FOnMoveTick m_OnMoveTick;
 
 	FOnMoveTick m_OnMoveEnd;
+
+	FOnStamina m_OnStaminaChanged;
 
 protected:
 	int m_nZoneStamina;
@@ -45,6 +49,8 @@ protected:
 	FName m_CurrentID;//현재 위치한 존
 
 	TMap<FName, TWeakObjectPtr<UWidgetMapBtn>> m_MapZoneBtns;
+
+	float m_fRechargeTime;
 	
 public:
 	void Init();
@@ -86,4 +92,8 @@ public:
 	float GetWalkTime(const float& distIn);
 
 	FName GetDestZoneID();
+
+	int GetStamina();
+
+	float GetStaminaChargeTime() const;
 };

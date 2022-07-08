@@ -5,6 +5,8 @@ void UZoneMoveManager::Init()
 	m_nZoneStamina  = 100;
 	
 	m_CurrentID = TEXT("PlayerHome");
+
+	m_fRechargeTime = 10.f;
 }
 
 void UZoneMoveManager::ClearWidgetMap()
@@ -47,6 +49,8 @@ bool UZoneMoveManager::TryPurchaseStamina(int want)
 	}
 	
 	m_nZoneStamina -= want;
+
+	m_OnStaminaChanged.Broadcast(m_nZoneStamina);
 
 	return true;
 }
@@ -192,4 +196,14 @@ float UZoneMoveManager::GetWalkTime(const float& distIn)
 FName UZoneMoveManager::GetDestZoneID()
 {
 	return m_DestZoneID;
+}
+
+int UZoneMoveManager::GetStamina()
+{
+	return m_nZoneStamina;
+}
+
+float UZoneMoveManager::GetStaminaChargeTime() const
+{
+	return m_fRechargeTime;
 }
