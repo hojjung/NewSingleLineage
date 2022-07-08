@@ -89,10 +89,8 @@ void AMyPlayerController::Tick(float DeltaSeconds)
 
 	GetMousePosition(m_MousePos.X,m_MousePos.Y);
 
-	FVector2D Delta = (m_MousePos - OldPos);//.GetSafeNormal() * 50.f;
+	FVector2D Delta = (m_MousePos - OldPos) * 2.f;
 
-	float S =  Delta.Size();
-	PRINTF("Delta Size:%f", S);
 	m_OnFlick.Broadcast(Delta);
 }
 

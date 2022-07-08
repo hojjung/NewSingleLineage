@@ -102,6 +102,9 @@ void ATreeBase::SetEntity(const FName& id, const FGatherDataRow& data, AMyPlayer
 	m_IconMeshComp->SetRotationOffset(FRotator(0,45,0));
 
 	m_IconMeshComp->SetIcon(m_GatherAsset->m_MapIcon);
+
+	m_NavProp.AgentHeight = 88;
+	m_NavProp.AgentRadius = 70;
 }
 
 void ATreeBase::OnInteract()
@@ -286,4 +289,9 @@ bool ATreeBase::IsInteractable()
 UMinimapIconComp* ATreeBase::GetIconMeshComp()
 {
 	return m_IconMeshComp;
+}
+
+const FNavAgentProperties& ATreeBase::GetNavAgentPropertiesRef() const
+{
+	return m_NavProp;
 }

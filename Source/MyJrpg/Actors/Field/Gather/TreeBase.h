@@ -50,6 +50,8 @@ private:
 	
 	FName m_ID;
 
+	FNavAgentProperties m_NavProp;
+
 private:
 	void CreateSetDeathCurve(float fullLength);
 
@@ -88,4 +90,6 @@ public:
 	virtual bool IsInteractable() override;
 
 	virtual UMinimapIconComp* GetIconMeshComp() override;
+
+	virtual const FNavAgentProperties& GetNavAgentPropertiesRef() const override;
 };

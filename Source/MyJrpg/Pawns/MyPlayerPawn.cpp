@@ -482,6 +482,8 @@ void AMyPlayerPawn::SetCameraOffset(const FVector2D& delta)
 
 void AMyPlayerPawn::EndBuildCam()
 {
+	m_DissolveCam->SetRelativeLocation(FVector(0.f));
+	
 	m_DissolveCam->TargetArmLength = 730; //1375
 
 	m_DissolveCam->SetRelativeRotation(FRotator(-53, -45.f, 0.f)); //-45.f
