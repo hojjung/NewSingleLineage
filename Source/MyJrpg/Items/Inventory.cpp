@@ -405,14 +405,16 @@ int UInventory::GetUsingSlotCount() const
 {
 	int UsingSlotCnt = 0;
 	
-	for (auto& ItemMap : m_AryTotalItems)
+	for (auto& ItemMap : m_MapItemKeyCount)
 	{
-		if (!ItemMap.m_ID.IsNone())
-		{
-			UsingSlotCnt++;
-		}
+		UsingSlotCnt += ItemMap.Value.Num();
 	}
 	return UsingSlotCnt;
+}
+
+bool UInventory::IsEmpty()
+{
+	return GetUsingSlotCount() == 0;
 }
 
 FItemSpec* UInventory::FindItem(FName itemID, int stlv)

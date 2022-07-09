@@ -2,6 +2,7 @@
 
 #include "MyJrpg/MyLib.h"
 #include "MyJrpg/Actors/Field/Build/StructureActor.h"
+#include "MyJrpg/Actors/Field/Build/BuildInteract/BI_Assemble.h"
 #include "MyJrpg/Managers/ConstructionManager.h"
 #include "MyJrpg/Managers/MyGameInstance.h"
 
@@ -17,9 +18,11 @@ void UWidgetBuildPanel::NativeOnInitialized()
 
 	for(const FBuildDataRow* Data : AryDatas)
 	{
-		if(Data->m_BuildType == EBuildType::Furniture || Data->m_BuildType == EBuildType::Field || Data->m_AryCostItem.Num() < 1)
+		bool ShowInPanel = (Data->m_BuildType == EBuildType::Wall || Data->m_BuildType == EBuildType::Foundation) && Data->m_bShowInPanel;
+		
+		if(!ShowInPanel)
 		{
-			continue;
+			continue;//패널에 누가 떠야하나? 벽과,바닥이 떠야한다.벽과바닥이 뜨는데, 1단계만 떠야한다.
 		}
 		UWidgetBuildElement* SelectButton = CreateWidget<UWidgetBuildElement>(this,m_ClassBuildEle);
 		SelectButton->Init(*Data);

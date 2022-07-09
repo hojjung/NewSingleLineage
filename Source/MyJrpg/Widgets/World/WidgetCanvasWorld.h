@@ -12,6 +12,8 @@
 #include "Hud/WidgetWaitInteract.h"
 #include "Menu/CharacterInfoHUD/AlertInfoWindow.h"
 #include "Menu/Collection/WidgetCollecPanelParent.h"
+#include "Menu/Craft/WidgetAssemble.h"
+#include "Menu/Craft/WidgetAssembleAndInven.h"
 #include "Menu/Dialogue/WidgetLogWindow.h"
 #include "Menu/Enchant/WidgetEnchantBase.h"
 #include "Menu/Equipment/WidgetStatHealth.h"
@@ -21,6 +23,7 @@
 #include "Menu/Quest/WidgetQuestAcceptPanel.h"
 #include "Menu/Quest/WidgetQuestPanel.h"
 #include "Menu/StackSelector/WidgetStackCalculator.h"
+#include "MyJrpg/Actors/Field/Build/BuildInteract/BI_Assemble.h"
 #include "MyJrpg/Actors/Field/Build/BuildInteract/BI_ItemConverter.h"
 #include "MyJrpg/Pawns/CombatUnitPawn.h"
 #include "MyJrpg/Pawns/MonsterPawn.h"
@@ -132,6 +135,8 @@ protected:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (BindWidget))
 	UWidgetItemConvert* m_ItemConvertPanel;
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (BindWidget))
+	UWidgetAssembleAndInven* m_ItemAssemblePanel;
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (BindWidget))
 	UWidgetConfirmPanel* m_ConfirmPanel;
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (BindWidget))
 	UWidgetWaitInteract* m_WaitBar;
@@ -221,5 +226,7 @@ public:
 	UWidgetWaitInteract* GetWaitInteract();
 
 	UWidgetScreenEffect* GetScreenEffect();
+	
+	void OpenAssemble(UAssembleInst* assemble_inst);
 };
 

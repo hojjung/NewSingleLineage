@@ -4,20 +4,21 @@
 
 #include "CoreMinimal.h"
 #include "BuildInteractBase.h"
+#include "MyJrpg/Items/AssembleInst.h"
 #include "MyJrpg/Items/ItemConvertInst.h"
-#include "BI_ItemConverter.generated.h"
+#include "BI_Assemble.generated.h"
 
 /**
  * 
  */
 UCLASS()
-class MYJRPG_API UBI_ItemConverter : public UBuildInteractBase
+class MYJRPG_API UBI_Assemble : public UBuildInteractBase
 {
 	GENERATED_BODY()
 
 protected:
 	UPROPERTY()
-	UItemConvertInst* m_ItemConvert;
+	UAssembleInst* m_ItemHolder;
 		
 public:
 	virtual void Init(const TArray<FString>& variable, UInventory* inven) override;
@@ -27,6 +28,4 @@ public:
 	virtual void OnInteract() override;
 
 	virtual UInventory* GetItemHolder() override;
-
-	virtual void OnStructureDestory() override;
 };

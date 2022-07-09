@@ -40,3 +40,8 @@ UInventory* UBI_ItemConverter::GetItemHolder()
 {
 	return m_ItemConvert;
 }
+
+void UBI_ItemConverter::OnStructureDestory()
+{
+	UMyGameInstance::Get->m_ItemConvertManager->RemoveStructureAndItem(Cast<AStructureActor>(GetOuter()));
+}

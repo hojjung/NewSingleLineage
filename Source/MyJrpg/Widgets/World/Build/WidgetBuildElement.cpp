@@ -67,6 +67,8 @@ void UWidgetBuildElement::CreateCostWidgets(const TArray<FCraftItemCost>& costDa
 	{
 		UWidgetCraftCostElement* SelectButton = CreateWidget<UWidgetCraftCostElement>(this,m_ClassCostElement);
 
+		SelectButton->BoundStackDefaultStackFunPtr();
+		
 		SelectButton->SetCraftCost(CraftData);
 
 		m_VertCost->AddChildToVerticalBox(SelectButton);

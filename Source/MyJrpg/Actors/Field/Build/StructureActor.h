@@ -51,7 +51,6 @@ public:
 	virtual bool IsEraseable() ;
 	virtual void SetColl(bool b) ;
 	
-	bool IsUpgradeable();
 
 	virtual void OnInteract() override;
 
@@ -66,4 +65,11 @@ public:
 	virtual bool IsFocusable() override;
 
 	virtual const FNavAgentProperties& GetNavAgentPropertiesRef() const override;
+
+public:
+	bool HasUpgrade();
+
+	bool TryPurchaseUpgrade();
+
+	virtual void Destroyed() override;
 };

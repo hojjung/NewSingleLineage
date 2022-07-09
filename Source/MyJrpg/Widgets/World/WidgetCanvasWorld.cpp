@@ -333,6 +333,11 @@ UWidgetScreenEffect* UWidgetCanvasWorld::GetScreenEffect()
 	return m_ScreenEffect;
 }
 
+void UWidgetCanvasWorld::OpenAssemble(UAssembleInst* assemble_inst)
+{
+	m_ItemAssemblePanel->ShowAssemble(assemble_inst);
+}
+
 void UWidgetCanvasWorld::OnZoneMove(const FName& zoneID)
 {
 	if(zoneID == TEXT("PlayerHome"))

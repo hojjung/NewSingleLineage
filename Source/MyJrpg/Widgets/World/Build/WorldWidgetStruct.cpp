@@ -98,8 +98,7 @@ void UWorldWidgetStruct::ShowSelect(bool b)
 	if(b)
 	{
 		m_BtnErase->SetVisibility(ESlateVisibility::Visible);
-		bool Result = m_Owner->IsUpgradeable();
-		if(Result)
+		if(m_Owner->HasUpgrade())
 			m_BtnUpgrade->SetVisibility(ESlateVisibility::Visible);
 	}
 	else

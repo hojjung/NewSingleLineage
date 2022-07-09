@@ -1,6 +1,7 @@
 #include "CraftManager.h"
 #include "MyGameInstance.h"
 #include "MyJrpg/MyLib.h"
+#include "MyJrpg/Actors/Field/Build/BuildInteract/BI_Assemble.h"
 #include "MyJrpg/Items/Inventory.h"
 
 void UCraftManager::Init()
@@ -11,7 +12,8 @@ void UCraftManager::Init()
 	{
 		const FBuildDataRow* Build = (FBuildDataRow*)it.Value;
 		
-		if(Build->m_BuildType == EBuildType::Foundation || Build->m_BuildType == EBuildType::Wall || Build->m_AryCostItem.Num() < 1)
+		if(Build->m_BuildType == EBuildType::Foundation || Build->m_BuildType == EBuildType::Wall
+			|| Build->m_AryCostItem.Num() < 1 || !Build->m_bShowInPanel)
 		{
 			continue;
 		}

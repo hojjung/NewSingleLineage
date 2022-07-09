@@ -23,4 +23,6 @@ public:
 	virtual bool IsEraseable() { return true;}
 
 	virtual void OnInteract() {}
+
+	virtual void OnStructureDestory() {}
 };

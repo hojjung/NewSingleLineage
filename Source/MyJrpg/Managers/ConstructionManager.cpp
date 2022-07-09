@@ -771,14 +771,14 @@ void UConstructionManager::Erase(AStructureActor* buildActor)
 	TryEraseActor(*Holder);
 }
 
-void UConstructionManager::Upgrade(AStructureActor* buildActor)
+bool UConstructionManager::Upgrade(AStructureActor* buildActor)
 {
 	TWeakObjectPtr<AStructureActor> * Holder;
 	bool isHori;
 	GetStructureHolder(buildActor,Holder,isHori);
 	AStructureActor* Structure = Holder->Get(); 
-	if(!Structure->IsUpgradeable())
-		return;
+	if(!Structure->TryPurchaseUpgrade())
+		return false;
 	FVector Loc = Structure->GetActorLocation();
 	FName NextID = Structure->GetBuildData().m_NextUpgradeActorID;
 	const FBuildDataRow* NextBuild = UBuildData::GetBuildTable->FindRow<FBuildDataRow>(NextID,""); 
@@ -790,6 +790,7 @@ void UConstructionManager::Upgrade(AStructureActor* buildActor)
 	Structure->Destroy();
 	(*Holder) = NewUpgradeActor;
 	m_FocusActor = NewUpgradeActor;
+	return true;
 }
 
 void UConstructionManager::GetStructureHolder(AStructureActor* want, TWeakObjectPtr<AStructureActor> *& holder, bool &isHori)

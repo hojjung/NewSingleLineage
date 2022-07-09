@@ -97,8 +97,8 @@ public:
 	bool CheckCostItemAvailable(const FItemSpec& item);
 
 	void Tick(float delta_time);
-	
-	bool IsEmpty();
+
+	virtual bool IsEmpty() override;
 
 	float GetRemainTimePer();
 

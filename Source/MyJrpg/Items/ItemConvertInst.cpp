@@ -4,7 +4,6 @@
 
 void UItemConvertInst::SetConvertData(const FItemConvertRow& convertRow)
 {
-
 	m_bAllMaterialAvailable = false;
 	m_bIsFireWorking = false;
 	m_bIsConverting = false;

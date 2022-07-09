@@ -55,7 +55,8 @@ void UWidgetCraftSelected::SelectCraft(const FCraftDataInfo& data)
 	for(const FCraftItemCost& CraftData : Ary)
 	{
 		UWidgetCraftCostElement* SelectButton = CreateWidget<UWidgetCraftCostElement>(this,m_ClassCost);
-		
+
+		SelectButton->BoundStackDefaultStackFunPtr();
 		SelectButton->SetCraftCost(CraftData);
 		
 		m_Wrap->AddChild(SelectButton);

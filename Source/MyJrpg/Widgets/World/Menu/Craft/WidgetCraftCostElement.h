@@ -17,6 +17,13 @@ class MYJRPG_API UWidgetCraftCostElement : public UUserWidget
 {
 	GENERATED_BODY()
 
+public:
+	DECLARE_DELEGATE_RetVal_OneParam(int, FGetStack, int);
+
+	FGetStack m_GetStackFuncPtr;
+
+	int m_nIndex = 0;
+
 protected:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (BindWidget))
 	UWidgetBaseElement* m_ItemElement;
@@ -27,9 +34,15 @@ protected:
 
 protected:
 	void OnHold(UWidgetBaseElement* ele);
+
+	int GetStack(int index);
 	
 public:
 	void UpdateCostAmount();
 	
 	void SetCraftCost(const FCraftItemCost& cost);
+	
+	void BoundStackDefaultStackFunPtr();
 };
+
+

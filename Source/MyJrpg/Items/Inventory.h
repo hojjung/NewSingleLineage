@@ -110,6 +110,8 @@ public:
 	void RemoveItem(int index, int lvCnt);
 
 	int GetUsingSlotCount() const;
+
+	virtual bool IsEmpty();
 	
 	FItemSpec* FindItem(FName itemID, int stlv);
 

@@ -20,19 +20,24 @@ void UWidgetCraftCostElement::SetCraftCost(const FCraftItemCost& cost)
 	m_ItemElement->SetFocusable(false);
 
 	m_ItemElement->SetDragable(false);
-
+	
 	UpdateCostAmount();
+}
+
+void UWidgetCraftCostElement::BoundStackDefaultStackFunPtr()
+{
+	m_GetStackFuncPtr.BindUObject(this, &UWidgetCraftCostElement::GetStack);
 }
 
 void UWidgetCraftCostElement::UpdateCostAmount()
 {
 	FString FormatAmount;
 
-	int Stack = UMyLib::GetItemCountAllInven(m_CraftData->m_ItemDataRowHandle.RowName,m_CraftData->m_nStackOrLevel);
+	int Stack = m_GetStackFuncPtr.Execute(m_nIndex);
 
 	if(UMyLib::IsEquip(m_CraftData->m_ItemDataRowHandle.RowName))
 	{
-		FormatAmount = FString::Printf(TEXT("Lv.+%d : %d/1"),m_CraftData->m_nStackOrLevel, Stack);
+		FormatAmount = FString::Printf(TEXT("Lv.+%d:%d/1"),m_CraftData->m_nStackOrLevel, Stack);
 	}
 	else
 	{
@@ -60,4 +65,9 @@ void UWidgetCraftCostElement::OnHold(UWidgetBaseElement* ele)
 	const FItemDataRow& ItemData = UMyLib::GetItemData(m_CraftData->m_ItemDataRowHandle.RowName);
 	
 	UMyLib::OpenItemInfo(ItemData);
+}
+
+int UWidgetCraftCostElement::GetStack(int index)
+{
+	return UMyLib::GetItemCountAllInven(m_CraftData->m_ItemDataRowHandle.RowName,m_CraftData->m_nStackOrLevel);
 }

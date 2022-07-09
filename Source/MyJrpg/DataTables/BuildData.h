@@ -65,6 +65,8 @@ public:
 	FName m_NextUpgradeActorID;
 	UPROPERTY(EditDefaultsOnly,BlueprintReadOnly)
 	int m_nMaxOwnedCount = 0;
+	UPROPERTY(EditDefaultsOnly,BlueprintReadOnly)
+	bool m_bShowInPanel = true;
 
 	virtual UStaticMesh* GetStMesh() override;
 

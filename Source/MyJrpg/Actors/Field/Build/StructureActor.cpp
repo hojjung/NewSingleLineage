@@ -166,9 +166,24 @@ void AStructureActor::SetColl(bool b)
 	}
 }
 
-bool AStructureActor::IsUpgradeable()
+bool AStructureActor::HasUpgrade()
 {
 	return !GetBuildData().m_NextUpgradeActorID.IsNone();
+}
+
+bool AStructureActor::TryPurchaseUpgrade()
+{
+	return true;
+}
+
+void AStructureActor::Destroyed()
+{
+	if(m_BuildInteract)
+	{
+		m_BuildInteract->OnStructureDestory();
+		m_BuildInteract = nullptr;
+	}
+	Super::Destroyed();
 }
 
 void AStructureActor::OnInteract()
