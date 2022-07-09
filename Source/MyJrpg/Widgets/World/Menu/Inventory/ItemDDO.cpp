@@ -28,11 +28,15 @@ const FItemSpec& UItemDDO::GetItem()
 {
 	if(m_FromConverter.Get())
 	{
-		return m_FromConverter->GetItemRef(m_nIndex);
+		return m_FromConverter->GetItemConstRef(m_nIndex);
 	}
-	if(m_FromInven.Get())
+	else if(m_FromInven.Get())
 	{
 		return m_FromInven->GetItemConstRef(m_nIndex);
+	}
+	else if(m_FromAssemble.Get())
+	{
+		return m_FromAssemble->GetItemConstRef(m_nIndex);
 	}
 
 	return m_FromEquip->GetEquipItem(m_nIndex);

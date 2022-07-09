@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "Blueprint/DragDropOperation.h"
+#include "MyJrpg/Items/AssembleInst.h"
 #include "MyJrpg/Managers/EquipManager.h"
 #include "ItemDDO.generated.h"
 
@@ -28,6 +29,8 @@ public:
 	TWeakObjectPtr<UEquipManager> m_FromEquip;
 
 	TWeakObjectPtr<UItemConvertInst> m_FromConverter;
+
+	TWeakObjectPtr<UAssembleInst> m_FromAssemble;
 
 	int m_nIndex;
 public:

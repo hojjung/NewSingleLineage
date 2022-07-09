@@ -442,6 +442,7 @@ FItemSpec* UInventory::FindItem(FName itemID, int stlv)
 		Sum += GetStLv(Index);
 		if(Sum >= stlv)
 		{
+			PRINTF("UInventory::FindItem, but this function is wrong");
 			return &GetItemRef(Index);
 		}
 	}

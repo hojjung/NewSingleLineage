@@ -1,7 +1,8 @@
-// Fill out your copyright notice in the Description page of Project Settings.
-
-
 #include "WidgetAssemble.h"
+
+#include "MyJrpg/MyLib.h"
+#include "MyJrpg/Managers/MyGameInstance.h"
+#include "MyJrpg/Widgets/World/Menu/Inventory/ItemDDO.h"
 
 void UWidgetAssemble::NativeOnInitialized()
 {
@@ -25,13 +26,15 @@ void UWidgetAssemble::NativeOnInitialized()
 		Ele->m_nIndex = Index;
 		Ele->SetVisibility(ESlateVisibility::Collapsed);
 		Ele->m_GetStackFuncPtr.BindUObject(this, &UWidgetAssemble::GetStack);
+		Ele->GetEle()->SetDragable(false);
+		Ele->GetEle()->m_OnDrop.AddUObject(this, &UWidgetAssemble::OnDrop);
+		
 		Index++;
 	}
-
 	m_BtnPutAll->OnClicked.AddDynamic(this, &UWidgetAssemble::OnPutAll);
-
 	m_BtnComplete->OnClicked.AddDynamic(this, &UWidgetAssemble::OnComplete);
 }
+
 
 void UWidgetAssemble::UpdateSlots()
 {
@@ -66,24 +69,89 @@ void UWidgetAssemble::ShowAssemble(UAssembleInst* assemble_inst)
 	UpdateSlots();
 }
 
+int UWidgetAssemble::GetRemainNeedItemCount(int index)
+{
+	int RemainItemNeed = 0;
+
+	const FCraftItemCost& ItemCost = m_AssembleInst.Get()->GetCraftData().m_AryCostItem[index];
+
+	bool IsEquip = UMyLib::IsEquip(ItemCost.m_ItemDataRowHandle.RowName);
+
+	if(IsEquip && m_AssembleInst->GetItemConstRef(index).m_ID.IsNone())
+	{
+		RemainItemNeed = 1;
+	}
+	else
+	{
+		RemainItemNeed = ItemCost.m_nStackOrLevel - m_AssembleInst->GetItemConstRef(index).m_nLvStack;	
+	}
+
+	return RemainItemNeed;
+}
+
+void UWidgetAssemble::TryPutItem(UInventory* inven, const FCraftItemCost& cost, int outRemain)
+{
+	int ItemHave = 0;
+	
+	ItemHave = inven->GetItemCount(cost.m_ItemDataRowHandle.RowName, cost.m_nStackOrLevel);
+
+	if(ItemHave > 0)
+	{
+		int RemoveCount = FMath::Min(ItemHave, outRemain);
+
+		outRemain -= RemoveCount;
+
+		inven->RemoveItem(cost.m_ItemDataRowHandle.RowName, RemoveCount);
+
+		//AddItem How?
+	}
+}
+
 void UWidgetAssemble::OnPutAll()
 {
-	//드래그 드랍으로 넣는것 먼저
-	// int Index = 0;
-	// for(const FCraftItemCost& Cost : m_AssembleInst.Get()->GetCraftData().m_AryCostItem)
-	// {
-	// 	if(!m_AssembleInst->IsSlotPutable(Index))
-	// 	{
-	// 		Index++;
-	// 		continue;
-	// 	}
-	// 	m_AssembleInst->AddSlot(Index, );
-	// 	m_AssembleInst->AddItemKey(Index, );
-	//
-	// 	m_AssembleInst->OnDropItem()
-	// 	
-	// 	Index++;
-	// }
+	UEquipManager* Equip = UMyGameInstance::Get->m_EquipManager;
+	
+	int Index = 0;
+
+	FItemSpec* ItemFound = nullptr;
+
+	int RemainItemNeed = 0;
+
+	int ItemHave = 0;
+	
+	for(const FCraftItemCost& Cost : m_AssembleInst.Get()->GetCraftData().m_AryCostItem)
+	{
+		RemainItemNeed = GetRemainNeedItemCount(Index);
+
+		if(RemainItemNeed <= 0)//다채워진 아이템이래 패스
+		{
+			continue;
+		}
+		
+		ItemHave = UMyLib::GetPlayerInven()->GetItemCount(Cost.m_ItemDataRowHandle.RowName, Cost.m_nStackOrLevel);
+
+		if(ItemHave > 0)
+		{
+			int RemoveCount = FMath::Min(ItemHave, RemainItemNeed);
+
+			RemainItemNeed -= RemoveCount;
+
+			if(RemainItemNeed <= 0)
+			{
+				continue;
+			}
+		}
+		
+		if(Equip->GetBag())
+		{
+			Equip->GetBag()->GetItemCount(Cost.m_ItemDataRowHandle.RowName, Cost.m_nStackOrLevel);
+		}
+		if(Equip->GetBelt())
+		{
+			Equip->GetBelt()->GetItemCount(Cost.m_ItemDataRowHandle.RowName, Cost.m_nStackOrLevel);
+		}		
+		Index++;
+	}
 }
 
 void UWidgetAssemble::OnComplete()
@@ -94,4 +162,29 @@ void UWidgetAssemble::OnComplete()
 void UWidgetAssemble::ClosePanel()
 {
 	m_AssembleInst->m_OnInvenChanged.Remove(m_DeleHandle);
+}
+
+void UWidgetAssemble::OnDrag(UWidgetBaseElement* ele)
+{
+	UItemDDO::GetDDOInst->m_FromAssemble = m_AssembleInst;
+
+	UItemDDO::GetDDOInst->m_FromInven = nullptr;
+
+	UItemDDO::GetDDOInst->m_nIndex = ele->GetIndex();
+}
+
+void UWidgetAssemble::OnDrop(UWidgetBaseElement* ele)
+{
+	if(UItemDDO::GetDDOInst->m_FromInven.Get())
+	{
+		const FItemSpec& ItemSpec = UItemDDO::GetDDOInst->GetItem();
+
+		int Index = ele->GetIndex();
+
+		if(!m_AssembleInst->IsSlotPutable(Index, ItemSpec))
+		{
+			return;
+		}
+		m_AssembleInst->OnDropItem(ele->GetIndex(),UItemDDO::GetDDOInst->m_FromInven.Get(),UItemDDO::GetDDOInst->m_nIndex);
+	}
 }

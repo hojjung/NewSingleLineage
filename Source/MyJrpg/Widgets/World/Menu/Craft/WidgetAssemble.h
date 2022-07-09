@@ -10,7 +10,6 @@
 #include "WidgetAssemble.generated.h"
 
 /**
- * 
  */
 UCLASS()
 class MYJRPG_API UWidgetAssemble : public UUserWidget
@@ -56,9 +55,17 @@ protected:
 protected:
 	virtual void NativeOnInitialized() override;
 
+	int GetRemainNeedItemCount(int index);
+
+	void TryPutItem(UInventory* inven, const FCraftItemCost& cost, int outRemain);
+
 	void UpdateSlots();
 
 	int GetStack(int index);
+
+	void OnDrag(UWidgetBaseElement* ele);
+
+	void OnDrop(UWidgetBaseElement* ele);
 
 public:
 	void ShowAssemble(UAssembleInst* assemble_inst);

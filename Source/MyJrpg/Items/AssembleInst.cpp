@@ -48,7 +48,8 @@ bool UAssembleInst::TryComplete()
 	return UMyGameInstance::Get->m_BuildManager->Upgrade(Cast<AStructureActor>(GetOuter()));
 }
 
-void UAssembleInst::PutItem(int index, UInventory* from)
+void UAssembleInst::PutItem(int index, const FItemSpec& item)
 {
-	
+	AddSlot(index, item);
+	AddItemKey();
 }

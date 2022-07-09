@@ -43,6 +43,8 @@ public:
 	void SetCraftCost(const FCraftItemCost& cost);
 	
 	void BoundStackDefaultStackFunPtr();
+
+	UWidgetBaseElement* GetEle();
 };
 
 

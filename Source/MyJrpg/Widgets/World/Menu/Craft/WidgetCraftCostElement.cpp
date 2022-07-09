@@ -29,6 +29,11 @@ void UWidgetCraftCostElement::BoundStackDefaultStackFunPtr()
 	m_GetStackFuncPtr.BindUObject(this, &UWidgetCraftCostElement::GetStack);
 }
 
+UWidgetBaseElement* UWidgetCraftCostElement::GetEle()
+{
+	return m_ItemElement;
+}
+
 void UWidgetCraftCostElement::UpdateCostAmount()
 {
 	FString FormatAmount;

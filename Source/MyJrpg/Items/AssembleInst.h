@@ -31,5 +31,5 @@ public:
 
 	bool TryComplete();
 
-	void PutItem(int index, UInventory* from);
+	void PutItem(int index, const FItemSpec& item);
 };
