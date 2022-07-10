@@ -20,7 +20,7 @@ void UWorldWidgetStruct::NativeOnInitialized()
 	m_BtnErase->OnClicked.AddDynamic(this, &UWorldWidgetStruct::OnErase);
 
 	m_BtnUpgrade->OnClicked.AddDynamic(this, &UWorldWidgetStruct::OnUpgrade);
-	
+
 	ShowSelect(false);
 }
 
@@ -37,6 +37,13 @@ void UWorldWidgetStruct::DeselectErase()
 void UWorldWidgetStruct::ConfirmErase()
 {
 	UMyGameInstance::Get->m_BuildManager->Erase(m_Owner.Get());
+}
+
+void UWorldWidgetStruct::UpdateUpgradeCost()
+{
+	const FBuildDataRow& NextBuildData = *UBuildData::GetBuildTable->FindRow<FBuildDataRow>(m_Owner->GetBuildData().m_NextUpgradeActorID, "");
+
+	CreateCostWidgets(NextBuildData.m_AryCostItem);
 }
 
 void UWorldWidgetStruct::ShowRotation(bool b)
@@ -99,11 +106,16 @@ void UWorldWidgetStruct::ShowSelect(bool b)
 	{
 		m_BtnErase->SetVisibility(ESlateVisibility::Visible);
 		if(m_Owner->HasUpgrade())
+		{
 			m_BtnUpgrade->SetVisibility(ESlateVisibility::Visible);
+			m_VertCost->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
+			UpdateUpgradeCost();
+		}
 	}
 	else
 	{
 		m_BtnUpgrade->SetVisibility(ESlateVisibility::Collapsed);
+		m_VertCost->SetVisibility(ESlateVisibility::Collapsed);
 		m_BtnErase->SetVisibility(ESlateVisibility::Collapsed);
 	}
 	ShowBuildWidget(!b);
@@ -114,4 +126,28 @@ void UWorldWidgetStruct::ShowSelect(bool b)
 void UWorldWidgetStruct::SetOwnerActor(AStructureActor* actor)
 {
 	m_Owner = actor;
+}
+
+void UWorldWidgetStruct::CreateCostWidgets(const TArray<FCraftItemCost>& costData)
+{
+	m_VertCost->ClearChildren();
+
+	m_CraftCost.Reset();
+	
+	for(const FCraftItemCost& CraftData : costData)
+	{
+		UWidgetCraftCostElement* SelectButton = CreateWidget<UWidgetCraftCostElement>(this,m_ClassCostElement);
+
+		SelectButton->BoundStackDefaultStackFunPtr();
+		
+		SelectButton->SetCraftCost(CraftData);
+
+		m_VertCost->AddChildToVerticalBox(SelectButton);
+
+		m_CraftCost.Add(SelectButton);
+		
+		SelectButton->SetPadding(FMargin(0,0,0,0));
+
+		SelectButton->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
+	}
 }

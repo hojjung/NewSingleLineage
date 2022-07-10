@@ -20,6 +20,8 @@ void UWidgetAssembleAndInven::NativeOnInitialized()
 	m_BeltPanel->m_OnFocus.AddUObject(this, &UWidgetAssembleAndInven::OnPlInvenFocused);
 
 	m_BeltPanel->m_OnFocusConfirm.AddUObject(this, &UWidgetAssembleAndInven::OnPlInvenFocuseConfirm);
+
+	m_AssemblePanel->m_OnComplete.BindUObject(this, &UWidgetAssembleAndInven::ClosePanel);
 }
 
 void UWidgetAssembleAndInven::OnPlInvenFocused(UWidgetBaseElement* ele, UInventory* inven, int index)

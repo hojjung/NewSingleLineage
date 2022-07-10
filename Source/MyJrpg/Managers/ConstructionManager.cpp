@@ -771,25 +771,45 @@ void UConstructionManager::Erase(AStructureActor* buildActor)
 	TryEraseActor(*Holder);
 }
 
-bool UConstructionManager::Upgrade(AStructureActor* buildActor)
+bool UConstructionManager::Upgrade(AStructureActor* buildActor, bool isShowWidget)
 {
 	TWeakObjectPtr<AStructureActor> * Holder;
+	
 	bool isHori;
+	
 	GetStructureHolder(buildActor,Holder,isHori);
-	AStructureActor* Structure = Holder->Get(); 
-	if(!Structure->TryPurchaseUpgrade())
+	
+	AStructureActor* Structure = Holder->Get();
+	
+	if(isShowWidget && !Structure->TryPurchaseUpgrade())
 		return false;
+	
 	FVector Loc = Structure->GetActorLocation();
+	
+	FRotator Rot = Structure->GetActorRotation();
+	
 	FName NextID = Structure->GetBuildData().m_NextUpgradeActorID;
-	const FBuildDataRow* NextBuild = UBuildData::GetBuildTable->FindRow<FBuildDataRow>(NextID,""); 
+	
+	const FBuildDataRow* NextBuild = UBuildData::GetBuildTable->FindRow<FBuildDataRow>(NextID,"");
+	
 	AStructureActor* NewUpgradeActor = Cast<AStructureActor>(SpawnStructure(*NextBuild));
+	
 	NewUpgradeActor->SetActorLocation(Loc);
-	if(!isHori)
-		NewUpgradeActor->SetActorRotation(FRotator(0,90,0));
-	NewUpgradeActor->ShowSelect(true);
+	
+	NewUpgradeActor->SetActorRotation(Rot);
+	
+	NewUpgradeActor->ShowSelect(isShowWidget);
+
+	NewUpgradeActor->ConfirmBuild();
+	
+	UMyGameInstance::Get->m_ZoneInst->AddBuildActor(NewUpgradeActor);
+	
 	Structure->Destroy();
+	
 	(*Holder) = NewUpgradeActor;
+	
 	m_FocusActor = NewUpgradeActor;
+	
 	return true;
 }
 

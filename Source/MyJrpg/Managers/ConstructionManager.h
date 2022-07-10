@@ -164,7 +164,7 @@ public:
 	
 	void Erase(AStructureActor* buildActor);
 	
-	bool Upgrade(AStructureActor* buildActor);
+	bool Upgrade(AStructureActor* buildActor, bool isShowWidget =  true);
 
 	void GetStructureHolder(AStructureActor* want, TWeakObjectPtr<AStructureActor> *& holder, bool &isHori);
 	

@@ -42,25 +42,41 @@ void UWidgetCraftCostElement::UpdateCostAmount()
 
 	if(UMyLib::IsEquip(m_CraftData->m_ItemDataRowHandle.RowName))
 	{
-		FormatAmount = FString::Printf(TEXT("Lv.+%d:%d/1"),m_CraftData->m_nStackOrLevel, Stack);
+		if(m_CraftData->m_nStackOrLevel <= 0)
+		{
+			FormatAmount = FString::Printf(TEXT("%d/1"), Stack);
+		}
+		else
+		{
+			FormatAmount = FString::Printf(TEXT("Lv.%d  %d/1"),m_CraftData->m_nStackOrLevel, Stack);	
+		}
+
+		if(Stack > 0)
+		{
+			m_TextCostAmount->SetColorAndOpacity(FLinearColor::White);
+		}
+		else
+		{
+			m_TextCostAmount->SetColorAndOpacity(FLinearColor::Red);
+		}
 	}
 	else
 	{
 		FormatAmount = FString::Printf(TEXT("%d/%d"),Stack,m_CraftData->m_nStackOrLevel);
+
+		if(Stack >= m_CraftData->m_nStackOrLevel)
+		{
+			m_TextCostAmount->SetColorAndOpacity(FLinearColor::White);
+		}
+		else
+		{
+			m_TextCostAmount->SetColorAndOpacity(FLinearColor::Red);
+		}
 	}
 	
 	FText TextWant = FText::FromString(FormatAmount); 
 	
 	m_TextCostAmount->SetText(TextWant);
-	
-	if(Stack >= m_CraftData->m_nStackOrLevel)
-	{
-		m_TextCostAmount->SetColorAndOpacity(FLinearColor::White);
-	}
-	else
-	{
-		m_TextCostAmount->SetColorAndOpacity(FLinearColor::Red);
-	}
 }
 
 void UWidgetCraftCostElement::OnHold(UWidgetBaseElement* ele)

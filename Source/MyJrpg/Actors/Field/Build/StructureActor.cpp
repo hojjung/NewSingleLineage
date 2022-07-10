@@ -173,6 +173,15 @@ bool AStructureActor::HasUpgrade()
 
 bool AStructureActor::TryPurchaseUpgrade()
 {
+	const FBuildDataRow& NextBuildData = *UBuildData::GetBuildTable->FindRow<FBuildDataRow>(GetBuildData().m_NextUpgradeActorID, "");
+
+	if(!UMyGameInstance::Get->m_CraftManager->IsMaterialEnough(NextBuildData.m_AryCostItem))
+	{
+		return false;
+	}
+
+	UMyGameInstance::Get->m_CraftManager->PurchaseItemForCraft(NextBuildData.m_AryCostItem);
+	
 	return true;
 }
 

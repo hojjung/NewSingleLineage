@@ -7,6 +7,7 @@
 #include "MyJrpg/DataTables/ItemData.h"
 #include "AssembleInst.generated.h"
 
+class UBI_Assemble;
 /**
  *  아이템 추가
  *  크래프트 에이블에서 가져오는값
@@ -20,8 +21,10 @@ class MYJRPG_API UAssembleInst : public UInventory
 private:
 	const FCraftable* m_Craftable;
 
+	TWeakObjectPtr<UBI_Assemble> m_AssembleOuter;
+
 public:
-	void SetCraftItem(const FCraftable& craftable);
+	void SetCraftItem(UBI_Assemble* assembleOuter, const FCraftable& craftable);
 
 	bool IsSlotPutable(int index, const FItemSpec& item);
 
@@ -31,5 +34,5 @@ public:
 
 	bool TryComplete();
 
-	void PutItem(int index, const FItemSpec& item);
+	void PutItem(int index, const FCraftItemCost& itemWant, int stLv);
 };

@@ -19,7 +19,7 @@ void UBI_Assemble::Init(const TArray<FString>& variable, UInventory* inven)
 
 		const FBuildDataRow& NextBuildData = *UBuildData::GetBuildTable->FindRow<FBuildDataRow>(BuildData.m_NextUpgradeActorID, "");
 		
-		m_ItemHolder->SetCraftItem(NextBuildData);
+		m_ItemHolder->SetCraftItem(this, NextBuildData);
 	}
 }
 

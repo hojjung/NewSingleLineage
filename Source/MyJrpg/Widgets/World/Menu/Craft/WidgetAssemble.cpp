@@ -48,7 +48,22 @@ void UWidgetAssemble::UpdateSlots()
 
 int UWidgetAssemble::GetStack(int index)
 {
-	return m_AssembleInst->GetItemConstRef(index).m_nLvStack;
+	const FName& ID = m_AssembleInst->GetCraftData().m_AryCostItem[index].m_ItemDataRowHandle.RowName;
+
+	const FItemSpec& ItemSpec = m_AssembleInst->GetItemConstRef(index);
+
+	if(UMyLib::IsEquip(ID))
+	{
+		if(ItemSpec.m_ID.IsNone())
+		{
+			return 0;
+		}
+		else
+		{
+			return 1;
+		}
+	}
+	return ItemSpec.m_nLvStack;
 }
 
 void UWidgetAssemble::ShowAssemble(UAssembleInst* assemble_inst)
@@ -89,21 +104,27 @@ int UWidgetAssemble::GetRemainNeedItemCount(int index)
 	return RemainItemNeed;
 }
 
-void UWidgetAssemble::TryPutItem(UInventory* inven, const FCraftItemCost& cost, int outRemain)
+void UWidgetAssemble::TryPutItem(int index, UInventory* inven, const FCraftItemCost& cost, int outRemain)
 {
-	int ItemHave = 0;
-	
-	ItemHave = inven->GetItemCount(cost.m_ItemDataRowHandle.RowName, cost.m_nStackOrLevel);
+	int ItemHave = inven->GetItemCount(cost.m_ItemDataRowHandle.RowName, cost.m_nStackOrLevel);
 
 	if(ItemHave > 0)
 	{
 		int RemoveCount = FMath::Min(ItemHave, outRemain);
 
+		if(UMyLib::IsEquip(cost.m_ItemDataRowHandle.RowName))
+		{
+			inven->RemoveItem(cost.m_ItemDataRowHandle.RowName, cost.m_nStackOrLevel);
+
+			m_AssembleInst->PutItem(index, cost, 0);
+		}
+		else
+		{
+			inven->RemoveItem(cost.m_ItemDataRowHandle.RowName, RemoveCount);
+
+			m_AssembleInst->PutItem(index, cost, RemoveCount);
+		}
 		outRemain -= RemoveCount;
-
-		inven->RemoveItem(cost.m_ItemDataRowHandle.RowName, RemoveCount);
-
-		//AddItem How?
 	}
 }
 
@@ -113,50 +134,59 @@ void UWidgetAssemble::OnPutAll()
 	
 	int Index = 0;
 
-	FItemSpec* ItemFound = nullptr;
-
 	int RemainItemNeed = 0;
 
-	int ItemHave = 0;
-	
 	for(const FCraftItemCost& Cost : m_AssembleInst.Get()->GetCraftData().m_AryCostItem)
 	{
 		RemainItemNeed = GetRemainNeedItemCount(Index);
 
-		if(RemainItemNeed <= 0)//다채워진 아이템이래 패스
+		if(RemainItemNeed <= 0)
 		{
+			Index++;
 			continue;
 		}
 		
-		ItemHave = UMyLib::GetPlayerInven()->GetItemCount(Cost.m_ItemDataRowHandle.RowName, Cost.m_nStackOrLevel);
+		TryPutItem(Index, UMyLib::GetPlayerInven(), Cost, RemainItemNeed);
 
-		if(ItemHave > 0)
+		if(RemainItemNeed <= 0)
 		{
-			int RemoveCount = FMath::Min(ItemHave, RemainItemNeed);
-
-			RemainItemNeed -= RemoveCount;
-
-			if(RemainItemNeed <= 0)
-			{
-				continue;
-			}
+			Index++;
+			continue;
 		}
 		
 		if(Equip->GetBag())
 		{
-			Equip->GetBag()->GetItemCount(Cost.m_ItemDataRowHandle.RowName, Cost.m_nStackOrLevel);
+			TryPutItem(Index, Equip->GetBag(), Cost, RemainItemNeed);
+			
+			if(RemainItemNeed <= 0)
+			{
+				Index++;
+				continue;
+			}
 		}
+		
 		if(Equip->GetBelt())
 		{
-			Equip->GetBelt()->GetItemCount(Cost.m_ItemDataRowHandle.RowName, Cost.m_nStackOrLevel);
+			TryPutItem(Index, Equip->GetBelt(), Cost, RemainItemNeed);
+			
+			if(RemainItemNeed <= 0)
+			{
+				Index++;
+				continue;
+			}
 		}		
 		Index++;
 	}
+	m_AssembleInst->UpdateInventory();
 }
 
 void UWidgetAssemble::OnComplete()
 {
-	
+	if(m_AssembleInst->TryComplete())
+	{
+		m_OnComplete.Execute();
+		
+	}
 }
 
 void UWidgetAssemble::ClosePanel()

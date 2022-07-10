@@ -14,8 +14,8 @@ class MYJRPG_API AGridActor : public AStaticMeshActor
 {
 	GENERATED_BODY()
 
-protected:
-	AGridActor();
+public:
+	AGridActor(const FObjectInitializer& ObjectInitializer);
 
 public:
 	void Show();

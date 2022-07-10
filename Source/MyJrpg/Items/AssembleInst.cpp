@@ -1,10 +1,11 @@
 #include "AssembleInst.h"
-
 #include "MyJrpg/Actors/Field/Build/StructureActor.h"
 #include "MyJrpg/Managers/MyGameInstance.h"
 
-void UAssembleInst::SetCraftItem(const FCraftable& craftable)
+void UAssembleInst::SetCraftItem(UBI_Assemble* assembleOuter, const FCraftable& craftable)
 {
+	m_AssembleOuter = assembleOuter;
+	
 	m_Craftable = &craftable;
 
 	Init( FMath::Min(m_Craftable->m_AryCostItem.Num(), 10), m_Craftable->m_ShowingName);
@@ -45,11 +46,12 @@ bool UAssembleInst::TryComplete()
 		}
 		Index++;
 	}
-	return UMyGameInstance::Get->m_BuildManager->Upgrade(Cast<AStructureActor>(GetOuter()));
+	return UMyGameInstance::Get->m_BuildManager->Upgrade(Cast<AStructureActor>(m_AssembleOuter->GetOuter()), false);
 }
 
-void UAssembleInst::PutItem(int index, const FItemSpec& item)
+void UAssembleInst::PutItem(int index, const FCraftItemCost& itemWant, int stLv)
 {
-	AddSlot(index, item);
-	AddItemKey();
+	m_AryTotalItems[index].m_ID = itemWant.m_ItemDataRowHandle.RowName;
+	
+	m_AryTotalItems[index].m_nLvStack += stLv;
 }

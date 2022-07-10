@@ -16,6 +16,11 @@ class MYJRPG_API UWidgetAssemble : public UUserWidget
 {
 	GENERATED_BODY()
 
+public:
+	DECLARE_DELEGATE(FOnWidgetComplete)
+
+	FOnWidgetComplete m_OnComplete;
+
 protected:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (BindWidget))
 	UWidgetCraftCostElement* m_Slot01;
@@ -57,7 +62,7 @@ protected:
 
 	int GetRemainNeedItemCount(int index);
 
-	void TryPutItem(UInventory* inven, const FCraftItemCost& cost, int outRemain);
+	void TryPutItem(int index, UInventory* inven, const FCraftItemCost& cost, int outRemain);
 
 	void UpdateSlots();
 

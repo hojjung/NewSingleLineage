@@ -6,6 +6,8 @@
 #include "Blueprint/UserWidget.h"
 #include "Components/Button.h"
 #include "Components/Overlay.h"
+#include "Components/VerticalBox.h"
+#include "MyJrpg/Widgets/World/Menu/Craft/WidgetCraftCostElement.h"
 #include "WorldWidgetStruct.generated.h"
 
 class AStructureActor;
@@ -27,6 +29,13 @@ protected:
 	UOverlay* m_OverlayErase;
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (BindWidget))
 	UButton* m_BtnUpgrade;
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (BindWidget))
+	UVerticalBox* m_VertCost;
+	UPROPERTY(EditAnywhere)
+	TSubclassOf<UWidgetCraftCostElement> m_ClassCostElement;
+	UPROPERTY()
+	TArray<UWidgetCraftCostElement*> m_CraftCost;
+	
 
 	TWeakObjectPtr<AStructureActor> m_Owner;
 	
@@ -38,6 +47,10 @@ protected:
 	void DeselectErase();
 
 	void ConfirmErase();
+
+	void UpdateUpgradeCost();
+
+	void CreateCostWidgets(const TArray<FCraftItemCost>& costData);
 	
 public:
 	void ShowRotation(bool b);

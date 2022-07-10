@@ -134,6 +134,9 @@ void UMyGameInstance::Init()
 void UMyGameInstance::TestModeSetting()
 {
 	m_Inven->AddItem(FItemSpec(TEXT("OHSword01"),0),true);
+	m_Inven->AddItem(FItemSpec(TEXT("Wood01"),1),true);
+	m_Inven->AddItem(FItemSpec(TEXT("Wood01"),4),true);
+	m_Inven->AddItem(FItemSpec(TEXT("Axe01"),0),true);
 }
 
 void UMyGameInstance::StartGame()
