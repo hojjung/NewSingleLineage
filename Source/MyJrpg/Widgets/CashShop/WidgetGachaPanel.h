@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "Blueprint/UserWidget.h"
+#include "Components/TextBlock.h"
 #include "WidgetGachaPanel.generated.h"
 
 /**
@@ -14,4 +15,8 @@ class MYJRPG_API UWidgetGachaPanel : public UUserWidget
 {
 	GENERATED_BODY()
 	
+protected:
+	//UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (BindWidget))
+	//UTextBlock* m_TextExp;
+
 };

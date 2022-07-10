@@ -72,3 +72,15 @@ public:
 
 	virtual float GetMeshScale() override;
 };
+
+USTRUCT(BlueprintType)
+struct FBuildDataHandle : public FDataTableRowHandle
+{
+	GENERATED_USTRUCT_BODY()
+
+public:
+	FBuildDataHandle()
+	{
+		DataTable = UBuildData::GetBuildTable;
+	}
+};

@@ -44,6 +44,7 @@ void FMyJrpgEditorModule::StartupModule()
 	PropertyModule.RegisterCustomPropertyTypeLayout("ColorDataHandle", FOnGetPropertyTypeCustomizationInstance::CreateStatic(&FDataTableRowHandleCustom::MakeInstance));
 	PropertyModule.RegisterCustomPropertyTypeLayout("CurrencyDataHandle", FOnGetPropertyTypeCustomizationInstance::CreateStatic(&FDataTableRowHandleCustom::MakeInstance));
 	PropertyModule.RegisterCustomPropertyTypeLayout("UnitDataHandle", FOnGetPropertyTypeCustomizationInstance::CreateStatic(&FDataTableRowHandleCustom::MakeInstance));
+	PropertyModule.RegisterCustomPropertyTypeLayout("BuildDataHandle", FOnGetPropertyTypeCustomizationInstance::CreateStatic(&FDataTableRowHandleCustom::MakeInstance));
 
 
 	m_OnDataTableChanged = MakeShared<OnDataTableChanged>();
@@ -67,6 +68,7 @@ void FMyJrpgEditorModule::ShutdownModule()
 	PropertyModule.UnregisterCustomPropertyTypeLayout("ColorDataHandle");
 	PropertyModule.UnregisterCustomPropertyTypeLayout("CurrencyDataHandle");
 	PropertyModule.UnregisterCustomPropertyTypeLayout("UnitDataHandle");
+	PropertyModule.UnregisterCustomPropertyTypeLayout("BuildDataHandle");
 
 	PropertyModule.NotifyCustomizationModuleChanged();
 }

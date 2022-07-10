@@ -45,6 +45,8 @@ void UWidgetCanvasWorld::NativeOnInitialized()
 
 	m_BtnQuest->OnClicked.AddDynamic(this,&UWidgetCanvasWorld::OpenQuest);
 
+	m_BtnCashShop->OnClicked.AddDynamic(this,&UWidgetCanvasWorld::OpenCashShop);
+
 	m_Calculator->SetVisibility(ESlateVisibility::Collapsed);
 
 	UMyGameInstance::Get->m_LevelMoveManager->m_OnLvelMoveComp.AddUObject(this, &UWidgetCanvasWorld::OnZoneMove);
@@ -150,6 +152,11 @@ void UWidgetCanvasWorld::OpenBuild()
 {
 	ShowMainHUD(false);
 	m_BuildPanel->OpenPanel();
+}
+
+void UWidgetCanvasWorld::OpenCashShop()
+{
+	m_CashShop->OpenPanel();
 }
 
 void UWidgetCanvasWorld::OpenQuestPanel(bool isMain)

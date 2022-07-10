@@ -27,6 +27,7 @@
 #include "MyJrpg/Actors/Field/Build/BuildInteract/BI_ItemConverter.h"
 #include "MyJrpg/Pawns/CombatUnitPawn.h"
 #include "MyJrpg/Pawns/MonsterPawn.h"
+#include "MyJrpg/Widgets/CashShop/WidgetCashShopCanvas.h"
 #include "WidgetCanvasWorld.generated.h"
 
 class UEquipManager;
@@ -82,6 +83,8 @@ protected:
 	UButton* m_BtnBuild;
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (BindWidget))
 	UWidgetMinimapPanel* m_Minimap;
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (BindWidget))
+	UWidgetCashShopCanvas* m_CashShop;
 	
 	//
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (BindWidget))
@@ -194,6 +197,8 @@ public:
 	void OpenPet();
 	UFUNCTION()
 	void OpenBuild();
+	UFUNCTION()
+	void OpenCashShop();
 
 	void OpenStorage(UInventory* storage);
 	
