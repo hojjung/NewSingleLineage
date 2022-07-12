@@ -54,3 +54,24 @@ void UEventStageManager::Tick(float deltaTime)
 		}
 	}
 }
+
+bool UEventStageManager::IsTimeEnough(float t, FName zoneID)
+{
+	for(const FEventStageSpec& EventBase : m_AryEventInst)
+	{
+		if(EventBase.m_EventDataRow->m_ZoneID != zoneID)
+		{
+			continue;
+		}
+
+		if(t <= EventBase.m_fDuration)
+		{
+			return true;
+		}
+		else
+		{
+			return false;
+		}
+	}
+	return true;
+}

@@ -76,4 +76,6 @@ public:
 	{
 		return m_AryEventInst;
 	}
+
+	bool IsTimeEnough(float t, FName zoneID);
 };

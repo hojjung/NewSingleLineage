@@ -1,5 +1,7 @@
 #include "ZoneMoveManager.h"
 
+#include "MyGameInstance.h"
+
 void UZoneMoveManager::Init()
 {
 	m_nZoneStamina  = 100;

@@ -31,6 +31,7 @@ protected:
 	UOverlay* m_OverlayTime;
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (BindWidget))
 	UTextBlock* m_TextTimeRemain;
+	
 protected:
 	virtual void NativeOnInitialized() override;
 
@@ -39,11 +40,12 @@ protected:
 public:
 	UFUNCTION()
 	void OnClick();
-
+	
 	FName GetZoneID();
-	void UpdateDuration(float dur);
-
+	
 	void SetZoneID(FName id, float dur);
+	
+	void UpdateDuration(float dur);
 
 	FVector2D GetPos();
 };
