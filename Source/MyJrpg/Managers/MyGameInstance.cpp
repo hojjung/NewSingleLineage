@@ -97,6 +97,8 @@ void UMyGameInstance::Init()
 	
 	m_SpawnEvent = NewObject<USpawnEventManager>(this);
 
+	m_EventStage = NewObject<UEventStageManager>(this);
+
 	m_BuildManager->Init();
 	m_ItemCollecManager->Init();
 	m_PetManager->Init();
@@ -111,6 +113,7 @@ void UMyGameInstance::Init()
 	m_BadwordTable->Init();
 	m_TeamKarma->Init();
 	m_ZoneMove->Init();
+	m_EventStage->Init();
 	//
 	IterateItemTableToRegister();
 

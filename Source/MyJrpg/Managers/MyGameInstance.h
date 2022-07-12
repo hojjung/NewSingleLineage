@@ -7,6 +7,7 @@
 #include "CraftManager.h"
 #include "CurrencyManager.h"
 #include "EnchantManager.h"
+#include "EventStageManager.h"
 #include "FriendKarmaManager.h"
 #include "ItemConvertManager.h"
 #include "LevelMoveManager.h"
@@ -99,6 +100,9 @@ public:
 	UZoneMoveManager* m_ZoneMove;
 	UPROPERTY()
 	USpawnEventManager* m_SpawnEvent;
+	UPROPERTY()
+	UEventStageManager* m_EventStage;
+	
 public:
 	TWeakObjectPtr<AMyPlayerPawn> m_Player;
 	

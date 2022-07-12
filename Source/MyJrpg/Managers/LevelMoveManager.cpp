@@ -74,6 +74,10 @@ void ULevelMoveManager::OnOpenWorldLevelComplete()
 	{
 		UMyGameInstance::Get->m_BuildManager->SpawnGrid();
 	}
+	else if (GetCrntZoneID() == TEXT("Map"))
+	{
+		UMyGameInstance::Get->m_EventStage->UpdateEvent();
+	}
 	
 	UMyGameInstance::Get->m_PetManager->CreatePreviewActor();
 	

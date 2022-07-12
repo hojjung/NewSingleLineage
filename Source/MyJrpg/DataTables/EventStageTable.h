@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "Engine/DataTable.h"
+#include "MyJrpg/EventConditions/EventConditionBase.h"
 #include "UObject/NoExportTypes.h"
 #include "EventStageTable.generated.h"
 
@@ -36,4 +37,8 @@ public:
 	TSoftObjectPtr<UTexture2D> m_EventImage;
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
 	FName m_ZoneID;
-};
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
+	float m_fDuration;
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
+	TSubclassOf<UEventConditionBase> m_ClassCondition;
+};//이벤트는 여러개 쌓일수 있다.

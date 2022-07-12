@@ -137,7 +137,7 @@ bool UInventory::AddItem(FItemSpec& addItem, bool newEquipItem)
 			if (Item.m_ID == addItem.m_ID || Item.m_ID.IsNone())
 			{
 				AddItemStack(ItemData, Iter, addItem.m_nLvStack, addItem.m_ID, MaxStack);
-				if(addItem.m_nLvStack <= 0)
+				if(addItem.m_nLvStack <= 0)//이제 지워도 되자 않나?
 				{
 					UpdateInventory();
 					return true;
