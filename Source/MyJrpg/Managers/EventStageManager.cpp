@@ -30,3 +30,27 @@ void UEventStageManager::UpdateEvent()
 		}
 	}
 }
+
+void UEventStageManager::Tick(float deltaTime)
+{
+	for(FEventStageSpec& EventBase : m_AryEventInst)
+	{
+		if(!EventBase.m_bIsUnlocked)
+		{
+			continue;
+		}
+
+		EventBase.m_fDuration -= deltaTime;
+
+		m_OnEventTick.Broadcast(EventBase);
+
+		if(EventBase.m_fDuration <= 0.f)
+		{
+			EventBase.m_bIsUnlocked = false;
+
+			EventBase.m_fDuration = 0.f;
+
+			m_OnEventLocked.Broadcast(EventBase);
+		}
+	}
+}

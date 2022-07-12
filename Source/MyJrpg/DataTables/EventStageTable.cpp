@@ -7,7 +7,7 @@ UDataTable* UEventStageTable::GetEventStage = nullptr;
 
 UEventStageTable::UEventStageTable()
 {
-	static ConstructorHelpers::FObjectFinder<UDataTable> FoundTable01(TEXT("DataTable'/Game/00_DataTables/Item/CurrencyTable.CurrencyTable'"));
+	static ConstructorHelpers::FObjectFinder<UDataTable> FoundTable01(TEXT("DataTable'/Game/00_DataTables/Event/EventStageData.EventStageData'"));
 
 	GetEventStage = FoundTable01.Object;
 }

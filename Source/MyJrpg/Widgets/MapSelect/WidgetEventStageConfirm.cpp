@@ -1,5 +1,11 @@
-// Fill out your copyright notice in the Description page of Project Settings.
-
-
 #include "WidgetEventStageConfirm.h"
 
+void UWidgetEventStageConfirm::NativeOnInitialized()
+{
+	Super::NativeOnInitialized();
+}
+
+void UWidgetEventStageConfirm::SetStageConfirm(const FEventStageSpec& data)
+{
+	
+}

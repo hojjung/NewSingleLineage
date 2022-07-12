@@ -36,8 +36,7 @@ void UWidgetMapPanel::NativeOnInitialized()
 	m_BtnCraft->OnClicked.AddDynamic(this, &UWidgetMapPanel::OnOpenCraft);
 
 	m_BtnInven->OnClicked.AddDynamic(this, &UWidgetMapPanel::OnOpenInven);
-
-
+	
 	m_MoveBar->SetVisibility(ESlateVisibility::Collapsed);
 
 	m_BtnRun->OnClicked.AddDynamic(this, &UWidgetMapPanel::OnRunStart);
@@ -53,6 +52,12 @@ void UWidgetMapPanel::NativeOnInitialized()
 	OnMove();
 	
 	m_BtnRun->SetVisibility(ESlateVisibility::Collapsed);
+	
+	InitCreateEventBtns();
+	UMyGameInstance::Get->m_EventStage->m_OnEventUnlocked.AddUObject(this, &UWidgetMapPanel::ShowEventConfirm);
+	UMyGameInstance::Get->m_EventStage->m_OnEventUnlocked.AddUObject(this, &UWidgetMapPanel::CreateEventBtn);
+	UMyGameInstance::Get->m_EventStage->m_OnEventLocked.AddUObject(this, &UWidgetMapPanel::RemoveEventBtn);
+	UMyGameInstance::Get->m_EventStage->UpdateEvent();
 }
 
 void UWidgetMapPanel::OpenItemInfoData(const FItemDataRow& item_data_row)
@@ -127,6 +132,55 @@ void UWidgetMapPanel::OnWalkTick()
 	FTimespan Run(0,0,Time);
 	
 	m_TextRunTimeSpan->SetText(FText::AsTimespan(Run, Culture));
+}
+
+void UWidgetMapPanel::InitCreateEventBtns()
+{
+	for(const FEventStageSpec& EventSpec : UMyGameInstance::Get->m_EventStage->GetEvents())
+	{
+		if(!EventSpec.m_bIsUnlocked)
+		{
+			continue;
+		}
+		CreateEventBtn(EventSpec);
+	}
+}
+
+void UWidgetMapPanel::CreateEventBtn(const FEventStageSpec& data)
+{
+	UWidgetMapBtn* ItemEle = CreateWidget<UWidgetMapBtn>(this, m_ClassEventMapBtn);
+	
+	ItemEle->SetZoneID(data.m_EventDataRow->m_ZoneID, data.m_EventDataRow->m_fDuration);
+	//
+	ItemEle->m_OnClick.BindUObject(this, &UWidgetMapPanel::OnClick);
+
+	UCanvasPanelSlot* SlotWant = m_CanvasMap->AddChildToCanvas(ItemEle);
+
+	SlotWant->SetAutoSize(false);
+	
+	SlotWant->SetPosition(data.m_EventDataRow->m_Coord);
+
+	SlotWant->SetSize(FVector2D(75.f,75.f));
+
+	SlotWant->SetAlignment(FVector2D(0.5f,0.5f));
+
+	SlotWant->SetAnchors(FAnchors(0.5f));
+		
+	UMyGameInstance::Get->m_ZoneMove->AddMapBtn(ItemEle->GetZoneID(),ItemEle);
+}
+
+void UWidgetMapPanel::ShowEventConfirm(const FEventStageSpec& data)
+{
+	UWidgetEventStageConfirm* ConfirmPanel = CreateWidget<UWidgetEventStageConfirm>(this, m_ClassEventConfirm);
+
+	ConfirmPanel->SetStageConfirm(data);
+	
+	m_CanvasMap->AddChildToCanvas(ConfirmPanel);
+}
+
+void UWidgetMapPanel::RemoveEventBtn(const FEventStageSpec& data)
+{
+	UMyGameInstance::Get->m_ZoneMove->RemoveMapBtn(data.m_EventDataRow->m_ZoneID);
 }
 
 void UWidgetMapPanel::OnOpenInven()

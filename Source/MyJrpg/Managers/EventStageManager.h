@@ -55,6 +55,10 @@ public:
 
 	FOnEventUnlocked m_OnEventUnlocked;
 
+	FOnEventUnlocked m_OnEventLocked;
+
+	FOnEventUnlocked m_OnEventTick;
+
 protected:
 	UPROPERTY()
 	TArray<FEventStageSpec> m_AryEventInst;
@@ -63,5 +67,11 @@ public:
 	void Init();
 	
 	void UpdateEvent();
-	
+
+	void Tick(float deltaTime);
+
+	FORCEINLINE const TArray<FEventStageSpec>& GetEvents() const
+	{
+		return m_AryEventInst;
+	}
 };

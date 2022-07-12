@@ -2,28 +2,31 @@
 
 #include "MyJrpg/DataTables/ZoneData.h"
 
-void UWidgetMapBtn::NativePreConstruct()
-{
-	Super::NativePreConstruct();
-
-	if(m_TextureIcon)
-	{
-		FButtonStyle Style;
-
-		Style.Normal.SetResourceObject(m_TextureIcon);
-		Style.Hovered.SetResourceObject(m_TextureIcon);
-		Style.Pressed.SetResourceObject(m_TextureIcon);
-		Style.Disabled.SetResourceObject(m_TextureIcon);
-		
-		m_BtnIcon->SetStyle(Style);
-	}
-}
-
 void UWidgetMapBtn::NativeOnInitialized()
 {
 	Super::NativeOnInitialized();
 
 	m_BtnIcon->OnClicked.AddDynamic(this, &UWidgetMapBtn::OnClick);
+	
+	UpdateIcon();
+}
+
+void UWidgetMapBtn::UpdateIcon()
+{
+	const FZoneDataRow* ZoneData = UZoneData::GetZoneTable->FindRow<FZoneDataRow>(m_ZoneID, "");
+
+	if(!ZoneData)
+	{
+		PRINTF("UWidgetMapBtn::UpdateIcon, No Data, ID Name is :%s", *m_ZoneID.ToString());
+		return;	
+	}
+	FButtonStyle Style;
+	UTexture2D* t = ZoneData->m_Icon.LoadSynchronous();
+	Style.Normal.SetResourceObject(t);
+	Style.Hovered.SetResourceObject(t);
+	Style.Pressed.SetResourceObject(t);
+	Style.Disabled.SetResourceObject(t);
+	m_BtnIcon->SetStyle(Style);
 }
 
 void UWidgetMapBtn::OnClick()
@@ -34,6 +37,13 @@ void UWidgetMapBtn::OnClick()
 FName UWidgetMapBtn::GetZoneID()
 {
 	return  m_ZoneID;
+}
+
+void UWidgetMapBtn::SetZoneID(FName id, float dur)
+{
+	m_ZoneID = id;
+
+	UpdateIcon();
 }
 
 FVector2D UWidgetMapBtn::GetPos()

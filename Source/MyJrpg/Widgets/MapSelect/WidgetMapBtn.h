@@ -23,21 +23,21 @@ public:
 protected:
 	UPROPERTY(EditAnywhere)
 	FName m_ZoneID;
-	UPROPERTY(EditAnywhere)
-	UTexture2D* m_TextureIcon;
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (BindWidget))
 	UButton* m_BtnIcon;
 	
 protected:
-	virtual void NativePreConstruct() override;
-	
 	virtual void NativeOnInitialized() override;
+
+	void UpdateIcon();
 	
 public:
 	UFUNCTION()
 	void OnClick();
 
 	FName GetZoneID();
+
+	void SetZoneID(FName id, float dur);
 
 	FVector2D GetPos();
 };

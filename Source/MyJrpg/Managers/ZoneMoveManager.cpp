@@ -19,6 +19,11 @@ void UZoneMoveManager::AddMapBtn(FName zoneID, UWidgetMapBtn* mapBtn)
 	m_MapZoneBtns.Emplace(zoneID, TWeakObjectPtr<UWidgetMapBtn>(mapBtn));
 }
 
+void UZoneMoveManager::RemoveMapBtn(FName zoneID)
+{
+	m_MapZoneBtns.Remove(zoneID);
+}
+
 void UZoneMoveManager::Tick(float deltaTime)
 {
 	if(m_DestZoneID.IsNone())
@@ -190,7 +195,11 @@ void UZoneMoveManager::GetRunStaminaCostTime(const float& distIn, int& outRunCos
 
 float UZoneMoveManager::GetWalkTime(const float& distIn)
 {
-	return distIn * 3.5f;
+	float RunTime = distIn * 3.5f;
+	
+	RunTime = FMath::Min(RunTime, 3600.f);
+	
+	return RunTime;
 }
 
 FName UZoneMoveManager::GetDestZoneID()

@@ -26,4 +26,5 @@ void AMapGameMode::Tick(float DeltaSeconds)
 	Super::Tick(DeltaSeconds);
 
 	UMyGameInstance::Get->m_ZoneMove->Tick(DeltaSeconds);
+	UMyGameInstance::Get->m_EventStage->Tick(DeltaSeconds);
 }

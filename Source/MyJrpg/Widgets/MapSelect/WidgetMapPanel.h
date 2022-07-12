@@ -3,10 +3,12 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "WidgetEventStageConfirm.h"
 #include "WidgetMapBtn.h"
 #include "WidgetMapPlayerIcon.h"
 #include "Blueprint/UserWidget.h"
 #include "Components/CanvasPanel.h"
+#include "MyJrpg/Managers/EventStageManager.h"
 #include "MyJrpg/Widgets/World/Menu/CharacterInfoHUD/AlertInfoWindow.h"
 #include "MyJrpg/Widgets/World/Menu/Craft/WidgetCraftPanel.h"
 #include "MyJrpg/Widgets/World/Menu/Equipment/WidgetEquipInvenPanel.h"
@@ -15,6 +17,7 @@
 #include "WidgetMapPanel.generated.h"
 
 /**
+ * UWidgetEventStageConfirm
  * 
  */
 UCLASS()
@@ -50,6 +53,10 @@ protected:
 	UTextBlock* m_TextRunCost;
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (BindWidget))
 	UTextBlock* m_TextRunTimeSpan;
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
+	TSubclassOf<UWidgetEventStageConfirm> m_ClassEventConfirm;
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
+	TSubclassOf<UWidgetMapBtn> m_ClassEventMapBtn;
 	
 public:
 	virtual void NativeOnInitialized() override;
@@ -70,6 +77,14 @@ protected:
 	void OnWalkStart(const FName& dst, float dist);
 
 	void OnWalkTick();
+
+	void InitCreateEventBtns();
+
+	void CreateEventBtn(const FEventStageSpec& data);
+	
+	void ShowEventConfirm(const FEventStageSpec& data);
+
+	void RemoveEventBtn(const FEventStageSpec& data);
 
 public:
 	UFUNCTION()
