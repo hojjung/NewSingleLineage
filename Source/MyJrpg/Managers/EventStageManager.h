@@ -53,11 +53,13 @@ class MYJRPG_API UEventStageManager : public UObject
 public:
 	DECLARE_MULTICAST_DELEGATE_OneParam(FOnEventUnlocked, const FEventStageSpec&);
 
+	DECLARE_MULTICAST_DELEGATE_OneParam(FOnEventTick, float);
+
 	FOnEventUnlocked m_OnEventUnlocked;
 
 	FOnEventUnlocked m_OnEventLocked;
 
-	FOnEventUnlocked m_OnEventTick;
+	FOnEventTick m_OnEventTick;
 
 protected:
 	UPROPERTY()

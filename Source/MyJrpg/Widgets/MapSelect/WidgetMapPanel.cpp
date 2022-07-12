@@ -1,5 +1,6 @@
 #include "WidgetMapPanel.h"
 
+#include "BUITween.h"
 #include "MyJrpg/Managers/MyGameInstance.h"
 #include "MyJrpg/Widgets/World/Menu/Craft/WidgetCraftPanel.h"
 
@@ -175,7 +176,17 @@ void UWidgetMapPanel::ShowEventConfirm(const FEventStageSpec& data)
 
 	ConfirmPanel->SetStageConfirm(data);
 	
-	m_CanvasMap->AddChildToCanvas(ConfirmPanel);
+	UCanvasPanelSlot* SlotWant = m_CanvasMap->AddChildToCanvas(ConfirmPanel);
+
+	SlotWant->SetAutoSize(true);
+	
+	SlotWant->SetPosition(FVector2D(0.f));
+
+	SlotWant->SetAlignment(FVector2D(0.5f,0.5f));
+
+	SlotWant->SetAnchors(FAnchors(0.5f));
+	
+	SlotWant->SetZOrder(5);
 }
 
 void UWidgetMapPanel::RemoveEventBtn(const FEventStageSpec& data)
@@ -243,11 +254,9 @@ void UWidgetMapPanel::OnMoveEnd()
 	m_BtnRun->SetVisibility(ESlateVisibility::Collapsed);
 }
 
-FReply UWidgetMapPanel::NativeOnTouchMoved(const FGeometry& InGeometry, const FPointerEvent& InGestureEvent)
+void UWidgetMapPanel::SetMapCanvasPos(FVector2D ResultPos, bool useAnim)
 {
-	FReply Re = Super::NativeOnTouchMoved(InGeometry, InGestureEvent);
-
-	FVector2D OutCanvasSize = InGeometry.GetLocalSize() / 2.f;
+	FVector2D OutCanvasSize = GetCachedGeometry().GetLocalSize() / 2.f;
 
 	FVector2D PanelSize = m_PanelSlot->GetSize() / 4.f;
 	
@@ -259,17 +268,33 @@ FReply UWidgetMapPanel::NativeOnTouchMoved(const FGeometry& InGeometry, const FP
 
 	PanelSize.Y *= RateY;
 
-	FVector2D Pos = m_PanelSlot->GetPosition();
-
-	const FVector2D& Delta = InGestureEvent.GetCursorDelta();
-
-	FVector2D ResultPos = Pos + (Delta * 2.f);
-
 	ResultPos.X = FMath::Clamp<float>(ResultPos.X, -PanelSize.X, PanelSize.X);
 
 	ResultPos.Y = FMath::Clamp<float>(ResultPos.Y, -PanelSize.Y, PanelSize.Y);
 
-	m_PanelSlot->SetPosition(ResultPos);
+	if(useAnim)
+	{
+		UBUITween::Create(m_PanelSlot.Get()->Content, 0.25f)
+			.ToCanvasPosition(ResultPos)
+			.Begin();
+	}
+	else
+	{
+		m_PanelSlot->SetPosition(ResultPos);	
+	}
+}
+
+FReply UWidgetMapPanel::NativeOnTouchMoved(const FGeometry& InGeometry, const FPointerEvent& InGestureEvent)
+{
+	FReply Re = Super::NativeOnTouchMoved(InGeometry, InGestureEvent);
+	
+	const FVector2D& Delta = InGestureEvent.GetCursorDelta();
+
+	FVector2D Pos = m_PanelSlot->GetPosition();
+
+	FVector2D ResultPos = Pos + (Delta * 2.f);
+	
+	SetMapCanvasPos(ResultPos);
 
 	return FReply::Handled();
 }

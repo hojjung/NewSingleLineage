@@ -42,7 +42,7 @@ void UEventStageManager::Tick(float deltaTime)
 
 		EventBase.m_fDuration -= deltaTime;
 
-		m_OnEventTick.Broadcast(EventBase);
+		m_OnEventTick.Broadcast(EventBase.m_fDuration);
 
 		if(EventBase.m_fDuration <= 0.f)
 		{

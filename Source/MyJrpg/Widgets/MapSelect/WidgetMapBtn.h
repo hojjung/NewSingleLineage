@@ -5,6 +5,8 @@
 #include "CoreMinimal.h"
 #include "Blueprint/UserWidget.h"
 #include "Components/Button.h"
+#include "Components/Overlay.h"
+#include "Components/TextBlock.h"
 #include "WidgetMapBtn.generated.h"
 
 /**
@@ -25,7 +27,10 @@ protected:
 	FName m_ZoneID;
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (BindWidget))
 	UButton* m_BtnIcon;
-	
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (BindWidget))
+	UOverlay* m_OverlayTime;
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (BindWidget))
+	UTextBlock* m_TextTimeRemain;
 protected:
 	virtual void NativeOnInitialized() override;
 
@@ -36,6 +41,7 @@ public:
 	void OnClick();
 
 	FName GetZoneID();
+	void UpdateDuration(float dur);
 
 	void SetZoneID(FName id, float dur);
 

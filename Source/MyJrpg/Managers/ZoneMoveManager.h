@@ -48,7 +48,7 @@ protected:
 
 	FName m_CurrentID;//현재 위치한 존
 
-	TMap<FName, TWeakObjectPtr<UWidgetMapBtn>> m_MapZoneBtns;
+	TMap<FName,TWeakObjectPtr<UWidgetMapBtn>> m_MapZoneBtns;
 
 	float m_fRechargeTime;
 	
@@ -98,4 +98,6 @@ public:
 	int GetStamina();
 
 	float GetStaminaChargeTime() const;
+
+	UWidgetMapBtn* GetMapBtn(FName zoneID);
 };

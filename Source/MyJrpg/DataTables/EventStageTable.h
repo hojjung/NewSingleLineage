@@ -30,8 +30,6 @@ public:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
 	FVector2D m_Coord;
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
-	FText m_TextEventName;
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
 	FText m_TextEventDesc;
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
 	TSoftObjectPtr<UTexture2D> m_EventImage;

@@ -99,4 +99,6 @@ public:
 	void OnMove();
 
 	void OnMoveEnd();
+	
+	void SetMapCanvasPos(FVector2D ResultPos, bool useAnim = false);
 };

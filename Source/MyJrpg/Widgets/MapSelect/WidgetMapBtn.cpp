@@ -1,6 +1,7 @@
 #include "WidgetMapBtn.h"
 
 #include "MyJrpg/DataTables/ZoneData.h"
+#include "MyJrpg/Managers/MyGameInstance.h"
 
 void UWidgetMapBtn::NativeOnInitialized()
 {
@@ -9,6 +10,8 @@ void UWidgetMapBtn::NativeOnInitialized()
 	m_BtnIcon->OnClicked.AddDynamic(this, &UWidgetMapBtn::OnClick);
 	
 	UpdateIcon();
+
+	m_OverlayTime->SetVisibility(ESlateVisibility::Collapsed);
 }
 
 void UWidgetMapBtn::UpdateIcon()
@@ -39,11 +42,28 @@ FName UWidgetMapBtn::GetZoneID()
 	return  m_ZoneID;
 }
 
+void UWidgetMapBtn::UpdateDuration(float dur)
+{
+	const FString& CultName = FInternationalization::Get().GetCurrentCulture().Get().GetName();
+	
+	FCulturePtr Culture = FInternationalization::Get().GetCulture(CultName);
+	
+	FTimespan Run(0,0,dur);
+	
+	m_TextTimeRemain->SetText(FText::AsTimespan(Run, Culture));
+}
+
 void UWidgetMapBtn::SetZoneID(FName id, float dur)
 {
 	m_ZoneID = id;
 
-	UpdateIcon();
+	UpdateIcon();//시간 제한, 시간제한이 이동시간보다 크다면, 이동 불가능임
+
+	m_OverlayTime->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
+
+	UMyGameInstance::Get->m_EventStage->m_OnEventTick.AddUObject(this, &UWidgetMapBtn::UpdateDuration);
+
+	UpdateDuration(dur);
 }
 
 FVector2D UWidgetMapBtn::GetPos()
