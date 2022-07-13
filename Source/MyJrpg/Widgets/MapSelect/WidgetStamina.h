@@ -34,7 +34,7 @@ protected:
 
 	void UpdateRemainTime(float delta);
 
-	void UpdateStaText(float sta);
+	void UpdateStaText();
 
 	virtual void NativeTick(const FGeometry& MyGeometry, float InDeltaTime) override;
 public:

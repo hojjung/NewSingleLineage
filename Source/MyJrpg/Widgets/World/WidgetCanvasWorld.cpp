@@ -345,6 +345,11 @@ void UWidgetCanvasWorld::OpenAssemble(UAssembleInst* assemble_inst)
 	m_ItemAssemblePanel->ShowAssemble(assemble_inst);
 }
 
+void UWidgetCanvasWorld::OpenRidePanel(UInventory* inven)
+{
+	m_RidePanel->ShowRidePanel(inven);
+}
+
 void UWidgetCanvasWorld::OnZoneMove(const FName& zoneID)
 {
 	if(zoneID == TEXT("PlayerHome"))

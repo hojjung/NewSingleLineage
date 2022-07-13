@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "BuildInteractBase.h"
+#include "MyJrpg/Pawns/MyPlayerPawn.h"
 #include "BI_Horse.generated.h"
 
 /**
@@ -15,5 +16,19 @@ UCLASS()
 class MYJRPG_API UBI_Horse : public UBuildInteractBase
 {
 	GENERATED_BODY()
+
+protected:
+	UPROPERTY()
+	UInventory* m_Inven;
+	UPROPERTY()
+	AMyPlayerPawn* m_Player;
 	
+public:
+	virtual void Init(const TArray<FString>& variable, UInventory* inven) override;
+	
+	virtual UInventory* GetItemHolder() override;
+	
+	virtual bool IsEraseable() override;
+
+	virtual void OnInteract() override;
 };

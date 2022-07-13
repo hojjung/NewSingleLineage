@@ -11,7 +11,7 @@ void UWidgetStamina::NativeOnInitialized()
 
 	UMyGameInstance::Get->m_ZoneMove->m_OnStaminaChanged.AddUObject(this, &UWidgetStamina::UpdateStaText);
 	
-	UpdateStaText(UMyGameInstance::Get->m_ZoneMove->GetStamina());
+	UpdateStaText();
 	
 	m_fTimer = 0;
 }
@@ -40,7 +40,7 @@ void UWidgetStamina::UpdateRemainTime(float delta)
 
 		if (m_fTimer > RemainTime)
 		{
-			UpdateStaText(UMyGameInstance::Get->m_ZoneMove->GetStamina());
+			UpdateStaText();
 
 			m_fTimer = 0.f;
 		}
@@ -61,7 +61,7 @@ void UWidgetStamina::OpenRecharge()
 	PRINTF("Open Cash Shop!");	
 }
 
-void UWidgetStamina::UpdateStaText(float sta)
+void UWidgetStamina::UpdateStaText()
 {
 	int Stamina = UMyGameInstance::Get->m_ZoneMove->GetStamina();
 	

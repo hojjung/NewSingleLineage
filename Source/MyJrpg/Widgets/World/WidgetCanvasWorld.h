@@ -4,6 +4,7 @@
 #include "CoreMinimal.h"
 #include "Blueprint/UserWidget.h"
 #include "Build/WidgetBuildPanel.h"
+#include "Build/WidgetRidePanel.h"
 #include "Components/WrapBox.h"
 #include "Hud/WidgetGameOver.h"
 #include "Hud/WidgetLevelUp.h"
@@ -138,6 +139,8 @@ protected:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (BindWidget))
 	UWidgetItemConvert* m_ItemConvertPanel;
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (BindWidget))
+	UWidgetRidePanel* m_RidePanel;
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (BindWidget))
 	UWidgetAssembleAndInven* m_ItemAssemblePanel;
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (BindWidget))
 	UWidgetConfirmPanel* m_ConfirmPanel;
@@ -233,5 +236,7 @@ public:
 	UWidgetScreenEffect* GetScreenEffect();
 	
 	void OpenAssemble(UAssembleInst* assemble_inst);
+
+	void OpenRidePanel(UInventory* inven);
 };
 

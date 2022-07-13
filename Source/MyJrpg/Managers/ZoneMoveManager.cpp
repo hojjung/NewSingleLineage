@@ -63,7 +63,7 @@ bool UZoneMoveManager::TryPurchaseStamina(int want)
 	
 	m_nZoneStamina -= want;
 
-	m_OnStaminaChanged.Broadcast(m_nZoneStamina);
+	m_OnStaminaChanged.Broadcast();
 
 	return true;
 }
@@ -77,7 +77,7 @@ bool UZoneMoveManager::TryPurchaseRideCost(int want)
 	
 	m_nRideCost -= want;
 	
-	m_OnRideCostChanged.Broadcast(m_nRideCost);
+	m_OnRideCostChanged.Broadcast();
 
 	return true;
 }

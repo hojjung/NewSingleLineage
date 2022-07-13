@@ -622,20 +622,20 @@ AStructureActor* UConstructionManager::SpawnStructure(const FBuildDataRow& data)
 	return StructActor;
 }
 
-bool UConstructionManager::IsEraseable()
+bool UConstructionManager::IsEraseable(AStructureActor* st)
 {
-	switch (m_FocusActor->GetBuildData().m_BuildType)
+	switch (st->GetBuildData().m_BuildType)
 	{
 	case EBuildType::Foundation:
 		{
 			int X,Y;
-			FVector Loc = m_FocusActor->GetActorLocation();		
+			FVector Loc = st->GetActorLocation();		
 			GetIndex(Loc,X,Y);
 			return !m_Grid[X][Y].m_Furniture.Get();
 		}
 	case EBuildType::Field:
 	case EBuildType::Furniture:
-		return m_FocusActor->IsEraseable();
+		return st->IsEraseable();
 	}
 	return true;
 }
@@ -672,7 +672,6 @@ void UConstructionManager::TryEraseActor(TWeakObjectPtr<AStructureActor>& holder
 {
 	if(!holder.Get())
 		return;
-	RemovePlacedStructures(holder->GetBuildData().m_RowID);
 	holder->Destroy();
 	holder = nullptr;
 }
@@ -772,9 +771,9 @@ void UConstructionManager::SelectStruct(AStructureActor* sActor)
 	m_FocusActor->ShowSelect(true);
 }
 
-void UConstructionManager::Erase(AStructureActor* buildActor)
+void UConstructionManager::Erase(AStructureActor* buildActor, bool isTakeBackToInven)
 {
-	if(!IsEraseable())
+	if(!IsEraseable(buildActor))
 	{
 		return;
 	}
@@ -791,10 +790,11 @@ void UConstructionManager::Erase(AStructureActor* buildActor)
 		FVector Loc = (*Holder)->GetActorLocation(); 
 		OnErase(Loc);
 	}
-	else if (buildActor->GetBuildData().m_BuildType == EBuildType::Furniture)
+	else if (buildActor->GetBuildData().m_BuildType == EBuildType::Furniture && isTakeBackToInven)
 	{
 		AddFurniture(buildActor->GetBuildData().m_RowID);
 	}
+	RemovePlacedStructures(buildActor->GetBuildData().m_RowID);
 	TryEraseActor(*Holder);
 }
 
@@ -829,9 +829,11 @@ bool UConstructionManager::Upgrade(AStructureActor* buildActor, bool isShowWidge
 
 	NewUpgradeActor->ConfirmBuild();
 	
+	AddPlacedStructures(NewUpgradeActor->GetBuildData().m_RowID);
+	
 	UMyGameInstance::Get->m_ZoneInst->AddBuildActor(NewUpgradeActor);
 	
-	Structure->Destroy();
+	Erase(Structure, false);
 	
 	(*Holder) = NewUpgradeActor;
 	

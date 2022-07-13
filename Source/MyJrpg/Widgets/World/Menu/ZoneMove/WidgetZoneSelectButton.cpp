@@ -372,6 +372,7 @@ void UWidgetZoneSelectButton::UpdateBtnText()
 		ShowWalkBtn(false);
 		return;
 	}
+	m_fDist = UMyGameInstance::Get->m_ZoneMove->GetDist(m_ZoneData->m_RowKey);
 	//
 	TryShowBoatBtn();
 	//
@@ -386,8 +387,6 @@ void UWidgetZoneSelectButton::UpdateBtnText()
 	ShowRunBtn(true);
 
 	ShowWalkBtn(true);
-	
-	m_fDist = UMyGameInstance::Get->m_ZoneMove->GetDist(m_ZoneData->m_RowKey);
 	
 	const FString& CultName = FInternationalization::Get().GetCurrentCulture().Get().GetName();
 	

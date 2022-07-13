@@ -19,7 +19,7 @@ class MYJRPG_API UZoneMoveManager : public UObject
 	GENERATED_BODY()
 
 public:
-	DECLARE_MULTICAST_DELEGATE_OneParam(FOnStamina, float);
+	DECLARE_MULTICAST_DELEGATE(FOnStamina);
 	
 	DECLARE_MULTICAST_DELEGATE_TwoParams(FMoveStart, const FName& , float);
 

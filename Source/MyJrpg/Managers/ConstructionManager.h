@@ -119,7 +119,7 @@ private:
 
 	AStructureActor* SpawnStructure(const FBuildDataRow& data);
 
-	bool IsEraseable();
+	bool IsEraseable(AStructureActor* st);
 
 	void OnErase(const FVector& Loc);
 
@@ -129,11 +129,12 @@ private:
 
 	void SetFurnitureWallShow();
 
+
+public:
 	void AddPlacedStructures(FName id);
 
 	void RemovePlacedStructures(FName id);
-
-public:
+	
 	void Init();
 	
 	void SetStructureGrid(AStructureActor* actorWant);
@@ -167,7 +168,7 @@ public:
 
 	void CancelSelect();
 	
-	void Erase(AStructureActor* buildActor);
+	void Erase(AStructureActor* buildActor, bool isTakeBackToInven);
 	
 	bool Upgrade(AStructureActor* buildActor, bool isShowWidget =  true);
 
