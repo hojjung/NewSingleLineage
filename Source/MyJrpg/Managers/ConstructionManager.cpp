@@ -810,6 +810,7 @@ bool UConstructionManager::Upgrade(AStructureActor* buildActor, bool isShowWidge
 	
 	if(isShowWidget && !Structure->TryPurchaseUpgrade())
 		return false;
+
 	
 	FVector Loc = Structure->GetActorLocation();
 	
@@ -818,6 +819,8 @@ bool UConstructionManager::Upgrade(AStructureActor* buildActor, bool isShowWidge
 	FName NextID = Structure->GetBuildData().m_NextUpgradeActorID;
 	
 	const FBuildDataRow* NextBuild = UBuildData::GetBuildTable->FindRow<FBuildDataRow>(NextID,"");
+	
+	AddPlacedStructures(NextID);
 	
 	AStructureActor* NewUpgradeActor = Cast<AStructureActor>(SpawnStructure(*NextBuild));
 	
@@ -829,7 +832,7 @@ bool UConstructionManager::Upgrade(AStructureActor* buildActor, bool isShowWidge
 
 	NewUpgradeActor->ConfirmBuild();
 	
-	AddPlacedStructures(NewUpgradeActor->GetBuildData().m_RowID);
+	
 	
 	UMyGameInstance::Get->m_ZoneInst->AddBuildActor(NewUpgradeActor);
 	

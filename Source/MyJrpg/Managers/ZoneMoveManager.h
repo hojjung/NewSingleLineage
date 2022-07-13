@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "MyJrpg/Actors/Field/Build/BuildInteract/BI_Horse.h"
 #include "MyJrpg/Widgets/MapSelect/WidgetMapBtn.h"
 #include "MyJrpg/Widgets/World/Menu/ZoneMove/WidgetZoneSelectButton.h"
 #include "UObject/NoExportTypes.h"
@@ -36,7 +37,7 @@ public:
 	FOnStamina m_OnRideCostChanged;
 
 protected:
-	int m_nRideCost;
+	int m_nRideEnergy;
 	
 	int m_nZoneStamina;
 
@@ -55,6 +56,9 @@ protected:
 	TMap<FName,TWeakObjectPtr<UWidgetMapBtn>> m_MapZoneBtns;
 
 	float m_fRechargeTime;
+
+	UPROPERTY()
+	UInventory* m_RiderEnergyInven;
 	
 public:
 	void Init();
@@ -105,9 +109,13 @@ public:
 
 	int GetStamina();
 
-	int GetRideCost();
+	int GetRideEnergy();
 
 	float GetStaminaChargeTime() const;
 
 	UWidgetMapBtn* GetMapBtn(FName zoneID);
+
+	void SetRiderEnergy(int v);
+	
+	void SetRiderEnergyInven(UInventory* inventory);
 };

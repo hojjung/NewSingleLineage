@@ -1,14 +1,12 @@
 #include "WidgetRideCost.h"
 #include "MyJrpg/Managers/MyGameInstance.h"
 
-void UWidgetRideCost::NativeOnInitialized()
+void UWidgetRideCost::TryVisible()
 {
-	Super::NativeOnInitialized();
-
-	m_CostBar->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
-
 	if(UMyGameInstance::Get->m_BuildManager->HasFurniturePlaced(TEXT("Horse")))
 	{
+		SetVisibility(ESlateVisibility::SelfHitTestInvisible);
+		
 		UMyGameInstance::Get->m_ZoneMove->m_OnRideCostChanged.AddUObject(this, &UWidgetRideCost::UpdateCostText);
 	
 		UpdateCostText();	
@@ -16,12 +14,21 @@ void UWidgetRideCost::NativeOnInitialized()
 	else
 	{
 		SetVisibility(ESlateVisibility::Collapsed);
-	}	
+	}
+}
+
+void UWidgetRideCost::NativeOnInitialized()
+{
+	Super::NativeOnInitialized();
+
+	m_CostBar->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
+
+	TryVisible();	
 }
 
 void UWidgetRideCost::UpdateCostText()
 {
-	int Stamina = UMyGameInstance::Get->m_ZoneMove->GetRideCost();
+	int Stamina = UMyGameInstance::Get->m_ZoneMove->GetRideEnergy();
 	
 	float Per = 0.f;
 

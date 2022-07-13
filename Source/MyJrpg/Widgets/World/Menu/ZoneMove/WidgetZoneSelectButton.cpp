@@ -25,6 +25,8 @@ void UWidgetZoneSelectButton::NativeOnInitialized()
 
 	m_BtnWalk->OnClicked.AddDynamic(this,&UWidgetZoneSelectButton::OnWalk);
 
+	m_BtnRide->OnClicked.AddDynamic(this,&UWidgetZoneSelectButton::OnRide);
+
 	UMyGameInstance::Get->m_ZoneMove->m_OnMoveEnd.AddUObject(this, &UWidgetZoneSelectButton::UpdateBtnText);
 }
 
@@ -312,12 +314,12 @@ void UWidgetZoneSelectButton::OnRide()
 		UMyLib::PrintErrorText(NSLOCTEXT("UWidgetZoneSelectButton","Already in Moving","이동중엔 경로 변경 불가"));
 		return;
 	}
-	if(!UMyGameInstance::Get->m_EventStage->IsTimeEnough(m_fRunTime, m_ZoneData->m_RowKey))
+	if(!UMyGameInstance::Get->m_EventStage->IsTimeEnough(m_fRideTime, m_ZoneData->m_RowKey))
 	{
 		UMyLib::PrintErrorText(NSLOCTEXT("UWidgetZoneSelectButton","Lack of Duration!","남은 시간이 부족합니다."));
 		return;
 	}
-	if(!UMyGameInstance::Get->m_ZoneMove->TryPurchaseRideCost(m_RunCost))
+	if(!UMyGameInstance::Get->m_ZoneMove->TryPurchaseRideCost(m_RideCost))
 	{
 		UMyLib::PrintErrorText(NSLOCTEXT("UWidgetZoneSelectButton","Lack of Ride Cost!","말의 에너지가 부족합니다."));
 		return;

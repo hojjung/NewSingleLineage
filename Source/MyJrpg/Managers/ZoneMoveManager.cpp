@@ -6,7 +6,7 @@ void UZoneMoveManager::Init()
 {
 	m_nZoneStamina  = 100;
 
-	m_nRideCost  = 100;
+	m_nRideEnergy  = 100;
 	
 	m_CurrentID = TEXT("PlayerHome");
 
@@ -70,12 +70,14 @@ bool UZoneMoveManager::TryPurchaseStamina(int want)
 
 bool UZoneMoveManager::TryPurchaseRideCost(int want)
 {
-	if(m_nRideCost < want)
+	if(m_nRideEnergy < want)
 	{
 		return false;
 	}
 	
-	m_nRideCost -= want;
+	m_nRideEnergy -= want;
+
+	m_RiderEnergyInven->RemoveItem(0,want/5);
 	
 	m_OnRideCostChanged.Broadcast();
 
@@ -218,11 +220,11 @@ void UZoneMoveManager::GetRunStaminaCostTime(const float& distIn, int& outRunCos
 
 void UZoneMoveManager::GetRideStaminaCostTime(const float& distIn, int& outRunCost, float& outRunTime)
 {
-	outRunCost = distIn / 35.f;
+	outRunCost = distIn / 13.f;
 	
-	outRunCost = FMath::Min(outRunCost, 50);
+	outRunCost = FMath::Min(outRunCost, 90);
 
-	outRunTime = distIn / 40.f;
+	outRunTime = distIn / 30.f;
 }
 
 float UZoneMoveManager::GetWalkTime(const float& distIn)
@@ -244,9 +246,9 @@ int UZoneMoveManager::GetStamina()
 	return m_nZoneStamina;
 }
 
-int UZoneMoveManager::GetRideCost()
+int UZoneMoveManager::GetRideEnergy()
 {
-	return m_nRideCost;
+	return m_nRideEnergy;
 }
 
 float UZoneMoveManager::GetStaminaChargeTime() const
@@ -257,4 +259,16 @@ float UZoneMoveManager::GetStaminaChargeTime() const
 UWidgetMapBtn* UZoneMoveManager::GetMapBtn(FName zoneID)
 {
 	return m_MapZoneBtns[zoneID].Get();
+}
+
+void UZoneMoveManager::SetRiderEnergy(int v)
+{
+	m_nRideEnergy = v;
+
+	m_OnRideCostChanged.Broadcast();
+}
+
+void UZoneMoveManager::SetRiderEnergyInven(UInventory* inventory)
+{
+	m_RiderEnergyInven = inventory;
 }

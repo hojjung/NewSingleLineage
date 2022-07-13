@@ -19,6 +19,10 @@ void UBI_Horse::Init(const TArray<FString>& variable, UInventory* inven)
 		m_Inven = NewObject<UInventory>(UMyGameInstance::Get);
 		
 		m_Inven->Init(1,NSLOCTEXT("UBI_Horse","HorseHouse","마구간"));
+
+		UMyGameInstance::Get->m_ZoneMove->SetRiderEnergyInven(m_Inven);
+
+		UMyGameInstance::Get->m_ZoneMove->SetRiderEnergy(0);
 	}
 	m_Player = UMyLib::GetPlayer();
 }

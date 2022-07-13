@@ -26,4 +26,7 @@ protected:
 	virtual void NativeOnInitialized() override;
 
 	void UpdateCostText();
+
+public:
+	void TryVisible();
 };

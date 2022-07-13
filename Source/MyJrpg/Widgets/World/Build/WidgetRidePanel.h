@@ -37,7 +37,8 @@ protected:
 protected:
 	virtual void NativeOnInitialized() override;
 
-
+	void ReduceCarrots();
+	
 	void UpdatePanel();
 
 	void UpdateElement(UWidgetBaseElement* ele, const FItemSpec& item);

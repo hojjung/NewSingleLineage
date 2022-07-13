@@ -173,6 +173,18 @@ void UWidgetInventory::OnDrop(UWidgetBaseElement* ele)
 {
 	UnFocusCurrent();
 
+	if(UItemDDO::GetDDOInst->m_FromRideCost.Get())
+	{
+		FName ID = m_CurrentInven->GetItemConstRef(ele->GetIndex()).m_ID;
+		if(!ID.IsNone() && ID != TEXT("Carrot") )
+		{
+			return;
+		}
+		m_CurrentInven->OnDropItem(ele->GetIndex(), UItemDDO::GetDDOInst->m_FromRideCost.Get(),UItemDDO::GetDDOInst->m_nIndex);
+
+		return;
+	}
+
 	if(UItemDDO::GetDDOInst->m_FromConverter.Get())//
 	{
 		FItemSpec MyItem = m_CurrentInven->GetItemConstRef(ele->GetIndex());

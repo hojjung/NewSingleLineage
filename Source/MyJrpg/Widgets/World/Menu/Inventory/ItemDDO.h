@@ -32,6 +32,8 @@ public:
 
 	TWeakObjectPtr<UAssembleInst> m_FromAssemble;
 
+	TWeakObjectPtr<UInventory> m_FromRideCost;
+
 	int m_nIndex;
 public:
 	void SetDDO(UWidgetBaseElement* ele);

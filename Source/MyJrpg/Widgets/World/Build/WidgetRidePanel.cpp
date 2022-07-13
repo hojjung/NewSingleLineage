@@ -27,8 +27,11 @@ void UWidgetRidePanel::ShowRidePanel(UInventory* inst)
 
 	m_TextRideName->SetText(m_RideInven->GetInvenName());
 
+	m_RiderCost->TryVisible();
+
 	UpdatePanel();
 }
+
 void UWidgetRidePanel::UpdatePanel()
 {
 	m_Inven->OpenPanel();
@@ -53,11 +56,15 @@ void UWidgetRidePanel::UpdateElement(UWidgetBaseElement* ele, const FItemSpec& i
 	if(item.m_ID.IsNone())
 	{
 		ele->Clear();
+		UMyGameInstance::Get->m_ZoneMove->SetRiderEnergy(0);
 		return ;
 	}
 
 	ele->SetItem(item);
+	
 	ele->SetDragable(true);
+
+	UMyGameInstance::Get->m_ZoneMove->SetRiderEnergy(item.m_nLvStack * 5);
 }
 void UWidgetRidePanel::OnPlInvenFocused(UWidgetBaseElement* ele, UInventory* inven, int index)
 {
@@ -66,12 +73,9 @@ void UWidgetRidePanel::OnPlInvenFocused(UWidgetBaseElement* ele, UInventory* inv
 
 void UWidgetRidePanel::OnDrag(UWidgetBaseElement* ele)
 {
-	UItemDDO::GetDDOInst->m_FromConverter = nullptr;
-
-	UItemDDO::GetDDOInst->m_FromInven = m_RideInven;
+	UItemDDO::GetDDOInst->m_FromRideCost = m_RideInven;
 
 	UItemDDO::GetDDOInst->m_nIndex = 0;
-	//이것이 라이드 패널에서 갔고 당근이 아니면 교체될수 없음이 있어야한다.
 }
 
 void UWidgetRidePanel::OnDrop(UWidgetBaseElement* ele)
