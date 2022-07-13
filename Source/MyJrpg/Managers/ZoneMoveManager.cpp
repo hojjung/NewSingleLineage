@@ -5,6 +5,8 @@
 void UZoneMoveManager::Init()
 {
 	m_nZoneStamina  = 100;
+
+	m_nRideCost  = 100;
 	
 	m_CurrentID = TEXT("PlayerHome");
 
@@ -62,6 +64,20 @@ bool UZoneMoveManager::TryPurchaseStamina(int want)
 	m_nZoneStamina -= want;
 
 	m_OnStaminaChanged.Broadcast(m_nZoneStamina);
+
+	return true;
+}
+
+bool UZoneMoveManager::TryPurchaseRideCost(int want)
+{
+	if(m_nRideCost < want)
+	{
+		return false;
+	}
+	
+	m_nRideCost -= want;
+	
+	m_OnRideCostChanged.Broadcast(m_nRideCost);
 
 	return true;
 }
@@ -200,6 +216,15 @@ void UZoneMoveManager::GetRunStaminaCostTime(const float& distIn, int& outRunCos
 	outRunTime = distIn / 30.f;
 }
 
+void UZoneMoveManager::GetRideStaminaCostTime(const float& distIn, int& outRunCost, float& outRunTime)
+{
+	outRunCost = distIn / 35.f;
+	
+	outRunCost = FMath::Min(outRunCost, 50);
+
+	outRunTime = distIn / 40.f;
+}
+
 float UZoneMoveManager::GetWalkTime(const float& distIn)
 {
 	float RunTime = distIn * 3.5f;
@@ -217,6 +242,11 @@ FName UZoneMoveManager::GetDestZoneID()
 int UZoneMoveManager::GetStamina()
 {
 	return m_nZoneStamina;
+}
+
+int UZoneMoveManager::GetRideCost()
+{
+	return m_nRideCost;
 }
 
 float UZoneMoveManager::GetStaminaChargeTime() const

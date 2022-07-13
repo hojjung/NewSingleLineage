@@ -36,6 +36,10 @@ public:
 	UPROPERTY(EditDefaultsOnly,BlueprintReadOnly)
 	FName m_RowKey = TEXT("Should Same Row Key");
 	UPROPERTY(EditDefaultsOnly,BlueprintReadOnly)
+	bool m_bNeedBoat = false;
+	UPROPERTY(EditDefaultsOnly,BlueprintReadOnly)
+	bool m_bNeedHorse = false;
+	UPROPERTY(EditDefaultsOnly,BlueprintReadOnly)
 	TSoftObjectPtr<UTexture2D> m_Icon;
 	UPROPERTY(EditDefaultsOnly,BlueprintReadOnly)
 	FText m_ShowingName;

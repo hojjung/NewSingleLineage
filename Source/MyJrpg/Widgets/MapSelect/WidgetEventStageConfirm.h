@@ -29,6 +29,9 @@ protected:
 	UTextBlock* m_TextDesc;
 
 	const FEventStageSpec* m_DataRow;
+
+	FVector2D m_BtnPosCached;
+	
 protected:
 	virtual void NativeOnInitialized() override;
 	

@@ -30,14 +30,13 @@ AMyPlayerPawn::AMyPlayerPawn(const FObjectInitializer& objInit):Super(objInit)
 
 	m_DissolveCam = CreateDefaultSubobject<UCameraDissolve>(TEXT("CamDissolve00"));
 	m_DissolveCam->SetupAttachment(RootComponent);
-	m_DissolveCam->SetRelativeRotation(FRotator(-53, -45.f, 0.f)); //-45.f
-	m_DissolveCam->TargetArmLength = 730; //1375
+	EndBuildCam();
 	m_DissolveCam->m_SocketOffset = FVector(0,0,-30);
 	m_DissolveCam->CameraLagSpeed=30;
 	//
 	m_TopCamera = CreateDefaultSubobject<UCameraComponent>(TEXT("m_TopCamera"));
 	m_TopCamera->SetupAttachment(m_DissolveCam);
-	m_TopCamera->FieldOfView = 90.f;
+	m_TopCamera->FieldOfView = 60.f;
 	//
 	m_AryTargetingObjectType.Reset();
 	m_AryTargetingObjectType.Add(EObjectTypeQuery::ObjectTypeQuery3);
@@ -458,7 +457,7 @@ void AMyPlayerPawn::UnbindCancel()
 
 void AMyPlayerPawn::StartBuildCam()
 {
-	m_DissolveCam->TargetArmLength = 1300; //1375
+	m_DissolveCam->TargetArmLength = 1500; //1375
 
 	m_DissolveCam->SetRelativeRotation(FRotator(-70, -45.f, 0.f)); //-45.f
 }
@@ -484,9 +483,9 @@ void AMyPlayerPawn::EndBuildCam()
 {
 	m_DissolveCam->SetRelativeLocation(FVector(0.f));
 	
-	m_DissolveCam->TargetArmLength = 730; //1375
+	m_DissolveCam->TargetArmLength = 1300; //1375
 
-	m_DissolveCam->SetRelativeRotation(FRotator(-53, -45.f, 0.f)); //-45.f
+	m_DissolveCam->SetRelativeRotation(FRotator(-50, -45.f, 0.f)); //-45.f
 }
 
 bool AMyPlayerPawn::IsLooting()

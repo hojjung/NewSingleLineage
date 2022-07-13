@@ -90,7 +90,9 @@ private:
 	UPROPERTY()
 	TArray<FWallAry> m_WallVertical; //[FGlobalVariable::GRID_COUNT + 2][FGlobalVariable::GRID_COUNT + 1];
 
-	TMap<FName,int> m_MapInvenFurniture;
+	TMap<FName,int> m_MapInvenFurniture;//Furniture Inven
+
+	TMap<FName,int> m_MapPlacedStructures;//Furniture Inven
 
 private:
 	FVector GetWorldPos(int x, int y);
@@ -123,10 +125,13 @@ private:
 
 	void TryEraseActor(TWeakObjectPtr<AStructureActor>& holder);
 	
-
 	bool TraceBuildable(const FVector& Loc, const FVector&& extent, const FRotator& rot, float height);
 
 	void SetFurnitureWallShow();
+
+	void AddPlacedStructures(FName id);
+
+	void RemovePlacedStructures(FName id);
 
 public:
 	void Init();
@@ -177,4 +182,6 @@ public:
 	bool HasFurnitureEmptySpace(FName id);
 
 	int GetFurnitureMaxOwnCnt(FName id);
+
+	bool HasFurniturePlaced(FName id);
 };

@@ -48,25 +48,48 @@ protected:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (BindWidget))
 	UButton* m_BtnWalk;
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (BindWidget))
+	UButton* m_BtnRide;
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (BindWidget))
 	UTextBlock* m_TextRunCost;
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (BindWidget))
 	UTextBlock* m_TextRunTimeSpan;
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (BindWidget))
+	UTextBlock* m_TextRideCost;
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (BindWidget))
+	UTextBlock* m_TextRideTimeSpan;
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (BindWidget))
 	UTextBlock* m_TextWalkTimeSpan;
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (BindWidget))
+	UHorizontalBox* m_ParentBtns;
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (BindWidget))
+	USizeBox* m_ParentBoat;
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (BindWidget))
+	USizeBox* m_ParentHorse;
 	
 	const FZoneDataRow* m_ZoneData;
 
 	TSet<FName> m_SetRewardItems;
 	
-	int m_RunCost;
-
+	float m_fDist;
+	
 	float m_fWalkTime;
+	
+	int m_RunCost;
 
 	float m_fRunTime;
 
-	float m_fDist;
+	int m_RideCost;
+
+	float m_fRideTime;
+
 
 protected:
+	void ShowRideBtn(bool b);
+
+	void ShowRunBtn(bool b);
+
+	void ShowWalkBtn(bool b);
+	
 	void SetItemsInSet();
 
 	void CreateZoneElement();
@@ -78,11 +101,26 @@ protected:
 	void SetPlayerHome();
 
 	void UpdateBtnText();
+
+	virtual FReply NativeOnTouchStarted(const FGeometry& InGeometry, const FPointerEvent& InGestureEvent) override;
+
+	virtual FReply NativeOnMouseButtonDown(const FGeometry& InGeometry, const FPointerEvent& InMouseEvent) override;
+	
+	void TryShowBoatBtn();
+	
+	void TryShowHorseBtn();
+	
+	void SetZone();
+
+	void SetRideText(const FCulturePtr& cPtr);
+
+	void SetRunText(const FCulturePtr& cPtr);
+
+	void SetWalkText(const FCulturePtr& cPtr);
 	
 public:
 	void Init(const FZoneDataRow& zone_data);
 	
-	void SetZone();
 	UFUNCTION()
 	void OnClose();
 	UFUNCTION()
@@ -91,5 +129,7 @@ public:
 	void OnWalk();
 	UFUNCTION()
 	void OnRun();
+	UFUNCTION()
+	void OnRide();
 };
  

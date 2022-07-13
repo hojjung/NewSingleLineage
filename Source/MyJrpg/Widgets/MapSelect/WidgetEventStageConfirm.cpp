@@ -19,13 +19,15 @@ void UWidgetEventStageConfirm::SetStageConfirm(const FEventStageSpec& data)
 	m_ImgEvent->SetBrushFromSoftTexture(m_DataRow->m_EventDataRow->m_EventImage);
 
 	m_TextDesc->SetText(m_DataRow->m_EventDataRow->m_TextEventDesc);
+
+	UWidgetMapBtn* MapBtn = UMyGameInstance::Get->m_ZoneMove->GetMapBtn(m_DataRow->m_EventDataRow->m_ZoneID);
+
+	m_BtnPosCached = MapBtn->GetPos();
 }
 
 void UWidgetEventStageConfirm::OnLook()
 {
-	UWidgetMapBtn* MapBtn = UMyGameInstance::Get->m_ZoneMove->GetMapBtn(m_DataRow->m_EventDataRow->m_ZoneID);
-	
-	UMyLib::GetMapCanvas()->SetMapCanvasPos(MapBtn->GetPos() * -1.f, true);
+	UMyLib::GetMapCanvas()->SetMapCanvasPos(m_BtnPosCached * -1.f, true);
 
 	OnClose();
 }

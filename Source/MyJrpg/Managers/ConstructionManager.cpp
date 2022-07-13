@@ -493,6 +493,30 @@ void UConstructionManager::SetFurnitureWallShow()
 	}
 }
 
+void UConstructionManager::AddPlacedStructures(FName id)
+{
+	int* CntPtr = m_MapPlacedStructures.Find(id);
+
+	if(CntPtr)
+	{
+		(*CntPtr)++;
+		return;
+	}
+	m_MapPlacedStructures.Add(id, 1);
+}
+
+void UConstructionManager::RemovePlacedStructures(FName id)
+{
+	int* CntPtr = m_MapPlacedStructures.Find(id);
+
+	(*CntPtr)--;
+	
+	if((*CntPtr) <= 0)
+	{
+		m_MapPlacedStructures.Remove(id);
+	}
+}
+
 void UConstructionManager::SetFurnitureHide()
 {
 	int Iter = 0;
@@ -648,6 +672,7 @@ void UConstructionManager::TryEraseActor(TWeakObjectPtr<AStructureActor>& holder
 {
 	if(!holder.Get())
 		return;
+	RemovePlacedStructures(holder->GetBuildData().m_RowID);
 	holder->Destroy();
 	holder = nullptr;
 }
@@ -706,6 +731,8 @@ void UConstructionManager::ConfirmBuild()
 	m_PreviewActor->ConfirmBuild();
 
 	UMyGameInstance::Get->m_ZoneInst->AddBuildActor(m_PreviewActor.Get());
+
+	AddPlacedStructures(m_PreviewActor.Get()->GetBuildData().m_RowID);
 	
 	m_PreviewActor = nullptr;
 	
@@ -901,6 +928,17 @@ int UConstructionManager::GetFurnitureMaxOwnCnt(FName id)
 	const FBuildDataRow* BuildData = UBuildData::GetBuildTable->FindRow<FBuildDataRow>(id, "UConstructionManager::GetFurnitureMaxOwnCnt No ID?");
 
 	return BuildData->m_nMaxOwnedCount;	
+}
+
+bool UConstructionManager::HasFurniturePlaced(FName id)
+{
+	int* Cnt = m_MapPlacedStructures.Find(id);
+
+	if(!Cnt)
+	{
+		return false;
+	}
+	return true;
 }
 
 void UConstructionManager::Cancel()

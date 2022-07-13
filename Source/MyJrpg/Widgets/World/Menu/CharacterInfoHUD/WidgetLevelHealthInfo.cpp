@@ -31,4 +31,8 @@ void UWidgetLevelHealthInfo::UpdateHp(const FStatGroup& stat)
 	}
 	
 	m_HpBar->SetPercent(Per);
+	//
+	FString Str = FString::Printf(TEXT("%d/%d"), (int)stat.m_Hp, (int)stat.m_MaxHp);
+	
+	m_TextAmount->SetText(FText::FromString(Str));
 }

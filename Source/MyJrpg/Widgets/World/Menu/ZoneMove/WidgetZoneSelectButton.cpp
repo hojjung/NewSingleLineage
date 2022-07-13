@@ -28,6 +28,20 @@ void UWidgetZoneSelectButton::NativeOnInitialized()
 	UMyGameInstance::Get->m_ZoneMove->m_OnMoveEnd.AddUObject(this, &UWidgetZoneSelectButton::UpdateBtnText);
 }
 
+FReply UWidgetZoneSelectButton::NativeOnTouchStarted(const FGeometry& InGeometry, const FPointerEvent& InGestureEvent)
+{
+	Super::NativeOnTouchStarted(InGeometry, InGestureEvent);
+	
+	return FReply::Handled(); 
+}
+
+FReply UWidgetZoneSelectButton::NativeOnMouseButtonDown(const FGeometry& InGeometry, const FPointerEvent& InMouseEvent)
+{
+	Super::NativeOnMouseButtonDown(InGeometry, InMouseEvent);
+
+	return FReply::Handled();
+}
+
 void UWidgetZoneSelectButton::SetBarGauge(UProgressBar* bar, int amount)
 {
 	float Value = (amount * 0.25f) + 0.04f;
@@ -48,6 +62,17 @@ void UWidgetZoneSelectButton::SetPlayerHome()
 	m_BarRock->GetParent()->SetVisibility(ESlateVisibility::Collapsed);
 
 	m_BarItem->GetParent()->SetVisibility(ESlateVisibility::Collapsed);
+	
+
+	m_ParentHorse->SetVisibility(ESlateVisibility::Collapsed);
+	
+	m_ParentBoat->SetVisibility(ESlateVisibility::Collapsed);
+
+	m_BtnRide->SetVisibility(ESlateVisibility::Collapsed);
+	
+	m_ParentBtns->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
+
+	m_BtnEnter->SetVisibility(ESlateVisibility::Visible);
 }
 
 void UWidgetZoneSelectButton::Init(const FZoneDataRow& zone_data)
@@ -81,6 +106,68 @@ void UWidgetZoneSelectButton::Init(const FZoneDataRow& zone_data)
 void UWidgetZoneSelectButton::OnClose()
 {
 	SetVisibility(ESlateVisibility::Collapsed);	
+}
+
+void UWidgetZoneSelectButton::ShowRideBtn(bool b)
+{
+	if(b)
+	{
+		m_BtnRide->SetVisibility(ESlateVisibility::Visible);
+
+		m_TextRideCost->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
+
+		m_TextRideTimeSpan->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
+
+		const FString& CultName = FInternationalization::Get().GetCurrentCulture().Get().GetName();
+	
+		FCulturePtr Culture = FInternationalization::Get().GetCulture(CultName);
+		
+		SetRideText(Culture);
+	}
+	else
+	{
+		m_BtnRide->SetVisibility(ESlateVisibility::Collapsed);
+
+		m_TextRideCost->SetVisibility(ESlateVisibility::Collapsed);
+
+		m_TextRideTimeSpan->SetVisibility(ESlateVisibility::Collapsed);
+	}
+}
+
+void UWidgetZoneSelectButton::ShowRunBtn(bool b)
+{
+	if(b)
+	{
+		m_BtnRun->SetVisibility(ESlateVisibility::Visible);
+
+		m_TextRunCost->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
+
+		m_TextRunTimeSpan->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
+	}
+	else
+	{
+		m_BtnRun->SetVisibility(ESlateVisibility::Collapsed);
+
+		m_TextRunCost->SetVisibility(ESlateVisibility::Collapsed);
+
+		m_TextRunTimeSpan->SetVisibility(ESlateVisibility::Collapsed);
+	}
+}
+
+void UWidgetZoneSelectButton::ShowWalkBtn(bool b)
+{
+	if(b)
+	{
+		m_BtnWalk->SetVisibility(ESlateVisibility::Visible);
+
+		m_TextWalkTimeSpan->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
+	}
+	else
+	{
+		m_BtnWalk->SetVisibility(ESlateVisibility::Collapsed);
+
+		m_TextWalkTimeSpan->SetVisibility(ESlateVisibility::Collapsed);
+	}
 }
 
 void UWidgetZoneSelectButton::SetItemsInSet()
@@ -159,6 +246,20 @@ void UWidgetZoneSelectButton::SetZone()
 	m_TextMapName->SetText(m_ZoneData->m_ShowingName);
 
 	m_TextMapDesc->SetText(m_ZoneData->m_Desc);
+
+	m_BarSkull->GetParent()->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
+	
+	m_BarWood->GetParent()->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
+
+	m_BarRock->GetParent()->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
+
+	m_BarItem->GetParent()->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
+	
+	m_ParentBtns->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
+
+	m_ParentHorse->SetVisibility(ESlateVisibility::Collapsed);
+	
+	m_ParentBoat->SetVisibility(ESlateVisibility::Collapsed);
 }
 
 void UWidgetZoneSelectButton::MoveToZone()
@@ -204,51 +305,126 @@ void UWidgetZoneSelectButton::OnRun()
 	OnClose();
 }
 
+void UWidgetZoneSelectButton::OnRide()
+{
+	if(UMyGameInstance::Get->m_ZoneMove->IsMoving())
+	{
+		UMyLib::PrintErrorText(NSLOCTEXT("UWidgetZoneSelectButton","Already in Moving","이동중엔 경로 변경 불가"));
+		return;
+	}
+	if(!UMyGameInstance::Get->m_EventStage->IsTimeEnough(m_fRunTime, m_ZoneData->m_RowKey))
+	{
+		UMyLib::PrintErrorText(NSLOCTEXT("UWidgetZoneSelectButton","Lack of Duration!","남은 시간이 부족합니다."));
+		return;
+	}
+	if(!UMyGameInstance::Get->m_ZoneMove->TryPurchaseRideCost(m_RunCost))
+	{
+		UMyLib::PrintErrorText(NSLOCTEXT("UWidgetZoneSelectButton","Lack of Ride Cost!","말의 에너지가 부족합니다."));
+		return;
+	}
+
+	UMyGameInstance::Get->m_ZoneMove->StartMove(true, m_fRideTime, m_ZoneData->m_RowKey);
+	OnClose();
+}
+
+void UWidgetZoneSelectButton::TryShowBoatBtn()
+{
+	if(m_ZoneData->m_bNeedBoat && !UMyGameInstance::Get->m_BuildManager->HasFurniturePlaced(TEXT("Boat")))
+	{
+		m_ParentBtns->SetVisibility(ESlateVisibility::Collapsed);
+
+		m_ParentBoat->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
+	}
+	else
+	{
+		m_ParentBoat->SetVisibility(ESlateVisibility::Collapsed);
+	}
+}
+
+void UWidgetZoneSelectButton::TryShowHorseBtn()
+{
+	bool HasHorse = UMyGameInstance::Get->m_BuildManager->HasFurniturePlaced(TEXT("Horse")); 
+
+	ShowRideBtn(HasHorse);
+	
+	if(!HasHorse && m_ZoneData->m_bNeedHorse)
+	{
+		m_ParentBtns->SetVisibility(ESlateVisibility::Collapsed);
+
+		m_ParentHorse->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
+	}
+	else
+	{
+		m_ParentHorse->SetVisibility(ESlateVisibility::Collapsed);
+	}
+}
+
 void UWidgetZoneSelectButton::UpdateBtnText()
 {
 	if(UMyGameInstance::Get->m_ZoneMove->IsZoneAlreadyIn(m_ZoneData->m_RowKey))
 	{
 		m_BtnEnter->SetVisibility(ESlateVisibility::Visible);
-		
-		m_BtnRun->SetVisibility(ESlateVisibility::Collapsed);
 
-		m_BtnWalk->SetVisibility(ESlateVisibility::Collapsed);
+		ShowRideBtn(false);
 
-		m_TextWalkTimeSpan->SetVisibility(ESlateVisibility::Collapsed);
+		ShowRunBtn(false);
 
-		m_TextRunTimeSpan->SetVisibility(ESlateVisibility::Collapsed);
-
-		//들어가기 버튼이 있어야함
+		ShowWalkBtn(false);
 		return;
 	}
-	
-	m_fDist = UMyGameInstance::Get->m_ZoneMove->GetDist(m_ZoneData->m_RowKey);
-
+	//
+	TryShowBoatBtn();
+	//
+	TryShowHorseBtn();
+	//
+	if(!m_ParentBtns->IsVisible())
+	{
+		return;
+	}
 	m_BtnEnter->SetVisibility(ESlateVisibility::Collapsed);
 	
-	m_BtnRun->SetVisibility(ESlateVisibility::Visible);
+	ShowRunBtn(true);
 
-	m_BtnWalk->SetVisibility(ESlateVisibility::Visible);
-
-	m_TextWalkTimeSpan->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
-
-	m_TextRunTimeSpan->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
+	ShowWalkBtn(true);
 	
-	UMyGameInstance::Get->m_ZoneMove->GetRunStaminaCostTime(m_fDist,m_RunCost, m_fRunTime);
-
-	m_fWalkTime = UMyGameInstance::Get->m_ZoneMove->GetWalkTime(m_fDist);
-
-	m_TextRunCost->SetText(FText::AsNumber(m_RunCost));
-
+	m_fDist = UMyGameInstance::Get->m_ZoneMove->GetDist(m_ZoneData->m_RowKey);
+	
 	const FString& CultName = FInternationalization::Get().GetCurrentCulture().Get().GetName();
 	
 	FCulturePtr Culture = FInternationalization::Get().GetCulture(CultName);
+
+	SetRunText(Culture);
+
+	SetWalkText(Culture);
+}
+
+void UWidgetZoneSelectButton::SetRideText(const FCulturePtr& cPtr)
+{
+	UMyGameInstance::Get->m_ZoneMove->GetRideStaminaCostTime(m_fDist,m_RideCost, m_fRideTime);
+
+	m_TextRideCost->SetText(FText::AsNumber(m_RideCost));
+	
+	FTimespan Ride(0,0,m_fRideTime);
+	
+	m_TextRideTimeSpan->SetText(FText::AsTimespan(Ride, cPtr));	
+}
+
+void UWidgetZoneSelectButton::SetRunText(const FCulturePtr& cPtr)
+{
+	UMyGameInstance::Get->m_ZoneMove->GetRunStaminaCostTime(m_fDist,m_RunCost, m_fRunTime);
+
+	m_TextRunCost->SetText(FText::AsNumber(m_RunCost));
 	
 	FTimespan Run(0,0,m_fRunTime);
 	
-	m_TextRunTimeSpan->SetText(FText::AsTimespan(Run, Culture));
+	m_TextRunTimeSpan->SetText(FText::AsTimespan(Run, cPtr));
+}
 
+void UWidgetZoneSelectButton::SetWalkText(const FCulturePtr& cPtr)
+{
+	m_fWalkTime = UMyGameInstance::Get->m_ZoneMove->GetWalkTime(m_fDist);
+	
 	FTimespan Walk(0,0,m_fWalkTime);
 	
-	m_TextWalkTimeSpan->SetText(FText::AsTimespan(Walk, Culture));
+	m_TextWalkTimeSpan->SetText(FText::AsTimespan(Walk, cPtr));
 }

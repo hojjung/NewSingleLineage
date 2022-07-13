@@ -20,7 +20,7 @@ AMyPlayerController::AMyPlayerController()
 
 	m_bUseFlick = false;
 
-	
+	m_MousePos = FVector2D(0.f);
 }
 
 void AMyPlayerController::BeginPlay()
@@ -134,6 +134,7 @@ void AMyPlayerController::OnPressed()
 void AMyPlayerController::OnReleased()
 {
 	m_bUseFlick = false;
+	m_MousePos = FVector2D(0.f);
 }
 
 void AMyPlayerController::OnTouchPressed()

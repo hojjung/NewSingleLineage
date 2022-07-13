@@ -33,7 +33,11 @@ public:
 
 	FOnStamina m_OnStaminaChanged;
 
+	FOnStamina m_OnRideCostChanged;
+
 protected:
+	int m_nRideCost;
+	
 	int m_nZoneStamina;
 
 	float m_fRemainDuration;
@@ -64,6 +68,8 @@ public:
 	void Tick(float deltaTime);
 
 	bool TryPurchaseStamina(int want);
+
+	bool TryPurchaseRideCost(int want);
 	
 	void StartMove(bool isRunning, float timeUse, FName destZoneID);
 
@@ -91,11 +97,15 @@ public:
 
 	void GetRunStaminaCostTime(const float& distIn, int& outRunCost, float& outRunTime);
 
+	void GetRideStaminaCostTime(const float& distIn, int& outRunCost, float& outRunTime);
+
 	float GetWalkTime(const float& distIn);
 
 	FName GetDestZoneID();
 
 	int GetStamina();
+
+	int GetRideCost();
 
 	float GetStaminaChargeTime() const;
 
