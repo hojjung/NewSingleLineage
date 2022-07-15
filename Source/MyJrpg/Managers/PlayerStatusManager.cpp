@@ -40,10 +40,10 @@ void UPlayerStatusManager::Init()
 	DefaultStat.m_nAccu = 10;
 	DefaultStat.m_nAvoid = 0;
 	DefaultStat.m_MaxHp = 100;
-	DefaultStat.m_Dmg = 4;
+	DefaultStat.m_Dmg = 2;
 	DefaultStat.m_AtkPerSec = 0.8f;
 	DefaultStat.m_DmgReduce = 0;
-	DefaultStat.m_CriPer = 0.1f;
+	DefaultStat.m_CriPer = 0.0f;
 	DefaultStat.m_CriDmg = 1.5f;
 	DefaultStat.m_MoveSpeed = FGlobalVariable::HERO_DEFAULT_SPEED;
 	

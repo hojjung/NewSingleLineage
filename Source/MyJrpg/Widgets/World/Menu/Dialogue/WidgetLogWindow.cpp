@@ -72,6 +72,10 @@ void UWidgetLogWindow::RenderNextDialogue(const FDialogueNode& playerRply)//ìž¬ê
 	for(UWidgetLogReply* Rply : m_AryReplies)
 	{
 		Rply->SetIsEnabled(false);
+		if(Rply->m_ReplyNode != &playerRply)
+		{
+			Rply->SetVisibility(ESlateVisibility::Collapsed);
+		}
 	}
 
 	TryRunQuestEvent(playerRply);
@@ -136,6 +140,10 @@ void UWidgetLogWindow::CloseDialogue()
 
 void UWidgetLogWindow::CloseDialogueWrap()
 {
+	UMyLib::GetPlayerCon()->EnableJoystick(true);
+
+	UMyLib::GetPlayer()->SetInteracting(false);
+	
 	SetVisibility(ESlateVisibility::Collapsed);
 
 	m_OnClose.ExecuteIfBound();

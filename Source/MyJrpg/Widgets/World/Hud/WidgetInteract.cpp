@@ -12,8 +12,6 @@ void UWidgetInteract::NativeOnInitialized()
 
 	m_bAutoToggle = false;
 
-	m_bHasFocus = false;
-
 	m_BtnInteract->OnClicked.AddDynamic(this, &UWidgetInteract::OnInteract);
 	m_BtnAttack->OnClicked.AddDynamic(this, &UWidgetInteract::OnAttack);
 	m_BtnSneak->OnClicked.AddDynamic(this, &UWidgetInteract::OnSneak);
@@ -50,15 +48,22 @@ void UWidgetInteract::ShowInteract(IFocusable* focus)
 {
 	m_BtnInteract->SetVisibility(ESlateVisibility::Collapsed);
 	
-	m_bHasFocus = true;
-	
 	AMonsterPawn* Monster = Cast<AMonsterPawn>(focus);
 
-	if(!focus || (Monster && Monster->IsAlive()))
+	if(!focus || !Monster)
 	{
-		return;
+		return;	
 	}
+	const FName& TalkID = Monster->GetTalkID();
 	
+	if(Monster->IsAlive())
+	{
+		if(TalkID.IsNone() || UMyGameInstance::Get->m_TeamKarma->IsFoe(Monster))
+		{
+			return;
+		}
+	}
+
 	m_BtnInteract->SetVisibility(ESlateVisibility::Visible);
 }
 

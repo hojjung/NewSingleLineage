@@ -394,6 +394,13 @@ void AMonsterPawn::SetHp(int hp)
 
 void AMonsterPawn::OnRequestMoveDone()
 {
+	if(IsAlive() && !m_TalkID.IsNone())
+	{
+		UMyLib::GetPlayer()->SetInteracting(true);
+		HomingRotateToTarget(-1.f);
+		UMyLib::GetCanvas()->StartDialogue(m_TalkID);
+		return;
+	}
 	UMyLib::GetCanvas()->StartPickPocket(this);
 }
 

@@ -91,7 +91,7 @@ struct FDialogueNode
 	GENERATED_USTRUCT_BODY()
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Dialogue Node")
-	FName m_SpeakerID;
+	FName m_SpeakerIDNode;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Dialogue Node")
 	int32 m_nID = -1;

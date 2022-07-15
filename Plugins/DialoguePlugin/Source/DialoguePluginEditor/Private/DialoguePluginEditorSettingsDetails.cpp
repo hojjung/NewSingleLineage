@@ -75,10 +75,12 @@ void FDialoguePluginEditorSettingsDetails::CustomizeDetails( IDetailLayoutBuilde
 		const TSharedPtr<IPropertyHandle> SoundField = Child->GetChildHandle("m_Sound");
 		const TSharedPtr<IPropertyHandle> DialogueWaveField = Child->GetChildHandle("m_DialogueWave");
 		const TSharedPtr<IPropertyHandle> QuestField = Child->GetChildHandle("m_QuestID");
+		const TSharedPtr<IPropertyHandle> SpeakerField = Child->GetChildHandle("m_SpeakerIDNode");
 		
 		CurrentNodeCategory.AddProperty(IsPlayerField);
 		CurrentNodeCategory.AddProperty(EventsField);
 		CurrentNodeCategory.AddProperty(QuestField);
+		CurrentNodeCategory.AddProperty(SpeakerField);
 		
 		IDetailPropertyRow * ConditionDetailsRow = &CurrentNodeCategory.AddProperty(ConditionsField);
 

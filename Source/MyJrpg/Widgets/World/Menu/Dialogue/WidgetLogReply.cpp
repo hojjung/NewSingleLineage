@@ -15,6 +15,14 @@ void UWidgetLogReply::Init(const FDialogueNode& node,UWidgetLogWindow* log)
 	{
 		m_SpeakerPortrait->SetVisibility(ESlateVisibility::Collapsed);
 	}
+	else if(!node.m_SpeakerIDNode.IsNone())
+	{
+		FEntityRow* EntityRow = UUnitEntityData::GetNpcUnitTable->FindRow<FEntityRow>(node.m_SpeakerIDNode, "");
+		
+		m_SpeakerIcon->SetBrushFromSoftTexture(EntityRow->m_Icon);
+
+		m_SpeakerName->SetText(EntityRow->m_ShowingName);
+	}
 }
 
 FReply UWidgetLogReply::OnClick(const FPointerEvent& inputEvent)

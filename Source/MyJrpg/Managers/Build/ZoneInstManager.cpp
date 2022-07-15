@@ -493,6 +493,7 @@ AStructureActor* UZoneInstManager::SpawnBuildActor(const FZoneActorTransform& sp
 	if(UMyGameInstance::Get->m_LevelMoveManager->GetCrntZoneID() == TEXT("PlayerHome"))
 	{
 		UMyGameInstance::Get->m_BuildManager->SetStructureGrid(StructureActor);
+		
 		PlayerHomeSnap(StructureActor);
 	}
 

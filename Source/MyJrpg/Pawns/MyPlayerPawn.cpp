@@ -20,6 +20,7 @@ AMyPlayerPawn::AMyPlayerPawn(const FObjectInitializer& objInit):Super(objInit)
 {
 	m_Movement->MaxSpeed=FGlobalVariable::HERO_DEFAULT_SPEED;
 
+	m_bIsSneakAttack = false;
 	m_bIsSkillUsing = false;
 	m_bCanMoveInSkill = false;
 	m_bIsInvincible = false;
@@ -243,10 +244,15 @@ void AMyPlayerPawn::RequestAttack()
 
 void AMyPlayerPawn::TryAttack_External()
 {
+	
 	float Len = TryAttack();
 
 	if(Len > 0.f && IsSneak())
 	{
+		if(GetFocusedTarget<AMonsterPawn>()->GetFocusedTarget<>() != this)
+		{
+			m_bIsSneakAttack = true;
+		}
 		SetSneak();
 	}
 	SetInteracting(false);
@@ -369,8 +375,14 @@ void AMyPlayerPawn::DealBaseMeleeAttack()
 	{
 		return ;
 	}
-		
-	Pawn->TakeDmg(GetStat().m_Dmg,this);
+	float Dmg = GetStat().m_Dmg;
+
+	if(m_bIsSneakAttack)
+	{
+		Dmg *= 1.5f;
+		m_bIsSneakAttack = false;
+	}
+	Pawn->TakeDmg(Dmg,this);
 
 	UMyGameInstance::Get->m_EquipManager->ReduceDurability(EEquipSlotType::Weapon,1);
 }

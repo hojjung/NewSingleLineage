@@ -180,6 +180,7 @@ UWidgetStackCalculator* UWidgetCanvasWorld::GetCalculator()
 
 void UWidgetCanvasWorld::StartDialogue(FName str, AActor* speaker)
 {
+	UMyLib::GetPlayerCon()->EnableJoystick(false);
 	m_DialoguePanel->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
 
 	UDialogue* Dial = UDialogueTable::GetDialogue(str);

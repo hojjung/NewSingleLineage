@@ -50,6 +50,8 @@ void ULogic_Stay::SetIdle()
 	{
 		return;
 	}
+	m_fIdleTimer = 0.f;
+	
 	m_CurrentState = EFSM::Idle;
 
 	m_Owner->SetFocusedTarget(nullptr);
@@ -86,6 +88,22 @@ FString ULogic_Stay::CurrentState()
 
 void ULogic_Stay::OnIdle()
 {
+	if(m_fIdleTimer > 0.f)
+	{
+		m_fIdleTimer -= m_fDeltaTime;
+
+		return;
+	}
+	m_fIdleTimer = FMath::FRandRange(3.f, 7.f);
+	
+	FVector Loc = m_Owner->GetActorLocation();
+
+	float DistSqr = FVector::DistSquared2D(Loc, m_StartPoint);
+
+	if(DistSqr >= 90000)
+	{
+		m_Owner->MoveToLocation(m_StartPoint);
+	}
 	//Stay
 }
 

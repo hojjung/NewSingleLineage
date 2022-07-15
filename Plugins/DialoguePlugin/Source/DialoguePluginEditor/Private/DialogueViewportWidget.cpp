@@ -871,7 +871,7 @@ void SDialogueViewportWidget::OnAddNodeClicked()
 	
 	FDialogueNode NewNode;
 
-	NewNode.m_SpeakerID= Dialogue->m_SpeakerID;
+	NewNode.m_SpeakerIDNode= Dialogue->m_SpeakerID;
 			
 	NewNode.m_nID = Dialogue->m_nNextNodeId;
 	// mouseCoords = (nodeCoords + panning) * Zoom

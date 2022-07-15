@@ -41,8 +41,6 @@ protected:
 	UPROPERTY()
 	AMyPlayerPawn* m_Pl;
 	
-	bool m_bHasFocus;
-	
 	bool m_bAutoToggle;
 
 protected:

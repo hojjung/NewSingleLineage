@@ -79,6 +79,8 @@ protected:
 
 	FVoidVoid m_OnCancelInteract;
 
+	bool m_bIsSneakAttack;
+
 private:
 	void CreateFocusActor();
 	

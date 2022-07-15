@@ -6,7 +6,9 @@
 #include "Blueprint/UserWidget.h"
 #include "Dialogue.h"
 #include "Components/CanvasPanel.h"
+#include "Components/Image.h"
 #include "Components/RichTextBlock.h"
+#include "Components/TextBlock.h"
 #include "WidgetLogReply.generated.h"
 
 
@@ -24,6 +26,10 @@ public:
 public:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (BindWidget))
 	UCanvasPanel* m_SpeakerPortrait;
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (BindWidget))
+	UImage* m_SpeakerIcon;
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (BindWidget))
+	UTextBlock* m_SpeakerName;
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (BindWidget))
 	URichTextBlock* m_TextReply;
 	
