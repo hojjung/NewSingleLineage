@@ -108,6 +108,7 @@ protected:
 
 	void AddPlayerAllItem(UInventory* inven);
 
+	void PlayerHomeSnap(AActor* target);
 	
 public:
 	void SpawnZone(const FName& id, const FZoneDataRow& zoneData);

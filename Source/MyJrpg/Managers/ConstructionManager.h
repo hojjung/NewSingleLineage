@@ -94,10 +94,12 @@ private:
 
 	TMap<FName,int> m_MapPlacedStructures;//Furniture Inven
 
-private:
+public:
 	FVector GetWorldPos(int x, int y);
 
 	void GetIndex(const FVector& inloc, int& outX, int& outY);
+	
+private:
 
 	bool GetWallIndex(const FVector& inloc, int& outX, int& outY, bool &isHori);
 

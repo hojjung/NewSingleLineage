@@ -14,10 +14,10 @@ UMinimapIconComp::UMinimapIconComp(const FObjectInitializer& ObjectInitializer):
 	m_IconMeshComp->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 	m_IconMeshComp->SetCanEverAffectNavigation(false);
 	m_IconMeshComp->bReceivesDecals = false;
-	m_IconMeshComp->SetOwnerNoSee(true);
 	static ConstructorHelpers::FObjectFinder<UStaticMesh> FoundIconMesh(
 		TEXT("StaticMesh'/Game/03_VisualEffect/SM_Icon.SM_Icon'"));
 	m_IconMeshComp->SetStaticMesh(FoundIconMesh.Object);
+	m_IconMeshComp->bVisibleInSceneCaptureOnly = true;
 }
 
 FTransform UMinimapIconComp::GetSocketTransform(FName InSocketName, ERelativeTransformSpace TransformSpace) const

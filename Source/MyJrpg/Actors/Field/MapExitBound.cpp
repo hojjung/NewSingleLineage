@@ -48,13 +48,12 @@ AMapExitBound::AMapExitBound()
 void AMapExitBound::BeginPlay()
 {
 	Super::BeginPlay();
+	
 	m_CollBox->SetBoxExtent(m_Decal->DecalSize);
 	m_CollBox->OnComponentBeginOverlap.AddDynamic(this, &AMapExitBound::OnTriggerStart);
 	m_CollBox->OnComponentEndOverlap.AddDynamic(this, &AMapExitBound::OnTriggerEnd);
-	//
-	//m_IconMeshComp->SetRotationOffset(FRotator(0,45,0));
 	
-	GetWorldTimerManager().SetTimer(m_Timer, this, &AMapExitBound::SetMinimap,1.5f,false);
+	SetMinimap();
 }
 
 void AMapExitBound::OnTriggerStart(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor,

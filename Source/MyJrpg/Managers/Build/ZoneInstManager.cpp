@@ -46,11 +46,6 @@ void UZoneInstManager::SpawnZone(const FName& id, const FZoneDataRow& zoneData)
 	
 	m_Build.Reset();
 
-	FActorSpawnParameters Param;
-	Param.bNoFail = false;
-	
-	m_MiniMapCam = GetWorld()->SpawnActor<AMinimapCam>(Param);
-
 	AddTrackIcon(UMyLib::GetPlayer());
 
 	FZoneSerialData* BuildInst = m_MapBuildInsts.Find(id);
@@ -301,6 +296,27 @@ void UZoneInstManager::AddPlayerAllItem(UInventory* inven)
 	}
 }
 
+void UZoneInstManager::PlayerHomeSnap(AActor* target)
+{
+	FVector Loc = target->GetActorLocation();
+
+	int X,Y;
+	
+	UMyGameInstance::Get->m_BuildManager->GetIndex(Loc,X,Y);
+
+	Loc =  UMyGameInstance::Get->m_BuildManager->GetWorldPos(X,Y);
+
+	target->SetActorLocation(Loc);
+	
+	FRotator Rot = target->GetActorRotation();
+
+	int RotClamp = (360.f / Rot.Yaw);
+
+	Rot.Yaw = RotClamp * 90.f;
+
+	target->SetActorRotation(Rot);
+}
+
 void UZoneInstManager::ResetZone()
 {
 	TArray<FName> AryRemove;
@@ -477,6 +493,7 @@ AStructureActor* UZoneInstManager::SpawnBuildActor(const FZoneActorTransform& sp
 	if(UMyGameInstance::Get->m_LevelMoveManager->GetCrntZoneID() == TEXT("PlayerHome"))
 	{
 		UMyGameInstance::Get->m_BuildManager->SetStructureGrid(StructureActor);
+		PlayerHomeSnap(StructureActor);
 	}
 
 	AddBuildActor(StructureActor);
@@ -738,11 +755,17 @@ void UZoneInstManager::GetNearNpcs(const ABaseUnitPawn* caller, TArray<ACombatUn
 
 void UZoneInstManager::AddTrackIcon(IFocusable* icon)
 {
-	m_MiniMapCam->AddTrackIcon(icon);
+	AddTrackIcon(icon->GetIconMeshComp()->GetMeshComp());
 }
 
 void UZoneInstManager::AddTrackIcon(UMeshComponent* mesh)
 {
+	if(!m_MiniMapCam.Get())
+	{
+		FActorSpawnParameters Param;
+		Param.bNoFail = false;
+		m_MiniMapCam = GetWorld()->SpawnActor<AMinimapCam>(Param);
+	}
 	m_MiniMapCam->AddTrackIcon(mesh);
 }
 
