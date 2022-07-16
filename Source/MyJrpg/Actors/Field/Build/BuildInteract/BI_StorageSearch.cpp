@@ -29,7 +29,7 @@ void UBI_StorageSearch::Init(const TArray<FString>& variable, UInventory* inven)
 		
 		m_Inven->Init(Size,NSLOCTEXT("UBI_StorageSearch","StorageName","루트박스"));
 
-		if(variable.Num() % 2 != 0 && variable.Num() >= 3)
+		if(variable.Num() % 3 != 0 && variable.Num() >= 4)
 		{
 			int Iter = 1;
 			while (Iter < variable.Num())
@@ -38,16 +38,31 @@ void UBI_StorageSearch::Init(const TArray<FString>& variable, UInventory* inven)
 				
 				int Cnt = FCString::Atoi(*variable[Iter + 1]);
 
-				int RandLuck = FMath::RandRange(0, Cnt);
+				float RandLuck = FCString::Atoi(*variable[Iter + 2]);
 
-				if(RandLuck > 0)
+				float Rand = FMath::RandRange(0.f, 1.f);
+
+				if(Rand <= RandLuck)
 				{
-					FItemSpec NewItem(ItemID, RandLuck);
+					int Dur = 0;
+
+					const FItemDataRow& ItemData = UMyLib::GetItemData(ItemID);
+					
+					if(UMyLib::IsEquip(ItemData))
+					{
+						float MinDur = (float)ItemData.m_nDurability * 0.15f;
+
+						float MaxDur = (float)ItemData.m_nDurability * 0.85f;
+						
+						Dur = FMath::RandRange(MinDur, MaxDur);
+					}
+					FItemSpec NewItem(ItemID, Cnt, Dur);
+
 
 					m_Inven->AddItem(NewItem);
 				}
 				
-				Iter+=2;
+				Iter +=3;
 			}
 		}
 		

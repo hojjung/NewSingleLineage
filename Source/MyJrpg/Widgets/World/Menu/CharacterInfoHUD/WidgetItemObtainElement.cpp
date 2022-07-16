@@ -15,7 +15,14 @@ void UWidgetItemObtainElement::ShowImageText(const FItemDataRow& item, int amoun
 	
 	if(UMyLib::IsEquip(item))
 	{
-		Str = FString::Printf(TEXT("%s +Lv.%d"),*item.m_ShowingName.ToString(),amount + 1);
+		if(amount > 0)
+		{
+			Str = FString::Printf(TEXT("%s +Lv.%d"),*item.m_ShowingName.ToString(), amount);
+		}
+		else
+		{
+			Str = FString::Printf(TEXT("%s x 1"),*item.m_ShowingName.ToString());
+		}
 	}
 	else
 	{

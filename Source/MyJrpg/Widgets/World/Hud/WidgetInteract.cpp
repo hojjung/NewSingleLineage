@@ -50,17 +50,21 @@ void UWidgetInteract::ShowInteract(IFocusable* focus)
 	
 	AMonsterPawn* Monster = Cast<AMonsterPawn>(focus);
 
-	if(!focus || !Monster)
+	if(!focus)
 	{
-		return;	
+		return;
 	}
-	const FName& TalkID = Monster->GetTalkID();
-	
-	if(Monster->IsAlive())
+
+	if (Monster)
 	{
-		if(TalkID.IsNone() || UMyGameInstance::Get->m_TeamKarma->IsFoe(Monster))
+		const FName& TalkID = Monster->GetTalkID();
+
+		if (Monster->IsAlive())
 		{
-			return;
+			if (TalkID.IsNone() || UMyGameInstance::Get->m_TeamKarma->IsFoe(Monster))
+			{
+				return;
+			}
 		}
 	}
 

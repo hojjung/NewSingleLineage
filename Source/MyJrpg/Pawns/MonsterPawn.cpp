@@ -377,7 +377,7 @@ bool AMonsterPawn::IsInteractable()
 	{
 		return true;
 	}
-	return m_Inven && !m_Inven->IsInvenEmpty();
+	return m_Inven && !m_Inven->IsEmpty();
 }
 
 bool AMonsterPawn::IsFocusable()

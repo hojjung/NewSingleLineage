@@ -21,7 +21,7 @@ void UWidgetPickpocketPanel::OnWithdrawAll()
 {
 	Super::OnWithdrawAll();
 
-	if(m_StoragePanel->GetInven()->IsInvenEmpty())
+	if(m_StoragePanel->GetInven()->IsEmpty())
 	{
 		ClosePanel();
 		

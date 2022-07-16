@@ -43,6 +43,8 @@ public:
 	bool m_bSupportRotate = true;
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
 	bool m_bIsFocusable = true;
+	UPROPERTY(EditDefaultsOnly,BlueprintReadOnly)
+	bool m_bIsVolatile = false;//its for evet corpse, box like that
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	TSubclassOf<UBuildInteractBase> m_ClassInter = nullptr;
 	UPROPERTY(EditAnywhere, meta=(EditCondition = "m_ClassInter != nullptr", EditConditionHides))

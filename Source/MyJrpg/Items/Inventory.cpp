@@ -295,7 +295,7 @@ int UInventory::EmptySlotCount()
 	return m_nInvenMaxSize - GetUsingSlotCount();
 }
 
-bool UInventory::IsInvenEmpty()
+bool UInventory::IsEmpty()
 {
 	return m_MapItemKeyCount.Num() < 1; 
 }
@@ -410,11 +410,6 @@ int UInventory::GetUsingSlotCount() const
 		UsingSlotCnt += ItemMap.Value.Num();
 	}
 	return UsingSlotCnt;
-}
-
-bool UInventory::IsEmpty()
-{
-	return GetUsingSlotCount() == 0;
 }
 
 FItemSpec* UInventory::FindItem(FName itemID, int stlv)

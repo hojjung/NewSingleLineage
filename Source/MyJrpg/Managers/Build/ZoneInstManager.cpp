@@ -74,7 +74,7 @@ int UZoneInstManager::SaveActors(const FName& id)
 
 	for(TWeakObjectPtr<AMonsterPawn> ActorEle : m_Npc)
 	{
-		if(!ActorEle.Get() || !ActorEle->IsAlive() && ActorEle->GetInven()->IsInvenEmpty())
+		if(!ActorEle.Get() || !ActorEle->IsAlive() && ActorEle->GetInven()->IsEmpty())
 		{
 			continue;
 		}
@@ -125,14 +125,19 @@ int UZoneInstManager::SaveActors(const FName& id)
 		ZoneData.m_IDEntity = ActorEle->GetBuildData().m_RowID;
 		ZoneData.m_SpawnPosition = ActorEle->GetActorLocation();
 		ZoneData.m_SpawnRotation = ActorEle->GetActorRotation();
-		BuildInst->m_AryZoneActorTrans.Add(ZoneData);
-
+		
 		if(ActorEle->GetItemHolder())
 		{
+			if(ActorEle->GetItemHolder()->IsEmpty() && ActorEle->GetBuildData().m_bIsVolatile)
+			{
+				continue;
+			}
 			TStrongObjectPtr<UInventory> ItemHolder(ActorEle->GetItemHolder());
 			
 			BuildInst->m_MapItemHolders.Add(Index, ItemHolder);
 		}
+		BuildInst->m_AryZoneActorTrans.Add(ZoneData);
+		
 		Index++;
 	}
 	for(TWeakObjectPtr<AItemActor> ActorEle : m_Item)
@@ -818,7 +823,7 @@ void UZoneInstManager::SaveActorsOnPlayerDead(const FName& id)
 	
 	AddPlayerAllItem(DeadInven);
 	
-	if(DeadInven->IsInvenEmpty())
+	if(DeadInven->IsEmpty())
 	{
 		return;
 	}
