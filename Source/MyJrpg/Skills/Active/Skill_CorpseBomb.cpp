@@ -14,14 +14,14 @@ void USkill_CorpseBomb::OnSkillTriggered()
 {
 	Super::OnSkillTriggered();
 	
-	ACombatUnitPawn* Pawn =  UMyGameInstance::Get->m_ZoneInst->GetNearNpc(m_Player->GetActorLocation(), m_SkillData->m_fRange);
-	
-	if (!Pawn)
-	{
-		return;
-	}
-	
-	ExecuteCorpseBomb(Pawn);
+	// ACombatUnitPawn* Pawn =  UMyGameInstance::Get->m_ZoneInst->GetNearNpc(m_Player->GetActorLocation(), m_SkillData->m_fRange);
+	//
+	// if (!Pawn)
+	// {
+	// 	return;
+	// }
+	//
+	//ExecuteCorpseBomb(Pawn);
 }
 
 void USkill_CorpseBomb::ExecuteCorpseBomb(ACombatUnitPawn* pawn)

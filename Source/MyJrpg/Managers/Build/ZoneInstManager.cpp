@@ -48,6 +48,18 @@ void UZoneInstManager::SpawnZone(const FName& id, const FZoneDataRow& zoneData)
 
 	AddTrackIcon(UMyLib::GetPlayer());
 
+	if (UMyLib::GetNavSys() && UMyLib::GetNavSys()->GetNavigationBounds().Num() > 0)
+	{
+		FBox NavBox = UMyLib::GetNavSys()->GetNavigationBounds().Array()[0].AreaBox;
+
+		m_RootOctTree = MakeShareable(new OctreeNode(NavBox.GetCenter(), NavBox.GetExtent(), 0));
+
+		m_RootOctTree->InsertObject(UMyLib::GetPlayer());
+	}
+	else
+	{
+		m_RootOctTree.Reset();
+	}
 	FZoneSerialData* BuildInst = m_MapBuildInsts.Find(id);
 	
 	if (!BuildInst)
@@ -165,7 +177,7 @@ void UZoneInstManager::AddBuildActor(AStructureActor* buildActor)
 
 	IFocusable* Focus = Cast<IFocusable>(buildActor);
 
-	if(Focus && Focus->IsFocusable())
+	if(Focus && Focus->IsInteractable())
 	{
 		UMyGameInstance::Get->m_ZoneInst->AddFocusActor(buildActor);
 	}
@@ -205,21 +217,25 @@ void UZoneInstManager::SpawnActors(const FZoneSerialData& zoneInst, bool isInit)
 		case EActorType::Npc:
 			{
 				AMonsterPawn* MobPawn = SpawnNpcActor(ZoneActorEle, Index, zoneInst, isInit);
+				m_RootOctTree->InsertObject(MobPawn);
 			}
 			break;
 		case EActorType::Item:
 			{
 				AItemActor* ItemActor = SpawnItemActor(ZoneActorEle, Index, zoneInst, isInit);
+				m_RootOctTree->InsertObject(ItemActor);
 			}
 			break;
 		case EActorType::Gather:
 			{
 				ATreeBase* GatherActor = SpawnGatherActor(ZoneActorEle, Index, zoneInst, isInit);
+				m_RootOctTree->InsertObject(GatherActor);
 			}
 			break;
 		case EActorType::Build:
 			{
 				AStructureActor* BuildActor = SpawnBuildActor(ZoneActorEle, Index, zoneInst);
+				m_RootOctTree->InsertObject(BuildActor);
 			}
 			break;
 		}
@@ -320,6 +336,15 @@ void UZoneInstManager::PlayerHomeSnap(AActor* target)
 	Rot.Yaw = RotClamp * 90.f;
 
 	target->SetActorRotation(Rot);
+}
+
+void UZoneInstManager::BeginDestroy()
+{
+	UObject::BeginDestroy();
+	// if(m_RootOctTree.Get())
+	// {
+	// 	delete m_RootOctTree.Get();
+	// }
 }
 
 void UZoneInstManager::ResetZone()
@@ -538,225 +563,20 @@ void UZoneInstManager::RemoveFocusActor(UObject* want)
 	m_AryFocusActors.Remove(Focus);
 }
 
-IFocusable* UZoneInstManager::GetNearProp(FVector callerLoc, float range, UClass* ignoreClass, bool excludeNotInteractable)
+void UZoneInstManager::GetNearNpcs(const ABaseUnitPawn* caller, TArray<ACombatUnitPawn*>& outAry, float range)
 {
-	float MAX_Dist = MAX_flt;
-
-	range = range * range;
-
-	IFocusable* NearPawn = nullptr;
-
-	AMyPlayerPawn* PlayerPawn = UMyLib::GetPlayer();
-
-	FNavLocation StartPoint;
-
-	UNavigationSystemV1* NavSys = UMyLib::GetNavSys();
-
-	NavSys->ProjectPointToNavigation(callerLoc, StartPoint);
-
-	for (TScriptInterface<IFocusable>& Focus : m_AryFocusActors)
-	{
-		if (!Focus.GetObject())
-		{
-			continue;
-		}
-
-		AActor* FocusActor = Cast<AActor>(Focus.GetObject());
-
-		if(FocusActor->GetClass()->IsChildOf(ignoreClass))
-		{
-			continue;
-		}
-
-		IFocusable* FocusInter = Cast<IFocusable>(Focus.GetObject());
-
-		if(excludeNotInteractable && !FocusInter->IsInteractable())
-		{
-			continue;//벨수 없는 나무를 스킵한다 
-		}
-		
-		float Length = MAX_flt;
-
-		FNavLocation EndPoint;
-
-		NavSys->ProjectPointToNavigation(FocusActor->GetActorLocation(), EndPoint);
-
-		if (!PlayerPawn->LineOfSightTo(FocusActor))
-		{
-			NavSys->GetPathLength(GetWorld(), StartPoint, EndPoint, Length);
-
-			Length = Length * Length;
-		}
-		else
-		{
-			Length = FVector::DistSquared2D(StartPoint, EndPoint);
-		}
-
-		if (range > 0 && range < Length)
-		{
-			continue;
-		}
-
-		if (MAX_Dist > Length)
-		{
-			NearPawn = FocusInter;
-
-			MAX_Dist = Length;
-		}
-	}
-
-	return NearPawn;
+	m_RootOctTree->TraceObjectInRange<ACombatUnitPawn>(caller,range, outAry);
 }
 
-IFocusable* UZoneInstManager::GetNearTarget(FVector callerLoc, float range, bool isUseAuto)
+IFocusable* UZoneInstManager::GetNearTarget(AActor* self, const FVector& loc, float range, bool excludeNotInteractable)
 {
-	AMyPlayerPawn* Pl = UMyLib::GetPlayer();
+	UClass* ignoreClass = nullptr;
 	
-	bool ExcludeNotInteractable = false;
-	
-	bool ExcludeDead = false;
-	
-	UClass* IgnoreClass = nullptr;
-	
-	if(isUseAuto)
+	if(excludeNotInteractable)
 	{
-		IgnoreClass = AStructureActor::StaticClass();
-		ExcludeDead = true;
-		ExcludeNotInteractable = true;
-		range = 0;
+		ignoreClass = AStructureActor::StaticClass();  
 	}
-	ACombatUnitPawn* Pawn = GetNearNpc(callerLoc, range, nullptr, ExcludeDead);
-	
-	IFocusable* Prop = GetNearProp(callerLoc, range, IgnoreClass, ExcludeNotInteractable);
-	
-	AActor* FocusActor = Cast<AActor>(Prop);
-
-	if(Pawn && FocusActor)
-	{
-		FVector Loc1 = Pawn->GetActorLocation();
-		
-		FVector Loc2 = FocusActor->GetActorLocation();
-
-		float Dist1 = FVector::DistSquared2D(Loc1, callerLoc);
-
-		float Dist2 = FVector::DistSquared2D(Loc2, callerLoc) + (Pawn->IsAlive() && !Pl->IsSneak() ? 250000 : 0 );
-
-		float ARange = Pl->GetAttackRangeSqr(); 
-		
-		if(Dist1 <= ARange ||  Dist1 <= Dist2)
-		{
-			return Pawn;
-		}
-		return Prop;
-	}
-	else if (Pawn)
-	{
-		return Pawn;		
-	}
-	return Prop;
-}
-ACombatUnitPawn* UZoneInstManager::GetNearNpc(FVector callerLoc, float range, const TSet<ACombatUnitPawn*>* ignore, bool excludeDead)
-{
-	float MAX_Dist = MAX_flt;
-
-	range = range * range;
-
-	ACombatUnitPawn* NearPawn = nullptr;
-
-	AMyPlayerPawn* PlayerPawn = UMyLib::GetPlayer();
-
-	FNavLocation StartPoint;
-
-	UNavigationSystemV1* NavSys = UMyLib::GetNavSys();
-
-	NavSys->ProjectPointToNavigation(callerLoc, StartPoint);
-
-	for (TWeakObjectPtr<AMonsterPawn>& Pawn : m_Npc)
-	{
-		if (!Pawn.Get() || (excludeDead && !Pawn->IsAlive()) || Pawn->IsHidden() || (ignore && (*ignore).Contains(Pawn.Get())) || !Pawn->IsFocusable())
-		{
-			continue;
-		}
-		
-		float Length = MAX_flt;
-
-		FNavLocation EndPoint;
-
-		NavSys->ProjectPointToNavigation(Pawn->GetActorLocation(), EndPoint);
-
-		if (!PlayerPawn->LineOfSightTo(Pawn.Get()))
-		{
-			NavSys->GetPathLength(GetWorld(), StartPoint, EndPoint, Length);
-
-			Length = Length * Length;
-		}
-		else
-		{
-			Length = FVector::DistSquared2D(StartPoint, EndPoint);
-		}
-
-		if (range > 0 && range < Length)//900, 실제 거리 1300
-		{
-			continue;
-		}
-
-		if(!Pawn->IsAlive())
-		{
-			Length += 562500;
-		}
-		
-		if (MAX_Dist > Length)
-		{
-			NearPawn = Pawn.Get();
-			MAX_Dist = Length;
-		}
-	}
-	return NearPawn;
-}
-
-void UZoneInstManager::GetNearNpcs(const ABaseUnitPawn* caller, TArray<ACombatUnitPawn*>& outAry, float range,const TSet<ACombatUnitPawn*>* ignore)
-{
-	FVector Loc = caller->GetActorLocation();
-
-	range = range * range;
-
-	FNavLocation StartPoint;
-
-	UNavigationSystemV1* NavSys = UMyLib::GetNavSys();
-
-	NavSys->ProjectPointToNavigation(Loc, StartPoint);
-
-	for (TWeakObjectPtr<AMonsterPawn>& Pawn : m_Npc)
-	{
-		if (!Pawn.Get() || !Pawn->IsAlive() || Pawn->IsHidden() || (ignore && (*ignore).Contains(Pawn.Get())))
-		{
-			continue;
-		}
-
-		float Length = MAX_flt;
-
-		FNavLocation EndPoint;
-
-		NavSys->ProjectPointToNavigation(Pawn->GetActorLocation(), EndPoint);
-
-		if (!caller->LineOfSightTo(Pawn.Get()))
-		{
-			NavSys->GetPathLength(GetWorld(), StartPoint, EndPoint, Length);
-
-			Length = Length * Length;
-		}
-		else
-		{
-			Length = FVector::DistSquared2D(StartPoint, EndPoint);
-		}
-
-		if (range > 0 && range < Length)
-		{
-			continue;
-		}
-
-		outAry.Add(Pawn.Get());
-	}
+	return m_RootOctTree->GetNearTarget(self, loc, range, excludeNotInteractable, ignoreClass);
 }
 
 void UZoneInstManager::AddTrackIcon(IFocusable* icon)
@@ -843,4 +663,9 @@ void UZoneInstManager::SaveActorsOnPlayerDead(const FName& id)
 	
 	TStrongObjectPtr<UInventory> ItemHolder(DeadInven);
 	ZoneSerialData.m_MapItemHolders.Add(Index, ItemHolder);	
+}
+
+void UZoneInstManager::Tick(float delta)
+{
+	m_RootOctTree->UpdateState();
 }

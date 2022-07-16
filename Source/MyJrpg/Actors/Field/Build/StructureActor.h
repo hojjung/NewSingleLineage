@@ -62,7 +62,7 @@ public:
 
 	virtual UMinimapIconComp* GetIconMeshComp() override;
 
-	virtual bool IsFocusable() override;
+	virtual bool IsInteractable() override;
 
 	virtual const FNavAgentProperties& GetNavAgentPropertiesRef() const override;
 

@@ -100,8 +100,6 @@ public:
 
 	virtual bool IsInteractable() override;
 
-	virtual bool IsFocusable() override;
-	
 	void SetHp(int hp);
 };
 

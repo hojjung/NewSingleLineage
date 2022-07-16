@@ -41,21 +41,21 @@ void USkill_ChainLight::EndSkillAnim()
 
 ACombatUnitPawn* USkill_ChainLight::ExecuteChainLight(FVector&& start, float range)
 {
-	ACombatUnitPawn* Pawn = UMyGameInstance::Get->m_ZoneInst->GetNearNpc(start, range, &m_Hitten);
+	// ACombatUnitPawn* Pawn = UMyGameInstance::Get->m_ZoneInst->GetNearNpc(start, range, &m_Hitten);
+	//
+	// if (!Pawn)
+	// {
+	// 	return nullptr;
+	// }
+	//
+	// UParticleSystemComponent* SpawnedLaser = UMyGameInstance::Get->m_EffectManager->SpawnEffect(Pawn,true,m_Particle);
+	// SpawnedLaser->SetBeamSourcePoint(0,start,0);
+	// SpawnedLaser->SetBeamEndPoint(0, Pawn->GetActorLocation());
+	// m_ArySpawnedLaser.Add(SpawnedLaser);
+	//
+	// Pawn->TakeDmg(GetDamage(),m_Player);
+	//
+	// m_Hitten.Add(Pawn);
 
-	if (!Pawn)
-	{
-		return nullptr;
-	}
-	
-	UParticleSystemComponent* SpawnedLaser = UMyGameInstance::Get->m_EffectManager->SpawnEffect(Pawn,true,m_Particle);
-	SpawnedLaser->SetBeamSourcePoint(0,start,0);
-	SpawnedLaser->SetBeamEndPoint(0, Pawn->GetActorLocation());
-	m_ArySpawnedLaser.Add(SpawnedLaser);
-	
-	Pawn->TakeDmg(GetDamage(),m_Player);
-	
-	m_Hitten.Add(Pawn);
-
-	return Pawn;
+	return nullptr;
 }

@@ -38,10 +38,5 @@ public:
 		return true;
 	};
 
-	virtual bool IsFocusable()
-	{
-		return true;
-	};
-
 	virtual UMinimapIconComp* GetIconMeshComp() = 0;
 };

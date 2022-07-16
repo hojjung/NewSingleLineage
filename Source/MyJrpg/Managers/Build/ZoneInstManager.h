@@ -7,6 +7,7 @@
 #include "MyJrpg/Actors/Field/Build/StructureActor.h"
 #include "MyJrpg/Actors/Field/Gather/TreeBase.h"
 #include "MyJrpg/DataTables/SpawnEventTable.h"
+#include "MyJrpg/Octree/OctreeNode.h"
 #include "MyJrpg/Pawns/MonsterPawn.h"
 #include "UObject/NoExportTypes.h"
 #include "ZoneInstManager.generated.h"
@@ -72,6 +73,8 @@ protected:
 	UPROPERTY()
 	TArray<TScriptInterface<IFocusable>> m_AryFocusActors;
 
+	TSharedPtr<OctreeNode> m_RootOctTree;
+	
 protected:
 	TWeakObjectPtr<AMinimapCam> m_MiniMapCam;
 	
@@ -111,6 +114,8 @@ protected:
 	void PlayerHomeSnap(AActor* target);
 	
 public:
+	virtual void BeginDestroy() override;
+	
 	void SpawnZone(const FName& id, const FZoneDataRow& zoneData);
 
 	int SaveActors(const FName& id);
@@ -128,14 +133,6 @@ public:
 
 	void RemoveFocusActor(UObject* want);
 	
-	IFocusable* GetNearProp(FVector callerLoc, float range = 0, UClass* ignoreClass = nullptr, bool excludeNotInteractable = false);
-
-	IFocusable* GetNearTarget(FVector callerLoc, float range = 0, bool isUseAuto = false);
-
-	ACombatUnitPawn* GetNearNpc(FVector callerLoc, float range, const TSet<ACombatUnitPawn*>* ignore = nullptr, bool excludeDead = false);
-
-	void GetNearNpcs(const ABaseUnitPawn* caller, TArray<ACombatUnitPawn*>& outAry, float range,const TSet<ACombatUnitPawn*>* ignore = nullptr);
-
 	void AddTrackIcon(IFocusable* icon);
 
 	void AddTrackIcon(UMeshComponent* mesh);
@@ -143,5 +140,12 @@ public:
 	void RemovePlayerTomb();
 
 	void SaveActorsOnPlayerDead(const FName& id);
+
+	void Tick(float delta);
+
+public:
+	void GetNearNpcs(const ABaseUnitPawn* caller, TArray<ACombatUnitPawn*>& outAry, float range);
+	
+	IFocusable* GetNearTarget(AActor* self, const FVector& loc, float range, bool excludeNotInteractable);
 };
 

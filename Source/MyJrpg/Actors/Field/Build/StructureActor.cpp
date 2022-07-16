@@ -243,7 +243,7 @@ UMinimapIconComp* AStructureActor::GetIconMeshComp()
 	return m_IconMeshComp;
 }
 
-bool AStructureActor::IsFocusable()
+bool AStructureActor::IsInteractable()
 {
 	return m_BuildData->m_bIsFocusable && m_BuildInteract != nullptr;
 }

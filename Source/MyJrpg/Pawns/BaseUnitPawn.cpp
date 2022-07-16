@@ -52,7 +52,7 @@ USkeletalMeshComponent* ABaseUnitPawn::CreateSkMeshComp(FName keyID)
 	skMesh->bOwnerNoSee = false;
 	//
 	skMesh->bCastDynamicShadow = false; //chanage for mobile
-	skMesh->VisibilityBasedAnimTickOption = EVisibilityBasedAnimTickOption::AlwaysTickPoseAndRefreshBones;//최적화
+	skMesh->VisibilityBasedAnimTickOption = EVisibilityBasedAnimTickOption::OnlyTickPoseWhenRendered;//최적화
 	skMesh->bAffectDynamicIndirectLighting = true;
 	skMesh->PrimaryComponentTick.TickGroup = TG_PrePhysics;
 	skMesh->CanCharacterStepUpOn = ECanBeCharacterBase::ECB_No;

@@ -380,11 +380,6 @@ bool AMonsterPawn::IsInteractable()
 	return m_Inven && !m_Inven->IsEmpty();
 }
 
-bool AMonsterPawn::IsFocusable()
-{
-	return IsInteractable();
-}
-
 void AMonsterPawn::SetHp(int hp)
 {
 	m_StatGroup.m_Hp = hp;
@@ -406,6 +401,10 @@ void AMonsterPawn::OnRequestMoveDone()
 
 void AMonsterPawn::SetIcon()
 {
+	if(!m_AiFsm)
+	{
+		return;
+	}
 	if(m_AiFsm->GetClass() == ULogic_Flee::StaticClass() || !UMyGameInstance::Get->m_TeamKarma->IsFoe(this))
 	{
 		m_IconComp->SetIcon(m_IconNonAttack);	

@@ -25,23 +25,23 @@ void USkill_ShieldThrow::OnSkillTriggered()
 
 ACombatUnitPawn* USkill_ShieldThrow::Shoot(const FVector& start)
 {
-	ACombatUnitPawn* Pawn = UMyGameInstance::Get->m_ZoneInst->GetNearNpc(start, m_SkillData->m_fRange, &m_Hitten);
+	// ACombatUnitPawn* Pawn = UMyGameInstance::Get->m_ZoneInst->GetNearNpc(start, m_SkillData->m_fRange, &m_Hitten);
+	//
+	// if (!Pawn)
+	// {
+	// 	return nullptr;
+	// }
+	// m_Hitten.Add(Pawn);
+	//
+	// FActorSpawnParameters Param;
+	//
+	// Param.bNoFail = true;
+	//
+	// Param.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
+	//
+	// ABullet* Bullet= UMyLib::GetUWorld()->SpawnActor<ABullet>(ABullet::StaticClass(), start, FRotator::ZeroRotator, Param);
+	// Bullet->Init(GetDamage(),m_Player,m_Particle,true);
+	// Bullet->StartBullet(start,Pawn);
 
-	if (!Pawn)
-	{
-		return nullptr;
-	}
-	m_Hitten.Add(Pawn);
-	
-	FActorSpawnParameters Param;
-
-	Param.bNoFail = true;
-
-	Param.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
-
-	ABullet* Bullet= UMyLib::GetUWorld()->SpawnActor<ABullet>(ABullet::StaticClass(), start, FRotator::ZeroRotator, Param);
-	Bullet->Init(GetDamage(),m_Player,m_Particle,true);
-	Bullet->StartBullet(start,Pawn);
-
-	return Pawn;
+	return nullptr;
 }

@@ -171,6 +171,7 @@ void UMyGameInstance::Tick(float deltaTime)
 	m_SkillAuto->Tick(deltaTime);
 	m_ItemConvertManager->Tick(deltaTime);
 	m_SpawnEvent->Tick(deltaTime);
+	m_ZoneInst->Tick(deltaTime);
 }
 
 void UMyGameInstance::AddStorage(UInventory* inven)
