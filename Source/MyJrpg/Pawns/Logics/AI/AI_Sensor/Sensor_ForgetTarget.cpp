@@ -6,11 +6,6 @@
 #include "MyJrpg/MyLib.h"
 
 
-USensor_ForgetTarget::USensor_ForgetTarget()
-{
-	m_SightRadius = 700.f;
-}
-
 void USensor_ForgetTarget::Init(ACombatUnitPawn* owner)
 {
 	Super::Init(owner);

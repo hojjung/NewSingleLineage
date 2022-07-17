@@ -6,6 +6,7 @@
 #include "MyJrpg/DataTables/GatherTable.h"
 #include "MyJrpg/DataTables/ZoneData.h"
 #include "MyJrpg/Managers/MyGameInstance.h"
+#include "MyJrpg/Octree/OctreeNode.h"
 
 void UZoneInstManager::InitZone(const FName& id, const FZoneDataRow& zoneData)
 {
@@ -54,7 +55,7 @@ void UZoneInstManager::SpawnZone(const FName& id, const FZoneDataRow& zoneData)
 
 		m_RootOctTree = MakeShareable(new OctreeNode(NavBox.GetCenter(), NavBox.GetExtent(), 0));
 
-		m_RootOctTree->InsertObject(UMyLib::GetPlayer());
+		AddFocusActor(UMyLib::GetPlayer());
 	}
 	else
 	{
@@ -217,25 +218,25 @@ void UZoneInstManager::SpawnActors(const FZoneSerialData& zoneInst, bool isInit)
 		case EActorType::Npc:
 			{
 				AMonsterPawn* MobPawn = SpawnNpcActor(ZoneActorEle, Index, zoneInst, isInit);
-				m_RootOctTree->InsertObject(MobPawn);
+				AddFocusActor(MobPawn);
 			}
 			break;
 		case EActorType::Item:
 			{
 				AItemActor* ItemActor = SpawnItemActor(ZoneActorEle, Index, zoneInst, isInit);
-				m_RootOctTree->InsertObject(ItemActor);
+				AddFocusActor(ItemActor);
 			}
 			break;
 		case EActorType::Gather:
 			{
 				ATreeBase* GatherActor = SpawnGatherActor(ZoneActorEle, Index, zoneInst, isInit);
-				m_RootOctTree->InsertObject(GatherActor);
+				AddFocusActor(GatherActor);
 			}
 			break;
 		case EActorType::Build:
 			{
 				AStructureActor* BuildActor = SpawnBuildActor(ZoneActorEle, Index, zoneInst);
-				m_RootOctTree->InsertObject(BuildActor);
+				AddFocusActor(BuildActor);
 			}
 			break;
 		}
@@ -341,10 +342,8 @@ void UZoneInstManager::PlayerHomeSnap(AActor* target)
 void UZoneInstManager::BeginDestroy()
 {
 	UObject::BeginDestroy();
-	// if(m_RootOctTree.Get())
-	// {
-	// 	delete m_RootOctTree.Get();
-	// }
+
+	m_RootOctTree.Reset();
 }
 
 void UZoneInstManager::ResetZone()
@@ -549,18 +548,12 @@ void UZoneInstManager::SpawnPlayer(const FVector& loc, const FRotator& rot)
 
 void UZoneInstManager::AddFocusActor(UObject* want)
 {
-	TScriptInterface<IFocusable> Focus;
-	Focus.SetInterface(want);
-	Focus.SetObject(want);
-	m_AryFocusActors.Add(Focus);
+	m_RootOctTree->InsertObject(Cast<AActor>(want));
 }
 
 void UZoneInstManager::RemoveFocusActor(UObject* want)
 {
-	TScriptInterface<IFocusable> Focus;
-	Focus.SetInterface(want);
-	Focus.SetObject(want);
-	m_AryFocusActors.Remove(Focus);
+	m_RootOctTree->RmoveObject(Cast<AActor>(want));
 }
 
 void UZoneInstManager::GetNearNpcs(const ABaseUnitPawn* caller, TArray<ACombatUnitPawn*>& outAry, float range)
@@ -570,13 +563,19 @@ void UZoneInstManager::GetNearNpcs(const ABaseUnitPawn* caller, TArray<ACombatUn
 
 IFocusable* UZoneInstManager::GetNearTarget(AActor* self, const FVector& loc, float range, bool excludeNotInteractable)
 {
+	if(!m_RootOctTree.Get())
+	{
+		return nullptr;
+	}
 	UClass* ignoreClass = nullptr;
 	
 	if(excludeNotInteractable)
 	{
 		ignoreClass = AStructureActor::StaticClass();  
 	}
-	return m_RootOctTree->GetNearTarget(self, loc, range, excludeNotInteractable, ignoreClass);
+	IFocusable* Focus = m_RootOctTree->GetNearTarget(self, loc, range, excludeNotInteractable, ignoreClass);
+		
+	return Focus;
 }
 
 void UZoneInstManager::AddTrackIcon(IFocusable* icon)

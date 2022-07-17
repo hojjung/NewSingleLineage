@@ -120,6 +120,8 @@ public://스텟과 보상
 	TSubclassOf<AMonsterPawn> m_ClassActor;
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (UIMin = "100"))
 	float m_fAtkRange = 200.f;
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (UIMin = "100"))
+	float m_fSightRange = 700.f;
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
 	bool m_bIsBoss = false;
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
@@ -130,8 +132,6 @@ public://스텟과 보상
 	TSubclassOf<UAI_LogicBase> m_ClassAI_Logic;
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
 	TSubclassOf<USensor_LogicBase> m_ClassAI_Sensor;
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
-	TSubclassOf<UInteractBase> m_ClassInteract;
 	UPROPERTY(EditAnywhere, meta=(EditCondition = "m_ClassInteract != nullptr", EditConditionHides))
 	FString m_InteractVariable;
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)

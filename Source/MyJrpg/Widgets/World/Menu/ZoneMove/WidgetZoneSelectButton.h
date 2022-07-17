@@ -68,7 +68,7 @@ protected:
 	
 	const FZoneDataRow* m_ZoneData;
 
-	TSet<FName> m_SetRewardItems;
+	TSet<const FItemDataRow*> m_SetRewardItems;
 	
 	float m_fDist;
 	

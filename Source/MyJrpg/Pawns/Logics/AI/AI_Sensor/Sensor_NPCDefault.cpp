@@ -6,11 +6,6 @@
 #include "Perception/AISense_Team.h"
 #include "Perception/PawnSensingComponent.h"
 
-USensor_NPCDefault::USensor_NPCDefault()
-{
-	m_SightRadius = 700.f;
-}
-
 void USensor_NPCDefault::Init(ACombatUnitPawn* owner)
 {
 	Super::Init(owner);

@@ -170,10 +170,7 @@ UParticleSystem* UEquipManager::GetBulletEffect()
 		m_bIsRange = false;
 		return nullptr;
 	}
-
-	const FColorDataRow* ColorData = UMyLib::GetItemData(FoundItem.m_ID).m_ColorHandle.GetRow<FColorDataRow>("");
-
-	return ColorData->m_Bullet;
+	return UMyLib::GetItemData(FoundItem.m_ID).m_WeaponData.m_BulletEffect;
 }
 
 void UEquipManager::UpdateEquip()

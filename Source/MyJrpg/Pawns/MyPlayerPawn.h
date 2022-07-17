@@ -188,5 +188,10 @@ public:
 	virtual bool IsLooting() override;
 	
 	UCameraComponent* GetCameraComp();
+
+protected:
+	virtual float PlayBaseAttackAnim() override;
+
+	virtual float TryAttack() override;
 };
 

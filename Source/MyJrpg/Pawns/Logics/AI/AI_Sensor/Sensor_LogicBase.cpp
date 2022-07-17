@@ -16,6 +16,8 @@ USensor_LogicBase::USensor_LogicBase()
 void USensor_LogicBase::Init(ACombatUnitPawn* owner)
 {
 	m_Owner=owner;
+
+	m_SightRadius = owner->GetSightRange();
 	
 	SetSensingUpdatesEnabled(true);
 }

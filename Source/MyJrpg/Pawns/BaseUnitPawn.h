@@ -39,6 +39,8 @@ protected:
 
 	FName m_EntityID;
 
+	float m_fSightRange;
+
 protected:
 	virtual void EndPlay(const EEndPlayReason::Type EndPlayReason) override;
 	
@@ -103,5 +105,7 @@ public:
 	void AddComp(UObject* key, UActorComponent* want);
 
 	UActorComponent* FindComp(UObject* key);
+
+	float GetSightRange();
 };
 

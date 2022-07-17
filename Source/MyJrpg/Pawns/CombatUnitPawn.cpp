@@ -10,7 +10,6 @@ ACombatUnitPawn::ACombatUnitPawn(const FObjectInitializer& objInit):Super(objIni
 {
 	m_fAttackCD=0;
    	m_fHitAnimCD = -1.f;
-   	m_fAttackMinCD = 0.15f;
 	SetAttackRange(200);
 
 	m_bIsRotateable = true;
@@ -85,7 +84,7 @@ float ACombatUnitPawn::PlayBaseAttackAnim()
 	
 	int RandIndex = FMath::RandRange(0, AnimAry.Num()-1);
 	
-	return PlayAnimMontage(GetBaseAttackMontage(), 1 * GetStat().m_AtkPerSec, AnimAry[RandIndex].SectionName);
+	return PlayAnimMontage(GetBaseAttackMontage(), 1, AnimAry[RandIndex].SectionName);
 }
 
 UAnimMontage* ACombatUnitPawn::GetBaseAttackMontage()
@@ -125,12 +124,6 @@ void ACombatUnitPawn::SetEntity(const FName& id, const FNpcUnitEntityRow& unitEn
 	{
 		m_Stance = HumanAsset->m_StanceType;;
 	}
-
-	if(unitEntityRow.m_ClassInteract->IsValidLowLevel())
-	{
-		m_Interaction = NewObject<UInteractBase>(this,unitEntityRow.m_ClassInteract);
-		m_Interaction->Init(unitEntityRow.m_InteractVariable);
-	}
 	SetIcon();
 }
 
@@ -165,9 +158,9 @@ float ACombatUnitPawn::TryAttack()
 	{
 		float AnimMongLen = PlayBaseAttackAnim();
 
-		m_fAttackCD = FMath::Max(AnimMongLen - 0.1f, m_fAttackMinCD);
+		m_fAttackCD = FMath::Max(AnimMongLen - 0.1f,  1.f / GetStat().m_AtkPerSec);
 
-		return AnimMongLen;
+		return m_fAttackCD;
 	}
 
 	return 0.f;

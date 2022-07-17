@@ -2,11 +2,9 @@
 
 #include "MyJrpg/MyLib.h"
 
-void UWidgetZoneItemElement::SetZone(const FName& itemID)
+void UWidgetZoneItemElement::SetZone(const FItemDataRow& itemID)
 {
-	m_ID = itemID;
-	
-	m_ItemRow = &UMyLib::GetItemData(m_ID);
+	m_ItemRow = &itemID;
 
 	check(m_ItemRow);
 

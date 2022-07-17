@@ -189,14 +189,18 @@ void UWidgetZoneSelectButton::SetItemsInSet()
 
 			for(const FDropRewardItem& DropItem : NpcEntity->m_AryDropItem)
 			{
-				m_SetRewardItems.Add(DropItem.m_Item.RowName);			
+				const FItemDataRow* ItemDataRow = DropItem.m_Item.GetRow<FItemDataRow>("");
+				
+				m_SetRewardItems.Add(ItemDataRow);			
 			}
 		}
 		else if(Data.m_EntityParentTable->RowStruct->IsChildOf(FGatherDataRow::StaticStruct()))
 		{
 			const FGatherDataRow* GatherEntity = Data.m_EntityParentTable->FindRow<FGatherDataRow>(Data.m_IDEntity, "");
 
-			m_SetRewardItems.Add(GatherEntity->m_ItemGather.RowName);
+			const FItemDataRow* ItemDataRow = GatherEntity->m_ItemGather.GetRow<FItemDataRow>("");
+
+			m_SetRewardItems.Add(ItemDataRow);
 		}
 		else if(Data.m_EntityParentTable->RowStruct->IsChildOf(FBuildDataRow::StaticStruct()))
 		{
@@ -207,33 +211,62 @@ void UWidgetZoneSelectButton::SetItemsInSet()
 				continue;
 			}
 			const TArray<FString>& Items = BuildEntity->m_AryInteractVariable;
-			if(Items.Num() % 2 != 0 && Items.Num() >= 3)
+			
+			int Num = Items.Num() - 1;
+			
+			if(Num % 3 == 0)
 			{
 				int Iter = 1;
+				
 				while (Iter < Items.Num())
 				{
-					FName ItemID = *Items[Iter];
+					const FName& ItemID = *Items[Iter];
 
-					m_SetRewardItems.Add(ItemID);
+					const FItemDataRow* ItemData = &UMyLib::GetItemData(ItemID);
+
+					m_SetRewardItems.Add(ItemData);
 					
-					Iter+=2;
+					Iter+=3;
 				}
 			}
 		}
 	}
 	
-	m_SetRewardItems.Sort([](const FName& LHS, const FName& RHS)  { return LHS.FastLess(RHS); });
+	m_SetRewardItems.Sort([](const FItemDataRow& LHS, const FItemDataRow& RHS)
+	{
+		int LhsLevel = LHS.m_ColorHandle.GetRow<FColorDataRow>("")->m_fRarity * 1000;
+
+		int RhsLevel = RHS.m_ColorHandle.GetRow<FColorDataRow>("")->m_fRarity * 1000;
+
+		int LDur = LHS.m_nDurability;
+
+		int RDur = RHS.m_nDurability;
+
+		int LGold = LHS.m_nPlayerEarnGoldSell + LHS.m_nPlayerSpentGoldBuy;
+
+		int RGold = RHS.m_nPlayerEarnGoldSell + RHS.m_nPlayerSpentGoldBuy;
+
+		int LItemT = (int)LHS.m_ItemType;
+
+		int RItemT = (int)RHS.m_ItemType;
+
+		int L = LhsLevel + LDur + LGold + LItemT;
+
+		int R = RhsLevel + RDur + RGold + RItemT;
+		
+		return L > R;
+	});
 }
 
 void UWidgetZoneSelectButton::CreateZoneElement()
 {
 	m_HoriItemParents->ClearChildren();
 	
-	for(const FName& Data : m_SetRewardItems)
+	for(const FItemDataRow* Data : m_SetRewardItems)
 	{
 		UWidgetZoneItemElement* SelectButton = CreateWidget<UWidgetZoneItemElement>(this,m_ClassItem);
 
-		SelectButton->SetZone(Data);
+		SelectButton->SetZone(*Data);
 
 		UPanelSlot* PanelSlotWant = m_HoriItemParents->AddChild(SelectButton);
 

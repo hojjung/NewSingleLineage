@@ -48,8 +48,6 @@ protected:
 
 	FName m_TalkID;
 
-	FStatGroup m_StatGroup;
-	
 protected:
 	virtual void BeginPlay() override;
 	

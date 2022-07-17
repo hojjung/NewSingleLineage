@@ -105,19 +105,7 @@ public:
 	UPROPERTY(EditDefaultsOnly)
 	UTexture2D* m_GlowTexture;
 	UPROPERTY(EditAnywhere)
-	UParticleSystem* m_HeadAura;
-	UPROPERTY(EditAnywhere)
-	UParticleSystem* m_Bullet;
-	UPROPERTY(EditAnywhere)
-	UParticleSystem* m_RangeAura;
-	UPROPERTY(EditAnywhere)
-	UParticleSystem* m_SwordTrail;
-	UPROPERTY(EditAnywhere)
-	UParticleSystem* m_SwordAura;
-	UPROPERTY(EditAnywhere)
-	float m_fMaxStealPer = 1;
-	UPROPERTY(EditAnywhere)
-	float m_fMaxStealLv = 1;
+	float m_fRarity = 1;
 };
 
 USTRUCT(BlueprintType)

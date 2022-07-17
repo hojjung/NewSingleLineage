@@ -40,6 +40,7 @@ AItemActor::AItemActor()
 void AItemActor::EndPlay(const EEndPlayReason::Type EndPlayReason)
 {
 	Super::EndPlay(EndPlayReason);
+	UMyGameInstance::Get->m_ZoneInst->RemoveFocusActor(this);
 	m_MeshItem->SetStaticMesh(nullptr);
 }
 

@@ -39,8 +39,6 @@ protected:
 	UPROPERTY()
 	USensor_LogicBase* m_AiSensor;
 	UPROPERTY()
-	UInteractBase* m_Interaction;
-	UPROPERTY()
 	UBulletPool* m_Pool;
 	
 	FTimerHandle m_DeathAnimTimer;
@@ -57,7 +55,6 @@ protected:
 	
 	float m_fAttackCD;
 	float m_fHitAnimCD;
-	float m_fAttackMinCD;
 	float m_fAttackRange;
 	float m_fAttackRangeSqr;
 	bool m_bUseFsmTick;
@@ -83,7 +80,7 @@ protected:
 	
 	virtual void OnDeathAnimEnd();
 
-	float PlayBaseAttackAnim();
+	
 
 	virtual UAnimMontage* GetBaseAttackMontage();
 
@@ -104,6 +101,9 @@ public://took dmg
 	virtual bool TakeDmg(float amount,ACombatUnitPawn* attacker);
 	
 	virtual void Dead();
+
+protected:
+	virtual float PlayBaseAttackAnim();
 
 public:// try atk
 	virtual float TryAttack();

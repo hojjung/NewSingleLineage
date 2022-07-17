@@ -6,6 +6,7 @@
 #include "Kismet/KismetMathLibrary.h"
 #include "Kismet/KismetSystemLibrary.h"
 #include "MyJrpg/Interfaces/Focusable.h"
+#include "MyJrpg/Managers/MyGameInstance.h"
 #include "MyJrpg/Pawns/CombatUnitPawn.h"
 
 /**
@@ -205,19 +206,24 @@ public:
 			{
 				for (AActor* obj : m_AryActors)
 				{
+					AMyPlayerPawn* Pl = Cast<AMyPlayerPawn>(obj);
+
+					if(Pl)
 					{
-						T* CastedObj = Cast<T>(obj);
+						continue;
+					}
+					
+					T* CastedObj = Cast<T>(obj);
 
-						if (!CastedObj || obj == traceActor)
-						{
-							continue;
-						}
-						bool bCanActive = FVector::DistSquared2D(_OCenter, obj->GetActorLocation()) <= RadSqr;
+					if (!CastedObj || obj == traceActor)
+					{
+						continue;
+					}
+					bool bCanActive = FVector::DistSquared2D(_OCenter, obj->GetActorLocation()) <= RadSqr;
 
-						if (bCanActive)
-						{
-							aryOut.Add(CastedObj);
-						}
+					if (bCanActive)
+					{
+						aryOut.Add(CastedObj);
 					}
 				}
 			}
@@ -285,18 +291,14 @@ public:
 		
 		float MaxRange = MAX_flt;
 
-		if(excludeNotInteractable)
+		if(range > 0 && !excludeNotInteractable)
 		{
-			range = MAX_flt;
-		}
-		if(range > 0)
-		{
-			MaxRange = range * range; 
+			MaxRange = range; 
 		}
 
 		AActor* Target = nullptr;
 
-		if (InterSection(loc, range))
+		if (InterSection(loc, MaxRange))
 		{
 			for(AActor* InnerActor : Start->m_AryActors)
 			{
@@ -321,19 +323,24 @@ public:
 				if(excludeNotInteractable)
 				{
 					ACombatUnitPawn* Pawn = Cast<ACombatUnitPawn>(InnerActor);
-					
-					if(Pawn && !Pawn->IsAlive())
+
+					if(Pawn)
 					{
-						continue;	
+						if(!Pawn->IsAlive() || !UMyGameInstance::Get->m_TeamKarma->IsFoe(Pawn))
+						{
+							continue;	
+						}
 					}
 				}
-				float DistSqr = FVector::DistSquared2D(loc, InnerActor->GetActorLocation());
+				float NavLen = 0.f;
 				
-				if(DistSqr > MaxRange)
+				UMyLib::GetNavSys()->GetPathLength(self, loc, InnerActor->GetActorLocation(), NavLen);
+
+				if(NavLen > MaxRange)
 				{
 					continue;
 				}
-				MaxRange = DistSqr;
+				MaxRange = NavLen;
 
 				Target = InnerActor;
 			}
@@ -349,17 +356,22 @@ public:
 
 				AActor* ChildInnerActor = Cast<AActor>(ChildInner);
 
-				float DistSqr = FVector::DistSquared2D(loc, ChildInnerActor->GetActorLocation());
+				float NavLen = 0.f;
 				
-				if(DistSqr > MaxRange)
+				UMyLib::GetNavSys()->GetPathLength(self, loc, ChildInnerActor->GetActorLocation(), NavLen);
+				
+				if(NavLen > MaxRange)
 				{
 					continue;
 				}
-				MaxRange = DistSqr;
+				MaxRange = NavLen;
 
 				Target = ChildInnerActor;
 			}
 		}
-		return Cast<IFocusable>(Target);;
+
+		IFocusable* Focus = Cast<IFocusable>(Target);
+		
+		return Focus; 
 	}
 };

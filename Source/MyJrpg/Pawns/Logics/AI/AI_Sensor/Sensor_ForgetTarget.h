@@ -19,9 +19,6 @@ public:
 	DECLARE_DELEGATE_OneParam(FSeePawnDelegate, APawn*);
 	DECLARE_DELEGATE_ThreeParams(FHearNoiseDelegate, APawn*, const FVector&, float);
 	
-public:
-	USensor_ForgetTarget();
-	
 protected:
 	FVector m_LastSeenLocation;
 	

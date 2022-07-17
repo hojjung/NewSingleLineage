@@ -64,6 +64,8 @@ USkeletalMeshComponent* ABaseUnitPawn::CreateSkMeshComp(FName keyID)
 void ABaseUnitPawn::SetEntity(const FName& id, const FNpcUnitEntityRow& unitEntityRow)
 {
 	m_EntityID = id;
+
+	m_fSightRange = unitEntityRow.m_fSightRange;
 	
 	m_PFComp->SetMovementComponent(m_Movement);
 	
@@ -486,4 +488,9 @@ UActorComponent* ABaseUnitPawn::FindComp(UObject* key)
 		return nullptr;
 	}
 	return Found->Get();
+}
+
+float ABaseUnitPawn::GetSightRange()
+{
+	return m_fSightRange;
 }

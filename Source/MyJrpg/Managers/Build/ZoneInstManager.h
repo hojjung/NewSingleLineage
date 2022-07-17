@@ -7,11 +7,11 @@
 #include "MyJrpg/Actors/Field/Build/StructureActor.h"
 #include "MyJrpg/Actors/Field/Gather/TreeBase.h"
 #include "MyJrpg/DataTables/SpawnEventTable.h"
-#include "MyJrpg/Octree/OctreeNode.h"
 #include "MyJrpg/Pawns/MonsterPawn.h"
 #include "UObject/NoExportTypes.h"
 #include "ZoneInstManager.generated.h"
 
+class OctreeNode;
 class UNPCPaletteDataAsset;
 /**
  * 생성 삭제 모두 얘기준으로 해야한다.
@@ -70,9 +70,6 @@ class MYJRPG_API UZoneInstManager : public UObject
 	GENERATED_BODY()
 
 protected:
-	UPROPERTY()
-	TArray<TScriptInterface<IFocusable>> m_AryFocusActors;
-
 	TSharedPtr<OctreeNode> m_RootOctTree;
 	
 protected:

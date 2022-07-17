@@ -29,12 +29,15 @@ void UBI_StorageSearch::Init(const TArray<FString>& variable, UInventory* inven)
 		
 		m_Inven->Init(Size,NSLOCTEXT("UBI_StorageSearch","StorageName","루트박스"));
 
-		if(variable.Num() % 3 != 0 && variable.Num() >= 4)
+		int Num = variable.Num() - 1;
+
+		if(Num % 3 == 0)
 		{
 			int Iter = 1;
+			
 			while (Iter < variable.Num())
 			{
-				FName ItemID = *variable[Iter];
+				const FName& ItemID = *variable[Iter];
 				
 				int Cnt = FCString::Atoi(*variable[Iter + 1]);
 

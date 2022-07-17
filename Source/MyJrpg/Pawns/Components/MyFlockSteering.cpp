@@ -18,40 +18,35 @@ FVector UMyFlockSteering::GetFlockDir()
 	m_NearMobs.Reset();
 	
 	FVector TargetLoc = GetOwner()->GetActorLocation();
+	TargetLoc.Z = 0.f;
 
 	UMyGameInstance::Get->m_ZoneInst->GetNearNpcs(m_OwnerCombatPawn,m_NearMobs,500);
 	
-	FVector Sum = FVector(0);
+	FVector Sum = FVector::ZeroVector;
 
 	int Count = 0;
 
 	for (ACombatUnitPawn* OtherActor : m_NearMobs)
 	{
-		if(!OtherActor->IsAlive())
+		if (!OtherActor->IsAlive())
 		{
 			continue;
 		}
 		FVector OtherLoc = OtherActor->GetActorLocation();
-		
-		float Dist = FVector::DistSquared2D(TargetLoc, OtherLoc);
+		OtherLoc.Z = 0.f;
 
-		if ((Dist > 0) && (Dist < 250000))
-		{
-			FVector Diff = TargetLoc - OtherLoc;
-			
-			Diff = Diff.GetSafeNormal2D();
+		FVector Diff = TargetLoc - OtherLoc;
 
-			Sum += Diff;
+		Sum += Diff;
 
-			Count++;
-		}
+		Count++;
 	}
 
-	if (Count > 0)
+	if(Count > 0)
 	{
 		Sum /= Count;
-
-		return Sum;
+		
+		return Sum.GetSafeNormal();
 	}
 
 	return FVector::ZeroVector;

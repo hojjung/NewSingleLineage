@@ -510,6 +510,29 @@ UCameraComponent* AMyPlayerPawn::GetCameraComp()
 	return m_TopCamera;
 }
 
+float AMyPlayerPawn::PlayBaseAttackAnim()
+{
+	const TArray<FCompositeSection>& AnimAry = GetBaseAttackMontage()->CompositeSections;
+	
+	int RandIndex = FMath::RandRange(0, AnimAry.Num()-1);
+	
+	return PlayAnimMontage(GetBaseAttackMontage(), 1 * GetStat().m_AtkPerSec, AnimAry[RandIndex].SectionName);
+}
+
+float AMyPlayerPawn::TryAttack()
+{
+	if (GetBaseAttackMontage() && m_fAttackCD < 0.f)
+	{
+		float AnimMongLen = PlayBaseAttackAnim();
+
+		m_fAttackCD = FMath::Max(AnimMongLen - 0.1f,  0.15f);
+
+		return m_fAttackCD;
+	}
+
+	return 0.f;
+}
+
 void AMyPlayerPawn::OnNotifyTrigger(const FName& id)
 {
 	if(id == TEXT("BaseAttack"))

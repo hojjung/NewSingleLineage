@@ -24,6 +24,7 @@ protected:
 	TSet<ACombatUnitPawn*> m_SetIgnoreSelf;
 	UPROPERTY()
 	TArray<ACombatUnitPawn*> m_NearMobs;
+	
 protected:
 	virtual void BeginPlay() override;
 	

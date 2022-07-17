@@ -23,11 +23,9 @@ protected:
 protected:
 	const FItemDataRow* m_ItemRow;
 
-	FName m_ID;
-
 protected:
 	void OnHold(UWidgetBaseElement* ele);
 	
 public:
-	void SetZone(const FName& itemID);
+	void SetZone(const FItemDataRow& itemID);
 };

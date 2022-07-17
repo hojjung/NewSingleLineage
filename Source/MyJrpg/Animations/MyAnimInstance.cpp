@@ -25,6 +25,8 @@ void UMyAnimInstance::NativeInitializeAnimation()
 {
 	Super::NativeInitializeAnimation();
 
+	bUseMultiThreadedAnimationUpdate = true;
+
 	m_Owner=Cast<ACombatUnitPawn>( TryGetPawnOwner());
 }
 
