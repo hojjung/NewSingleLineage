@@ -42,6 +42,10 @@ void ULevelMoveManager::OpenMyLevel(const FZoneDataRow& zoneData, bool isPlayerD
 			UMyLib::GetPlayerInven()->ClearAllInven();
 			
 			UMyLib::GetEquip()->ClearAllEquipment();
+
+			UMyGameInstance::Get->m_ZoneMove->ZoneMoveDone(zoneData.m_RowKey);
+
+			//UMyGameInstance::Get->m_PlayerStatManager->ResetPlayerStatus();
 		}
 		else
 		{

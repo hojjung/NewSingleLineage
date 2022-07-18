@@ -354,7 +354,7 @@ void UZoneInstManager::ResetZone()
 	
 	for(const auto& ZoneData : m_MapBuildInsts)
 	{
-		if((!m_PlayerTombZoneID.IsNone() && ZoneData.Key == m_PlayerTombZoneID) || ZoneData.Key == TEXT("PlayerHome"))
+		if(ZoneData.Key == m_PlayerTombZoneID || ZoneData.Key == TEXT("PlayerHome"))//플레이어 죽은곳이거나 플레이어집은 초기화 안함
 		{
 			continue;
 		}

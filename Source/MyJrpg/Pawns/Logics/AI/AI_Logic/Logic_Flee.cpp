@@ -96,7 +96,7 @@ void ULogic_Flee::OnIdle()
 
 	if (EPathFollowingStatus::Idle == Status)
 	{
-		if (!UMyLib::GetNavSys()->GetRandomPointInNavigableRadius(m_StartPoint, 1400.f, Result))
+		if (!UMyLib::GetNavSys()->GetRandomPointInNavigableRadius(m_StartPoint, m_Owner->GetSightRange() * 1.5f, Result))
 		{
 			return;
 		}
@@ -117,15 +117,15 @@ void ULogic_Flee::OnFlee()
 	}
 	FVector RunDir = (m_Owner->GetActorLocation() - m_Owner->GetFocusedTarget<AActor>()->GetActorLocation()).GetSafeNormal2D();
 
-	float RandDistLen = FMath::RandRange(750,1500);
+	float RandDistLen = FMath::RandRange(m_Owner->GetSightRange(),m_Owner->GetSightRange() * 2.f);
 
-	float RandRad = FMath::RandRange(800,1200);
+	float RandRad = FMath::RandRange(m_Owner->GetSightRange(),m_Owner->GetSightRange() * 2.f);
 
 	RunDir *= RandDistLen;
 
 	FNavLocation Result;
 
-	if (!UMyLib::GetNavSys()->GetRandomPointInNavigableRadius(m_Owner->GetActorLocation() + RunDir, RandRad, Result))
+	if (!UMyLib::GetNavSys()->GetRandomPointInNavigableRadius(m_StartPoint + RunDir, RandRad, Result))
 	{
 		return;
 	}

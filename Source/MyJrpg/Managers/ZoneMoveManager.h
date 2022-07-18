@@ -68,6 +68,8 @@ public:
 	void AddMapBtn(FName zoneID, UWidgetMapBtn* mapBtn);
 
 	void RemoveMapBtn(FName zoneID);
+	
+	void ZoneMoveDone(FName zoneID);
 
 	void Tick(float deltaTime);
 

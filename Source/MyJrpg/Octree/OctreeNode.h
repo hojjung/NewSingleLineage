@@ -333,8 +333,14 @@ public:
 					}
 				}
 				float NavLen = 0.f;
-				
-				UMyLib::GetNavSys()->GetPathLength(self, loc, InnerActor->GetActorLocation(), NavLen);
+
+				ENavigationQueryResult::Type ResultT = UMyLib::GetNavSys()->GetPathLength(
+					self, loc, InnerActor->GetActorLocation(), NavLen);
+
+				if(ResultT != ENavigationQueryResult::Success)
+				{
+					NavLen = MAX_flt;
+				}
 
 				if(NavLen > MaxRange)
 				{

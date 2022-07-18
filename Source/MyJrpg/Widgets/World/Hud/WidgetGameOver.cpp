@@ -11,8 +11,6 @@ void UWidgetGameOver::NativeOnInitialized()
 
 void UWidgetGameOver::OnReturnVillage()
 {
-	UMyGameInstance::Get->m_PlayerStatManager->ResetPlayerStatus();
-	
 	UMyGameInstance::Get->m_LevelMoveManager->OpenMyLevel(TEXT("PlayerHome"), true);
 }
 

@@ -521,7 +521,7 @@ float AMyPlayerPawn::PlayBaseAttackAnim()
 
 float AMyPlayerPawn::TryAttack()
 {
-	if (GetBaseAttackMontage() && m_fAttackCD < 0.f)
+	if (IsAlive() && GetBaseAttackMontage() && m_fAttackCD < 0.f)
 	{
 		float AnimMongLen = PlayBaseAttackAnim();
 

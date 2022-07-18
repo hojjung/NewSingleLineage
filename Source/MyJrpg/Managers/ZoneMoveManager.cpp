@@ -32,6 +32,18 @@ void UZoneMoveManager::RemoveMapBtn(FName zoneID)
 	Btn->RemoveFromParent();
 }
 
+void UZoneMoveManager::ZoneMoveDone(FName zoneID)
+{
+	m_CurrentID = zoneID;
+		
+	m_DestZoneID = NAME_None;
+
+	if(m_CurrentID == TEXT("PlayerHome"))
+	{
+		UMyGameInstance::Get->m_PlayerStatManager->ResetPlayerStatus();
+	}
+}
+
 void UZoneMoveManager::Tick(float deltaTime)
 {
 	if(m_DestZoneID.IsNone())
@@ -42,9 +54,7 @@ void UZoneMoveManager::Tick(float deltaTime)
 
 	if(m_fRemainDuration >= m_fMaxDuration)
 	{
-		m_CurrentID = m_DestZoneID;
-		
-		m_DestZoneID = NAME_None;
+		ZoneMoveDone(m_DestZoneID);
 		
 		m_OnMoveEnd.Broadcast();
 

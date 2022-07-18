@@ -154,7 +154,7 @@ void ACombatUnitPawn::SetFocusedTarget(IFocusable* target)
 
 float ACombatUnitPawn::TryAttack()
 {
-	if (GetBaseAttackMontage() && m_fAttackCD < 0.f)
+	if (IsAlive() && GetBaseAttackMontage() && m_fAttackCD < 0.f)
 	{
 		float AnimMongLen = PlayBaseAttackAnim();
 
