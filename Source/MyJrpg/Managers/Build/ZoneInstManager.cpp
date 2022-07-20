@@ -666,5 +666,9 @@ void UZoneInstManager::SaveActorsOnPlayerDead(const FName& id)
 
 void UZoneInstManager::Tick(float delta)
 {
+	if(!m_RootOctTree)
+	{
+		return;
+	}
 	m_RootOctTree->UpdateState();
 }
