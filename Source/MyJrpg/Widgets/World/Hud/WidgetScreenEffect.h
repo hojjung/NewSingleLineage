@@ -1,6 +1,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "BUITweenInstance.h"
 #include "Blueprint/UserWidget.h"
 #include "Components/Image.h"
 #include "MyJrpg/MyJrpg.h"
@@ -17,7 +18,9 @@ class MYJRPG_API UWidgetScreenEffect : public UUserWidget
 protected:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (BindWidget))
 	UImage* m_ImgBlack;
-
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (BindWidget))
+	UImage* m_ImgTakeHit;
+	
 protected:
 	float m_fFadeOutTimer;
 
@@ -36,6 +39,8 @@ protected:
 
 public:
 	void ShowFadeOut(float t, const FVoidVoid& onFadeOutEnd);
+
+	void ShowHittenFlash();
 
 	void HideFadeOut();
 };

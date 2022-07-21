@@ -22,6 +22,8 @@ void UWidgetAnimLib::PlayTextAnim(UTextBlock* textblock, FLinearColor colorWant,
 		.Begin();
 }
 
+
+
 void UWidgetAnimLib::RecoverTextAnim(UTextBlock* textblock, float dur)
 {
 	textblock->SetColorAndOpacity(FLinearColor::White);
@@ -32,5 +34,32 @@ void UWidgetAnimLib::RecoverTextAnim(UTextBlock* textblock, float dur)
 		{
 			
 		}))
+		.Begin();
+}
+
+FBUITweenInstance& UWidgetAnimLib::PlayAlphaFlashAnim(UImage* textblock, float dur)
+{
+	float DurHalf = dur / 2.f;
+	
+	FBUITweenInstance& Tween = UBUITween::Create(textblock, DurHalf)
+	                        .FromOpacity(0.f)
+	                        .ToOpacity(1.f)
+	                        .OnComplete(FBUITweenSignature::CreateLambda([&](UWidget* Owner)
+	                        {
+		                        UImage* OwnerT = Cast<UImage>(Owner);
+		                        if (OwnerT)
+		                        {
+			                        RecoverAlphaFlashAnim(OwnerT, DurHalf);
+		                        }
+	                        }));
+
+	Tween.Begin();
+	return Tween;
+}
+void UWidgetAnimLib::RecoverAlphaFlashAnim(UImage* textblock, float dur)
+{
+	UBUITween::Create(textblock, dur)
+		.FromOpacity(1.f)
+		.ToOpacity(0.f)
 		.Begin();
 }

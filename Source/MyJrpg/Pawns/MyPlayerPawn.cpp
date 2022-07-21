@@ -384,6 +384,8 @@ void AMyPlayerPawn::DealBaseMeleeAttack()
 	}
 	Pawn->TakeDmg(Dmg,this);
 
+	
+
 	UMyGameInstance::Get->m_EquipManager->ReduceDurability(EEquipSlotType::Weapon,1);
 }
 
@@ -574,6 +576,7 @@ bool AMyPlayerPawn::TakeDmg(float amount, ACombatUnitPawn* attacker)
 	{
 		return false;
 	}
+	UMyLib::GetCanvas()->GetScreenEffect()->ShowHittenFlash();
 
 	m_LastAttacker = attacker;
 

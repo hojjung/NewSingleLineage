@@ -3,10 +3,14 @@
 
 #include "WidgetScreenEffect.h"
 
+#include "BUITween.h"
+#include "MyJrpg/WidgetAnimLib.h"
+
 void UWidgetScreenEffect::NativeOnInitialized()
 {
 	Super::NativeOnInitialized();
-
+	m_ImgTakeHit->SetRenderOpacity(0.f);
+	m_ImgTakeHit->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
 	EndFade();
 }
 
@@ -70,6 +74,15 @@ void UWidgetScreenEffect::ShowFadeOut(float t, const FVoidVoid& onFadeOutEnd)
 	m_fMaxFadeOut = t;
 
 	m_OnFadeOutDone = onFadeOutEnd;
+}
+
+void UWidgetScreenEffect::ShowHittenFlash()
+{
+	if(UBUITween::GetIsTweening(m_ImgTakeHit))
+	{
+		return;
+	}
+	UWidgetAnimLib::PlayAlphaFlashAnim(m_ImgTakeHit, 0.3f);
 }
 
 void UWidgetScreenEffect::HideFadeOut()
