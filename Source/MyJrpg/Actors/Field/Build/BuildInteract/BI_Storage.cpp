@@ -39,3 +39,8 @@ UInventory* UBI_Storage::GetItemHolder()
 {
 	return m_Inven;
 }
+
+void UBI_Storage::SetCopiedItemHolder(UInventory* inventory)
+{
+	m_Inven->CopyInventory(inventory);
+}

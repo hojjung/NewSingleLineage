@@ -58,6 +58,30 @@ const FText& UInventory::GetInvenName() const
 	return m_InvenName;
 }
 
+void UInventory::CopyInventory(const UInventory* inventory)
+{
+	int Iter = 0;
+
+	int Size = FMath::Min(GetInvenSize(), inventory->GetInvenSize());
+
+	while (Iter < Size)
+	{
+		FName ID = inventory->GetItemConstRef(Iter).m_ID;
+
+		if(ID.IsNone())
+		{
+			Iter++;
+			continue;
+		}
+		
+		AddSlot(Iter, inventory->GetItemConstRef(Iter));
+		
+		AddItemKey(UMyLib::GetItemData(ID), ID, Iter);
+
+		Iter++;
+	}
+}
+
 int UInventory::GetInvenSize() const
 {
 	return m_nInvenMaxSize;

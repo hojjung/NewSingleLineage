@@ -195,6 +195,11 @@ void AStructureActor::Destroyed()
 	Super::Destroyed();
 }
 
+void AStructureActor::SetCopiedItemHolder(UInventory* inventory)
+{
+	m_BuildInteract->SetCopiedItemHolder(inventory);
+}
+
 void AStructureActor::OnInteract()
 {
 	float R = 0;

@@ -170,7 +170,7 @@ public:
 
 	void CancelSelect();
 	
-	void Erase(AStructureActor* buildActor, bool isTakeBackToInven);
+	void Erase(AStructureActor* buildActor, bool isTakeBackToInven, bool forceErase);
 	
 	bool Upgrade(AStructureActor* buildActor, bool isShowWidget =  true);
 

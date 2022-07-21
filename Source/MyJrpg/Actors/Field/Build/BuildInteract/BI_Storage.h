@@ -29,4 +29,6 @@ public:
 	virtual void OnInteract() override;
 
 	virtual UInventory* GetItemHolder() override;
+
+	virtual void SetCopiedItemHolder(UInventory* inventory) override;
 };

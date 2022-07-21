@@ -72,4 +72,6 @@ public:
 	bool TryPurchaseUpgrade();
 
 	virtual void Destroyed() override;
+	
+	void SetCopiedItemHolder(UInventory* inventory);
 };

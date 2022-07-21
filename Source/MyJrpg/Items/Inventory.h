@@ -142,5 +142,7 @@ public:
 	int GetItemIndex(const FItemSpec& itemHere);
 
 	const FText& GetInvenName() const;
+	
+	void CopyInventory(const UInventory* inventory);
 };
 

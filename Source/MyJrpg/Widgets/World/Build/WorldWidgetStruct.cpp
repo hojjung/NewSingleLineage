@@ -36,7 +36,7 @@ void UWorldWidgetStruct::DeselectErase()
 
 void UWorldWidgetStruct::ConfirmErase()
 {
-	UMyGameInstance::Get->m_BuildManager->Erase(m_Owner.Get(), true);
+	UMyGameInstance::Get->m_BuildManager->Erase(m_Owner.Get(), true, false);
 }
 
 void UWorldWidgetStruct::UpdateUpgradeCost()

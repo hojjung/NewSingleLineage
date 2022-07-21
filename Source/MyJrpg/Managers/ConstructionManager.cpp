@@ -771,9 +771,9 @@ void UConstructionManager::SelectStruct(AStructureActor* sActor)
 	m_FocusActor->ShowSelect(true);
 }
 
-void UConstructionManager::Erase(AStructureActor* buildActor, bool isTakeBackToInven)
+void UConstructionManager::Erase(AStructureActor* buildActor, bool isTakeBackToInven, bool forceErase)
 {
-	if(!IsEraseable(buildActor))
+	if(!IsEraseable(buildActor) && !forceErase)
 	{
 		return;
 	}
@@ -810,7 +810,6 @@ bool UConstructionManager::Upgrade(AStructureActor* buildActor, bool isShowWidge
 	
 	if(isShowWidget && !Structure->TryPurchaseUpgrade())
 		return false;
-
 	
 	FVector Loc = Structure->GetActorLocation();
 	
@@ -832,11 +831,14 @@ bool UConstructionManager::Upgrade(AStructureActor* buildActor, bool isShowWidge
 
 	NewUpgradeActor->ConfirmBuild();
 	
-	
+	if(Structure->GetItemHolder())//창고처럼 인벤이 이미있다면
+	{
+		NewUpgradeActor->SetCopiedItemHolder(Structure->GetItemHolder());
+	}
 	
 	UMyGameInstance::Get->m_ZoneInst->AddBuildActor(NewUpgradeActor);
 	
-	Erase(Structure, false);
+	Erase(Structure, false, true);
 	
 	(*Holder) = NewUpgradeActor;
 	

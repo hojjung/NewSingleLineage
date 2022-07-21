@@ -25,4 +25,6 @@ public:
 	virtual void OnInteract() {}
 
 	virtual void OnStructureDestory() {}
+	
+	virtual void SetCopiedItemHolder(UInventory* inventory) {};
 };

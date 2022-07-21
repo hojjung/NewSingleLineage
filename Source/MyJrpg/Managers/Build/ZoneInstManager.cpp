@@ -523,6 +523,8 @@ AStructureActor* UZoneInstManager::SpawnBuildActor(const FZoneActorTransform& sp
 	{
 		UMyGameInstance::Get->m_BuildManager->SetStructureGrid(StructureActor);
 		
+		UMyGameInstance::Get->m_BuildManager->AddPlacedStructures(StructureActor->GetBuildData().m_RowID);
+		
 		PlayerHomeSnap(StructureActor);
 	}
 
