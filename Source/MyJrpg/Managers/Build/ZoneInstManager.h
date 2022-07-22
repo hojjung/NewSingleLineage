@@ -117,8 +117,6 @@ public:
 
 	int SaveActors(const FName& id);
 
-	void AddBuildActor(AStructureActor* buildActor);
-
 	AMonsterPawn* SpawnAdditionalNpcActor(const FUnitDataHandle& data);
 
 	void ResetZone();
@@ -143,6 +141,8 @@ public:
 public:
 	void GetNearNpcs(const ABaseUnitPawn* caller, TArray<ACombatUnitPawn*>& outAry, float range);
 	
-	IFocusable* GetNearTarget(AActor* self, const FVector& loc, float range, bool excludeNotInteractable);
+	IFocusable* GetNearTarget(AActor* self, const FVector& loc, float range, float myTargetingRange, bool isManual);
+	
+	void AddBuildActor(AStructureActor* buildActor);
 };
 

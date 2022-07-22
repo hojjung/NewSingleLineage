@@ -44,7 +44,7 @@ FBUITweenInstance& UWidgetAnimLib::PlayAlphaFlashAnim(UImage* textblock, float d
 	FBUITweenInstance& Tween = UBUITween::Create(textblock, DurHalf)
 	                        .FromOpacity(0.f)
 	                        .ToOpacity(1.f)
-	                        .OnComplete(FBUITweenSignature::CreateLambda([&](UWidget* Owner)
+	                        .OnComplete(FBUITweenSignature::CreateLambda([=](UWidget* Owner)
 	                        {
 		                        UImage* OwnerT = Cast<UImage>(Owner);
 		                        if (OwnerT)
@@ -56,10 +56,12 @@ FBUITweenInstance& UWidgetAnimLib::PlayAlphaFlashAnim(UImage* textblock, float d
 	Tween.Begin();
 	return Tween;
 }
+
 void UWidgetAnimLib::RecoverAlphaFlashAnim(UImage* textblock, float dur)
 {
 	UBUITween::Create(textblock, dur)
 		.FromOpacity(1.f)
 		.ToOpacity(0.f)
-		.Begin();
+		
+	.Begin();
 }

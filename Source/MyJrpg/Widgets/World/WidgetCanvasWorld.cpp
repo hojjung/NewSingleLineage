@@ -12,8 +12,8 @@
 #include "Menu/Storage/WidgetStorage.h"
 #include "Menu/ZoneMove/WidgetZoneSelectPanel.h"
 #include "MyJrpg/MyLib.h"
-#include "MyJrpg/DataTables/DialogueTable.h"
 #include "MyJrpg/Managers/EquipManager.h"
+#include "MyJrpg/Managers/MyAssetManager.h"
 #include "MyJrpg/Managers/MyGameInstance.h"
 #include "MyJrpg/Pawns/MyPlayerPawn.h"
 
@@ -178,14 +178,13 @@ UWidgetStackCalculator* UWidgetCanvasWorld::GetCalculator()
 	return m_Calculator;
 }
 
-void UWidgetCanvasWorld::StartDialogue(FName str, AActor* speaker)
+void UWidgetCanvasWorld::StartDialogue(UDialogue* dial, AActor* speaker)
 {
 	UMyLib::GetPlayerCon()->EnableJoystick(false);
+	
 	m_DialoguePanel->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
 
-	UDialogue* Dial = UDialogueTable::GetDialogue(str);
-
-	m_DialoguePanel->StartDialogue(speaker, Dial);
+	m_DialoguePanel->StartDialogue(speaker, dial);
 }
 
 void UWidgetCanvasWorld::TryAcceptQuest(FName qId)

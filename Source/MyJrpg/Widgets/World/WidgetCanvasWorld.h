@@ -151,6 +151,7 @@ protected:
 	UWidgetScreenEffect* m_ScreenEffect; 
 	//
 	bool m_bIsBuildable;
+	
 protected:
 	void HideHUD();
 
@@ -165,6 +166,8 @@ protected:
 	virtual void OnAnimationFinishedPlaying(UUMGSequencePlayer& Player) override;
 
 	void OnZoneMove(const FName& zoneID);
+
+	void StartDialogue();
 	
 public:
 	UWidgetEquipInvenPanel* GetEquipInvenMenu();
@@ -221,7 +224,7 @@ public:
 
 	void ShowGameOverWindow(const ACombatUnitPawn* killer);
 	
-	void StartDialogue(FName str, AActor* speaker = nullptr);
+	void StartDialogue(UDialogue* dial, AActor* speaker = nullptr);
 	
 	void StartPickPocket(AMonsterPawn* mob);
 
@@ -239,4 +242,3 @@ public:
 
 	void OpenRidePanel(UInventory* inven);
 };
-

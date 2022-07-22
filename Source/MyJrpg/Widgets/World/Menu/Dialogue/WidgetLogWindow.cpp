@@ -53,6 +53,8 @@ void UWidgetLogWindow::StartDialogue(AActor* speaker, UDialogue* dial)
 
 void UWidgetLogWindow::StartDialogueWrap()
 {
+	check(InDialogue);
+	
 	InDialogue->AssignPersistentOuter(UMyGameInstance::Get);
 
 	if (InDialogue->m_AryData.Num() <= 1)
@@ -69,6 +71,7 @@ void UWidgetLogWindow::StartDialogueWrap()
 
 void UWidgetLogWindow::RenderNextDialogue(const FDialogueNode& playerRply)//재귀적으로 계속해서 불릴것
 {
+	
 	for(UWidgetLogReply* Rply : m_AryReplies)
 	{
 		Rply->SetIsEnabled(false);
@@ -78,6 +81,7 @@ void UWidgetLogWindow::RenderNextDialogue(const FDialogueNode& playerRply)//재�
 		}
 	}
 
+	RunEventsForNode(playerRply);
 	TryRunQuestEvent(playerRply);
 	
 	

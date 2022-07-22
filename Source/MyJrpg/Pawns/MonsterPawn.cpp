@@ -135,7 +135,7 @@ void AMonsterPawn::SetEntity(const FName& id,const FNpcUnitEntityRow& unitEntity
 
 	m_bIsBoss = unitEntityRow.m_bIsBoss;
 
-	m_TalkID = unitEntityRow.m_TalkID;
+	m_Dial = unitEntityRow.m_Dialogue;
 
 	if(unitEntityRow.m_TakeHitEffect)
 	{
@@ -203,9 +203,9 @@ bool AMonsterPawn::IsBoss() const
 	return m_bIsBoss;
 }
 
-const FName& AMonsterPawn::GetTalkID() const
+const UDialogue* AMonsterPawn::GetDial() const
 {
-	return m_TalkID;
+	return m_Dial.Get();
 }
 
 UInventory* AMonsterPawn::GetInven()
@@ -389,11 +389,11 @@ void AMonsterPawn::SetHp(int hp)
 
 void AMonsterPawn::OnRequestMoveDone()
 {
-	if(IsAlive() && !m_TalkID.IsNone())
+	if(IsAlive() && m_Dial.Get())
 	{
 		UMyLib::GetPlayer()->SetInteracting(true);
 		HomingRotateToTarget(-1.f);
-		UMyLib::GetCanvas()->StartDialogue(m_TalkID);
+		UMyLib::GetCanvas()->StartDialogue(m_Dial.Get(), this);
 		return;
 	}
 	UMyLib::GetCanvas()->StartPickPocket(this);

@@ -82,7 +82,7 @@ void UWidgetScreenEffect::ShowHittenFlash()
 	{
 		return;
 	}
-	UWidgetAnimLib::PlayAlphaFlashAnim(m_ImgTakeHit, 0.3f);
+	UWidgetAnimLib::PlayAlphaFlashAnim(m_ImgTakeHit, 1.f);
 }
 
 void UWidgetScreenEffect::HideFadeOut()

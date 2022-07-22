@@ -13,7 +13,8 @@
 				"Engine",
 				"UMG",
 				"Slate",
-				"SlateCore"
+				"SlateCore",
+				"DialoguePlugin"
 			]
 		},
 		{

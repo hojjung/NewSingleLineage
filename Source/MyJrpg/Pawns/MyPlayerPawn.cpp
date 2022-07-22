@@ -244,16 +244,16 @@ void AMyPlayerPawn::RequestAttack()
 
 void AMyPlayerPawn::TryAttack_External()
 {
-	
 	float Len = TryAttack();
 
 	if(Len > 0.f && IsSneak())
 	{
-		if(GetFocusedTarget<AMonsterPawn>()->GetFocusedTarget<>() != this)
+		AMonsterPawn* Target = GetFocusedTarget<AMonsterPawn>();
+		
+		if(Target && Target->GetFocusedTarget<>() != this)
 		{
 			m_bIsSneakAttack = true;
 		}
-		SetSneak();
 	}
 	SetInteracting(false);
 }
@@ -381,6 +381,7 @@ void AMyPlayerPawn::DealBaseMeleeAttack()
 	{
 		Dmg *= 1.5f;
 		m_bIsSneakAttack = false;
+		SetSneak();
 	}
 	Pawn->TakeDmg(Dmg,this);
 

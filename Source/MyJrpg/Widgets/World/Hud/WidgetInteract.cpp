@@ -57,11 +57,11 @@ void UWidgetInteract::ShowInteract(IFocusable* focus)
 
 	if (Monster)
 	{
-		const FName& TalkID = Monster->GetTalkID();
+		const UDialogue* Dial = Monster->GetDial();
 
 		if (Monster->IsAlive())
 		{
-			if (TalkID.IsNone() || UMyGameInstance::Get->m_TeamKarma->IsFoe(Monster))
+			if (!Dial || UMyGameInstance::Get->m_TeamKarma->IsFoe(Monster))
 			{
 				return;
 			}

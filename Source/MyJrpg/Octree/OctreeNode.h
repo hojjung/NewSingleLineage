@@ -285,13 +285,13 @@ public:
 		}
 	}
 
-	IFocusable* GetNearTarget(AActor* self, const FVector& loc, float range, bool excludeNotInteractable, const UClass* ignoreClass = nullptr)
+	IFocusable* GetNearTarget(AActor* self, const FVector& loc, float range, float myTargetingRange,bool isManualMode, const UClass* ignoreClass = nullptr)
 	{
 		OctreeNode* Start = this;
 		
 		float MaxRange = MAX_flt;
 
-		if(range > 0 && !excludeNotInteractable)
+		if(range > 0 && isManualMode)
 		{
 			MaxRange = range; 
 		}
@@ -320,28 +320,30 @@ public:
 				{
 					continue;
 				}
-				if(excludeNotInteractable)
+				if(!isManualMode)
 				{
 					ACombatUnitPawn* Pawn = Cast<ACombatUnitPawn>(InnerActor);
 
-					if(Pawn)
+					if(Pawn && (!Pawn->IsAlive() || !UMyGameInstance::Get->m_TeamKarma->IsFoe(Pawn)))
 					{
-						if(!Pawn->IsAlive() || !UMyGameInstance::Get->m_TeamKarma->IsFoe(Pawn))
-						{
-							continue;	
-						}
+						continue;	
 					}
 				}
 				float NavLen = 0.f;
 
 				ENavigationQueryResult::Type ResultT = UMyLib::GetNavSys()->GetPathLength(
 					self, loc, InnerActor->GetActorLocation(), NavLen);
-
+				
 				if(ResultT != ENavigationQueryResult::Success)
 				{
 					NavLen = MAX_flt;
 				}
-
+				
+				if(!Cast<ACombatUnitPawn>(InnerActor) || !isManualMode)
+				{
+					NavLen += myTargetingRange;
+				}
+				
 				if(NavLen > MaxRange)
 				{
 					continue;
@@ -353,7 +355,7 @@ public:
 
 			for (auto& child : m_AryChildren)
 			{
-				IFocusable* ChildInner = child->GetNearTarget(self, loc, range, excludeNotInteractable, ignoreClass);
+				IFocusable* ChildInner = child->GetNearTarget(self, loc, range, myTargetingRange,isManualMode, ignoreClass);
 
 				if(!ChildInner)
 				{

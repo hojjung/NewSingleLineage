@@ -168,4 +168,9 @@ public:
 	const FDialogueNode* GetNodeById(int32 id);
 	
 	void CleanOuter();
+	
+	virtual FPrimaryAssetId GetPrimaryAssetId() const override
+	{
+		return FPrimaryAssetId(TEXT("Dialogue"), GetFName());
+	}
 };

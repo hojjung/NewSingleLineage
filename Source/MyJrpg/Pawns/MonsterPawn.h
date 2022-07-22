@@ -46,7 +46,7 @@ protected:
 	UPROPERTY()
 	UInventory* m_Inven;
 
-	FName m_TalkID;
+	TWeakObjectPtr<UDialogue> m_Dial;
 
 protected:
 	virtual void BeginPlay() override;
@@ -84,7 +84,7 @@ public:
 
 	bool IsBoss() const;
 	
-	const FName& GetTalkID() const;
+	const UDialogue* GetDial() const;
 
 	UInventory* GetInven();
 	

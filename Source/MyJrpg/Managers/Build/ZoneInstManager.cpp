@@ -172,18 +172,6 @@ int UZoneInstManager::SaveActors(const FName& id)
 	return Index;
 }
 
-void UZoneInstManager::AddBuildActor(AStructureActor* buildActor)
-{
-	m_Build.Add(buildActor);
-
-	IFocusable* Focus = Cast<IFocusable>(buildActor);
-
-	if(Focus && Focus->IsInteractable())
-	{
-		UMyGameInstance::Get->m_ZoneInst->AddFocusActor(buildActor);
-	}
-}
-
 AMonsterPawn* UZoneInstManager::SpawnAdditionalNpcActor(const FUnitDataHandle& data)
 {
 	FVector PlPos = UMyLib::GetPlayer()->GetActorLocation();
@@ -218,25 +206,21 @@ void UZoneInstManager::SpawnActors(const FZoneSerialData& zoneInst, bool isInit)
 		case EActorType::Npc:
 			{
 				AMonsterPawn* MobPawn = SpawnNpcActor(ZoneActorEle, Index, zoneInst, isInit);
-				AddFocusActor(MobPawn);
 			}
 			break;
 		case EActorType::Item:
 			{
 				AItemActor* ItemActor = SpawnItemActor(ZoneActorEle, Index, zoneInst, isInit);
-				AddFocusActor(ItemActor);
 			}
 			break;
 		case EActorType::Gather:
 			{
 				ATreeBase* GatherActor = SpawnGatherActor(ZoneActorEle, Index, zoneInst, isInit);
-				AddFocusActor(GatherActor);
 			}
 			break;
 		case EActorType::Build:
 			{
 				AStructureActor* BuildActor = SpawnBuildActor(ZoneActorEle, Index, zoneInst);
-				AddFocusActor(BuildActor);
 			}
 			break;
 		}
@@ -410,7 +394,7 @@ AMonsterPawn* UZoneInstManager::SpawnNpcActor(const FZoneActorTransform& spawnDa
 {
 	FActorSpawnParameters Param;
 	Param.bNoFail = true;
-	Param.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
+	Param.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButAlwaysSpawn;
 
 	const FNpcUnitEntityRow* EntityRow = UUnitEntityData::GetNpcUnitTable->FindRow<FNpcUnitEntityRow>(spawnData.m_IDEntity, "");
 
@@ -444,6 +428,8 @@ AMonsterPawn* UZoneInstManager::SpawnNpcActor(const FZoneActorTransform& spawnDa
 
 	m_Npc.Add(NpcActor);
 
+	AddFocusActor(NpcActor);
+
 	return NpcActor;
 }
 
@@ -451,7 +437,7 @@ AItemActor* UZoneInstManager::SpawnItemActor(const FZoneActorTransform& spawn_da
 {
 	FActorSpawnParameters Param;
 	Param.bNoFail = true;
-	Param.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
+	Param.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButAlwaysSpawn;
 
 	const FItemDataRow* EntityRow = UItemData::GetItemTable->FindRow<FItemDataRow>(spawn_data.m_IDEntity, "");
 
@@ -467,7 +453,7 @@ AItemActor* UZoneInstManager::SpawnItemActor(const FZoneActorTransform& spawn_da
 
 	m_Item.Add(ItemActor);
 
-	UMyGameInstance::Get->m_ZoneInst->AddFocusActor(ItemActor);
+	AddFocusActor(ItemActor);
 
 	return ItemActor;
 }
@@ -478,7 +464,7 @@ ATreeBase* UZoneInstManager::SpawnGatherActor(const FZoneActorTransform& spawn_d
 
 	Param.bNoFail = true;
 
-	Param.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
+	Param.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButAlwaysSpawn;
 
 	const FGatherDataRow* EntityRow = UGatherTable::GetGatherTable->FindRow<FGatherDataRow>(spawn_data.m_IDEntity, "");
 
@@ -497,7 +483,7 @@ ATreeBase* UZoneInstManager::SpawnGatherActor(const FZoneActorTransform& spawn_d
 	
 	m_Gather.Add(TreeActor);
 
-	UMyGameInstance::Get->m_ZoneInst->AddFocusActor(TreeActor);
+	AddFocusActor(TreeActor);
 
 	return TreeActor;
 }
@@ -507,7 +493,7 @@ AStructureActor* UZoneInstManager::SpawnBuildActor(const FZoneActorTransform& sp
 
 	Param.bNoFail = true;
 
-	Param.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
+	Param.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButAlwaysSpawn;
 
 	const FBuildDataRow* EntityRow = UBuildData::GetBuildTable->FindRow<FBuildDataRow>(spawn_data.m_IDEntity, "");
 	
@@ -563,7 +549,7 @@ void UZoneInstManager::GetNearNpcs(const ABaseUnitPawn* caller, TArray<ACombatUn
 	m_RootOctTree->TraceObjectInRange<ACombatUnitPawn>(caller,range, outAry);
 }
 
-IFocusable* UZoneInstManager::GetNearTarget(AActor* self, const FVector& loc, float range, bool excludeNotInteractable)
+IFocusable* UZoneInstManager::GetNearTarget(AActor* self, const FVector& loc, float range, float myTargetingRange, bool isManual)
 {
 	if(!m_RootOctTree.Get())
 	{
@@ -571,13 +557,26 @@ IFocusable* UZoneInstManager::GetNearTarget(AActor* self, const FVector& loc, fl
 	}
 	UClass* ignoreClass = nullptr;
 	
-	if(excludeNotInteractable)
+	if(!isManual)
 	{
 		ignoreClass = AStructureActor::StaticClass();  
 	}
-	IFocusable* Focus = m_RootOctTree->GetNearTarget(self, loc, range, excludeNotInteractable, ignoreClass);
+	
+	IFocusable* Focus = m_RootOctTree->GetNearTarget(self, loc, range, myTargetingRange, isManual, ignoreClass);
 		
 	return Focus;
+}
+
+void UZoneInstManager::AddBuildActor(AStructureActor* buildActor)
+{
+	m_Build.Add(buildActor);
+
+	IFocusable* Focus = Cast<IFocusable>(buildActor);
+
+	if(Focus && Focus->IsInteractable())
+	{
+		UMyGameInstance::Get->m_ZoneInst->AddFocusActor(buildActor);
+	}
 }
 
 void UZoneInstManager::AddTrackIcon(IFocusable* icon)
@@ -590,7 +589,7 @@ void UZoneInstManager::AddTrackIcon(UMeshComponent* mesh)
 	if(!m_MiniMapCam.Get())
 	{
 		FActorSpawnParameters Param;
-		Param.bNoFail = false;
+		Param.bNoFail = true;
 		m_MiniMapCam = GetWorld()->SpawnActor<AMinimapCam>(Param);
 	}
 	m_MiniMapCam->AddTrackIcon(mesh);
