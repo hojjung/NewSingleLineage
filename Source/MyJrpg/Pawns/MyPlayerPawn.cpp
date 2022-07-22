@@ -244,6 +244,7 @@ void AMyPlayerPawn::RequestAttack()
 
 void AMyPlayerPawn::TryAttack_External()
 {
+	
 	float Len = TryAttack();
 
 	if(Len > 0.f && IsSneak())
@@ -254,6 +255,7 @@ void AMyPlayerPawn::TryAttack_External()
 		{
 			m_bIsSneakAttack = true;
 		}
+		SetSneak();
 	}
 	SetInteracting(false);
 }
@@ -381,7 +383,6 @@ void AMyPlayerPawn::DealBaseMeleeAttack()
 	{
 		Dmg *= 1.5f;
 		m_bIsSneakAttack = false;
-		SetSneak();
 	}
 	Pawn->TakeDmg(Dmg,this);
 
@@ -573,6 +574,12 @@ bool AMyPlayerPawn::TakeDmg(float amount, ACombatUnitPawn* attacker)
 		return false;
 	}
 
+	if(attacker && !TryHit(attacker->GetStat()))
+	{
+		ShowPopupText(0,ETextType::Miss);
+		return false;
+	}
+	
 	if(!Super::TakeDmg(amount, attacker))
 	{
 		return false;

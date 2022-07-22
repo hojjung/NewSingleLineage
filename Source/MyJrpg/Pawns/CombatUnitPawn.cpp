@@ -374,16 +374,9 @@ bool ACombatUnitPawn::TakeDmg(float amount, ACombatUnitPawn* attacker)
 {
 	ETextType TextType = ETextType::NormalRight;
 	
-	if(attacker && !TryHit(attacker->GetStat()))
-	{
-		ShowPopupText(0,ETextType::Miss);
-		return false;
-	}
-
 	if(attacker)
 	{
 		amount = attacker->GetRandomDmg(amount);
-		
 	}
 
 	if (attacker)
