@@ -26,6 +26,7 @@
 #include "MyJrpg/GameRules/GameRuleBase.h"
 #include "MyJrpg/Pawns/Logics/PlSkillAuto.h"
 #include "Web/ChatManager.h"
+#include "Web/PlayfabManager.h"
 #include "MyGameInstance.generated.h"
 
 class UPreviewActorManager;
@@ -49,6 +50,8 @@ protected:
 	TArray<UInventory*> m_AryStorage;
 	
 public:
+	UPROPERTY()
+	UPlayfabManager* m_PlayfabManager;
 	UPROPERTY()
 	ULevelMoveManager* m_LevelMoveManager;
 	UPROPERTY()

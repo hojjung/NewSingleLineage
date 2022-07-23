@@ -68,7 +68,7 @@ void UWidgetMapPanel::OpenItemInfoData(const FItemDataRow& item_data_row)
 
 void UWidgetMapPanel::PrintErrorText(const FString& string)
 {
-	m_AlertInfoWindow->PrintErrorText(string);
+	m_AlertInfoWindow->PrintInfoText(string);
 }
 
 void UWidgetMapPanel::OnClick(const FName& zoneID)

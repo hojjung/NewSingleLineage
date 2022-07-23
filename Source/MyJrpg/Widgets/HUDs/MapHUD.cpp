@@ -25,7 +25,7 @@ UWidgetMapPanel* AMapHUD::GetCanvas()
 	return m_Canvas;
 }
 
-void AMapHUD::PrintErrorText(const FString& str)
+void AMapHUD::PrintInfoText(const FString& str)
 {
 	GetCanvas()->PrintErrorText(str);
 }

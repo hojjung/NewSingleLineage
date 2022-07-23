@@ -123,7 +123,7 @@ void ATreeBase::OnArrived()
 	if(!IsInteractable())
 	{
 		m_Player->SetInteracting(false);
-		UMyLib::PrintErrorText(NSLOCTEXT("ATreeBase","No Tool","적합한 도구가 없음"));
+		UMyLib::PrintInfoText(NSLOCTEXT("ATreeBase","No Tool","적합한 도구가 없음"));
 		return;
 	}
 	m_Player->PlayAnimMontage(m_GatherAsset->m_AnimGatherMotion);

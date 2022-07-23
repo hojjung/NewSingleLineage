@@ -306,12 +306,12 @@ void UWidgetZoneSelectButton::OnWalk()
 {
 	if(UMyGameInstance::Get->m_ZoneMove->IsMoving())
 	{
-		UMyLib::PrintErrorText(NSLOCTEXT("UWidgetZoneSelectButton","Already in Moving","이동중엔 경로 변경 불가"));
+		UMyLib::PrintInfoText(NSLOCTEXT("UWidgetZoneSelectButton","Already in Moving","이동중엔 경로 변경 불가"));
 		return;
 	}
 	if(!UMyGameInstance::Get->m_EventStage->IsTimeEnough(m_fWalkTime, m_ZoneData->m_RowKey))
 	{
-		UMyLib::PrintErrorText(NSLOCTEXT("UWidgetZoneSelectButton","Lack of Duration!","남은 시간이 부족합니다."));
+		UMyLib::PrintInfoText(NSLOCTEXT("UWidgetZoneSelectButton","Lack of Duration!","남은 시간이 부족합니다."));
 		return;
 	}
 	UMyGameInstance::Get->m_ZoneMove->StartMove(false, m_fWalkTime, m_ZoneData->m_RowKey);
@@ -322,17 +322,17 @@ void UWidgetZoneSelectButton::OnRun()
 {
 	if(UMyGameInstance::Get->m_ZoneMove->IsMoving())
 	{
-		UMyLib::PrintErrorText(NSLOCTEXT("UWidgetZoneSelectButton","Already in Moving","이동중엔 경로 변경 불가"));
+		UMyLib::PrintInfoText(NSLOCTEXT("UWidgetZoneSelectButton","Already in Moving","이동중엔 경로 변경 불가"));
 		return;
 	}
 	if(!UMyGameInstance::Get->m_EventStage->IsTimeEnough(m_fRunTime, m_ZoneData->m_RowKey))
 	{
-		UMyLib::PrintErrorText(NSLOCTEXT("UWidgetZoneSelectButton","Lack of Duration!","남은 시간이 부족합니다."));
+		UMyLib::PrintInfoText(NSLOCTEXT("UWidgetZoneSelectButton","Lack of Duration!","남은 시간이 부족합니다."));
 		return;
 	}
 	if(!UMyGameInstance::Get->m_ZoneMove->TryPurchaseStamina(m_RunCost))
 	{
-		UMyLib::PrintErrorText(NSLOCTEXT("UWidgetZoneSelectButton","Lack of Stamina!","스태미나 부족합니다."));
+		UMyLib::PrintInfoText(NSLOCTEXT("UWidgetZoneSelectButton","Lack of Stamina!","스태미나 부족합니다."));
 		return;
 	}
 
@@ -344,17 +344,17 @@ void UWidgetZoneSelectButton::OnRide()
 {
 	if(UMyGameInstance::Get->m_ZoneMove->IsMoving())
 	{
-		UMyLib::PrintErrorText(NSLOCTEXT("UWidgetZoneSelectButton","Already in Moving","이동중엔 경로 변경 불가"));
+		UMyLib::PrintInfoText(NSLOCTEXT("UWidgetZoneSelectButton","Already in Moving","이동중엔 경로 변경 불가"));
 		return;
 	}
 	if(!UMyGameInstance::Get->m_EventStage->IsTimeEnough(m_fRideTime, m_ZoneData->m_RowKey))
 	{
-		UMyLib::PrintErrorText(NSLOCTEXT("UWidgetZoneSelectButton","Lack of Duration!","남은 시간이 부족합니다."));
+		UMyLib::PrintInfoText(NSLOCTEXT("UWidgetZoneSelectButton","Lack of Duration!","남은 시간이 부족합니다."));
 		return;
 	}
 	if(!UMyGameInstance::Get->m_ZoneMove->TryPurchaseRideCost(m_RideCost))
 	{
-		UMyLib::PrintErrorText(NSLOCTEXT("UWidgetZoneSelectButton","Lack of Ride Cost!","말의 에너지가 부족합니다."));
+		UMyLib::PrintInfoText(NSLOCTEXT("UWidgetZoneSelectButton","Lack of Ride Cost!","말의 에너지가 부족합니다."));
 		return;
 	}
 

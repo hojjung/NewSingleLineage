@@ -33,7 +33,7 @@ protected:
 public:
 	virtual void NativeOnInitialized() override;
 	
-	void PrintErrorText(const FString& str);
+	void PrintInfoText(const FString& str);
 
 protected:
 	virtual FReply NativeOnTouchEnded(const FGeometry& InGeometry, const FPointerEvent& InGestureEvent) override;

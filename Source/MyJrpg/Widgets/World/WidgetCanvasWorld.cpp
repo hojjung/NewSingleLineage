@@ -197,9 +197,9 @@ void UWidgetCanvasWorld::OpenEnchant()
 	m_Enchant->Open();
 }
 
-void UWidgetCanvasWorld::PrintErrorText(const FString& string)
+void UWidgetCanvasWorld::PrintInfoText(const FString& string)
 {
-	m_AlertInfoWindow->PrintErrorText(string);
+	m_AlertInfoWindow->PrintInfoText(string);
 }
 
 void UWidgetCanvasWorld::ShowZone(const FText& nameT)

@@ -26,22 +26,17 @@ public class MyJrpg : ModuleRules
 			"Slate", "SlateCore",
 			"CustomSlates","NPCPalette","BUITween","DialoguePlugin","DBTween","GameplayCameras",
 			"MoviePlayer", "Http","Json", "JsonUtilities", "OnlineSubsystem", "OnlineSubsystemUtils",
-			"PlayFabCommon", "PlayFabCpp" , "PlayFab"
+			"PlayFabCommon", "PlayFabCpp" , "PlayFab", "GooglePlayUtils"
 		});
 
 		if (Target.Platform == UnrealTargetPlatform.IOS)
 		{
-			PrivateDependencyModuleNames.AddRange(new string[] { "Core", "CoreUObject", "Engine", "OnlineSubsystem" });
-			DynamicallyLoadedModuleNames.AddRange(new string[] { "OnlineSubsystemIOS", "IOSAdvertising" });
+			PrivateDependencyModuleNames.AddRange(new string[] { "OnlineSubsystemIOS", "IOSAdvertising" });
 		}
 		else if (Target.Platform == UnrealTargetPlatform.Android)
 		{
-			//Need fix java template
-			//PrivateDependencyModuleNames.Add("OnlineSubsystemGooglePlay");
-			//PrivateDependencyModuleNames.Add("AndroidAdvertising");
-			//string PluginPath = Utils.MakePathRelativeTo(ModuleDirectory, Target.RelativeEnginePath);
-			//AdditionalPropertiesForReceipt.Add("AndroidPlugin", System.IO.Path.Combine(PluginPath, "Android_UPL.xml"));
-            
+			PrivateDependencyModuleNames.Add("OnlineSubsystemGooglePlay");
+			PrivateDependencyModuleNames.Add("AndroidAdvertising");
 		}
 
 	}

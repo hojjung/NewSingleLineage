@@ -120,9 +120,9 @@ public:
 	
 	static bool AddItemAll(FItemSpec& items, bool newItem);
 
-	static void PrintErrorText(const FString& string);
+	static void PrintInfoText(const FString& string);
 
-	static void PrintErrorText(FText&& tt);
+	static void PrintInfoText(FText&& tt);
 	
 	static void OpenItemInfo(const FItemDataRow& itemData);
 };

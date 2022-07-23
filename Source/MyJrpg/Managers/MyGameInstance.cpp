@@ -60,6 +60,7 @@ void UMyGameInstance::Init()
 	
 	Get = this;
 
+	m_PlayfabManager = NewObject<UPlayfabManager>(this);
 	m_EffectManager = NewObject<UParticleEffectManager>(this);
 	m_LevelMoveManager = NewObject<ULevelMoveManager>(this);
 	m_PlayerStatManager = NewObject<UPlayerStatusManager>(this);

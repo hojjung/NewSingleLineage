@@ -27,19 +27,19 @@ void UWidgetConfirm::OnConfirm()
 
 	if(CrntText.IsEmpty())
 	{
-		UMyLib::PrintErrorText(NSLOCTEXT("UWidgetConfirm","EmptyChar","비어있는 아이디"));
+		UMyLib::PrintInfoText(NSLOCTEXT("UWidgetConfirm","EmptyChar","비어있는 아이디"));
 		return;
 	}
 
 	if(UMyGameInstance::Get->m_BadwordTable->NicknameHasNonChar(CrntText.ToString()))
 	{
-		UMyLib::PrintErrorText(NSLOCTEXT("UWidgetConfirm","NonChar","지원되지 않는 문자"));
+		UMyLib::PrintInfoText(NSLOCTEXT("UWidgetConfirm","NonChar","지원되지 않는 문자"));
 		return;
 	}
 	
 	if(UMyGameInstance::Get->m_BadwordTable->NicknameHasBadWord(CrntText.ToString()))
 	{
-		UMyLib::PrintErrorText(NSLOCTEXT("UWidgetConfirm","Badword","허용되지 않은 비속어"));
+		UMyLib::PrintInfoText(NSLOCTEXT("UWidgetConfirm","Badword","허용되지 않은 비속어"));
 		return;
 	}
 	//동의 다되었는지 체크

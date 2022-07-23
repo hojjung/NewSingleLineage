@@ -29,5 +29,5 @@ protected:
 public:
 	virtual void BeginPlay() override;
 
-	virtual void PrintErrorText(const FString& str) override;
+	virtual void PrintInfoText(const FString& str) override;
 };

@@ -16,9 +16,9 @@ class MYJRPG_API ABaseHUD : public AHUD
 	GENERATED_BODY()
 
 public:
-	virtual void PrintErrorText(const FString& str);
+	virtual void PrintInfoText(const FString& str);
 
-	void PrintErrorText(FText&& tt);
+	void PrintInfoText(FText&& tt);
 	
 	virtual void OpenItemInfo(const FItemDataRow& item_data);
 };

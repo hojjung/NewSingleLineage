@@ -1,8 +1,8 @@
 #include "BaseHUD.h"
 
-void ABaseHUD::PrintErrorText(FText&& tt)
+void ABaseHUD::PrintInfoText(FText&& tt)
 {
-	PrintErrorText(tt.ToString());
+	PrintInfoText(tt.ToString());
 }
 
 void ABaseHUD::OpenItemInfo(const FItemDataRow& item_data)
@@ -10,7 +10,7 @@ void ABaseHUD::OpenItemInfo(const FItemDataRow& item_data)
 	
 }
 
-void ABaseHUD::PrintErrorText(const FString& str)
+void ABaseHUD::PrintInfoText(const FString& str)
 {
 	
 }

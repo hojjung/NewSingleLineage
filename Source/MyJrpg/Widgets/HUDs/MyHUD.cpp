@@ -26,9 +26,9 @@ UWidgetCanvasWorld* AMyHUD::GetCanvas()
 	return m_Canvas;
 }
 
-void AMyHUD::PrintErrorText(const FString& str)
+void AMyHUD::PrintInfoText(const FString& str)
 {
-	GetCanvas()->PrintErrorText(str);
+	GetCanvas()->PrintInfoText(str);
 }
 
 void AMyHUD::OpenItemInfo(const FItemDataRow& item_data)

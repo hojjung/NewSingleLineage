@@ -356,7 +356,7 @@ bool UEquipManager::AddItem(FItemSpec& addItem, bool newEquipItem)
 	
 	FString Str = FString::Printf(TEXT("%s%s"),*ItemData.m_ShowingName.ToString(), *NoSpace.ToString());
 	
-	UMyLib::PrintErrorText(Str);
+	UMyLib::PrintInfoText(Str);
 	return false;
 }
 

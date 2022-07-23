@@ -44,7 +44,7 @@ UAlertInfoElement* UAlertInfoWindow::GetTextElement()
 	return TextEle;
 }
 
-void UAlertInfoWindow::PrintErrorText(const FString& reason)
+void UAlertInfoWindow::PrintInfoText(const FString& reason)
 {
 	GetTextElement()->Show(reason);
 }
