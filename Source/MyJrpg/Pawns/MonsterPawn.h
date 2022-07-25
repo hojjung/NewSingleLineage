@@ -42,8 +42,6 @@ protected:
 	UPROPERTY()
 	FRotator m_SpawnRot;
 	UPROPERTY()
-	bool m_bIsBoss;
-	UPROPERTY()
 	UInventory* m_Inven;
 
 	TWeakObjectPtr<UDialogue> m_Dial;
@@ -82,8 +80,6 @@ public:
 
 	float GetRewardExp() const;
 
-	bool IsBoss() const;
-	
 	const UDialogue* GetDial() const;
 
 	UInventory* GetInven();

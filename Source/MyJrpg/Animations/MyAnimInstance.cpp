@@ -30,7 +30,7 @@ void UMyAnimInstance::NativeInitializeAnimation()
 	m_Owner=Cast<ACombatUnitPawn>( TryGetPawnOwner());
 }
 
-void UMyAnimInstance::UpdateMoveFlag()
+void UMyAnimInstance::UpdateMoveFlag()	
 {
 //#if WITH_EDITOR
 	if(!m_Owner)

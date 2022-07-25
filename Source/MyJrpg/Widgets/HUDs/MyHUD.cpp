@@ -17,7 +17,7 @@ void AMyHUD::BeginPlay()
 
 	if(m_Canvas)
 	{
-		m_Canvas->AddToViewport();
+		m_Canvas->AddToViewport(15);
 	}
 }
 

@@ -244,7 +244,6 @@ void AMyPlayerPawn::RequestAttack()
 
 void AMyPlayerPawn::TryAttack_External()
 {
-	
 	float Len = TryAttack();
 
 	if(Len > 0.f && IsSneak())
@@ -268,11 +267,6 @@ void AMyPlayerPawn::SubDmgFromHp(float dmg)
 const FStatGroup& AMyPlayerPawn::GetStat() const
 {
 	return UMyGameInstance::Get->m_PlayerStatManager->GetStat();
-}
-
-bool AMyPlayerPawn::IsManualMoving()
-{
-	return IsInputMoving();// || m_PFComp->GetStatus()==EPathFollowingStatus::Moving
 }
 
 void AMyPlayerPawn::SetAutoCombat(bool useAuto)

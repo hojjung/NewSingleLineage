@@ -127,8 +127,6 @@ public:
 public://Combat
 	void RequestAttack();
 
-	bool IsManualMoving();
-
 	void SetAutoCombat(bool useAuto);
 
 	virtual void PlayTookHitMontage() override;

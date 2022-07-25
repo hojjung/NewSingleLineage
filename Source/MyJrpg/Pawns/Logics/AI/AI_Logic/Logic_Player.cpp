@@ -70,7 +70,7 @@ void ULogic_Player::CheckSetState()
 {
 	IFocusable* Focused = m_Pl->GetFocusedTarget<>();
 	
-	if(m_Pl->IsManualMoving() || !Focused)
+	if(m_Pl->IsInputMoving() || !Focused)
 	{
 		m_CurrentState = EFSM::Idle;
 		return;

@@ -124,8 +124,6 @@ public://스텟과 보상
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (UIMin = "100"))
 	float m_fSightRange = 700.f;
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
-	bool m_bIsBoss = false;
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
 	FName m_FriendTeamID;
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
 	UDialogue* m_Dialogue;

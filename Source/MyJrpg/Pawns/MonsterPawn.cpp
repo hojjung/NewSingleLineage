@@ -133,8 +133,6 @@ void AMonsterPawn::SetEntity(const FName& id,const FNpcUnitEntityRow& unitEntity
 		m_Pool->InitPool(GetStat().m_Dmg,5,unitEntityRow.m_Bullet,this,unitEntityRow.m_fBulletScale);
 	}
 
-	m_bIsBoss = unitEntityRow.m_bIsBoss;
-
 	m_Dial = unitEntityRow.m_Dialogue;
 
 	if(unitEntityRow.m_TakeHitEffect)
@@ -196,11 +194,6 @@ void AMonsterPawn::OnNotifyTrigger(const FName& name)
 float AMonsterPawn::GetRewardExp() const
 {
 	return m_fExp;
-}
-
-bool AMonsterPawn::IsBoss() const
-{
-	return m_bIsBoss;
 }
 
 const UDialogue* AMonsterPawn::GetDial() const
