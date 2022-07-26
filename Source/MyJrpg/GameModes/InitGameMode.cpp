@@ -5,6 +5,7 @@
 
 #include "GameFramework/PlayerState.h"
 #include "MyJrpg/Actors/InitPlayerController.h"
+#include "MyJrpg/Managers/MyGameInstance.h"
 #include "MyJrpg/Widgets/HUDs/InitHUD.h"
 
 AInitGameMode::AInitGameMode()
@@ -18,5 +19,5 @@ void AInitGameMode::BeginPlay()
 {
 	Super::BeginPlay();
 
-	
+	UMyGameInstance::Get->m_PlayfabManager->Init();
 }

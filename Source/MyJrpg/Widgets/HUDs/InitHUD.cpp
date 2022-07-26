@@ -21,8 +21,6 @@ void AInitHUD::BeginPlay()
 	{
 		m_Canvas->AddToViewport();
 	}
-
-	UMyGameInstance::Get->m_PlayfabManager->Init();
 }
 
 void AInitHUD::PrintInfoText(const FString& str)

@@ -26,34 +26,6 @@ UPlayfabManager::UPlayfabManager()
 
 void UPlayfabManager::Init()
 {
-	if (m_bLoginProcessStarted)
-	{
-		return;
-	}
-
-	m_bLoginProcessStarted = true;
-
-	m_TitleNews.Reset();
-
-	bool bInternetConnectionSuccess = true;
-
-	GetClientAPI = IPlayFabModuleInterface::Get().GetClientAPI();
-
-
-	// m_Auth = CreateAuthCon();
-	//
-	// if(m_Auth.IsValid())
-	// {
-	// 	//m_LastLoginTime = m_CurrentTime;
-	// 	m_PlayfabID = m_Auth.Get()->GetPlayFabId();
-	//
-	// 	RequestGetServerTime();
-	//
-	// 	return;
-	// }
-
-	//StartPlayfabLogin();
-
 	IOnlineSubsystem* Subsystem = IOnlineSubsystem::Get();
 	
 	IOnlineExternalUIPtr ExternalUi = Subsystem->GetExternalUIInterface();
@@ -69,15 +41,12 @@ void UPlayfabManager::Init()
 
 void UPlayfabManager::HandleExternalUIClose(TSharedPtr<const FUniqueNetId> uniqueId, const int ControllerIndex, const FOnlineError& error)
 {
-	auto A = UMain::GetGooglePlayUserUID(ControllerIndex);
-	auto B = UMain::GetGooglePlayUserNickname(ControllerIndex);
-	auto C = UMain::GetGooglePlayAuthToken(ControllerIndex);
-	PRINTF("A:%s,B:%s,C:%s",*A,*B,*C);	
+	PRINTF("ID:%s",*uniqueId->ToString());	
 	if (error.bSucceeded)
 	{
 		PRINTF("11");
 		UMyLib::PrintInfoText(LOCTEXT("SUCCESS-GoogleLogin", "구글 로그인 성공01"));
-		//TryLoginPlayfabGoogle(uniqueId);
+		TryLoginPlayfabGoogle(uniqueId);
 		
 	}
 	else

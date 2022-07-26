@@ -35,6 +35,7 @@ public class MyJrpg : ModuleRules
 		}
 		else if (Target.Platform == UnrealTargetPlatform.Android)
 		{
+			PrivateDependencyModuleNames.Add("AndroidPermission");
 			PrivateDependencyModuleNames.Add("OnlineSubsystemGooglePlay");
 			PrivateDependencyModuleNames.Add("AndroidAdvertising");
 		}

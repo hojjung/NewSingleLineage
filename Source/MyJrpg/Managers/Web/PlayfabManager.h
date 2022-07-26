@@ -113,13 +113,13 @@ protected:
 
 	void OnSessionLoginErrorPlayfabReq(const FFailRslt& ErrorResult);
 
-public:
-	void Init();
-	
 	void StartPlayfabLogin();
 	
 	void TryLoginPlayfabGoogle(TSharedPtr<const FUniqueNetId> uniqueId);
 	
  	void OnSuccessPlayfabLogin(const PlayFab::ClientModels::FLoginResult& Result);
+
+public:
+	void Init();
 };
 
