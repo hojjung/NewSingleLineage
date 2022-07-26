@@ -26,6 +26,8 @@ UPlayfabManager::UPlayfabManager()
 
 void UPlayfabManager::Init()
 {
+	GetClientAPI = IPlayFabModuleInterface::Get().GetClientAPI();
+	
 	IOnlineSubsystem* Subsystem = IOnlineSubsystem::Get();
 	
 	IOnlineExternalUIPtr ExternalUi = Subsystem->GetExternalUIInterface();
@@ -44,14 +46,12 @@ void UPlayfabManager::HandleExternalUIClose(TSharedPtr<const FUniqueNetId> uniqu
 	PRINTF("ID:%s",*uniqueId->ToString());	
 	if (error.bSucceeded)
 	{
-		PRINTF("11");
 		UMyLib::PrintInfoText(LOCTEXT("SUCCESS-GoogleLogin", "구글 로그인 성공01"));
-		TryLoginPlayfabGoogle(uniqueId);
 		
+		TryLoginPlayfabGoogle(uniqueId);
 	}
 	else
 	{
-		PRINTF("22");
 		UMyLib::PrintInfoText(LOCTEXT("FAIL-GoogleLoginFail-2", "실패-앱을 종료후 구글 계정 로그인 먼저해주세요"));
 	}
 }
