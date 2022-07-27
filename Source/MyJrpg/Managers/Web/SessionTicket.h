@@ -20,5 +20,5 @@ public:
 	FString m_SessionTicket;
 
 public:
-	static TSharedPtr<UPlayFabAuthenticationContext> CreateAuthCon(const FString* newSessonTicket);
+	static TSharedPtr<UPlayFabAuthenticationContext> CreateAuthCon(const FString* newSessonTicket = nullptr);
 };

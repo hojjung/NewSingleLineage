@@ -41,6 +41,10 @@ class MYJRPG_API UPlayfabManager : public UObject
 public:
 	UPlayfabManager();
 
+	DECLARE_DELEGATE_OneParam(FOnPlayerLogin, bool);
+
+	FOnPlayerLogin m_PlayerLogined;
+
 protected:
 	PlayFabClientPtr GetClientAPI = nullptr;
 
@@ -75,8 +79,6 @@ protected:
 	FString m_CurrentVersionName;
 	
 protected:
-	TSharedPtr<UPlayFabAuthenticationContext> CreateAuthCon(const FString* newSessonTicket = nullptr);
-	
 	void RequestSetNickname(FString str);
 
 	void OnNickNameSetSuccess(const PlayFab::ClientModels::FUpdateUserTitleDisplayNameResult& result);
@@ -88,8 +90,6 @@ protected:
 	void RequestVersionCheck();
 	
 	void OnServerCloseCheckScriptSuccess(const FExeCScriptRslt& rslt);
-
-	void OnNewPlayerDataInitSuccess(const FExeCScriptRslt& rslt);
 
 	void RequestServerOpenCheck();
 
