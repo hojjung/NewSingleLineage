@@ -1,6 +1,5 @@
 #include "PlayfabManager.h"
 #include "JsonObjectConverter.h"
-#include "Main.h"
 #include "OnlineSubsystem.h"
 #include "OnlineSubsystemUtils.h"
 #include "PlayFabClientDataModels.h"

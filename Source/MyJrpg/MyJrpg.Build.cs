@@ -1,5 +1,6 @@
 // Copyright 1998-2019 Epic Games, Inc. All Rights Reserved.
 
+using System.IO;
 using UnrealBuildTool;
 
 public class MyJrpg : ModuleRules
@@ -26,7 +27,7 @@ public class MyJrpg : ModuleRules
 			"Slate", "SlateCore",
 			"CustomSlates","NPCPalette","BUITween","DialoguePlugin","DBTween","GameplayCameras",
 			"MoviePlayer", "Http","Json", "JsonUtilities", "OnlineSubsystem", "OnlineSubsystemUtils",
-			"PlayFabCommon", "PlayFabCpp" , "PlayFab", "GooglePlayUtils"
+			"PlayFabCommon", "PlayFabCpp" , "PlayFab"
 		});
 
 		if (Target.Platform == UnrealTargetPlatform.IOS)
@@ -38,6 +39,9 @@ public class MyJrpg : ModuleRules
 			PrivateDependencyModuleNames.Add("AndroidPermission");
 			PrivateDependencyModuleNames.Add("OnlineSubsystemGooglePlay");
 			PrivateDependencyModuleNames.Add("AndroidAdvertising");
+			
+			  string PluginPath = Utils.MakePathRelativeTo(ModuleDirectory, Target.RelativeEnginePath);
+                AdditionalPropertiesForReceipt.Add("AndroidPlugin", Path.Combine(PluginPath, "Android_UPL.xml"));
 		}
 
 	}
