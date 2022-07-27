@@ -16,7 +16,4 @@ class MYJRPG_API AInitGameMode : public AGameModeBase
 	GENERATED_BODY()
 public:
 	AInitGameMode();
-
-public:
-	virtual void BeginPlay() override;
 };

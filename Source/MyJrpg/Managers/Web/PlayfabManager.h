@@ -13,6 +13,13 @@
 #include "PlayfabManager.generated.h"
 
 
+typedef PlayFab::UPlayFabClientAPI::FGetTitleNewsDelegate FNewsDele;
+
+typedef PlayFab::UPlayFabClientAPI::FUpdateUserTitleDisplayNameDelegate FNicknameDele;
+
+typedef PlayFab::UPlayFabClientAPI::FLoginWithGoogleAccountDelegate FLoginDele;
+
+
 typedef PlayFab::UPlayFabClientAPI::FUpdateUserDataDelegate FUpdateDele;
 typedef PlayFab::ClientModels::FUpdateUserDataRequest FUpdateReq;
 typedef PlayFab::ClientModels::FUpdateUserDataResult FUpdateRslt;
@@ -41,50 +48,49 @@ class MYJRPG_API UPlayfabManager : public UObject
 public:
 	UPlayfabManager();
 
-	DECLARE_DELEGATE_OneParam(FOnPlayerLogin, bool);
-
-	FOnPlayerLogin m_PlayerLogined;
+	DECLARE_DELEGATE(FOnLoginEnd);
 
 protected:
 	PlayFabClientPtr GetClientAPI = nullptr;
-
+	UPROPERTY()
 	FString m_SessionTicket;
-
-	TArray<PlayFab::ClientModels::FTitleNewsItem> m_TitleNews;
-
+	UPROPERTY()
 	FString m_LoadedNickname;
 
-	bool m_bIsNicknameSet;
-
 	TSharedPtr<UPlayFabAuthenticationContext> m_Auth;
-
-	bool m_bLoginProcessStarted;
-
-	bool m_bIsNewCreatePlayer;
-
+	UPROPERTY()
 	FString m_PlayfabID;
-
+	UPROPERTY()
 	FDateTime m_LastLoginTime;
-	
+	UPROPERTY()
 	FDateTime m_LastLogoutTime;
-	
+	UPROPERTY()
  	FDateTime m_CurrentTime;
-
+	UPROPERTY()
 	bool m_bIsServerClosed;
-
+	UPROPERTY()
 	FString m_ServerCloseOpenTime;
-
+	UPROPERTY()
 	FString m_ServerVersion;
-
+	UPROPERTY()
 	FString m_CurrentVersionName;
-	
+
 protected:
+	FOnLoginEnd m_OnLoginEnd;
+
+protected:
+	void OnErrorPlayfabReq(const FFailRslt& ErrorResult);
+	
+public:
 	void RequestSetNickname(FString str);
 
+protected:
 	void OnNickNameSetSuccess(const PlayFab::ClientModels::FUpdateUserTitleDisplayNameResult& result);
 
-	void OnStageCompleteScriptSuccess(const FExeCScriptRslt& rslt);
+public:
+	void RequestTitleNews(FNewsDele onEnd);
 
+protected:
 	void OnVersionCheckCloudScriptSuccess(const FExeCScriptRslt& rslt);
 
 	void RequestVersionCheck();
@@ -93,18 +99,9 @@ protected:
 
 	void RequestServerOpenCheck();
 
-	void RequestTitleNews();
-	
-	void OnSuccessGetTitleNews(const PlayFab::ClientModels::FGetTitleNewsResult& rslt);
-
-	void OnErrorPlayfabReq(const FFailRslt& ErrorResult);
-	
 	void RequestGetServerTime();
 
-	void RequestGetAccountInfo();
 
-	FDateTime DecodePlayfabTimeToUe4Time(FString playfabTime);
-	
 	void OnSuccessTimeGet(const PlayFab::ClientModels::FGetTimeResult& rslt);
 	
 	void OnSuccessGetAccountInfo(const FGetAccntInfoRslt& rslt);
@@ -113,13 +110,18 @@ protected:
 
 	void OnSessionLoginErrorPlayfabReq(const FFailRslt& ErrorResult);
 
-	void StartPlayfabLogin();
 	
-	void TryLoginPlayfabGoogle(TSharedPtr<const FUniqueNetId> uniqueId);
+	void TryLoginPlayfabGoogle();
 	
  	void OnSuccessPlayfabLogin(const PlayFab::ClientModels::FLoginResult& Result);
 
 public:
 	void Init();
+	
+	void StartPlayfabLogin(FOnLoginEnd dele);
+	
+	void RequestGetAccountInfo();
+
+	const FString& GetNickName();
 };
 

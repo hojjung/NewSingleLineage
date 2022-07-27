@@ -21,6 +21,8 @@ void AInitHUD::BeginPlay()
 	{
 		m_Canvas->AddToViewport();
 	}
+	
+	m_Canvas->StartPlayfabLogin();
 }
 
 void AInitHUD::PrintInfoText(const FString& str)

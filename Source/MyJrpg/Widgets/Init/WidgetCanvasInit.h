@@ -19,29 +19,41 @@ class MYJRPG_API UWidgetCanvasInit : public UUserWidget
 {
 	GENERATED_BODY()
 	
-
 protected:
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (BindWidget))
+	UImage* m_ImgBlink;
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (BindWidget))
 	UAlertInfoWindow* m_AlertInfoWindow;
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (BindWidget))
 	UWidgetConfirm* m_WidgetConfirm;
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (BindWidget))
-	UImage* m_ImgBlinkText;
-	UPROPERTY()
+	UCanvasPanel* m_NewsCanvas;
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (BindWidget))
+	UTextBlock* m_TextTitle;
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (BindWidget))
+	UTextBlock* m_TextTitleNews;
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (BindWidget))
+	UButton* m_BtnCloseNews;
+
 	float m_fTimer;
-	
 public:
-	virtual void NativeOnInitialized() override;
-	
 	void PrintInfoText(const FString& str);
 
 protected:
-	virtual FReply NativeOnTouchEnded(const FGeometry& InGeometry, const FPointerEvent& InGestureEvent) override;
+	void OnSuccessGetTitleNews(const PlayFab::ClientModels::FGetTitleNewsResult& rslt);
 
-	virtual FReply NativeOnMouseButtonUp(const FGeometry& InGeometry, const FPointerEvent& InMouseEvent) override;
+	void OpenConfirmPanel();
 
-	void GameStart();
-
+	virtual FReply NativeOnTouchStarted(const FGeometry& InGeometry, const FPointerEvent& InGestureEvent) override;
+	
+	virtual FReply NativeOnMouseButtonDown(const FGeometry& InGeometry, const FPointerEvent& InMouseEvent) override;
+	
 	virtual void NativeTick(const FGeometry& MyGeometry, float InDeltaTime) override;
+	
+public:
+	UFUNCTION()
+	void OnCloseNews();
+
+	void StartPlayfabLogin();
 };
 

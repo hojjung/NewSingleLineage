@@ -1,65 +1,105 @@
-// All right Reserve 2021 HereticByte
-
-
 #include "WidgetCanvasInit.h"
-
 #include "MyJrpg/Managers/MyGameInstance.h"
-
-void UWidgetCanvasInit::NativeOnInitialized()
-{
-	Super::NativeOnInitialized();
-
-	m_WidgetConfirm->SetVisibility(ESlateVisibility::Collapsed);
-}
 
 void UWidgetCanvasInit::PrintInfoText(const FString& str)
 {
 	m_AlertInfoWindow->PrintInfoText(str);
 }
 
-FReply UWidgetCanvasInit::NativeOnTouchEnded(const FGeometry& InGeometry, const FPointerEvent& InGestureEvent)
+void UWidgetCanvasInit::OnCloseNews()
 {
-	Super::NativeOnTouchEnded(InGeometry, InGestureEvent);
-
-	GameStart();
-
-	return FReply::Handled();
+	m_NewsCanvas->SetVisibility(ESlateVisibility::Collapsed);
 }
 
-FReply UWidgetCanvasInit::NativeOnMouseButtonUp(const FGeometry& InGeometry, const FPointerEvent& InMouseEvent)
+void UWidgetCanvasInit::StartPlayfabLogin()
 {
-	Super::NativeOnMouseButtonUp(InGeometry, InMouseEvent);
+	m_fTimer = 0.f;
+	
+	m_ImgBlink->SetVisibility(ESlateVisibility::Collapsed);
+	
+	m_WidgetConfirm->SetVisibility(ESlateVisibility::Collapsed);
 
-	GameStart();
+	m_BtnCloseNews->OnClicked.AddDynamic(this, &UWidgetCanvasInit::OnCloseNews);
 
-	return FReply::Handled();
+	UMyGameInstance::Get->m_PlayfabManager->RequestTitleNews(FNewsDele::CreateUObject(this, &UWidgetCanvasInit::OnSuccessGetTitleNews));
+
+	UMyGameInstance::Get->m_PlayfabManager->StartPlayfabLogin(UPlayfabManager::FOnLoginEnd::CreateUObject(this, &UWidgetCanvasInit::OpenConfirmPanel));
 }
 
-void UWidgetCanvasInit::GameStart()
+void UWidgetCanvasInit::OnSuccessGetTitleNews(const PlayFab::ClientModels::FGetTitleNewsResult& rslt)
 {
-	//bool if account created
+	TArray<PlayFab::ClientModels::FTitleNewsItem> NewsArray = rslt.News;
 
-	if(!m_WidgetConfirm->IsVisible())
+	FTimespan KoreanTime(9,0,0);
+	
+	FDateTime Time = NewsArray[0].Timestamp + KoreanTime;
+
+	FString Title = FString::Printf(TEXT("%s-%s"), *NewsArray[0].Title, *Time.ToString());
+	
+	m_TextTitle->SetText(FText::FromString(Title));
+	
+	m_TextTitleNews->SetText(FText::FromString(NewsArray[0].Title));
+
+	m_TextTitleNews->SetText(FText::FromString(NewsArray[0].Body));
+}
+
+void UWidgetCanvasInit::OpenConfirmPanel()
+{
+	m_WidgetConfirm->Show();
+}
+
+FReply UWidgetCanvasInit::NativeOnTouchStarted(const FGeometry& InGeometry, const FPointerEvent& InGestureEvent)
+{
+	Super::NativeOnTouchStarted(InGeometry, InGestureEvent);
+
+	const FString& Nick = UMyGameInstance::Get->m_PlayfabManager->GetNickName();
+	
+	if(Nick.IsEmpty() || m_NewsCanvas->IsVisible())
 	{
-		m_WidgetConfirm->Show();
+		return FReply::Handled(); 
 	}
+	UMyGameInstance::Get->StartGame();
+
+	return FReply::Handled(); 
+}
+
+FReply UWidgetCanvasInit::NativeOnMouseButtonDown(const FGeometry& InGeometry, const FPointerEvent& InMouseEvent)
+{
+	Super::NativeOnMouseButtonDown(InGeometry, InMouseEvent);
+
+	const FString& Nick = UMyGameInstance::Get->m_PlayfabManager->GetNickName();
+	
+	if(Nick.IsEmpty() || m_NewsCanvas->IsVisible())
+	{
+		return FReply::Handled(); 
+	}
+	UMyGameInstance::Get->StartGame();
+
+	return FReply::Handled();
 }
 
 void UWidgetCanvasInit::NativeTick(const FGeometry& MyGeometry, float InDeltaTime)
 {
 	Super::NativeTick(MyGeometry, InDeltaTime);
 
+	const FString& Nick = UMyGameInstance::Get->m_PlayfabManager->GetNickName();
+
+	if(Nick.IsEmpty())
+	{
+		return ; 
+	}
+
 	m_fTimer += InDeltaTime;
 
 	if (m_fTimer >=0.15f)
 	{
-		if(m_ImgBlinkText->IsVisible())
+		if(m_ImgBlink->IsVisible())
 		{
-			m_ImgBlinkText->SetVisibility(ESlateVisibility::Collapsed);
+			m_ImgBlink->SetVisibility(ESlateVisibility::Collapsed);
 		}
 		else
 		{
-			m_ImgBlinkText->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
+			m_ImgBlink->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
 		}
 
 		m_fTimer = 0;

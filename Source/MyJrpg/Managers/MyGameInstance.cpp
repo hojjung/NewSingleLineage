@@ -100,6 +100,7 @@ void UMyGameInstance::Init()
 
 	m_EventStage = NewObject<UEventStageManager>(this);
 
+	m_PlayfabManager->Init();
 	m_BuildManager->Init();
 	m_ItemCollecManager->Init();
 	m_PetManager->Init();

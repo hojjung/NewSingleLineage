@@ -14,10 +14,3 @@ AInitGameMode::AInitGameMode()
 	HUDClass = AInitHUD::StaticClass();
 	DefaultPawnClass=nullptr;
 }
-
-void AInitGameMode::BeginPlay()
-{
-	Super::BeginPlay();
-
-	UMyGameInstance::Get->m_PlayfabManager->Init();
-}

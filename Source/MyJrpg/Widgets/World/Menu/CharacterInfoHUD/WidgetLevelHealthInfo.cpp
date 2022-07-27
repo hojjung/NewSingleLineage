@@ -12,6 +12,10 @@ void UWidgetLevelHealthInfo::NativeOnInitialized()
 	
 	UpdateHp(UMyLib::GetPlayer()->GetStat());
 	UpdateLevel();
+
+	const FString& NameWant = UMyGameInstance::Get->m_PlayfabManager->GetNickName();
+	
+	m_TextName->SetText(FText::FromString(NameWant));
 }
 
 void UWidgetLevelHealthInfo::UpdateLevel()
@@ -32,7 +36,7 @@ void UWidgetLevelHealthInfo::UpdateHp(const FStatGroup& stat)
 	
 	m_HpBar->SetPercent(Per);
 	//
-	FString Str = FString::Printf(TEXT("%d/%d"), (int)stat.m_Hp, (int)stat.m_MaxHp);
+	FString Str = FString::Printf(TEXT("%d"), (int)stat.m_Hp);
 	
 	m_TextAmount->SetText(FText::FromString(Str));
 }

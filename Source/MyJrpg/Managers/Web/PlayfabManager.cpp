@@ -15,6 +15,7 @@
 #include "Core/PlayFabSettings.h"
 #include "MyJrpg/MyJrpg.h"
 #include "MyJrpg/MyLib.h"
+#include "MyJrpg/Managers/MyGameInstance.h"
 //com.HereticByte.VagabondSurvival
 #define LOCTEXT_NAMESPACE "PlayfabManager"
 
@@ -22,16 +23,13 @@ void UPlayfabManager::OnErrorPlayfabReq(const FFailRslt& ErrorResult)
 {
 	FString CodeString = UPlayFabUtilities::getErrorText(ErrorResult.ErrorCode);
 	
-	if(1074 ==ErrorResult.ErrorCode ||CodeString.IsEmpty())
-	{
-		StartPlayfabLogin();
-		return;	
-	}
 }
 
 UPlayfabManager::UPlayfabManager()
 {
 	m_CurrentVersionName=TEXT("1");
+
+	m_bIsServerClosed = false;
 }
 
 void UPlayfabManager::Init()
@@ -39,13 +37,11 @@ void UPlayfabManager::Init()
 	GetClientAPI = IPlayFabModuleInterface::Get().GetClientAPI();
 
 	m_Auth = USessionTicket::CreateAuthCon();
-	
-	StartPlayfabLogin();
 }
 
-void UPlayfabManager::StartPlayfabLogin()
+void UPlayfabManager::StartPlayfabLogin(FOnLoginEnd dele)
 {
-	
+	m_OnLoginEnd = dele;
 #if PLATFORM_WINDOWS
 	UMyLib::PrintInfoText(LOCTEXT("Try Login With Desktop", "로그인 시도-PC"));
 	
@@ -57,13 +53,8 @@ void UPlayfabManager::StartPlayfabLogin()
 	
 	request.AuthenticationContext =	m_Auth;
 	
-	bool Result = GetClientAPI->LoginWithCustomID(request,
-												PlayFab::UPlayFabClientAPI::FLoginWithGoogleAccountDelegate::CreateUObject(
-													this, &UPlayfabManager::OnSuccessPlayfabLogin),
-												PlayFab::FPlayFabErrorDelegate::CreateUObject(
-													this, &UPlayfabManager::OnErrorPlayfabReq)
-	);
-
+	GetClientAPI->LoginWithCustomID(request,FLoginDele::CreateUObject(this, &UPlayfabManager::OnSuccessPlayfabLogin),
+		FFailDele::CreateUObject(this, &UPlayfabManager::OnErrorPlayfabReq));
 
 #endif
 
@@ -93,17 +84,50 @@ void UPlayfabManager::StartPlayfabLogin()
 
 void UPlayfabManager::HandleExternalUIClose(TSharedPtr<const FUniqueNetId> uniqueId, const int ControllerIndex, const FOnlineError& error)
 {
-	PRINTF("ID:%s",*uniqueId->ToString());	
 	if (error.bSucceeded)
 	{
 		UMyLib::PrintInfoText(LOCTEXT("SUCCESS-GoogleLogin", "구글 로그인 성공01"));
 		
-		TryLoginPlayfabGoogle(uniqueId);
+		TryLoginPlayfabGoogle();
 	}
 	else
 	{
 		UMyLib::PrintInfoText(LOCTEXT("FAIL-GoogleLoginFail-2", "실패-앱을 종료후 구글 계정 로그인 먼저해주세요"));
 	}
+}
+
+void UPlayfabManager::TryLoginPlayfabGoogle()
+{
+	IOnlineSubsystem* Subsystem = IOnlineSubsystem::Get();
+
+	IOnlineIdentityPtr OnlineIdentity = Subsystem->GetIdentityInterface();
+
+	PlayFab::ClientModels::FLoginWithGoogleAccountRequest request;
+	request.CreateAccount = true;
+	request.ServerAuthCode = OnlineIdentity->GetAuthToken(0);
+	request.TitleId = GetDefault<UPlayFabRuntimeSettings>()->TitleId;
+
+	GetClientAPI->LoginWithGoogleAccount(request,FLoginDele::CreateUObject(this, &UPlayfabManager::OnSuccessPlayfabLogin),
+													   FFailDele::CreateUObject(this, &UPlayfabManager::OnErrorPlayfabReq));
+}
+
+void UPlayfabManager::OnSuccessPlayfabLogin(const PlayFab::ClientModels::FLoginResult& Result)
+{
+	UMyLib::PrintInfoText(LOCTEXT("SUCCESS-Playfab Login Success", "구글 로그인 성공02"));
+
+	FString SeTicket = Result.SessionTicket;
+
+	m_Auth = USessionTicket::CreateAuthCon(&SeTicket);
+
+	m_PlayfabID = Result.PlayFabId;
+
+	m_LastLoginTime = Result.LastLoginTime;
+	
+	FTimespan KoreanTime(9,0,0);
+	
+	m_LastLoginTime+=KoreanTime;
+	
+	UMyGameInstance::Get->m_PlayfabManager->RequestGetAccountInfo();
 }
 
 void UPlayfabManager::OnSessionLoginErrorPlayfabReq(const FFailRslt& ErrorResult)
@@ -128,105 +152,23 @@ void UPlayfabManager::OnSessionLoginErrorPlayfabReq(const FFailRslt& ErrorResult
 	ExternalUi->ShowLoginUI(0, false, false,FOnLoginUIClosedDelegate::CreateUObject(this, &UPlayfabManager::HandleExternalUIClose));
 }
 //
-void UPlayfabManager::TryLoginPlayfabGoogle(TSharedPtr<const FUniqueNetId> uniqueId)
-{
-	IOnlineSubsystem* Subsystem = IOnlineSubsystem::Get();
 
-	IOnlineIdentityPtr OnlineIdentity = Subsystem->GetIdentityInterface();
-
-	auto Status = OnlineIdentity->GetLoginStatus(0);
-
-	switch (Status)
-	{
-	case ELoginStatus::NotLoggedIn:
-		{
-			UMyLib::PrintInfoText(LOCTEXT("FAIL-LoginStatus:NotLoggedin","FAIL-LoginStatus:NotLoggedin"));
-			break;
-		}
-	case ELoginStatus::UsingLocalProfile:
-		{
-			UMyLib::PrintInfoText(LOCTEXT("FAIL-LoginStatus:UsingLocalProfile","FAIL-LoginStatus:UsingLocalProfile"));
-			break;
-			
-		}
-	case ELoginStatus::LoggedIn:
-		{
-			UMyLib::PrintInfoText(LOCTEXT("LoginStatus:LoggedIn", "LoginStatus:LoggedIn"));
-			break;
-		}
-	}
-	PlayFab::ClientModels::FLoginWithGoogleAccountRequest request;
-	request.CreateAccount = true;
-	request.ServerAuthCode = OnlineIdentity->GetAuthToken(0);
-	request.TitleId = GetDefault<UPlayFabRuntimeSettings>()->TitleId;
-
-	bool Result = GetClientAPI->LoginWithGoogleAccount(request,
-	                                                   PlayFab::UPlayFabClientAPI::FLoginWithGoogleAccountDelegate::CreateUObject(
-		                                                   this, &UPlayfabManager::OnSuccessPlayfabLogin),
-	                                                   PlayFab::FPlayFabErrorDelegate::CreateUObject(
-		                                                   this, &UPlayfabManager::OnErrorPlayfabReq)
-	);
-
-
-	if (!Result)
-	{
-		PRINTF("88");;
-		UMyLib::PrintInfoText(
-			LOCTEXT("Fail-Request PlayfabLogin", "Fail-Request PlayfabLogin"));
-	}
-
-}
-
-void UPlayfabManager::OnSuccessPlayfabLogin(const PlayFab::ClientModels::FLoginResult& Result)
-{
-	UMyLib::PrintInfoText(LOCTEXT("SUCCESS-Playfab Login Success", "구글 로그인 성공02"));
-
-	FString SeTicket = Result.SessionTicket;
-
-	m_Auth = USessionTicket::CreateAuthCon(&SeTicket);
-
-	m_PlayfabID = Result.PlayFabId;
-
-	m_LastLoginTime = Result.LastLoginTime;
-	
-	FTimespan KoreanTime(9,0,0);
-	
-	m_LastLoginTime+=KoreanTime;
-	
-	m_bIsNewCreatePlayer = Result.NewlyCreated;
-
-	RequestTitleNews();
-	
-	RequestServerOpenCheck();
-	RequestVersionCheck();
-	
-	RequestGetServerTime();
-	RequestGetAccountInfo();
-	m_PlayerLogined.ExecuteIfBound(m_bIsNewCreatePlayer);
-}
 
 void UPlayfabManager::RequestSetNickname(FString str)
 {
 	UMyLib::PrintInfoText(LOCTEXT("Request Nickname", "닉네임 요청 전송"));
 	PlayFab::ClientModels::FUpdateUserTitleDisplayNameRequest DisplayReq;
-
 	DisplayReq.DisplayName = str;
-
-	GetClientAPI->UpdateUserTitleDisplayName(DisplayReq,
-	                                         PlayFab::UPlayFabClientAPI::FUpdateUserTitleDisplayNameDelegate::CreateUObject(
-		                                         this, &UPlayfabManager::OnNickNameSetSuccess)
-	                                         , PlayFab::FPlayFabErrorDelegate::CreateUObject(
-		                                         this, &UPlayfabManager::OnErrorPlayfabReq));
+	
+	GetClientAPI->UpdateUserTitleDisplayName(DisplayReq,FNicknameDele::CreateUObject(this, &UPlayfabManager::OnNickNameSetSuccess),PlayFab::FPlayFabErrorDelegate::CreateUObject(this, &UPlayfabManager::OnErrorPlayfabReq));
 }
 
 void UPlayfabManager::OnNickNameSetSuccess(const PlayFab::ClientModels::FUpdateUserTitleDisplayNameResult& result)
 {
-	//result.DisplayName
-	UMyLib::PrintInfoText(LOCTEXT("Nickname Success", "닉네임 성공,기다려주세요"));
-	m_bIsNicknameSet = true;
 	m_LoadedNickname = result.DisplayName;
+	int InsertIndex = m_LoadedNickname.Len() - 5; 
+	m_LoadedNickname.InsertAt(InsertIndex, '#');
 }
-
 
 void UPlayfabManager::RequestGetServerTime()
 {
@@ -325,10 +267,16 @@ void UPlayfabManager::OnServerCloseCheckScriptSuccess(const FExeCScriptRslt& rsl
 void UPlayfabManager::RequestGetAccountInfo()
 {
 	UMyLib::PrintInfoText(LOCTEXT("RequestGetAccountInfo", "계정 정보 요청"));
+	
 	FGetAccntInfoReq Req;
-
+	
 	GetClientAPI->GetAccountInfo(Req, FGetAccntInfoDele::CreateUObject(this, &UPlayfabManager::OnSuccessGetAccountInfo),
 	                             FFailDele::CreateUObject(this, &UPlayfabManager::OnErrorPlayfabReq));
+}
+
+const FString& UPlayfabManager::GetNickName()
+{
+	return m_LoadedNickname;
 }
 
 void UPlayfabManager::OnSuccessGetAccountInfo(const FGetAccntInfoRslt& rslt)
@@ -341,28 +289,25 @@ void UPlayfabManager::OnSuccessGetAccountInfo(const FGetAccntInfoRslt& rslt)
 
 	if (rslt.AccountInfo->TitleInfo->DisplayName.IsEmpty())
 	{
-		UMyLib::PrintInfoText(LOCTEXT("Please Set Nickname", "닉네임을 설정해주세요"));
+		m_OnLoginEnd.ExecuteIfBound();
 		return;
 	}
 
 	UMyLib::PrintInfoText(LOCTEXT("Welcome", "환영 합니다"));
 
-	m_LoadedNickname = rslt.AccountInfo->TitleInfo->DisplayName;
+	PlayFab::ClientModels::FUpdateUserTitleDisplayNameResult ResultNickname;
 	
-	m_bIsNicknameSet = true;
+	ResultNickname.DisplayName = rslt.AccountInfo->TitleInfo->DisplayName;
+	
+	OnNickNameSetSuccess(ResultNickname);
 }
 
 
-void UPlayfabManager::RequestTitleNews()
+void UPlayfabManager::RequestTitleNews(FNewsDele onEnd)
 {
 	PlayFab::ClientModels::FGetTitleNewsRequest Req;
 	Req.Count = 5;
-	GetClientAPI->GetTitleNews(Req,PlayFab::UPlayFabClientAPI::FGetTitleNewsDelegate::CreateUObject(this,&UPlayfabManager::OnSuccessGetTitleNews),PlayFab::FPlayFabErrorDelegate::CreateUObject(this, &UPlayfabManager::OnErrorPlayfabReq));
-}
-
-void UPlayfabManager::OnSuccessGetTitleNews(const PlayFab::ClientModels::FGetTitleNewsResult& rslt)
-{
-	 m_TitleNews=rslt.News;
+	GetClientAPI->GetTitleNews(Req, onEnd, FFailDele::CreateUObject(this, &UPlayfabManager::OnErrorPlayfabReq));
 }
 
 #undef LOCTEXT_NAMESPACE

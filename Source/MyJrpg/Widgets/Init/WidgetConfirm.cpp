@@ -23,21 +23,21 @@ void UWidgetConfirm::NativeOnInitialized()
 
 void UWidgetConfirm::OnConfirm()
 {
-	auto CrntText =  m_TextInputNickname->GetText();
+	FString CrntStr =  m_TextInputNickname->GetText().ToString();
 
-	if(CrntText.IsEmpty())
+	if(CrntStr.IsEmpty())
 	{
 		UMyLib::PrintInfoText(NSLOCTEXT("UWidgetConfirm","EmptyChar","비어있는 아이디"));
 		return;
 	}
 
-	if(UMyGameInstance::Get->m_BadwordTable->NicknameHasNonChar(CrntText.ToString()))
+	if(UMyGameInstance::Get->m_BadwordTable->NicknameHasNonChar(CrntStr))
 	{
 		UMyLib::PrintInfoText(NSLOCTEXT("UWidgetConfirm","NonChar","지원되지 않는 문자"));
 		return;
 	}
 	
-	if(UMyGameInstance::Get->m_BadwordTable->NicknameHasBadWord(CrntText.ToString()))
+	if(UMyGameInstance::Get->m_BadwordTable->NicknameHasBadWord(CrntStr))
 	{
 		UMyLib::PrintInfoText(NSLOCTEXT("UWidgetConfirm","Badword","허용되지 않은 비속어"));
 		return;
@@ -45,7 +45,11 @@ void UWidgetConfirm::OnConfirm()
 	//동의 다되었는지 체크
 	//나쁜 닉네임인지 체크
 	//닉네임 중복되는지 체크
-	UMyGameInstance::Get->StartGame();
+
+	UMyGameInstance::Get->m_PlayfabManager->RequestSetNickname(CrntStr);
+	
+	SetVisibility(ESlateVisibility::Collapsed);
+	//UMyGameInstance::Get->StartGame();
 }
 
 FReply UWidgetConfirm::NativeOnTouchStarted(const FGeometry& InGeometry, const FPointerEvent& InGestureEvent)

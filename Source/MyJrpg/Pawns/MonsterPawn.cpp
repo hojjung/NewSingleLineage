@@ -327,14 +327,7 @@ bool AMonsterPawn::TakeDmg(float amount, ACombatUnitPawn* attacker)
 	{
 		return false;
 	}
-	for(auto CompPair : m_MapComp)
-	{
-		USceneComponent* MySceneComp = Cast<USceneComponent>(CompPair.Value.Get());
-		if(MySceneComp)
-		{
-			MySceneComp->SetVisibility(false);
-		}
-	}
+
 	PlayHitFlash();
 	PlayHittenSound();
 	PlayHittenEffect();

@@ -25,6 +25,8 @@ protected:
 	UProgressBar* m_HpBar;
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (BindWidget))
 	UTextBlock* m_TextAmount;
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (BindWidget))
+	UTextBlock* m_TextName;
 	//m_HpBar
 protected:
 	virtual void NativeOnInitialized() override;
