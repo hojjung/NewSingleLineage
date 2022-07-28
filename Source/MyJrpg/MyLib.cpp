@@ -525,16 +525,16 @@ bool UMyLib::AddItemAll(FItemSpec& items, bool newItem)
 	return Equip->AddItem(items, newItem);
 }
 
-void UMyLib::PrintInfoText(const FString& string)
+void UMyLib::PrintInfoText(const FString& string, FLinearColor color)
 {
 	ABaseHUD *hud = Cast<ABaseHUD>(UGameplayStatics::GetPlayerController( GetUWorld(),0)->GetHUD());
 	
-	hud->PrintInfoText(string);
+	hud->PrintInfoText(string, color);
 }
 
-void UMyLib::PrintInfoText(FText&& tt)
+void UMyLib::PrintInfoText(FText&& tt, FLinearColor color)
 {
-	PrintInfoText(tt.ToString());
+	PrintInfoText(tt.ToString(),color);
 }
 
 void UMyLib::OpenItemInfo(const FItemDataRow& itemData)

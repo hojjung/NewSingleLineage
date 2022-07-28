@@ -16,9 +16,9 @@ class MYJRPG_API ABaseHUD : public AHUD
 	GENERATED_BODY()
 
 public:
-	virtual void PrintInfoText(const FString& str);
+	virtual void PrintInfoText(const FString& str, FLinearColor color = FLinearColor::White);
 
-	void PrintInfoText(FText&& tt);
+	void PrintInfoText(FText&& tt, FLinearColor color = FLinearColor::White);
 	
 	virtual void OpenItemInfo(const FItemDataRow& item_data);
 };

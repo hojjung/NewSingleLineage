@@ -31,5 +31,5 @@ protected:
 	UAlertInfoElement* GetTextElement();
 	
 public:
-	void PrintInfoText(const FString& reason);
+	void PrintInfoText(const FString& reason, FLinearColor color);
 };

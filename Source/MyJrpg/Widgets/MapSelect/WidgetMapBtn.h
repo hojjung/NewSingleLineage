@@ -31,6 +31,8 @@ protected:
 	UOverlay* m_OverlayTime;
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (BindWidget))
 	UTextBlock* m_TextTimeRemain;
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (BindWidget))
+	UTextBlock* m_TextName;
 	
 protected:
 	virtual void NativeOnInitialized() override;

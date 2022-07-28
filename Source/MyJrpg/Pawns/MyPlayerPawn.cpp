@@ -184,8 +184,7 @@ void AMyPlayerPawn::Tick(float DeltaTime)
 		ClearStopMoveDelegate();
 		
 		m_Movement->SetActive(true);
-
-
+		
 		FVector Loc = GetCapsule()->GetComponentLocation();
 
 		FVector Delta = (m_DeltaX + m_DeltaY) * 100.0f;
@@ -197,7 +196,7 @@ void AMyPlayerPawn::Tick(float DeltaTime)
 		if(UKismetSystemLibrary::LineTraceSingle(GetWorld(), Loc, Loc + Delta,ETraceTypeQuery::TraceTypeQuery3,
 			false,m_AryIgnores, EDrawDebugTrace::None,Hit,true))
 		{
-			Dest = Hit.Location;
+			//Dest = Hit.Location;
 		}
 
 		MoveToLocation(Dest,0);
@@ -571,18 +570,19 @@ bool AMyPlayerPawn::TakeDmg(float amount, ACombatUnitPawn* attacker)
 		ShowPopupText(0,ETextType::Miss);
 		return false;
 	}
+
+	UMyGameInstance::Get->m_EquipManager->TakeDurDmg(1);
+	
+	CancelInteract();
+	
+	UMyLib::GetCanvas()->GetScreenEffect()->ShowHittenFlash();
 	
 	if(!Super::TakeDmg(amount, attacker))
 	{
 		return false;
 	}
-	UMyLib::GetCanvas()->GetScreenEffect()->ShowHittenFlash();
-
-	CancelInteract();
 	
 	m_LastAttacker = attacker;
-
-	UMyGameInstance::Get->m_EquipManager->TakeDurDmg(1);
 	
 	return true;
 }

@@ -25,9 +25,9 @@ UWidgetMapPanel* AMapHUD::GetCanvas()
 	return m_Canvas;
 }
 
-void AMapHUD::PrintInfoText(const FString& str)
+void AMapHUD::PrintInfoText(const FString& str, FLinearColor color)
 {
-	GetCanvas()->PrintErrorText(str);
+	GetCanvas()->PrintInfoText(str, color);
 }
 
 void AMapHUD::OpenItemInfo(const FItemDataRow& item_data)

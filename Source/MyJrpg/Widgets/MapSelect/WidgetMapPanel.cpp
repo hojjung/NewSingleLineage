@@ -66,9 +66,9 @@ void UWidgetMapPanel::OpenItemInfoData(const FItemDataRow& item_data_row)
 	m_ItemInfo->SetInfoItemData(item_data_row);
 }
 
-void UWidgetMapPanel::PrintErrorText(const FString& string)
+void UWidgetMapPanel::PrintInfoText(const FString& string, FLinearColor color)
 {
-	m_AlertInfoWindow->PrintInfoText(string);
+	m_AlertInfoWindow->PrintInfoText(string, color);
 }
 
 void UWidgetMapPanel::OnClick(const FName& zoneID)

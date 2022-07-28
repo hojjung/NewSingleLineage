@@ -47,7 +47,7 @@ UAlertInfoElement* UAlertInfoWindow::GetTextElement()
 	return TextEle;
 }
 
-void UAlertInfoWindow::PrintInfoText(const FString& reason)
+void UAlertInfoWindow::PrintInfoText(const FString& reason, FLinearColor color)
 {
-	GetTextElement()->Show(reason);
+	GetTextElement()->Show(reason, color);
 }

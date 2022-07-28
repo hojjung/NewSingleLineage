@@ -25,6 +25,9 @@ public:
 	};
 
 protected:
+	UPROPERTY()
+	TArray<ACombatUnitPawn*> m_NearMobs;
+	
 	EFSM m_CurrentState;
 
 	FVector m_StartPoint;
@@ -43,7 +46,7 @@ protected:
 
 	float m_fDeltaTime;
 
-	float m_fAlertTimer;
+	bool m_bAlertOnce;
 
 protected:
 	FString CurrentState();

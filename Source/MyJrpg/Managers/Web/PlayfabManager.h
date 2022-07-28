@@ -50,6 +50,7 @@ public:
 
 	DECLARE_DELEGATE(FOnLoginEnd);
 
+	FOnLoginEnd m_OnNickNameFail;
 protected:
 	PlayFabClientPtr GetClientAPI = nullptr;
 	UPROPERTY()

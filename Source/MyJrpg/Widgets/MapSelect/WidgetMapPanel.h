@@ -63,7 +63,7 @@ public:
 	
 	void OpenItemInfoData(const FItemDataRow& item_data_row);
 	
-	void PrintErrorText(const FString& string);
+	void PrintInfoText(const FString& string, FLinearColor color);
 
 protected:
 	void OnClick(const FName& zoneID);

@@ -10,7 +10,7 @@ USensor_LogicBase::USensor_LogicBase()
 {
 	m_SensingInterval = 0.3f;
 
-	SetPeripheralVisionAngle(25);
+	SetPeripheralVisionAngle(22);
 }
 
 void USensor_LogicBase::Init(ACombatUnitPawn* owner)

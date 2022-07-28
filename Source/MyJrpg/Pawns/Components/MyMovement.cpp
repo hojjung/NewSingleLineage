@@ -86,8 +86,7 @@ void UMyMovement::TickComponent(float DeltaTime, ELevelTick TickType, FActorComp
 			const FVector NewLocation = UpdatedComponent->GetComponentLocation();
 			Velocity = ((NewLocation - OldLocation) / DeltaTime);
 		}
-
-		//SnapToNav();
+		SnapToNav();
 	}
 
 	m_ImpactVector = FVector::ZeroVector;

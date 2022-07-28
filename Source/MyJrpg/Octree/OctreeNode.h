@@ -30,7 +30,7 @@ public:
 	
 public:
 	OctreeNode(FVector _center, FVector _extend, int32 _depth, TSharedPtr<OctreeNode> _root = nullptr)
-		: m_Center(_center), m_Extend(_extend), m_nDepth(_depth)
+		: m_Center(_center), m_nDepth(_depth) ,m_Extend(_extend)
 	{
 		m_Root = _root;
 		m_bIsRange = false;
@@ -272,13 +272,13 @@ public:
 		}
 	}
 
-	IFocusable* GetNearTarget(AActor* self, const FVector& loc, float range, float myTargetingRange,bool isManualMode, const UClass* ignoreClass = nullptr)
+	IFocusable* GetNearTargetManualMode(AActor* self, const FVector& loc, float range, float myTargetingRange, const UClass* ignoreClass = nullptr)
 	{
 		OctreeNode* Start = this;
 		
 		float MaxRange = MAX_flt;
 
-		if(range > 0 && isManualMode)
+		if(range > 0)
 		{
 			MaxRange = range; 
 		}
@@ -287,56 +287,9 @@ public:
 
 		if (InterSection(loc, MaxRange))
 		{
-			for(AActor* InnerActor : Start->m_AryActors)
-			{
-				if((InnerActor->IsPendingKill()) || (self == InnerActor) || (InnerActor->GetClass() == ignoreClass))
-				{
-					continue;
-				}
-				IFocusable* Focus = Cast<IFocusable>(InnerActor);
-
-				if(Focus && !Focus->IsInteractable())
-				{
-					continue;
-				}
-				if(!isManualMode)
-				{
-					ACombatUnitPawn* Pawn = Cast<ACombatUnitPawn>(InnerActor);
-
-					if(Pawn && (!Pawn->IsAlive() || !UMyGameInstance::Get->m_TeamKarma->IsFoe(Pawn)))
-					{
-						continue;	
-					}
-				}
-				
-				float NavLen = 0.f;
-
-				ENavigationQueryResult::Type ResultT = UMyLib::GetNavSys()->GetPathLength(self, loc, InnerActor->GetActorLocation(), NavLen);
-				
-				if(ResultT != ENavigationQueryResult::Success)
-				{
-					NavLen = MAX_flt;
-				}
-
-				ACombatUnitPawn* Mob = Cast<ACombatUnitPawn>(InnerActor);
-				if(!!isManualMode || !Mob || !Mob->IsAlive())
-				{
-					NavLen += myTargetingRange + 50;//사거리안에 다른 몬스터 있을때 타겟팅이 유닛 우선순위로 가게해줌
-				}
-				
-				if(NavLen > MaxRange)
-				{
-					continue;
-				}
-				
-				MaxRange = NavLen;
-
-				Target = InnerActor;
-			}
-
 			for (auto& child : m_AryChildren)
 			{
-				IFocusable* ChildInner = child->GetNearTarget(self, loc, range, myTargetingRange,isManualMode, ignoreClass);
+				IFocusable* ChildInner = child->GetNearTargetManualMode(self, loc, range, myTargetingRange, ignoreClass);
 
 				if(!ChildInner)
 				{
@@ -357,6 +310,45 @@ public:
 
 				Target = ChildInnerActor;
 			}
+			for(AActor* InnerActor : Start->m_AryActors)
+			{
+				if((InnerActor->IsPendingKill()) || (self == InnerActor) || (InnerActor->GetClass() == ignoreClass))
+				{
+					continue;
+				}
+				IFocusable* Focus = Cast<IFocusable>(InnerActor);
+
+				if(Focus && !Focus->IsInteractable())
+				{
+					continue;
+				}
+				
+				float NavLen = 0.f;
+
+				ENavigationQueryResult::Type ResultT = UMyLib::GetNavSys()->GetPathLength(self, loc, InnerActor->GetActorLocation(), NavLen);
+				
+				if(ResultT != ENavigationQueryResult::Success)
+				{
+					NavLen = MAX_flt;
+				}
+
+				ACombatUnitPawn* Mob = Cast<ACombatUnitPawn>(InnerActor);
+				if(!Mob || !(Mob->IsAlive()))
+				{
+					NavLen += myTargetingRange + 50;//사거리안에 다른 몬스터 있을때 타겟팅이 유닛 우선순위로 가게해줌
+				}
+				
+				if(NavLen > MaxRange)
+				{
+					continue;
+				}
+				
+				MaxRange = NavLen;
+
+				Target = InnerActor;
+			}
+
+			
 		}
 
 		IFocusable* Focus = Cast<IFocusable>(Target);

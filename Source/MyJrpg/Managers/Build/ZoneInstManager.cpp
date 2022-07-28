@@ -562,7 +562,7 @@ IFocusable* UZoneInstManager::GetNearTarget(AActor* self, const FVector& loc, fl
 		ignoreClass = AStructureActor::StaticClass();  
 	}
 	
-	IFocusable* Focus = m_RootOctTree->GetNearTarget(self, loc, range, myTargetingRange, isManual, ignoreClass);
+	IFocusable* Focus = m_RootOctTree->GetNearTargetManualMode(self, loc, range, myTargetingRange, ignoreClass);
 		
 	return Focus;
 }

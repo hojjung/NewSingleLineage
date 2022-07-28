@@ -216,7 +216,7 @@ public:
 
 	void OpenEnchant();
 	
-	void PrintInfoText(const FString& string);
+	void PrintInfoText(const FString& string, FLinearColor color);
 
 	void ShowZone(const FText& nameT);
 

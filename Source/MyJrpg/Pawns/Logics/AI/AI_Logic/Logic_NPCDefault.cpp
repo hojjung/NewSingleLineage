@@ -2,6 +2,7 @@
 #include "NavigationSystem.h"
 #include "MyJrpg/MyJrpg.h"
 #include "MyJrpg/MyLib.h"
+#include "MyJrpg/Managers/MyGameInstance.h"
 #include "MyJrpg/Pawns/CombatUnitPawn.h"
 #include "Navigation/PathFollowingComponent.h"
 
@@ -10,7 +11,9 @@ void ULogic_NPCDefault::Init(ACombatUnitPawn* pawnUnit)
 {
 	Super::Init(pawnUnit);
 
-	m_fAlertTimer = -1.f;
+	m_bAlertOnce = false;
+
+	m_NearMobs.Reserve(10);
 
 	m_fIdleTimer = -1.f;
 
@@ -131,34 +134,19 @@ void ULogic_NPCDefault::OnCombat()
 
 void ULogic_NPCDefault::AlertEnemyToAllies()
 {
-	if(m_fAlertTimer > 0.f)
-	{
-		m_fAlertTimer -= m_fDeltaTime;
-
-		return;
-	}
-	m_fAlertTimer = FMath::FRandRange(3.f, 7.f);
-	
-	FVector Start = m_Owner->GetActorLocation();
-
-	TArray<AActor*> OutHits;
-	
-	if(!UMyLib::SphereOverlapActors(m_Owner,m_Owner->GetActorRotation(),Start,700,
-		m_Owner->GetTraceObjTypes(),AMonsterPawn::StaticClass(),m_Owner->GetTraceIgnoredActors(),OutHits))
+	if(m_bAlertOnce)
 	{
 		return;
 	}
+	m_bAlertOnce = true;
+	
+	UMyGameInstance::Get->m_ZoneInst->GetNearNpcs(m_Owner,m_NearMobs,500);
 
 	IFocusable* FocusedTarget = m_Owner->GetFocusedTarget<IFocusable>();
 	
-	for(auto Ally : OutHits)
+	for(ACombatUnitPawn* Ally : m_NearMobs)
 	{
-		AMonsterPawn* Mob = Cast<AMonsterPawn>(Ally);
-
-		if(Mob->GetFocusedTarget<IFocusable>() != FocusedTarget)
-		{
-			Mob->SetFocusedTarget(FocusedTarget);
-		}
+		Ally->SetFocusedTarget(FocusedTarget);
 	}
 }
 

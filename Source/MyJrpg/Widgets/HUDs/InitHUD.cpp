@@ -25,7 +25,7 @@ void AInitHUD::BeginPlay()
 	m_Canvas->StartPlayfabLogin();
 }
 
-void AInitHUD::PrintInfoText(const FString& str)
+void AInitHUD::PrintInfoText(const FString& str, FLinearColor color)
 {
-	m_Canvas->PrintInfoText(str);
+	m_Canvas->PrintInfoText(str, color);
 }

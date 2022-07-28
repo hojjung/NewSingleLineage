@@ -23,6 +23,12 @@ void UPlayfabManager::OnErrorPlayfabReq(const FFailRslt& ErrorResult)
 {
 	FString CodeString = UPlayFabUtilities::getErrorText(ErrorResult.ErrorCode);
 	
+	if(ErrorResult.ErrorCode == PlayFab::PlayFabErrorCode::PlayFabErrorProfaneDisplayName
+		|| ErrorResult.ErrorCode == PlayFab::PlayFabErrorCode::PlayFabErrorInvalidDisplayNameRandomSuffixLength
+		|| ErrorResult.ErrorCode == PlayFab::PlayFabErrorCode::PlayFabErrorAllowNonUniquePlayerDisplayNamesDisableNotAllowed)
+	{
+		m_OnNickNameFail.ExecuteIfBound();
+	}
 }
 
 UPlayfabManager::UPlayfabManager()
@@ -86,7 +92,7 @@ void UPlayfabManager::HandleExternalUIClose(TSharedPtr<const FUniqueNetId> uniqu
 {
 	if (error.bSucceeded)
 	{
-		UMyLib::PrintInfoText(LOCTEXT("SUCCESS-GoogleLogin", "구글 로그인 성공01"));
+		UMyLib::PrintInfoText(LOCTEXT("SUCCESS-GoogleLogin", "구글 로그인 성공"), FLinearColor::Green);
 		
 		TryLoginPlayfabGoogle();
 	}
@@ -113,7 +119,7 @@ void UPlayfabManager::TryLoginPlayfabGoogle()
 
 void UPlayfabManager::OnSuccessPlayfabLogin(const PlayFab::ClientModels::FLoginResult& Result)
 {
-	UMyLib::PrintInfoText(LOCTEXT("SUCCESS-Playfab Login Success", "구글 로그인 성공02"));
+	UMyLib::PrintInfoText(LOCTEXT("SUCCESS-Playfab Login Success", "플레이팹 로그인 성공"), FLinearColor::Green);
 
 	FString SeTicket = Result.SessionTicket;
 
@@ -219,7 +225,7 @@ void UPlayfabManager::OnVersionCheckCloudScriptSuccess(const FExeCScriptRslt& rs
 	}
 	else
 	{
-		UMyLib::PrintInfoText(LOCTEXT("Version Changed", "업데이트 해주세요!"));
+		UMyLib::PrintInfoText(LOCTEXT("Version Changed", "업데이트 해주세요!"), FLinearColor::Yellow);
 	}
 }
 
@@ -255,11 +261,11 @@ void UPlayfabManager::OnServerCloseCheckScriptSuccess(const FExeCScriptRslt& rsl
 
 	if(!m_bIsServerClosed)
 	{
-		UMyLib::PrintInfoText(LOCTEXT("Server Open", "서버 사용 가능"));
+		UMyLib::PrintInfoText(LOCTEXT("Server Open", "서버 사용 가능") , FLinearColor::Green);
 	}
 	else
 	{
-		UMyLib::PrintInfoText(LOCTEXT("Server Closed", "서버 사용 불가"));
+		UMyLib::PrintInfoText(LOCTEXT("Server Closed", "서버 사용 불가"), FLinearColor::Red);
 	}
 }
 
@@ -283,7 +289,7 @@ void UPlayfabManager::OnSuccessGetAccountInfo(const FGetAccntInfoRslt& rslt)
 {
 	if (rslt.AccountInfo->TitleInfo->isBanned)
 	{
-		UMyLib::PrintInfoText(LOCTEXT("Banned Player", "정지된 플레이어"));
+		UMyLib::PrintInfoText(LOCTEXT("Banned Player", "정지된 플레이어"), FLinearColor::Red);
 		return;
 	}
 
@@ -293,7 +299,7 @@ void UPlayfabManager::OnSuccessGetAccountInfo(const FGetAccntInfoRslt& rslt)
 		return;
 	}
 
-	UMyLib::PrintInfoText(LOCTEXT("Welcome", "환영 합니다"));
+	UMyLib::PrintInfoText(LOCTEXT("Welcome", "환영 합니다"), FLinearColor::Green);
 
 	PlayFab::ClientModels::FUpdateUserTitleDisplayNameResult ResultNickname;
 	

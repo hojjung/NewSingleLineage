@@ -37,7 +37,7 @@ protected:
 
 	float m_fTimer;
 public:
-	void PrintInfoText(const FString& str);
+	void PrintInfoText(const FString& str, FLinearColor color);
 
 protected:
 	void OnSuccessGetTitleNews(const PlayFab::ClientModels::FGetTitleNewsResult& rslt);

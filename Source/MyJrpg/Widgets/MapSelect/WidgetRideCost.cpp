@@ -39,7 +39,7 @@ void UWidgetRideCost::UpdateCostText()
 	
 	m_CostBar->SetPercent(Per);
 	
-	FString Str = FString::Printf(TEXT("%d/100"),Stamina);
+	FString Str = FString::Printf(TEXT("%d/100"), Stamina);
 	
 	m_TextAmount->SetText(FText::FromString(Str));	
 }

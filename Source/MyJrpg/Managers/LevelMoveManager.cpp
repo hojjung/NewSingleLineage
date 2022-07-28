@@ -47,7 +47,7 @@ void ULevelMoveManager::OpenMyLevel(const FZoneDataRow& zoneData, bool isPlayerD
 
 			//UMyGameInstance::Get->m_PlayerStatManager->ResetPlayerStatus();
 		}
-		else
+		else if (ID != TEXT("MapSelect"))
 		{
 			UMyGameInstance::Get->m_ZoneInst->SaveActors(ID);
 		}

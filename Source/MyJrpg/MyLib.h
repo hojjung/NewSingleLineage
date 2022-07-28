@@ -120,9 +120,9 @@ public:
 	
 	static bool AddItemAll(FItemSpec& items, bool newItem);
 
-	static void PrintInfoText(const FString& string);
+	static void PrintInfoText(const FString& string, FLinearColor color = FLinearColor::White);
 
-	static void PrintInfoText(FText&& tt);
+	static void PrintInfoText(FText&& tt, FLinearColor color = FLinearColor::White);
 	
 	static void OpenItemInfo(const FItemDataRow& itemData);
 };

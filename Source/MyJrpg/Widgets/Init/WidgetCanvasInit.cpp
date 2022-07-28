@@ -1,9 +1,9 @@
 #include "WidgetCanvasInit.h"
 #include "MyJrpg/Managers/MyGameInstance.h"
 
-void UWidgetCanvasInit::PrintInfoText(const FString& str)
+void UWidgetCanvasInit::PrintInfoText(const FString& str, FLinearColor color)
 {
-	m_AlertInfoWindow->PrintInfoText(str);
+	m_AlertInfoWindow->PrintInfoText(str, color);
 }
 
 void UWidgetCanvasInit::OnCloseNews()
@@ -24,6 +24,8 @@ void UWidgetCanvasInit::StartPlayfabLogin()
 	UMyGameInstance::Get->m_PlayfabManager->RequestTitleNews(FNewsDele::CreateUObject(this, &UWidgetCanvasInit::OnSuccessGetTitleNews));
 
 	UMyGameInstance::Get->m_PlayfabManager->StartPlayfabLogin(UPlayfabManager::FOnLoginEnd::CreateUObject(this, &UWidgetCanvasInit::OpenConfirmPanel));
+
+	UMyGameInstance::Get->m_PlayfabManager->m_OnNickNameFail.BindUObject(this, &UWidgetCanvasInit::OpenConfirmPanel);
 }
 
 void UWidgetCanvasInit::OnSuccessGetTitleNews(const PlayFab::ClientModels::FGetTitleNewsResult& rslt)

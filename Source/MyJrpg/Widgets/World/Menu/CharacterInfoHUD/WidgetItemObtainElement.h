@@ -19,9 +19,6 @@ protected:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (BindWidget))
 	UImage* m_ImgIcon;
 	
-protected:
-	virtual void Show(const FString& str) override;
-
 public:
 	void ShowImageText(const FItemDataRow& item, int amount);
 };

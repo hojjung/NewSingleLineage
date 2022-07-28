@@ -25,7 +25,7 @@ protected:
 	virtual void OnAnimationFinishedPlaying(UUMGSequencePlayer& Player) override;
 
 public:
-	virtual void Show(const FString& str);
+	virtual void Show(const FString& str, FLinearColor color);
 	
 	void Hide();
 };

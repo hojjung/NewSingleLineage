@@ -197,9 +197,9 @@ void UWidgetCanvasWorld::OpenEnchant()
 	m_Enchant->Open();
 }
 
-void UWidgetCanvasWorld::PrintInfoText(const FString& string)
+void UWidgetCanvasWorld::PrintInfoText(const FString& string, FLinearColor color)
 {
-	m_AlertInfoWindow->PrintInfoText(string);
+	m_AlertInfoWindow->PrintInfoText(string, color);
 }
 
 void UWidgetCanvasWorld::ShowZone(const FText& nameT)

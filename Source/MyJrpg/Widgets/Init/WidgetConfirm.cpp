@@ -23,23 +23,38 @@ void UWidgetConfirm::NativeOnInitialized()
 
 void UWidgetConfirm::OnConfirm()
 {
+	if(!m_CheckUsage->IsChecked())
+	{
+		UMyLib::PrintInfoText(NSLOCTEXT("UWidgetConfirm","GameUsage Check","게임 이용약관 미수락"), FLinearColor::Red);
+		return;
+	}
+	if(!m_CheckPrivate->IsChecked())
+	{
+		UMyLib::PrintInfoText(NSLOCTEXT("UWidgetConfirm","GamePrivate Check","게임내 개인정보 수집 미수락"), FLinearColor::Red);
+		return;
+	}
+	if(!m_CheckRefund->IsChecked())
+	{
+		UMyLib::PrintInfoText(NSLOCTEXT("UWidgetConfirm","GameRefund Check","청약철회 정책 미수락"), FLinearColor::Red);
+		return;
+	}
 	FString CrntStr =  m_TextInputNickname->GetText().ToString();
 
 	if(CrntStr.IsEmpty())
 	{
-		UMyLib::PrintInfoText(NSLOCTEXT("UWidgetConfirm","EmptyChar","비어있는 아이디"));
+		UMyLib::PrintInfoText(NSLOCTEXT("UWidgetConfirm","EmptyChar","비어있는 아이디"), FLinearColor::Red);
 		return;
 	}
 
 	if(UMyGameInstance::Get->m_BadwordTable->NicknameHasNonChar(CrntStr))
 	{
-		UMyLib::PrintInfoText(NSLOCTEXT("UWidgetConfirm","NonChar","지원되지 않는 문자"));
+		UMyLib::PrintInfoText(NSLOCTEXT("UWidgetConfirm","NonChar","지원되지 않는 문자"), FLinearColor::Red);
 		return;
 	}
 	
 	if(UMyGameInstance::Get->m_BadwordTable->NicknameHasBadWord(CrntStr))
 	{
-		UMyLib::PrintInfoText(NSLOCTEXT("UWidgetConfirm","Badword","허용되지 않은 비속어"));
+		UMyLib::PrintInfoText(NSLOCTEXT("UWidgetConfirm","Badword","허용되지 않은 비속어"), FLinearColor::Red);
 		return;
 	}
 	//동의 다되었는지 체크

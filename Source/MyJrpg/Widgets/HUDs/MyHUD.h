@@ -31,7 +31,7 @@ public:
 
 	UWidgetCanvasWorld* GetCanvas();
 
-	virtual void PrintInfoText(const FString& str) override;
+	virtual void PrintInfoText(const FString& str, FLinearColor color) override;
 
 	virtual void OpenItemInfo(const FItemDataRow& item_data) override;
 };
