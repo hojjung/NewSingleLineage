@@ -318,9 +318,10 @@ public:
 					NavLen = MAX_flt;
 				}
 
-				if(!Cast<ACombatUnitPawn>(InnerActor) || !isManualMode)
+				ACombatUnitPawn* Mob = Cast<ACombatUnitPawn>(InnerActor);
+				if(!!isManualMode || !Mob || !Mob->IsAlive())
 				{
-					NavLen += myTargetingRange;//사거리안에 다른 몬스터 있을때 타겟팅이 유닛 우선순위로 가게해줌
+					NavLen += myTargetingRange + 50;//사거리안에 다른 몬스터 있을때 타겟팅이 유닛 우선순위로 가게해줌
 				}
 				
 				if(NavLen > MaxRange)

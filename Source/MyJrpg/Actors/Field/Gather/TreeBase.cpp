@@ -14,7 +14,7 @@ ATreeBase::ATreeBase()
 	PrimaryActorTick.bCanEverTick = true; 
 	
 	m_Capsule = CreateDefaultSubobject<UCapsuleComponent>(TEXT("Capsule00"));
-	m_Capsule->InitCapsuleSize(34.0f, 40);
+	m_Capsule->InitCapsuleSize(70.0f, 70);
 	m_Capsule->SetCollisionProfileName(TEXT("BlockAll"));
 	m_Capsule->CanCharacterStepUpOn = ECB_No;
 	m_Capsule->SetShouldUpdatePhysicsVolume(false);
@@ -104,7 +104,7 @@ void ATreeBase::SetEntity(const FName& id, const FGatherDataRow& data, AMyPlayer
 	m_IconMeshComp->SetIcon(m_GatherAsset->m_MapIcon);
 
 	m_NavProp.AgentHeight = 88;
-	m_NavProp.AgentRadius = 70;
+	m_NavProp.AgentRadius = 130;
 }
 
 void ATreeBase::OnInteract()
@@ -115,7 +115,7 @@ void ATreeBase::OnInteract()
 	}
 	m_Player->BindOnCancel(FVoidVoid::CreateUObject(this, &ATreeBase::OnHarvestMotionDone));
 	m_Player->SetInteracting(true);
-	m_Player->RequestInteract(this,FVoidVoid::CreateUObject(this,&ATreeBase::OnArrived),90);
+	m_Player->RequestInteract(this,FVoidVoid::CreateUObject(this,&ATreeBase::OnArrived),130);
 }
 
 void ATreeBase::OnArrived()
