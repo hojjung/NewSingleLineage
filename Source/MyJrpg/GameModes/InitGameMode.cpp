@@ -1,8 +1,4 @@
-// All right Reserve 2021 HereticByte
-
-
 #include "InitGameMode.h"
-
 #include "GameFramework/PlayerState.h"
 #include "MyJrpg/Actors/InitPlayerController.h"
 #include "MyJrpg/Managers/MyGameInstance.h"

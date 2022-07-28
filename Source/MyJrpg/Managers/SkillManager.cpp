@@ -9,9 +9,9 @@ void USkillManager::Init()
 
 	m_MapSkillInsts.Reset();
 
-	m_AryEquipSkills.Init(NAME_None, FGlobalVariable::QUICKSLOT_MAX);
+	//m_AryEquipSkills.Init(NAME_None, FGlobalVariable::QUICKSLOT_MAX);
 
-	m_AryEquipSkillInst.Init(nullptr, FGlobalVariable::QUICKSLOT_MAX);
+	//m_AryEquipSkillInst.Init(nullptr, FGlobalVariable::QUICKSLOT_MAX);
 
 	TArray<FName> ArySkillNames = USkillData::GetSkillTable->GetRowNames();
 
@@ -19,9 +19,9 @@ void USkillManager::Init()
 	
 	USkillData::GetSkillTable->GetAllRows<FSkillDataRow>("",ArySkill);
 
-	int i=0;
+	int i = 0;
 
-	while (i<ArySkill.Num())
+	while (i < ArySkill.Num())
 	{
 		FName SkillID = ArySkillNames[i];
 		

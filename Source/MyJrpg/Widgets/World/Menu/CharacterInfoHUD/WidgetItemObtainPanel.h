@@ -39,14 +39,7 @@ class MYJRPG_API UWidgetItemObtainPanel : public UAlertInfoWindow
 	GENERATED_BODY()
 
 protected:
-	TQueue<FItemObtainQue> m_QueObtained;
-
-	int m_nIter;
-	
-protected:
 	virtual void NativeOnInitialized() override;
 
 	void OnItemObtain(const FItemDataRow& item, int amount);
-
-	void OnItemObtainQue();
 };

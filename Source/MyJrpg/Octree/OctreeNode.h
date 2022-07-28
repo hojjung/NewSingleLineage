@@ -15,18 +15,19 @@
 class MYJRPG_API OctreeNode : public TSharedFromThis<OctreeNode>
 {
 public:
-	FVector m_Center;
-	FVector m_Extend;
+	bool m_bIsRange;
 	float m_fMiniSize = 20;
+	
 	int32 m_nMaxCount = 4;
 	int32 m_nDepth;
-
-	TArray<AActor*> m_AryActors;
-	TArray<TSharedPtr<OctreeNode>> m_AryChildren;
-
-	bool m_bIsRange;
+	
+	FVector m_Center;
+	FVector m_Extend;
 
 	TSharedPtr<OctreeNode> m_Root;
+	TArray<AActor*> m_AryActors;
+	TArray<TSharedPtr<OctreeNode>> m_AryChildren;
+	
 public:
 	OctreeNode(FVector _center, FVector _extend, int32 _depth, TSharedPtr<OctreeNode> _root = nullptr)
 		: m_Center(_center), m_Extend(_extend), m_nDepth(_depth)
@@ -56,9 +57,7 @@ public:
 		float y = UKismetMathLibrary::Min(v.Y, m_Extend.Y);
 		y = UKismetMathLibrary::Max(y, -m_Extend.Y);
 
-		float z = UKismetMathLibrary::Min(v.Z, m_Extend.Z);
-		z = UKismetMathLibrary::Max(z, -m_Extend.Z);
-		return (x - v.X) * (x - v.X) + (y - v.Y) * (y - v.Y) + (z - v.Z) * (z - v.Z) <= _radian * _radian * _radian;
+		return (x - v.X) * (x - v.X) + (y - v.Y) * (y - v.Y) <= _radian * _radian;
 	}
 
 	bool InterSection(FVector _point)
@@ -69,34 +68,21 @@ public:
 			_point.Y <= m_Center.Y + m_Extend.Y
 		);
 	}
-
-
+	
 	int SelectBestChild(FVector _point)
 	{
-		return (_point.X <= m_Center.X ? 0 : 1) + (_point.Y >= m_Center.Y ? 0 : 4) + (_point.Z <= m_Center.Z ? 0 : 2);
+		return (_point.X <= m_Center.X ? 0 : 1) + (_point.Y >= m_Center.Y ? 0 : 2);
 	}
 
 	void split()
 	{
 		float quarter = m_Extend.X / 2.0f;
 		m_Root = m_Root.IsValid() ? m_Root : this->AsShared();
-		m_AryChildren.Init(nullptr, 8);
-		m_AryChildren[0] = MakeShareable(new OctreeNode(m_Center + FVector(-quarter, quarter, -quarter), m_Extend / 2,
-		                                                m_nDepth + 1, m_Root));
-		m_AryChildren[1] = MakeShareable(new OctreeNode(m_Center + FVector(quarter, quarter, -quarter), m_Extend / 2,
-		                                                m_nDepth + 1, m_Root));
-		m_AryChildren[2] = MakeShareable(new OctreeNode(m_Center + FVector(-quarter, quarter, quarter), m_Extend / 2,
-		                                                m_nDepth + 1, m_Root));
-		m_AryChildren[3] = MakeShareable(new OctreeNode(m_Center + FVector(quarter, quarter, quarter), m_Extend / 2,
-		                                                m_nDepth + 1, m_Root));
-		m_AryChildren[4] = MakeShareable(new OctreeNode(m_Center + FVector(-quarter, -quarter, -quarter), m_Extend / 2,
-		                                                m_nDepth + 1, m_Root));
-		m_AryChildren[5] = MakeShareable(new OctreeNode(m_Center + FVector(quarter, -quarter, -quarter), m_Extend / 2,
-		                                                m_nDepth + 1, m_Root));
-		m_AryChildren[6] = MakeShareable(new OctreeNode(m_Center + FVector(-quarter, -quarter, quarter), m_Extend / 2,
-		                                                m_nDepth + 1, m_Root));
-		m_AryChildren[7] = MakeShareable(new OctreeNode(m_Center + FVector(quarter, -quarter, quarter), m_Extend / 2,
-		                                                m_nDepth + 1, m_Root));
+		m_AryChildren.Init(nullptr, 4);
+		m_AryChildren[0] = MakeShareable(new OctreeNode(m_Center + FVector(-quarter, quarter, m_Center.Z), m_Extend / 2,m_nDepth + 1, m_Root));
+		m_AryChildren[1] = MakeShareable(new OctreeNode(m_Center + FVector(quarter, quarter, m_Center.Z), m_Extend / 2,m_nDepth + 1, m_Root));
+		m_AryChildren[2] = MakeShareable(new OctreeNode(m_Center + FVector(-quarter, -quarter, m_Center.Z), m_Extend / 2,m_nDepth + 1, m_Root));
+		m_AryChildren[3] = MakeShareable(new OctreeNode(m_Center + FVector(quarter, -quarter, m_Center.Z), m_Extend / 2,m_nDepth + 1, m_Root));
 	}
 
 	void InsertObject(AActor* obj)
@@ -104,7 +90,8 @@ public:
 		if (obj == nullptr || !InterSection(obj->GetActorLocation()))
 			return;
 
-		int32 childIndex;
+		int32 childIndex = 0;
+		
 		if (m_AryChildren.Num() == 0)
 		{
 			if (m_AryActors.Num() <= m_nMaxCount || m_Extend.X <= m_fMiniSize)
@@ -302,17 +289,9 @@ public:
 		{
 			for(AActor* InnerActor : Start->m_AryActors)
 			{
-				if(InnerActor->IsPendingKill())
+				if((InnerActor->IsPendingKill()) || (self == InnerActor) || (InnerActor->GetClass() == ignoreClass))
 				{
 					continue;
-				}
-				if(self && self == InnerActor)
-				{
-					continue;
-				}
-				if(InnerActor->GetClass() == ignoreClass)
-				{
-					continue;		
 				}
 				IFocusable* Focus = Cast<IFocusable>(InnerActor);
 
@@ -329,25 +308,26 @@ public:
 						continue;	
 					}
 				}
+				
 				float NavLen = 0.f;
 
-				ENavigationQueryResult::Type ResultT = UMyLib::GetNavSys()->GetPathLength(
-					self, loc, InnerActor->GetActorLocation(), NavLen);
+				ENavigationQueryResult::Type ResultT = UMyLib::GetNavSys()->GetPathLength(self, loc, InnerActor->GetActorLocation(), NavLen);
 				
 				if(ResultT != ENavigationQueryResult::Success)
 				{
 					NavLen = MAX_flt;
 				}
-				
+
 				if(!Cast<ACombatUnitPawn>(InnerActor) || !isManualMode)
 				{
-					NavLen += myTargetingRange;
+					NavLen += myTargetingRange;//사거리안에 다른 몬스터 있을때 타겟팅이 유닛 우선순위로 가게해줌
 				}
 				
 				if(NavLen > MaxRange)
 				{
 					continue;
 				}
+				
 				MaxRange = NavLen;
 
 				Target = InnerActor;

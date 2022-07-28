@@ -4,6 +4,7 @@
 #include "AlertInfoElement.h"
 #include "Blueprint/UserWidget.h"
 #include "Components/Overlay.h"
+#include "Components/VerticalBox.h"
 #include "AlertInfoWindow.generated.h"
 
 /**
@@ -18,7 +19,7 @@ protected:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
 	TSubclassOf<UAlertInfoElement> m_ClassInfo;
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (BindWidget))
-	UOverlay* m_OverlayInfo;
+	UVerticalBox* m_OverlayInfo;
 	UPROPERTY()
 	TArray<UAlertInfoElement*> m_AryInfo;
 	UPROPERTY()

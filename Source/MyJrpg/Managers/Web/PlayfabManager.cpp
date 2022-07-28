@@ -166,7 +166,7 @@ void UPlayfabManager::RequestSetNickname(FString str)
 void UPlayfabManager::OnNickNameSetSuccess(const PlayFab::ClientModels::FUpdateUserTitleDisplayNameResult& result)
 {
 	m_LoadedNickname = result.DisplayName;
-	int InsertIndex = m_LoadedNickname.Len() - 5; 
+	int InsertIndex = m_LoadedNickname.Len() - 4; 
 	m_LoadedNickname.InsertAt(InsertIndex, '#');
 }
 

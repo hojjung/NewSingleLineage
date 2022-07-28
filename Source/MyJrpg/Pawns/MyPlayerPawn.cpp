@@ -254,7 +254,6 @@ void AMyPlayerPawn::TryAttack_External()
 		{
 			m_bIsSneakAttack = true;
 		}
-		SetSneak();
 	}
 	SetInteracting(false);
 }
@@ -377,10 +376,9 @@ void AMyPlayerPawn::DealBaseMeleeAttack()
 	{
 		Dmg *= 1.5f;
 		m_bIsSneakAttack = false;
+		SetSneak();
 	}
 	Pawn->TakeDmg(Dmg,this);
-
-	
 
 	UMyGameInstance::Get->m_EquipManager->ReduceDurability(EEquipSlotType::Weapon,1);
 }
@@ -580,6 +578,8 @@ bool AMyPlayerPawn::TakeDmg(float amount, ACombatUnitPawn* attacker)
 	}
 	UMyLib::GetCanvas()->GetScreenEffect()->ShowHittenFlash();
 
+	CancelInteract();
+	
 	m_LastAttacker = attacker;
 
 	UMyGameInstance::Get->m_EquipManager->TakeDurDmg(1);

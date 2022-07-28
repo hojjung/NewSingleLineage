@@ -58,17 +58,15 @@ namespace FGlobalVariable
 {
 	static const int LEVEL_MAX = 100;
 
-	static const float HERO_DEFAULT_SPEED = 390.f;
+	static const float HERO_DEFAULT_SPEED = 444.f;
 
 	static const float HUNGER_DELAY = 3.f;
 	
 	static const float HUNGER_DAMAGE = 0.1f;
 
-	static const int INVEN_SIZE = 12;//42//14
+	static const int INVEN_SIZE = 10;//42//14
 
-	static const int STORAGE_SIZE = 24;
-
-	static const int QUICKSLOT_MAX = 5;
+	static const int STORAGE_SIZE = 20;
 
 	static const int ENCHANT_MAX = 20;
 

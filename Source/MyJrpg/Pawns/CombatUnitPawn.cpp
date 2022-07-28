@@ -300,7 +300,7 @@ bool ACombatUnitPawn::IsSneak() const
 
 EPathFollowingRequestResult::Type ACombatUnitPawn::ChaseTarget()
 {
-	return MoveToActor(GetFocusedTarget<AActor>());
+	return MoveToActor(GetFocusedTarget<AActor>(), GetAttackRange() - 20.f);
 }
 
 EStanceType ACombatUnitPawn::GetStance()

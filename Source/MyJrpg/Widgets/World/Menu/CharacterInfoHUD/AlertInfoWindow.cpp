@@ -1,6 +1,5 @@
 #include "AlertInfoWindow.h"
-
-#include "Components/OverlaySlot.h"
+#include "Components/VerticalBoxSlot.h"
 
 void UAlertInfoWindow::NativeOnInitialized()
 {
@@ -20,11 +19,15 @@ void UAlertInfoWindow::NativeOnInitialized()
 		
 		m_AryInfo.Add(ItemEle);
 		
-		UOverlaySlot* ChildSlot = Cast<UOverlaySlot>(m_OverlayInfo->AddChild(ItemEle));
+		UVerticalBoxSlot* ChildSlot = Cast<UVerticalBoxSlot>(m_OverlayInfo->AddChild(ItemEle));
 		
 		ChildSlot->SetHorizontalAlignment(EHorizontalAlignment::HAlign_Center);
 		
 		ChildSlot->SetVerticalAlignment(EVerticalAlignment::VAlign_Bottom);
+		
+		ChildSlot->SetSize(FSlateChildSize(ESlateSizeRule::Automatic));
+		
+		ItemEle->SetRenderScale(FVector2D(1.f,-1.f));
 		
 		iter++;
 	}
@@ -40,7 +43,7 @@ UAlertInfoElement* UAlertInfoWindow::GetTextElement()
 	{
 		m_nIndex = 0;
 	}
-
+	m_OverlayInfo->ShiftChild(0, TextEle);
 	return TextEle;
 }
 
