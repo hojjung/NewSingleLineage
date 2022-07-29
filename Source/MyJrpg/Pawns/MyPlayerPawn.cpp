@@ -25,7 +25,9 @@ AMyPlayerPawn::AMyPlayerPawn(const FObjectInitializer& objInit):Super(objInit)
 	m_bCanMoveInSkill = false;
 	m_bIsInvincible = false;
 	m_bIsSneaking = false;
-	m_bUseFsmTick = false;	
+	m_bUseFsmTick = false;
+
+	m_bVulnerable = false;
 
 	m_Capsule->SetCollisionEnabled(ECollisionEnabled::QueryOnly);
 
@@ -358,7 +360,7 @@ void AMyPlayerPawn::UpdateStat(const FStatGroup& stat_group)
 
 void AMyPlayerPawn::DealBaseMeleeAttack()
 {
-	if(!GetFocusedTarget())
+	if(!GetFocusedTarget() || m_bVulnerable)
 	{
 		return ;
 	}
@@ -505,6 +507,11 @@ UCameraComponent* AMyPlayerPawn::GetCameraComp()
 	return m_TopCamera;
 }
 
+void AMyPlayerPawn::SetVulnerable(bool b)
+{
+	m_bVulnerable = b;
+}
+
 float AMyPlayerPawn::PlayBaseAttackAnim()
 {
 	const TArray<FCompositeSection>& AnimAry = GetBaseAttackMontage()->CompositeSections;
@@ -554,6 +561,10 @@ void AMyPlayerPawn::OnNotifyTrigger(const FName& id)
 bool AMyPlayerPawn::TakeDmg(float amount, ACombatUnitPawn* attacker)
 {
 	if(!IsAlive())
+	{
+		return false;
+	}
+	if(m_bVulnerable)
 	{
 		return false;
 	}

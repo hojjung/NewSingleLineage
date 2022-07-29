@@ -62,6 +62,7 @@ void AMapExitBound::OnTriggerStart(UPrimitiveComponent* OverlappedComponent, AAc
 	if(OtherActor != UMyLib::GetPlayer() || UMyLib::GetPlayer()->IsUseFsm())
 		return;
 
+	Cast<AMyPlayerPawn>(OtherActor)->SetVulnerable(true);
 	UMyLib::GetCanvas()->GetScreenEffect()->ShowFadeOut(2.5f,FVoidVoid::CreateUObject(this, &AMapExitBound::MoveToMapLevel));
 }
 
@@ -69,6 +70,7 @@ void AMapExitBound::OnTriggerEnd(UPrimitiveComponent* OverlappedComponent, AActo
 {
 	if(OtherActor != UMyLib::GetPlayer())
 		return;
+	Cast<AMyPlayerPawn>(OtherActor)->SetVulnerable(false);
 	UMyLib::GetCanvas()->GetScreenEffect()->HideFadeOut();
 }
 

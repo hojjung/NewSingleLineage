@@ -81,6 +81,8 @@ protected:
 
 	bool m_bIsSneakAttack;
 
+	bool m_bVulnerable;
+
 private:
 	void CreateFocusActor();
 	
@@ -186,6 +188,8 @@ public:
 	virtual bool IsLooting() override;
 	
 	UCameraComponent* GetCameraComp();
+	
+	void SetVulnerable(bool b);
 
 protected:
 	virtual float PlayBaseAttackAnim() override;
