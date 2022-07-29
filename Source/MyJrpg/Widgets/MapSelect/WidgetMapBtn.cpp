@@ -46,6 +46,11 @@ FName UWidgetMapBtn::GetZoneID()
 
 void UWidgetMapBtn::UpdateDuration(float dur)
 {
+	if(dur <= 0.f)
+	{
+		m_OverlayTime->SetVisibility(ESlateVisibility::Collapsed);
+		return;
+	}
 	const FString& CultName = FInternationalization::Get().GetCurrentCulture().Get().GetName();
 	
 	FCulturePtr Culture = FInternationalization::Get().GetCulture(CultName);

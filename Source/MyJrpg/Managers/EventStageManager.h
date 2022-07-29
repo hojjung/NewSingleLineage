@@ -64,7 +64,7 @@ public:
 protected:
 	UPROPERTY()
 	TArray<FEventStageSpec> m_AryEventInst;
-	
+
 public:
 	void Init();
 	

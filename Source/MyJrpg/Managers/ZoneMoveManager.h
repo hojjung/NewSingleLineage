@@ -53,6 +53,8 @@ protected:
 
 	FName m_CurrentID;//현재 위치한 존
 
+	FName m_PendingKillID;//현재 위치한 존
+
 	TMap<FName,TWeakObjectPtr<UWidgetMapBtn>> m_MapZoneBtns;
 
 	float m_fRechargeTime;
@@ -65,11 +67,11 @@ public:
 
 	void ClearWidgetMap();
 
-	void AddMapBtn(FName zoneID, UWidgetMapBtn* mapBtn);
+	void AddMapBtn(const FName& zoneID, UWidgetMapBtn* mapBtn);
 
-	void RemoveMapBtn(FName zoneID);
+	void RemoveMapBtn(const FName& zoneID);
 	
-	void ZoneMoveDone(FName zoneID);
+	void ZoneMoveDone(const FName& zoneID);
 
 	void Tick(float deltaTime);
 
@@ -77,15 +79,15 @@ public:
 
 	bool TryPurchaseRideCost(int want);
 	
-	void StartMove(bool isRunning, float timeUse, FName destZoneID);
+	void StartMove(bool isRunning, float timeUse, const FName& destZoneID);
 
 	float GetMovePercent();
 
-	float GetDist(FName dst);
+	float GetDist(const FName& dst);
 
 	float GetDist(FVector2D loc);
 	
-	bool IsZoneAlreadyIn(FName dst);
+	bool IsZoneAlreadyIn(const FName& dst);
 	
 	FVector2D GetBarPos(const FName& dst);
 
@@ -109,15 +111,21 @@ public:
 
 	FName GetDestZoneID();
 
+	FName GetCurrentZoneID();
+
 	int GetStamina();
 
 	int GetRideEnergy();
 
 	float GetStaminaChargeTime() const;
 
-	UWidgetMapBtn* GetMapBtn(FName zoneID);
+	UWidgetMapBtn* GetMapBtn(const FName& zoneID);
 
 	void SetRiderEnergy(int v);
 	
 	void SetRiderEnergyInven(UInventory* inventory);
+	
+	void SetPendingKillStage(const FName& id);
 };
+
+

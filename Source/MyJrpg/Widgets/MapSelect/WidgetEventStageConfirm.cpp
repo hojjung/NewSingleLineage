@@ -27,7 +27,7 @@ void UWidgetEventStageConfirm::SetStageConfirm(const FEventStageSpec& data)
 
 void UWidgetEventStageConfirm::OnLook()
 {
-	UMyLib::GetMapCanvas()->SetMapCanvasPos(m_BtnPosCached * -1.f, true);
+	UMyLib::GetMapCanvas()->SetMapCanvasPos(m_BtnPosCached, true);
 
 	OnClose();
 }

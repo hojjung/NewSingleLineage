@@ -59,6 +59,10 @@ void UWidgetMapPanel::NativeOnInitialized()
 	UMyGameInstance::Get->m_EventStage->m_OnEventUnlocked.AddUObject(this, &UWidgetMapPanel::CreateEventBtn);
 	UMyGameInstance::Get->m_EventStage->m_OnEventLocked.AddUObject(this, &UWidgetMapPanel::RemoveEventBtn);
 	UMyGameInstance::Get->m_EventStage->UpdateEvent();
+	//
+	FVector2D Loc = UMyGameInstance::Get->m_ZoneMove->GetPlayerIconPos();
+
+	SetMapCanvasPos(Loc, true);
 }
 
 void UWidgetMapPanel::OpenItemInfoData(const FItemDataRow& item_data_row)
@@ -176,7 +180,7 @@ void UWidgetMapPanel::ShowEventConfirm(const FEventStageSpec& data)
 
 	ConfirmPanel->SetStageConfirm(data);
 	
-	UCanvasPanelSlot* SlotWant = m_CanvasMap->AddChildToCanvas(ConfirmPanel);
+	UCanvasPanelSlot* SlotWant = m_ParentCanvas->AddChildToCanvas(ConfirmPanel);
 
 	SlotWant->SetAutoSize(true);
 	
@@ -191,6 +195,14 @@ void UWidgetMapPanel::ShowEventConfirm(const FEventStageSpec& data)
 
 void UWidgetMapPanel::RemoveEventBtn(const FEventStageSpec& data)
 {
+	FName CrntID = UMyGameInstance::Get->m_ZoneMove->GetCurrentZoneID();
+
+	if(CrntID == data.m_EventDataRow->m_ZoneID)
+	{
+		UMyGameInstance::Get->m_ZoneMove->SetPendingKillStage(CrntID);
+		return;
+	}
+	
 	UMyGameInstance::Get->m_ZoneMove->RemoveMapBtn(data.m_EventDataRow->m_ZoneID);
 }
 
@@ -256,6 +268,8 @@ void UWidgetMapPanel::OnMoveEnd()
 
 void UWidgetMapPanel::SetMapCanvasPos(FVector2D ResultPos, bool useAnim)
 {
+	ResultPos *= -1.f;
+	
 	FVector2D OutCanvasSize = GetCachedGeometry().GetLocalSize() / 2.f;
 
 	FVector2D PanelSize = m_PanelSlot->GetSize() / 4.f;
@@ -293,6 +307,8 @@ FReply UWidgetMapPanel::NativeOnTouchMoved(const FGeometry& InGeometry, const FP
 	FVector2D Pos = m_PanelSlot->GetPosition();
 
 	FVector2D ResultPos = Pos + (Delta * 2.f);
+
+	ResultPos *= -1.f;
 	
 	SetMapCanvasPos(ResultPos);
 

@@ -18,12 +18,12 @@ void UZoneMoveManager::ClearWidgetMap()
 	m_MapZoneBtns.Reset();
 }
 
-void UZoneMoveManager::AddMapBtn(FName zoneID, UWidgetMapBtn* mapBtn)
+void UZoneMoveManager::AddMapBtn(const FName& zoneID, UWidgetMapBtn* mapBtn)
 {
 	m_MapZoneBtns.Emplace(zoneID, TWeakObjectPtr<UWidgetMapBtn>(mapBtn));
 }
 
-void UZoneMoveManager::RemoveMapBtn(FName zoneID)
+void UZoneMoveManager::RemoveMapBtn(const FName& zoneID)
 {
 	TWeakObjectPtr<UWidgetMapBtn> Btn = m_MapZoneBtns.FindAndRemoveChecked(zoneID);
 
@@ -32,8 +32,14 @@ void UZoneMoveManager::RemoveMapBtn(FName zoneID)
 	Btn->RemoveFromParent();
 }
 
-void UZoneMoveManager::ZoneMoveDone(FName zoneID)
+void UZoneMoveManager::ZoneMoveDone(const FName& zoneID)
 {
+	if(!m_PendingKillID.IsNone())
+	{
+		RemoveMapBtn(m_PendingKillID);
+		
+		m_PendingKillID = NAME_None;
+	}
 	m_CurrentID = zoneID;
 		
 	m_DestZoneID = NAME_None;
@@ -94,7 +100,7 @@ bool UZoneMoveManager::TryPurchaseRideCost(int want)
 	return true;
 }
 
-void UZoneMoveManager::StartMove(bool isRunning, float timeUse, FName destZoneID)
+void UZoneMoveManager::StartMove(bool isRunning, float timeUse, const FName& destZoneID)
 {
 	m_bIsRunning = isRunning;
 	
@@ -114,7 +120,7 @@ float UZoneMoveManager::GetMovePercent()
 	return m_fRemainDuration / m_fMaxDuration;
 }
 
-float UZoneMoveManager::GetDist(FName dst)
+float UZoneMoveManager::GetDist(const FName& dst)
 {
 	FVector2D SrcPos = m_MapZoneBtns[m_CurrentID]->GetPos();
 	
@@ -136,7 +142,7 @@ float UZoneMoveManager::GetDist(FVector2D loc)
 	return Dist;
 }
 
-bool UZoneMoveManager::IsZoneAlreadyIn(FName dst)
+bool UZoneMoveManager::IsZoneAlreadyIn(const FName& dst)
 {
 	return m_CurrentID == dst;
 }
@@ -251,6 +257,11 @@ FName UZoneMoveManager::GetDestZoneID()
 	return m_DestZoneID;
 }
 
+FName UZoneMoveManager::GetCurrentZoneID()
+{
+	return m_CurrentID;
+}
+
 int UZoneMoveManager::GetStamina()
 {
 	return m_nZoneStamina;
@@ -266,7 +277,7 @@ float UZoneMoveManager::GetStaminaChargeTime() const
 	return m_fRechargeTime;
 }
 
-UWidgetMapBtn* UZoneMoveManager::GetMapBtn(FName zoneID)
+UWidgetMapBtn* UZoneMoveManager::GetMapBtn(const FName& zoneID)
 {
 	return m_MapZoneBtns[zoneID].Get();
 }
@@ -281,4 +292,9 @@ void UZoneMoveManager::SetRiderEnergy(int v)
 void UZoneMoveManager::SetRiderEnergyInven(UInventory* inventory)
 {
 	m_RiderEnergyInven = inventory;
+}
+
+void UZoneMoveManager::SetPendingKillStage(const FName& id)
+{
+	m_PendingKillID = id;
 }
