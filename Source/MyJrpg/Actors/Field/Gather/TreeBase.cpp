@@ -65,7 +65,6 @@ ATreeBase::ATreeBase()
 	//
 	m_IconMeshComp = CreateDefaultSubobject<UMinimapIconComp>("m_IconMeshComp");
 	m_IconMeshComp->SetupAttachment(RootComponent);
-	m_IconMeshComp->SetRelativeScale3D(FVector(1.3f));
 }
 
 void ATreeBase::SetEntity(const FName& id, const FGatherDataRow& data, AMyPlayerPawn* pl, const int *hpPtr )

@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "WidgetQuickSlotEle.h"
 #include "Blueprint/UserWidget.h"
 #include "Components/HorizontalBox.h"
 #include "Components/ScrollBox.h"
@@ -21,35 +22,25 @@ class MYJRPG_API UWidgetQuickslotBar : public UUserWidget
 	GENERATED_BODY()
 
 protected:
-	UPROPERTY(EditDefaultsOnly)
-	TSubclassOf<UWidgetBaseElement> m_ClassWidgetItemEle;
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (BindWidget))
-	UHorizontalBox* m_ScrollBarQuickSlot;
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (BindWidget))
-	UWidgetBaseElement* m_QuickSlot;
+	TWeakObjectPtr<UInventory> m_InvenHolder;
 	UPROPERTY()
-	TArray<UWidgetBaseElement*> m_AryQuickSlot;
-
-	UInventory** m_InvenHolder;
+	TArray<UWidgetQuickSlotEle*> m_AryQuickSlot;
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (BindWidget))
+	UWidgetQuickSlotEle* m_Quick01;
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (BindWidget))
+	UWidgetQuickSlotEle* m_Quick02;
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (BindWidget))
+	UWidgetQuickSlotEle* m_Quick03;
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (BindWidget))
+	UWidgetQuickSlotEle* m_Quick04;
 	
 protected:
-	void CreateBeltSlots();
-	
+	void SetQuickSlot();
 	virtual void NativeOnInitialized() override;
-
-	virtual void NativeDestruct() override;
-
-	void OnClick(UWidgetBaseElement* ele);
-
-	void OnClickQuick(UWidgetBaseElement* ele);
-
-	void SetItem(UWidgetBaseElement* target, const FItemSpec& itemSpec);
-
-	void Clear();
-
-	void OnBeltEquipChanged();
 	
-	void UpdateQuickSlots();
+	void OnInvenChanged();
 
-	void UpdateQuickOne();
+	void OnClick(UWidgetQuickSlotEle* ele);
+
+	void SetItem(UWidgetQuickSlotEle* target, const FItemSpec& itemSpec);
 };

@@ -37,6 +37,7 @@ protected:
 	UImage* m_ImgUseAuto;
 	UPROPERTY(EditDefaultsOnly)
 	UTexture2D* m_DefaultPunch;
+	
 protected:
 	UPROPERTY()
 	AMyPlayerPawn* m_Pl;

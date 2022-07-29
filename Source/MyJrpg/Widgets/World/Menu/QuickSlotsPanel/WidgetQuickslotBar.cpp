@@ -10,77 +10,47 @@
 #include "MyJrpg/Managers/MyGameInstance.h"
 #include "MyJrpg/Widgets/World/Menu/Inventory/WidgetInventory.h"
 
-void UWidgetQuickslotBar::NativeOnInitialized()
+void UWidgetQuickslotBar::SetQuickSlot()
 {
-	Super::NativeOnInitialized();
-	
-	m_InvenHolder = UMyLib::GetEquip()->GetBeltHolder();
-	
-	UMyGameInstance::Get->m_EquipManager->m_OnEquipChanged.AddUObject(this, &UWidgetQuickslotBar::OnBeltEquipChanged);
-	
-	OnBeltEquipChanged();
+	m_AryQuickSlot.Reset(4);
+	m_AryQuickSlot.Add(m_Quick01);
+	m_AryQuickSlot.Add(m_Quick02);
+	m_AryQuickSlot.Add(m_Quick03);
+	m_AryQuickSlot.Add(m_Quick04);
 
-	m_QuickSlot->m_OnFocus.AddUObject(this,&UWidgetQuickslotBar::OnClickQuick);
-	
-	m_QuickSlot->SetIndex(0);
-
-	m_QuickSlot->SetDragable(false);
-
-	m_QuickSlot->SetHoldable(false);
-
-	UMyGameInstance::Get->m_EquipManager->GetQuickInven()->m_OnInvenChanged.AddUObject(this, &UWidgetQuickslotBar::UpdateQuickOne);
-	
-	UpdateQuickOne();
-}
-
-void UWidgetQuickslotBar::CreateBeltSlots()
-{
-	USpacer* RightSpace = NewObject<USpacer>(this);
-	
-	UHorizontalBoxSlot* SlotWant =Cast<UHorizontalBoxSlot>( m_ScrollBarQuickSlot->AddChild(RightSpace) );
-	
-	SlotWant->SetSize(FSlateChildSize(ESlateSizeRule::Fill));
-	
-	int Num = (*m_InvenHolder)->GetAryItems().Num();
-
-	for(int i=0; i < Num; i++)
+	for(int i=0; i < 4; i++)
 	{
-		UWidgetBaseElement* ItemEle = CreateWidget<UWidgetBaseElement>(this, m_ClassWidgetItemEle);
-
-		ItemEle->SetBoxSize(110,110);
-
-		m_AryQuickSlot.Add(ItemEle);
-		
-		m_ScrollBarQuickSlot->AddChild(m_AryQuickSlot[i]);
-
-		m_AryQuickSlot[i]->SetPadding(FMargin(0,0,15,0));
-
 		m_AryQuickSlot[i]->SetIndex(i);
 
-		m_AryQuickSlot[i]->m_OnFocus.AddUObject(this,&UWidgetQuickslotBar::OnClick);
-
-		m_AryQuickSlot[i]->SetDragable(false);
-
-		m_AryQuickSlot[i]->SetHoldable(false);
+		m_AryQuickSlot[i]->m_OnClick.AddUObject(this,&UWidgetQuickslotBar::OnClick);
 	}
 }
 
-void UWidgetQuickslotBar::NativeDestruct()
+void UWidgetQuickslotBar::NativeOnInitialized()
 {
-	Super::NativeDestruct();
+	Super::NativeOnInitialized();
+
+	SetQuickSlot();
 	
-	m_InvenHolder = nullptr;
+	m_InvenHolder = UMyLib::GetPlayerInven();
+	
+	m_InvenHolder->m_OnInvenChanged.AddUObject(this, &UWidgetQuickslotBar::OnInvenChanged);
+	
+	OnInvenChanged();
 }
 
-void UWidgetQuickslotBar::OnClick(UWidgetBaseElement* ele)
+void UWidgetQuickslotBar::OnClick(UWidgetQuickSlotEle* ele)
 {
-	ele->SetMyUnFocus();
-	
 	int Index = ele->GetIndex();
 	
-	UInventory* Belt = *m_InvenHolder;
+	UInventory* Belt = m_InvenHolder.Get();
 
 	FName ID = Belt->GetItemRef(Index).m_ID;
+
+	if(ID.IsNone())
+	{
+		return;
+	}
 
 	const FItemDataRow& ItemData = UMyLib::GetItemData(ID);
 
@@ -97,95 +67,33 @@ void UWidgetQuickslotBar::OnClick(UWidgetBaseElement* ele)
 	default:
 		break;
 	}
+	
+	OnInvenChanged();
 }
 
-void UWidgetQuickslotBar::OnClickQuick(UWidgetBaseElement* ele)
+void UWidgetQuickslotBar::OnInvenChanged()
 {
-	ele->SetMyUnFocus();
-	
-	UInventory* Quick = UMyGameInstance::Get->m_EquipManager->GetQuickInven();
+	int Index = -1;
 
-	const FItemSpec& ItemQuick = UMyGameInstance::Get->m_EquipManager->GetQuickSlotItem();
-
-	FName ID = ItemQuick.m_ID;
-
-	const FItemDataRow& ItemData = UMyLib::GetItemData(ID);
-
-	EItemType Type = UMyLib::GetItemType(ItemData);
-	
-	switch (Type)
+	while (++Index < 4)
 	{
-	case EItemType::Consume:
-		UMyGameInstance::Get->m_QuickManager->ExeItem(ItemData.m_ClassExeItem,Quick,0,1);
-		break;
-	case EItemType::Equip:
-		UMyLib::GetEquip()->Equip(ItemData.m_ItemType,Quick,0);
-		break;
-	default:
-		break;
-	}
-	UpdateQuickOne();
-}
+		const FItemSpec& Item = m_InvenHolder->GetItemConstRef(Index);
 
-void UWidgetQuickslotBar::OnBeltEquipChanged()
-{
-	UInventory* Belt = *m_InvenHolder;
-	if(!Belt)
-	{
-		Clear();
-		return;
-	}
-	
-	if(m_AryQuickSlot.Num() < 1)
-	{
-		CreateBeltSlots();
-	
-		(*m_InvenHolder)->m_OnInvenChanged.AddUObject(this, &UWidgetQuickslotBar::UpdateQuickSlots);
-	}
-	
-	UpdateQuickSlots();
-}
-
-void UWidgetQuickslotBar::UpdateQuickSlots()
-{
-	int Index = 0;
-	
-	for(const FItemSpec& Item : (*m_InvenHolder)->GetAryItems())
-	{
 		if(Item.m_ID.IsNone())
 		{
 			m_AryQuickSlot[Index]->Clear();
-			Index++;
 			continue;
 		}
-		
 		SetItem(m_AryQuickSlot[Index], Item);
-		Index++;
 	}
 }
 
-void UWidgetQuickslotBar::UpdateQuickOne()
+void UWidgetQuickslotBar::SetItem(UWidgetQuickSlotEle* target, const FItemSpec& itemSpec)
 {
-	const FItemSpec& Item = UMyLib::GetEquip()->GetQuickSlotItem();
-
-	if(Item.m_ID.IsNone())
-	{
-		m_QuickSlot->Clear();
-		return;
-	}
-	SetItem(m_QuickSlot, Item);
-}
-
-void UWidgetQuickslotBar::SetItem(UWidgetBaseElement* target, const FItemSpec& itemSpec)
-{
-	target->SetFocusable(true);
-	
 	const FItemDataRow& Data = UMyLib::GetItemData(itemSpec.m_ID);
 
 	target->SetIcon(Data.m_Icon);
 	
-	target->SetGlowColor(Data.m_ColorHandle);
-
 	bool IsEquip = UMyLib::IsEquip(Data);
 
 	if(IsEquip)
@@ -200,21 +108,11 @@ void UWidgetQuickslotBar::SetItem(UWidgetBaseElement* target, const FItemSpec& i
 		{
 			target->HideTextStackLv();
 		}
-
-		target->ShowDurBar((float)itemSpec.m_nDurability / (float)Data.m_nDurability);
 	}
 	else
 	{
 		FString Str = FString::Printf(TEXT("%d"), itemSpec.m_nLvStack);
 			
 		target->SetTextStackLv(Str);
-
-		target->HideDurBar();
 	}
-}
-
-void UWidgetQuickslotBar::Clear()
-{
-	m_ScrollBarQuickSlot->ClearChildren();
-	m_AryQuickSlot.Reset();
 }
