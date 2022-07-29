@@ -53,7 +53,8 @@ void UZoneInstManager::SpawnZone(const FName& id, const FZoneDataRow& zoneData)
 	{
 		FBox NavBox = UMyLib::GetNavSys()->GetNavigationBounds().Array()[0].AreaBox;
 
-		m_RootOctTree = MakeShareable(new OctreeNode(NavBox.GetCenter(), NavBox.GetExtent(), 0));
+		m_RootOctTree = MakeShareable(new OctreeNode(NavBox.GetCenter(), NavBox.GetExtent()));
+		m_RootOctTree->m_Root = m_RootOctTree;
 
 		AddFocusActor(UMyLib::GetPlayer());
 	}
@@ -544,29 +545,6 @@ void UZoneInstManager::RemoveFocusActor(UObject* want)
 	m_RootOctTree->RmoveObject(Cast<AActor>(want));
 }
 
-void UZoneInstManager::GetNearNpcs(const ABaseUnitPawn* caller, TArray<ACombatUnitPawn*>& outAry, float range)
-{
-	m_RootOctTree->TraceObjectInRange<ACombatUnitPawn>(caller,range, outAry);
-}
-
-IFocusable* UZoneInstManager::GetNearTarget(AActor* self, const FVector& loc, float range, float myTargetingRange, bool isManual)
-{
-	if(!m_RootOctTree.Get())
-	{
-		return nullptr;
-	}
-	UClass* ignoreClass = nullptr;
-	
-	if(!isManual)
-	{
-		ignoreClass = AStructureActor::StaticClass();  
-	}
-	
-	IFocusable* Focus = m_RootOctTree->GetNearTargetManualMode(self, loc, range, myTargetingRange, ignoreClass);
-		
-	return Focus;
-}
-
 void UZoneInstManager::AddBuildActor(AStructureActor* buildActor)
 {
 	m_Build.Add(buildActor);
@@ -671,5 +649,5 @@ void UZoneInstManager::Tick(float delta)
 	{
 		return;
 	}
-	m_RootOctTree->UpdateState();
+	m_RootOctTree->UpdateState(this);
 }

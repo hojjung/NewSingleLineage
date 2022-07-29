@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 
 #include "Sensor_LogicBase.h"
+#include "MyJrpg/Interfaces/Focusable.h"
 #include "MyJrpg/Pawns/BaseUnitPawn.h"
 #include "Sensor_Player.generated.h"
 
@@ -27,9 +28,14 @@ protected:
 	UPROPERTY()
 	TArray<AActor*> m_AryIgnores;
 
+	TArray<IFocusable*> m_AryInteractables;
 public:
 	virtual void Init(ACombatUnitPawn* owner) override;
 	
 protected:
 	virtual void UpdateAISensing() override;
+	
+	IFocusable* GetNearTargetManual(float SearchRange, float AttackRange);
+	//오토는, 우호적인 사람, 시체, 건물을 무시한다
+	IFocusable* GetNearTargetAuto(float SearchRange, float AttackRange);
 };

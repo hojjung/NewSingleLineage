@@ -41,7 +41,7 @@ void UBI_StorageSearch::Init(const TArray<FString>& variable, UInventory* inven)
 				
 				int Cnt = FCString::Atoi(*variable[Iter + 1]);
 
-				float RandLuck = FCString::Atoi(*variable[Iter + 2]);
+				float RandLuck = FCString::Atof(*variable[Iter + 2]);
 
 				float Rand = FMath::RandRange(0.f, 1.f);
 

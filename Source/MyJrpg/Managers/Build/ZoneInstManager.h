@@ -7,6 +7,7 @@
 #include "MyJrpg/Actors/Field/Build/StructureActor.h"
 #include "MyJrpg/Actors/Field/Gather/TreeBase.h"
 #include "MyJrpg/DataTables/SpawnEventTable.h"
+#include "MyJrpg/Octree/OctreeNode.h"
 #include "MyJrpg/Pawns/MonsterPawn.h"
 #include "UObject/NoExportTypes.h"
 #include "ZoneInstManager.generated.h"
@@ -139,10 +140,16 @@ public:
 	void Tick(float delta);
 
 public:
-	void GetNearNpcs(const ABaseUnitPawn* caller, TArray<ACombatUnitPawn*>& outAry, float range);
-	
-	IFocusable* GetNearTarget(AActor* self, const FVector& loc, float range, float myTargetingRange, bool isManual);
-	
 	void AddBuildActor(AStructureActor* buildActor);
+
+	template <class T>
+	void GetNearNpcs(const ABaseUnitPawn* caller, TArray<T*>& outAry, float range)
+	{
+		if(!m_RootOctTree)
+		{
+			return;
+		}
+		m_RootOctTree->TraceObjectInRange<T>(caller,range, outAry);
+	}
 };
 

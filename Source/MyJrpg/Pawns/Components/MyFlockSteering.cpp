@@ -20,7 +20,7 @@ FVector UMyFlockSteering::GetFlockDir()
 	FVector TargetLoc = GetOwner()->GetActorLocation();
 	TargetLoc.Z = 0.f;
 
-	UMyGameInstance::Get->m_ZoneInst->GetNearNpcs(m_OwnerCombatPawn,m_NearMobs,500);
+	UMyGameInstance::Get->m_ZoneInst->GetNearNpcs<ACombatUnitPawn>(m_OwnerCombatPawn,m_NearMobs,400);
 	
 	FVector Sum = FVector::ZeroVector;
 

@@ -62,7 +62,7 @@ void UWidgetMapPanel::NativeOnInitialized()
 	//
 	FVector2D Loc = UMyGameInstance::Get->m_ZoneMove->GetPlayerIconPos();
 
-	SetMapCanvasPos(Loc, true);
+	SetMapCanvasPos(Loc, false);
 }
 
 void UWidgetMapPanel::OpenItemInfoData(const FItemDataRow& item_data_row)

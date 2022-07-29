@@ -5,37 +5,35 @@
 #include "CoreMinimal.h"
 #include "Kismet/KismetMathLibrary.h"
 #include "Kismet/KismetSystemLibrary.h"
-#include "MyJrpg/Interfaces/Focusable.h"
-#include "MyJrpg/Managers/MyGameInstance.h"
-#include "MyJrpg/Pawns/CombatUnitPawn.h"
 
 /**
  * 
  */
 class MYJRPG_API OctreeNode : public TSharedFromThis<OctreeNode>
 {
+
 public:
-	bool m_bIsRange;
-	float m_fMiniSize = 20;
-	
-	int32 m_nMaxCount = 4;
-	int32 m_nDepth;
-	
 	FVector m_Center;
 	FVector m_Extend;
+	float m_fMiniSize = 20;
+	int32 m_nMaxCount = 4;
+	int32 m_nDepth;
+
+	TArray<AActor*> m_AryActors;
+	
+	TArray<TSharedPtr<OctreeNode>> m_AryChildren;
+
+	bool m_bIsRange;
 
 	TSharedPtr<OctreeNode> m_Root;
-	TArray<AActor*> m_AryActors;
-	TArray<TSharedPtr<OctreeNode>> m_AryChildren;
-	
 public:
-	OctreeNode(FVector _center, FVector _extend, int32 _depth, TSharedPtr<OctreeNode> _root = nullptr)
-		: m_Center(_center), m_nDepth(_depth) ,m_Extend(_extend)
+	OctreeNode(FVector _center, FVector _extend, int32 _depth = 0, TSharedPtr<OctreeNode> _root = nullptr)
+		: m_Center(_center), m_Extend(_extend)
 	{
 		m_Root = _root;
 		m_bIsRange = false;
+		m_nDepth = _depth;
 	}
-
 	~OctreeNode()
 	{
 		m_Root = nullptr;
@@ -57,7 +55,7 @@ public:
 		float y = UKismetMathLibrary::Min(v.Y, m_Extend.Y);
 		y = UKismetMathLibrary::Max(y, -m_Extend.Y);
 
-		return (x - v.X) * (x - v.X) + (y - v.Y) * (y - v.Y) <= _radian * _radian;
+		return (x - v.X) * (x - v.X) + (y - v.Y) * (y - v.Y) <= _radian * _radian * _radian;
 	}
 
 	bool InterSection(FVector _point)
@@ -68,7 +66,8 @@ public:
 			_point.Y <= m_Center.Y + m_Extend.Y
 		);
 	}
-	
+
+
 	int SelectBestChild(FVector _point)
 	{
 		return (_point.X <= m_Center.X ? 0 : 1) + (_point.Y >= m_Center.Y ? 0 : 2);
@@ -90,8 +89,7 @@ public:
 		if (obj == nullptr || !InterSection(obj->GetActorLocation()))
 			return;
 
-		int32 childIndex = 0;
-		
+		int32 childIndex;
 		if (m_AryChildren.Num() == 0)
 		{
 			if (m_AryActors.Num() <= m_nMaxCount || m_Extend.X <= m_fMiniSize)
@@ -189,29 +187,24 @@ public:
 		{
 			m_bIsRange = true;
 
-			for (int32 i = m_AryActors.Num() - 1; i >= 0; i--)
+			for (AActor* obj : m_AryActors)
 			{
-				for (AActor* obj : m_AryActors)
+				if (traceActor == obj || obj->IsPendingKill())
 				{
-					AMyPlayerPawn* Pl = Cast<AMyPlayerPawn>(obj);
+					continue;
+				}
 
-					if(Pl)
-					{
-						continue;
-					}
-					
-					T* CastedObj = Cast<T>(obj);
+				T* CastedObj = Cast<T>(obj);
 
-					if (!CastedObj || obj == traceActor)
-					{
-						continue;
-					}
-					bool bCanActive = FVector::DistSquared2D(_OCenter, obj->GetActorLocation()) <= RadSqr;
+				if (!CastedObj || obj == traceActor)
+				{
+					continue;
+				}
+				bool bCanActive = FVector::DistSquared2D(_OCenter, obj->GetActorLocation()) <= RadSqr;
 
-					if (bCanActive)
-					{
-						aryOut.Add(CastedObj);
-					}
+				if (bCanActive)
+				{
+					aryOut.Add(CastedObj);
 				}
 			}
 			for (auto& child : m_AryChildren)
@@ -219,36 +212,9 @@ public:
 				child->TraceObjectInRange(traceActor, _radian, aryOut);
 			}
 		}
-		else
-		{
-			TraceObjectOutRange<T>(aryOut);
-		}
 	}
 
-	template <class T>
-	void TraceObjectOutRange(TArray<T*>& aryOut)
-	{
-		m_bIsRange = false;
-		for (int32 i = m_AryActors.Num() - 1; i >= 0; i--)
-		{
-			T* CastedObj = Cast<T>(m_AryActors[i]);
-
-			if (!CastedObj)
-			{
-				continue;
-			}
-			aryOut.Add(CastedObj);
-		}
-		for (auto& node : m_AryChildren)
-		{
-			if (node.IsValid())
-			{
-				node->TraceObjectOutRange(aryOut);
-			}
-		}
-	}
-
-	void UpdateState()
+	void UpdateState(UObject* world)
 	{
 		for (int32 i = m_AryActors.Num() - 1; i >= 0; i--)
 		{
@@ -267,92 +233,12 @@ public:
 			}
 			for (auto& child : m_AryChildren)
 			{
-				child->UpdateState();
+				child->UpdateState(world);
 			}
 		}
-	}
-
-	IFocusable* GetNearTargetManualMode(AActor* self, const FVector& loc, float range, float myTargetingRange, const UClass* ignoreClass = nullptr)
-	{
-		OctreeNode* Start = this;
-		
-		float MaxRange = MAX_flt;
-
-		if(range > 0)
+		if (m_nDepth > 0)
 		{
-			MaxRange = range; 
+			DrawBound(world, 1 / UKismetSystemLibrary::GetFrameCount(),1);
 		}
-
-		AActor* Target = nullptr;
-
-		if (InterSection(loc, MaxRange))
-		{
-			for (auto& child : m_AryChildren)
-			{
-				IFocusable* ChildInner = child->GetNearTargetManualMode(self, loc, range, myTargetingRange, ignoreClass);
-
-				if(!ChildInner)
-				{
-					continue;
-				}
-
-				AActor* ChildInnerActor = Cast<AActor>(ChildInner);
-
-				float NavLen = 0.f;
-				
-				UMyLib::GetNavSys()->GetPathLength(self, loc, ChildInnerActor->GetActorLocation(), NavLen);
-				
-				if(NavLen > MaxRange)
-				{
-					continue;
-				}
-				MaxRange = NavLen;
-
-				Target = ChildInnerActor;
-			}
-			for(AActor* InnerActor : Start->m_AryActors)
-			{
-				if((InnerActor->IsPendingKill()) || (self == InnerActor) || (InnerActor->GetClass() == ignoreClass))
-				{
-					continue;
-				}
-				IFocusable* Focus = Cast<IFocusable>(InnerActor);
-
-				if(Focus && !Focus->IsInteractable())
-				{
-					continue;
-				}
-				
-				float NavLen = 0.f;
-
-				ENavigationQueryResult::Type ResultT = UMyLib::GetNavSys()->GetPathLength(self, loc, InnerActor->GetActorLocation(), NavLen);
-				
-				if(ResultT != ENavigationQueryResult::Success)
-				{
-					NavLen = MAX_flt;
-				}
-
-				ACombatUnitPawn* Mob = Cast<ACombatUnitPawn>(InnerActor);
-				if(!Mob || !(Mob->IsAlive()))
-				{
-					NavLen += myTargetingRange + 50;//사거리안에 다른 몬스터 있을때 타겟팅이 유닛 우선순위로 가게해줌
-				}
-				
-				if(NavLen > MaxRange)
-				{
-					continue;
-				}
-				
-				MaxRange = NavLen;
-
-				Target = InnerActor;
-			}
-
-			
-		}
-
-		IFocusable* Focus = Cast<IFocusable>(Target);
-		
-		return Focus; 
 	}
 };
