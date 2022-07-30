@@ -46,7 +46,7 @@ void UZoneMoveManager::ZoneMoveDone(const FName& zoneID)
 
 	if(m_CurrentID == TEXT("PlayerHome"))
 	{
-		UMyGameInstance::Get->m_PlayerStatManager->ResetPlayerStatus();
+		UMyGameInstance::Get->m_ZoneInst->ResetZone();
 	}
 }
 

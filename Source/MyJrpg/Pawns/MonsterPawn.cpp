@@ -10,8 +10,8 @@
 #include "MyJrpg/Widgets/WidgetComponents/WidgetPawnInfoComp.h"
 #include "MyJrpg/Widgets/WidgetComponents/WidgetSpeechBubbleComp.h"
 
-AMonsterPawn::AMonsterPawn(const FObjectInitializer& obj): Super(obj.SetDefaultSubobjectClass<UMyFlockSteering>(TEXT("m_Movement")))
-{
+AMonsterPawn::AMonsterPawn(const FObjectInitializer& obj): Super(obj)//.SetDefaultSubobjectClass<UMyFlockSteering>(TEXT("m_Movement")))
+{//보이드 쓰지말자 그냥
 	m_SoundComp = CreateDefaultSubobject<UAudioComponent>(TEXT("Audio01"));
 	m_SoundComp->SetupAttachment(RootComponent);
 	m_SoundComp->SetAutoActivate(false);

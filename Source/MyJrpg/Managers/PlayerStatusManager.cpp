@@ -358,7 +358,6 @@ void UPlayerStatusManager::UnequipItem(const FName& item_spec)
 void UPlayerStatusManager::OnPlayerDead(const ACombatUnitPawn* killer)
 {
 	m_OnPlayerKilled.Broadcast(killer);
-	
 }
 
 const TSoftObjectPtr<UHumanAsset>& UPlayerStatusManager::GetUnitAsset() const
@@ -378,8 +377,6 @@ void UPlayerStatusManager::ResetPlayerStatus()
 	UpdateStat();
 	
 	m_CurrentStat.m_Hp = m_CurrentStat.m_MaxHp;
-
-	UMyGameInstance::Get->m_ZoneInst->ResetZone();
 }
 
 void UPlayerStatusManager::SubDmgFromHp(float dmg)

@@ -60,11 +60,9 @@ void UBI_StorageSearch::Init(const TArray<FString>& variable, UInventory* inven)
 						Dur = FMath::RandRange(MinDur, MaxDur);
 					}
 					FItemSpec NewItem(ItemID, Cnt, Dur);
-
-
+					
 					m_Inven->AddItem(NewItem);
 				}
-				
 				Iter +=3;
 			}
 		}

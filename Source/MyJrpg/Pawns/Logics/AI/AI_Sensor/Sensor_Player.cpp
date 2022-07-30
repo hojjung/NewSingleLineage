@@ -64,19 +64,16 @@ IFocusable* USensor_Player::GetNearTargetManual(float SearchRange, float AttackR
 		float NavLen = 0.f;
 
 		FVector DestLoc = FocusActor->GetActorLocation();
-		
-		ENavigationQueryResult::Type ResultT = UMyLib::GetNavSys()->GetPathLength(this, Loc, DestLoc, NavLen);
 
-		if (ResultT != ENavigationQueryResult::Success)
-		{
-			NavLen = MAX_flt;
-		}
+		float Cost = 0.f;
+		
+		ENavigationQueryResult::Type ResultT = UMyLib::GetNavSys()->GetPathLengthAndCost(Loc, DestLoc, NavLen, Cost);
 
 		ACombatUnitPawn* Mob = Cast<ACombatUnitPawn>(Focus);
 		
 		if (!Mob || !(Mob->IsAlive()))
 		{
-			NavLen += AttackRange + 50;
+			NavLen += AttackRange;
 		}
 
 		if (NavLen > MaxRange)
