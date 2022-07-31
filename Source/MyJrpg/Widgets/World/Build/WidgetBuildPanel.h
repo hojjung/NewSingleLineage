@@ -37,8 +37,6 @@ protected:
 
 	FDelegateHandle m_DeleTouchWorld;
 
-	FDelegateHandle m_DeleFlick;
-
 	FDelegateHandle m_DeleCancel;
 
 	FDelegateHandle m_DeleFurniture;
@@ -61,6 +59,14 @@ protected:
 	void UpdateFurnitureTab();
 
 	void UpdateElement();
+
+	virtual FReply NativeOnTouchMoved(const FGeometry& InGeometry, const FPointerEvent& InGestureEvent) override;
+
+	virtual FReply NativeOnTouchEnded(const FGeometry& InGeometry, const FPointerEvent& InGestureEvent) override;
+
+	virtual FReply NativeOnMouseButtonUp(const FGeometry& InGeometry, const FPointerEvent& InMouseEvent) override;
+
+	
 	
 public:
 	virtual void OpenPanel() override;
