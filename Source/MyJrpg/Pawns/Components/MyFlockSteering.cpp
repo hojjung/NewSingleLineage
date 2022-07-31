@@ -53,15 +53,7 @@ void UMyFlockSteering::ApplyControlInputToVelocity(float DeltaTime)
 	
 	if(m_Owner->GetFocusedTarget<>())
 	{
-		m_NearMobs.Reset();
-		UMyGameInstance::Get->m_ZoneInst->GetNearNpcs<ACombatUnitPawn>(m_Owner,m_NearMobs,400);
-		
-		FVector cohesionVec = ControlAcceleration * 1.2f;
-		FVector alignmentVec = GetFlockDir();
-		FVector separationVec = CalculateSeparationVector();
-		
-		NewDelta = cohesionVec + alignmentVec + separationVec;
-		NewDelta = NewDelta.GetSafeNormal();
+		NewDelta = GetBoidDelta(ControlAcceleration);
 	}
 	else
 	{
@@ -76,43 +68,37 @@ void UMyFlockSteering::ApplyControlInputToVelocity(float DeltaTime)
 	ConsumeInputVector();
 }
 
-void UMyFlockSteering::NotifyBumpedPawn(APawn* BumpedPawn)
+FVector UMyFlockSteering::GetBoidDelta(FVector inputDelta)
 {
+	m_NearMobs.Reset();
+	UMyGameInstance::Get->m_ZoneInst->GetNearNpcs<ACombatUnitPawn>(m_Owner,m_NearMobs,400);
 	
-}
-
-FVector UMyFlockSteering::GetFlockDir()
-{
-	FVector Sum =  m_Owner->GetActorForwardVector();
-
-	if(m_NearMobs.Num() <= 0)
-	{
-		return Sum;	
-	}
-
-	for (ACombatUnitPawn* OtherActor : m_NearMobs)
-	{
-		Sum += OtherActor->GetActorForwardVector();
-	}
-	Sum /= m_NearMobs.Num();
-		
-	return Sum.GetSafeNormal();
-}
-
-FVector UMyFlockSteering::CalculateSeparationVector()
-{
-	FVector Sum = FVector::ZeroVector;
+	FVector FinalDelta = FVector::ZeroVector;
 	
-	if(m_NearMobs.Num() <= 0)
-	{
-		return Sum;	
-	}
+	FVector DestDelta = inputDelta * 1.2f;
+	
+	FVector AlignSum = m_Owner->GetActorForwardVector();
+	
+	FVector SepSum = FVector::ZeroVector;
 
-	for (ACombatUnitPawn* OtherActor : m_NearMobs)
+	FVector OwnerLoc = m_Owner->GetActorLocation();
+	OwnerLoc.Z = 0.f;
+
+	if (m_NearMobs.Num() > 0)
 	{
-		Sum += (m_Owner->GetActorLocation() - OtherActor->GetActorLocation());
+		for (ACombatUnitPawn* OtherActor : m_NearMobs)
+		{
+			AlignSum += OtherActor->GetActorForwardVector();
+
+			FVector OtherLoc = OtherActor->GetActorLocation();
+			OtherLoc.Z = 0.f;
+			
+			SepSum += (OwnerLoc - OtherLoc);
+		}
+		AlignSum /= m_NearMobs.Num();
+		SepSum /= m_NearMobs.Num();
 	}
-	Sum /= m_NearMobs.Num();
-		
-	return Sum.GetSafeNormal();
+	FinalDelta = DestDelta + AlignSum.GetSafeNormal() + SepSum.GetSafeNormal();
+	
+	return FinalDelta.GetSafeNormal();
 }

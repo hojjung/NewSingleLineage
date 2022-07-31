@@ -28,10 +28,10 @@ protected:
 	
 	virtual void ApplyControlInputToVelocity(float DeltaTime) override;
 
-	virtual void NotifyBumpedPawn(APawn* BumpedPawn) override;
-
 protected:
 	FVector GetFlockDir();
 	
 	FVector CalculateSeparationVector();
+
+	FVector GetBoidDelta(FVector inputDelta);
 };
