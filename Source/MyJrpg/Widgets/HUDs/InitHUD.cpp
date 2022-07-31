@@ -29,3 +29,9 @@ void AInitHUD::PrintInfoText(const FString& str, FLinearColor color)
 {
 	m_Canvas->PrintInfoText(str, color);
 }
+
+void AInitHUD::SetConfirmPanel(const FText& txt, UWidgetConfirmPanel::FOnClick onCancel,
+	UWidgetConfirmPanel::FOnClick onConfirm)
+{
+	m_Canvas->GetConfirmPanel()->SetConfirmPanel(txt,onCancel,onConfirm);
+}

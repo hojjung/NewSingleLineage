@@ -58,6 +58,8 @@ protected:
 
 	FDelegateHandle m_Handle;
 
+	FDelegateHandle m_DurHandle;
+
 	TWeakObjectPtr<UWidgetBaseElement> m_CurrentFocused;
 
 	TWeakObjectPtr<UEquipManager> m_Equip;

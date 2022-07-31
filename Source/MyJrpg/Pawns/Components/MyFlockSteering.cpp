@@ -96,7 +96,7 @@ FVector UMyFlockSteering::GetBoidDelta(FVector inputDelta)
 			SepSum += (OwnerLoc - OtherLoc);
 		}
 		AlignSum /= m_NearMobs.Num();
-		SepSum /= m_NearMobs.Num();
+		SepSum /= m_NearMobs.Num(); 
 	}
 	FinalDelta = DestDelta + AlignSum.GetSafeNormal() + SepSum.GetSafeNormal();
 	

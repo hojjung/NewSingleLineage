@@ -6,6 +6,11 @@ void UWidgetCanvasInit::PrintInfoText(const FString& str, FLinearColor color)
 	m_AlertInfoWindow->PrintInfoText(str, color);
 }
 
+UWidgetConfirmPanel* UWidgetCanvasInit::GetConfirmPanel()
+{
+	return m_ConfirmPanel;
+}
+
 void UWidgetCanvasInit::OnCloseNews()
 {
 	m_NewsCanvas->SetVisibility(ESlateVisibility::Collapsed);

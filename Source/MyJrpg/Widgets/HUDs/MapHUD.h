@@ -35,6 +35,8 @@ public:
 	virtual void PrintInfoText(const FString& str, FLinearColor color) override;
 
 	virtual void OpenItemInfo(const FItemDataRow& item_data) override;
+
+	virtual void SetConfirmPanel(const FText& txt, UWidgetConfirmPanel::FOnClick onCancel, UWidgetConfirmPanel::FOnClick onConfirm) override;
 };
 
 

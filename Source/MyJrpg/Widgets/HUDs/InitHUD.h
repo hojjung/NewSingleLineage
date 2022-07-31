@@ -30,4 +30,6 @@ public:
 	virtual void BeginPlay() override;
 
 	virtual void PrintInfoText(const FString& str,FLinearColor color) override;
+
+	virtual void SetConfirmPanel(const FText& txt, UWidgetConfirmPanel::FOnClick onCancel, UWidgetConfirmPanel::FOnClick onConfirm) override;
 };

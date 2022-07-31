@@ -7,6 +7,7 @@
 #include "WidgetConfirm.h"
 #include "Blueprint/UserWidget.h"
 #include "Components/Button.h"
+#include "MyJrpg/Widgets/World/CommonElements/WidgetConfirmPanel.h"
 #include "MyJrpg/Widgets/World/Menu/CharacterInfoHUD/AlertInfoWindow.h"
 
 #include "WidgetCanvasInit.generated.h"
@@ -34,10 +35,13 @@ protected:
 	UTextBlock* m_TextTitleNews;
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (BindWidget))
 	UButton* m_BtnCloseNews;
-
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (BindWidget))
+	UWidgetConfirmPanel* m_ConfirmPanel;
 	float m_fTimer;
 public:
 	void PrintInfoText(const FString& str, FLinearColor color);
+	
+	UWidgetConfirmPanel* GetConfirmPanel();
 
 protected:
 	void OnSuccessGetTitleNews(const PlayFab::ClientModels::FGetTitleNewsResult& rslt);

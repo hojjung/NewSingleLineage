@@ -514,3 +514,29 @@ void UMyLib::OpenItemInfo(const FItemDataRow& itemData)
 
 	hud->OpenItemInfo(itemData);
 }
+
+void UMyLib::SetConfirmPanel(const FString&& str, UWidgetConfirmPanel::FOnClick onCancel,
+	UWidgetConfirmPanel::FOnClick onConfirm)
+{
+	SetConfirmPanel(FText::FromString(str),onCancel,onConfirm);
+}
+
+void UMyLib::SetConfirmPanel(const FString& str, UWidgetConfirmPanel::FOnClick onCancel,
+	UWidgetConfirmPanel::FOnClick onConfirm)
+{
+	SetConfirmPanel(FText::FromString(str),onCancel,onConfirm);
+}
+
+
+void UMyLib::SetConfirmPanel(const FText&& txt, UWidgetConfirmPanel::FOnClick onCancel,
+	UWidgetConfirmPanel::FOnClick onConfirm)
+{
+	SetConfirmPanel(txt,onCancel,onConfirm);
+}
+void UMyLib::SetConfirmPanel(const FText& txt, UWidgetConfirmPanel::FOnClick onCancel,
+	UWidgetConfirmPanel::FOnClick onConfirm)
+{
+	ABaseHUD *hud = Cast<ABaseHUD>(UGameplayStatics::GetPlayerController( GetUWorld(),0)->GetHUD());
+
+	hud->SetConfirmPanel(txt,onCancel,onConfirm);
+}

@@ -9,6 +9,7 @@
 #include "Blueprint/UserWidget.h"
 #include "Components/CanvasPanel.h"
 #include "MyJrpg/Managers/EventStageManager.h"
+#include "MyJrpg/Widgets/World/CommonElements/WidgetConfirmPanel.h"
 #include "MyJrpg/Widgets/World/Menu/CharacterInfoHUD/AlertInfoWindow.h"
 #include "MyJrpg/Widgets/World/Menu/Craft/WidgetCraftPanel.h"
 #include "MyJrpg/Widgets/World/Menu/Equipment/WidgetEquipInvenPanel.h"
@@ -59,6 +60,8 @@ protected:
 	TSubclassOf<UWidgetEventStageConfirm> m_ClassEventConfirm;
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
 	TSubclassOf<UWidgetMapBtn> m_ClassEventMapBtn;
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (BindWidget))
+	UWidgetConfirmPanel* m_ConfirmPanel;
 	
 public:
 	virtual void NativeOnInitialized() override;
@@ -66,6 +69,8 @@ public:
 	void OpenItemInfoData(const FItemDataRow& item_data_row);
 	
 	void PrintInfoText(const FString& string, FLinearColor color);
+	
+	UWidgetConfirmPanel* GetConfirmPanel();
 
 protected:
 	void OnClick(const FName& zoneID);

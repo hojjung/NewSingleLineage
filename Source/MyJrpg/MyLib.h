@@ -125,4 +125,13 @@ public:
 	static void PrintInfoText(FText&& tt, FLinearColor color = FLinearColor::White);
 	
 	static void OpenItemInfo(const FItemDataRow& itemData);
+
+	static void SetConfirmPanel(const FString&& str,UWidgetConfirmPanel::FOnClick onCancel, UWidgetConfirmPanel::FOnClick onConfirm);
+	
+	static void SetConfirmPanel(const FString& str,UWidgetConfirmPanel::FOnClick onCancel, UWidgetConfirmPanel::FOnClick onConfirm);
+
+	static void SetConfirmPanel(const FText& txt,UWidgetConfirmPanel::FOnClick onCancel, UWidgetConfirmPanel::FOnClick onConfirm);
+	
+	static void SetConfirmPanel(const FText&& txt,UWidgetConfirmPanel::FOnClick onCancel, UWidgetConfirmPanel::FOnClick onConfirm);
+
 };

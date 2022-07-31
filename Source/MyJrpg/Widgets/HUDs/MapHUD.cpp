@@ -34,3 +34,9 @@ void AMapHUD::OpenItemInfo(const FItemDataRow& item_data)
 {
 	GetCanvas()->OpenItemInfoData(item_data);
 }
+
+void AMapHUD::SetConfirmPanel(const FText& txt, UWidgetConfirmPanel::FOnClick onCancel,
+	UWidgetConfirmPanel::FOnClick onConfirm)
+{
+	m_Canvas->GetConfirmPanel()->SetConfirmPanel(txt,onCancel,onConfirm);
+}

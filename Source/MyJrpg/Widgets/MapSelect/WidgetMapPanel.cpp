@@ -75,6 +75,11 @@ void UWidgetMapPanel::PrintInfoText(const FString& string, FLinearColor color)
 	m_AlertInfoWindow->PrintInfoText(string, color);
 }
 
+UWidgetConfirmPanel* UWidgetMapPanel::GetConfirmPanel()
+{
+	return m_ConfirmPanel;
+}
+
 void UWidgetMapPanel::OnClick(const FName& zoneID)
 {
 	m_ZoneSelect->SetVisibility(ESlateVisibility::SelfHitTestInvisible);

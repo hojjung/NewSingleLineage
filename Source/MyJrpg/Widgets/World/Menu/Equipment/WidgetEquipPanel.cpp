@@ -75,6 +75,8 @@ FReply UWidgetEquipPanel::NativeOnTouchStarted(const FGeometry& InGeometry, cons
 void UWidgetEquipPanel::Open()
 {
 	m_Handle = m_Equip->m_OnEquipChanged.AddUObject(this, &UWidgetEquipPanel::UpdateSlots);
+	m_DurHandle = m_Equip->m_OnDurChanged.AddUObject(this, &UWidgetEquipPanel::UpdateSlots);
+	
 	UpdateSlots();
 
 	UMyGameInstance::Get->m_PreviewActorManager->ShowPawn();
@@ -83,7 +85,8 @@ void UWidgetEquipPanel::Open()
 void UWidgetEquipPanel::Close()
 {
 	m_Equip->m_OnEquipChanged.Remove(m_Handle);
-
+	m_Equip->m_OnEquipChanged.Remove(m_DurHandle);
+	
 	UMyGameInstance::Get->m_PreviewActorManager->HidePawn();
 }
 

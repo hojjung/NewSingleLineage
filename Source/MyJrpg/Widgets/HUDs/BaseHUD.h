@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "GameFramework/HUD.h"
 #include "MyJrpg/DataTables/ItemData.h"
+#include "MyJrpg/Widgets/World/CommonElements/WidgetConfirmPanel.h"
 #include "BaseHUD.generated.h"
 
 /**
@@ -18,9 +19,10 @@ class MYJRPG_API ABaseHUD : public AHUD
 public:
 	virtual void PrintInfoText(const FString& str, FLinearColor color = FLinearColor::White);
 
-	void PrintInfoText(FText&& tt, FLinearColor color = FLinearColor::White);
-	
 	virtual void OpenItemInfo(const FItemDataRow& item_data);
+
+public:
+	virtual void SetConfirmPanel(const FText& txt,UWidgetConfirmPanel::FOnClick onCancel, UWidgetConfirmPanel::FOnClick onConfirm);
 };
 
 

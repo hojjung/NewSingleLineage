@@ -18,6 +18,8 @@ public:
 
 	virtual void SetupInputComponent() override;
 	
+	void OnExitGame();
+
 	void ExitGame();
 
 	virtual void BeginPlay() override;

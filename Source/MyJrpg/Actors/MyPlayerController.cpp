@@ -86,9 +86,9 @@ void AMyPlayerController::Tick(float DeltaSeconds)
 		return;
 	}
 	FVector2D OldPos = m_MousePos;
-
+	
 	GetMousePosition(m_MousePos.X,m_MousePos.Y);
-
+	
 	FVector2D Delta = (m_MousePos - OldPos) * 2.f;
 
 	m_OnFlick.Broadcast(Delta);
@@ -102,7 +102,7 @@ void AMyPlayerController::OpenExitPanel()
 
 	FString DescStrF = NSLOCTEXT("AMyPlayerController","OnExit","정말로 게임을 종료 하시겠습니까?").ToString();
 
-	UMyLib::GetCanvas()->GetConfirmPanel()->SetConfirmPanel(DescStrF,Cancel,Confirm);
+	UMyLib::SetConfirmPanel(DescStrF,Cancel,Confirm);
 }
 
 void AMyPlayerController::ShowInGameWorldText(float number, ABaseUnitPawn* interactActor, ETextType dmgPopup)

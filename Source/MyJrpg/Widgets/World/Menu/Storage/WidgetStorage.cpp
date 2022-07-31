@@ -7,8 +7,7 @@
 void UWidgetStorage::NativeOnInitialized()
 {
 	Super::NativeOnInitialized();
-
-
+	
 	m_StoragePanel->m_OnFocus.AddUObject(this, &UWidgetStorage::OnStorageInvenFocused);
 
 	m_StoragePanel->m_OnFocusConfirm.AddUObject(this, &UWidgetStorage::OnStorageFocuseConfirm);
@@ -106,11 +105,17 @@ void UWidgetStorage::AddRemoveItemAll(UInventory* from, FAddItem to)
 
 void UWidgetStorage::OnWithdrawAll()//모두꺼내기
 {
+	m_StoragePanel->UnFocusCurrent();
+	m_InvenPanel->UnFocusCurrent();
+	
 	AddRemoveItemAll(m_StoragePanel->GetInven(),FAddItem::CreateUObject(UMyGameInstance::Get->m_EquipManager, &UEquipManager::AddItem));
 }
 
 void UWidgetStorage::OnDepositAll()
 {
+	m_StoragePanel->UnFocusCurrent();
+	m_InvenPanel->UnFocusCurrent();
+	
 	AddRemoveItemAll(UMyGameInstance::Get->m_Inven,FAddItem::CreateUObject(m_StoragePanel->GetInven(), &UInventory::AddItem));
 
 	if(UMyGameInstance::Get->m_EquipManager->GetBag())
