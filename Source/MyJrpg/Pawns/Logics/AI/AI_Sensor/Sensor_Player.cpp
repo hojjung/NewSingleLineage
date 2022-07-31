@@ -30,7 +30,7 @@ void USensor_Player::UpdateAISensing()
 	}
 	else
 	{
-		
+		Target = GetNearTargetAuto(m_PlayerOwner->GetAttackRange());
 	}
 	if(Target)
 	{
@@ -73,18 +73,78 @@ IFocusable* USensor_Player::GetNearTargetManual(float SearchRange, float AttackR
 		
 		if (!Mob || !(Mob->IsAlive()))
 		{
-			NavLen += AttackRange;
+			Cost += AttackRange;
 		}
 
-		if (NavLen > MaxRange)
+		if (Cost > MaxRange)
 		{
 			continue;
 		}
 
-		MaxRange = NavLen;
+		MaxRange = Cost;
 
 		Target = Focus;
 	}
 	return Target;
 }
 
+IFocusable* USensor_Player::GetNearTargetAuto(float AttackRange)
+{
+	float MaxRange = MAX_flt;
+	
+	FVector Loc = m_PlayerOwner->GetActorLocation();
+	
+	m_AryInteractables.Reset(10);
+
+	UMyGameInstance::Get->m_ZoneInst->GetNearNpcs<IFocusable>(m_PlayerOwner, m_AryInteractables, MaxRange);	
+
+	IFocusable* Target = nullptr;
+	
+	for (IFocusable* Focus : m_AryInteractables)
+	{
+		if (!Focus->IsInteractable())
+		{
+			continue;
+		}
+
+		AActor* FocusActor = Cast<AActor>(Focus);
+
+		if(AStructureActor::StaticClass() == FocusActor->GetClass())
+		{
+			continue;
+		}
+		
+		ACombatUnitPawn* Mob = Cast<ACombatUnitPawn>(Focus);
+
+		if(Mob)
+		{
+			if(!Mob->IsAlive() || !UMyGameInstance::Get->m_TeamKarma->IsFoe(Mob))
+			{
+				continue;
+			}
+		}
+		
+		float NavLen = 0.f;
+
+		FVector DestLoc = FocusActor->GetActorLocation();
+
+		float Cost = 0.f;
+		
+		ENavigationQueryResult::Type ResultT = UMyLib::GetNavSys()->GetPathLengthAndCost(Loc, DestLoc, NavLen, Cost);
+		
+		if (!Mob || !(Mob->IsAlive()))
+		{
+			Cost += AttackRange;
+		}
+
+		if (Cost > MaxRange)
+		{
+			continue;
+		}
+
+		MaxRange = Cost;
+
+		Target = Focus;
+	}
+	return Target;
+}

@@ -81,6 +81,8 @@ void AMyPlayerPawn::BeginPlay()
 	SetPlayerEntity();
 
 	CreateFocusActor();
+
+	EndBuildCam();
 }
 
 void AMyPlayerPawn::SetPlayerEntity()

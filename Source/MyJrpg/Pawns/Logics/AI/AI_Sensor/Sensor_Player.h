@@ -37,5 +37,7 @@ protected:
 	
 	IFocusable* GetNearTargetManual(float SearchRange, float AttackRange);
 	//오토는, 우호적인 사람, 시체, 건물을 무시한다
-	IFocusable* GetNearTargetAuto(float SearchRange, float AttackRange);
+	IFocusable* GetNearTargetAuto(float AttackRange);
 };
+
+
