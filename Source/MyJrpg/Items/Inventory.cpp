@@ -273,6 +273,20 @@ void UInventory::RemoveItemStack(const FItemDataRow& itemData, int index, int& s
 	return;//제거 종료,아이템을 비우는게 목적이 아니라 차감이 목적,칸과 상관이 없다.
 }
 
+bool UInventory::CanbeRepair(const FItemDataRow& itemData, const FItemSpec& my, const FItemSpec& other)
+{
+	bool SameItem = UMyLib::IsEquip(itemData) && my.m_ID == other.m_ID && my.m_nLvStack == other.m_nLvStack;
+
+	if(!SameItem)
+	{
+		return false;
+	}
+	
+	int MaxDur = itemData.m_nDurability;
+	
+	return MaxDur >= my.m_nDurability + other.m_nDurability;
+}
+
 void UInventory::ClearSlot(int index)
 {
 	m_AryTotalItems[index].m_ID = NAME_None;
@@ -569,6 +583,13 @@ void UInventory::OnDropItem(int myIndex, UInventory* other, int other_index)
 
 			other->SetStLv(other_index, OtherStack);
 		}
+	}
+	else if (CanbeRepair(MyItemData, MyItem, OtherItem))
+	{
+		GetItemRef(myIndex).m_nDurability += OtherItem.m_nDurability;
+		
+		other->ClearSlot(other_index);
+		other->RemoveItemKey(OtherItemData,OtherItem.m_ID,other_index);
 	}
 	else
 	{

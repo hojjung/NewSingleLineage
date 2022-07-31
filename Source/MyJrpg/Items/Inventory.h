@@ -65,6 +65,8 @@ protected:
 
 	void RemoveItemStack(const FItemDataRow& itemData, int index, int& stackCnt);
 
+	bool CanbeRepair(const FItemDataRow& itemData, const FItemSpec& my, const FItemSpec& other);
+
 public:
 	FORCEINLINE const TArray<FItemSpec>& GetAryItems() const
 	{
