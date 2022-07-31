@@ -19,8 +19,6 @@ class MYJRPG_API UMyFlockSteering : public UMyMovement
 
 protected:
 	UPROPERTY()
-	ACombatUnitPawn* m_OwnerCombatPawn;
-	UPROPERTY()
 	TSet<ACombatUnitPawn*> m_SetIgnoreSelf;
 	UPROPERTY()
 	TArray<ACombatUnitPawn*> m_NearMobs;
@@ -28,9 +26,12 @@ protected:
 protected:
 	virtual void BeginPlay() override;
 	
-	FVector GetFlockDir();
-
 	virtual void ApplyControlInputToVelocity(float DeltaTime) override;
 
 	virtual void NotifyBumpedPawn(APawn* BumpedPawn) override;
+
+protected:
+	FVector GetFlockDir();
+	
+	FVector CalculateSeparationVector();
 };

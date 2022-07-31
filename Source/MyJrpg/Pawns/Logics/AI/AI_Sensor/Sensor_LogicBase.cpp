@@ -1,6 +1,7 @@
 #include "Sensor_LogicBase.h"
 #include "TimerManager.h"
 #include "Engine/Engine.h"
+#include "MyJrpg/MyLib.h"
 #include "MyJrpg/Pawns/CombatUnitPawn.h"
 #include "Perception/AISense_Hearing.h"
 #include "Perception/AISense_Team.h"
@@ -178,4 +179,31 @@ void USensor_LogicBase::SetPeripheralVisionAngle(const float NewPeripheralVision
 	m_PeripheralVisionAngle = NewPeripheralVisionAngle;
 	
 	m_PeripheralVisionCosine = FMath::Cos(FMath::DegreesToRadians(m_PeripheralVisionAngle));
+}
+
+ACombatUnitPawn* USensor_LogicBase::GetSensedPawn()
+{
+	AMyPlayerPawn* Player = UMyLib::GetPlayer();
+
+	if(!Player->IsAlive())
+	{
+		return nullptr;
+	}
+	
+	if (!HasLineOfSightTo(Player))
+	{
+		return nullptr;
+	}
+
+	if (CheckIsHidden(Player))
+	{
+		return nullptr;
+	}
+
+	if (!CheckDistAndAngle(Player)) //스텔스보다 먼저해야함
+		{
+		return nullptr;
+		}
+
+	return Player;
 }

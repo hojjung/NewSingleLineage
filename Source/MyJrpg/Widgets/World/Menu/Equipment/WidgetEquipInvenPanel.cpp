@@ -24,10 +24,6 @@ void UWidgetEquipInvenPanel::NativeOnInitialized()
 
 	m_BagPanel->m_OnFocusConfirm.AddUObject(this, &UWidgetEquipInvenPanel::OnPlInvenFocuseConfirm);
 
-	m_BeltPanel->m_OnFocus.AddUObject(this, &UWidgetEquipInvenPanel::OnPlInvenFocused);
-
-	m_BeltPanel->m_OnFocusConfirm.AddUObject(this, &UWidgetEquipInvenPanel::OnPlInvenFocuseConfirm);
-
 	UMyLib::GetEquip()->m_OnEquipChanged.AddUObject(this, &UWidgetEquipInvenPanel::OnEquipChanged);
 }
 
@@ -45,17 +41,6 @@ void UWidgetEquipInvenPanel::OnEquipChanged()
 		m_DeleBag = UMyGameInstance::Get->m_EquipManager->GetOnBagChanged().AddUObject(m_EquipPanel, &UWidgetEquipPanel::UpdateSlots);
 	}
 
-	if(!UMyGameInstance::Get->m_EquipManager->GetBelt())
-	{
-		m_BeltPanel->Clear();
-	}
-	else
-	{
-		m_BeltPanel->Init(UMyGameInstance::Get->m_EquipManager->GetBelt());
-		m_BeltPanel->OpenPanel();
-
-		m_DeleBelt = UMyGameInstance::Get->m_EquipManager->GetOnBeltChanged().AddUObject(m_EquipPanel, &UWidgetEquipPanel::UpdateSlots);
-	}
 }
 
 
@@ -113,15 +98,7 @@ void UWidgetEquipInvenPanel::ClosePanel()
 	{
 		UMyGameInstance::Get->m_EquipManager->GetOnBagChanged().Remove(m_DeleBag);
 	}
-
-	if(UMyGameInstance::Get->m_EquipManager->GetBelt())
-	{
-		UMyGameInstance::Get->m_EquipManager->GetOnBeltChanged().Remove(m_DeleBelt);
-	}
-
 	m_BagPanel->ClosePanel();
-
-	m_BeltPanel->ClosePanel();
 }
 
 void UWidgetEquipInvenPanel::OpenPanel()
@@ -133,8 +110,6 @@ void UWidgetEquipInvenPanel::OpenPanel()
 	m_InvenPanel->OpenPanel();
 
 	m_BagPanel->OpenPanel();
-
-	m_BeltPanel->OpenPanel();
 }
 
 UWidgetInventory* UWidgetEquipInvenPanel::GetInvenPanel()

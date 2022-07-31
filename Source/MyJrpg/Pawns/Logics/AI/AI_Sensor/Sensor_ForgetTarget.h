@@ -27,8 +27,6 @@ protected:
 
 	float m_fCurrentTargetDist;
 
-	ACombatUnitPawn* GetSensedPawn();
-
 	virtual void UpdateAISensing() override;
 
 	virtual bool CheckDistAndAngle(const ACombatUnitPawn* Other) override;

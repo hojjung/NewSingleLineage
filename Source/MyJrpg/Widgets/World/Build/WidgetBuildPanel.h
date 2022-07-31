@@ -47,8 +47,6 @@ protected:
 
 	FDelegateHandle m_DeleBag;
 	
-	FDelegateHandle m_DeleBelt;
-
 protected:
 	virtual void NativeOnInitialized() override;
 

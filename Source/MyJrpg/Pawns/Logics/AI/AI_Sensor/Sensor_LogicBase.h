@@ -52,6 +52,7 @@ protected:
 
 	void SetPeripheralVisionAngle(const float NewPeripheralVisionAngle);
 
+	ACombatUnitPawn* GetSensedPawn();
 public:
 	void SetSensingInterval(const float NewSensingInterval);
 

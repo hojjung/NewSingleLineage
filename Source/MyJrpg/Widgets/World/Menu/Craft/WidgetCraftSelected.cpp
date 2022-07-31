@@ -41,10 +41,6 @@ void UWidgetCraftSelected::SelectCraft(const FCraftDataInfo& data)
 	{
 		m_Dele2 = UMyGameInstance::Get->m_EquipManager->GetOnBagChanged().AddUObject(this, &UWidgetCraftSelected::UpdateCraftCostPanel);
 	}
-	if(UMyGameInstance::Get->m_EquipManager->GetBelt())
-	{
-		m_Dele3 = UMyGameInstance::Get->m_EquipManager->GetOnBeltChanged().AddUObject(this, &UWidgetCraftSelected::UpdateCraftCostPanel);
-	}
 
 	m_Icon->SetIcon(data.m_ItemData->m_Icon);
 
@@ -81,10 +77,6 @@ void UWidgetCraftSelected::Close()
 	if(UMyGameInstance::Get->m_EquipManager->GetBag())
 	{
 		UMyGameInstance::Get->m_EquipManager->GetOnBagChanged().Remove(m_Dele2);
-	}
-	if(UMyGameInstance::Get->m_EquipManager->GetBelt())
-	{
-		UMyGameInstance::Get->m_EquipManager->GetOnBeltChanged().Remove(m_Dele3);
 	}
 
 	Cancel();

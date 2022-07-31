@@ -379,10 +379,6 @@ int UMyLib::GetItemCountAllInven(const FName& id, int stlv)
 	{
 		Sum += Equip->GetBag()->GetItemCount(id, stlv);
 	}
-	if(Equip->GetBelt())
-	{
-		Sum += Equip->GetBelt()->GetItemCount(id, stlv);
-	}
 	return Sum;	
 }
 
@@ -414,16 +410,7 @@ FItemSpec* UMyLib::FindItemAllInven(const FName& id, int stlv, UInventory*& outI
 			return ItemFound;
 		}
 	}
-	if(Equip->GetBelt())
-	{
-		ItemFound = Equip->GetBelt()->FindItem(id, stlv);
-		if(ItemFound)
-		{
-			outInven =  Equip->GetBelt();
-			return ItemFound;
-		}
-	}
-	
+
 	return nullptr;
 }
 
@@ -455,10 +442,6 @@ void UMyLib::ReduceDurability(const FItemSpec& item_spec, int amount)
 	{
 		return;
 	}
-	if(Equip->GetBelt() &&Equip->GetBelt()->ReduceDurability(item_spec, amount))
-	{
-		return;
-	}
 }
 
 const FStatGroup& UMyLib::GetItemStatData(const FName& id)
@@ -482,13 +465,7 @@ bool UMyLib::HasSpaceAllInven(FItemSpec& item)
 			return true;
 		}
 	}
-	if(Equip->GetBelt())
-	{
-		if (Equip->GetBelt()->HasSpace(item))
-		{
-			return true;
-		}
-	}
+
 	return false;	
 }
 
@@ -508,13 +485,7 @@ bool UMyLib::RemoveItemAll(const FName& id, int stLv)
 			return true;
 		}
 	}
-	if(Equip->GetBelt())
-	{
-		if (Equip->GetBelt()->RemoveItem(id, stLv))
-		{
-			return true;
-		}
-	}
+
 	return false;	
 }
 

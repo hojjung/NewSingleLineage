@@ -234,9 +234,9 @@ void UWidgetZoneSelectButton::SetItemsInSet()
 	
 	m_SetRewardItems.Sort([](const FItemDataRow& LHS, const FItemDataRow& RHS)
 	{
-		int LhsLevel = LHS.m_ColorHandle.GetRow<FColorDataRow>("")->m_fRarity * 1000;
+		int LhsLevel = LHS.m_ColorHandle.GetRow<FColorDataRow>("")->m_fRarity * 100000;
 
-		int RhsLevel = RHS.m_ColorHandle.GetRow<FColorDataRow>("")->m_fRarity * 1000;
+		int RhsLevel = RHS.m_ColorHandle.GetRow<FColorDataRow>("")->m_fRarity * 100000;
 
 		int LDur = LHS.m_nDurability;
 
@@ -246,9 +246,9 @@ void UWidgetZoneSelectButton::SetItemsInSet()
 
 		int RGold = RHS.m_nPlayerEarnGoldSell + RHS.m_nPlayerSpentGoldBuy;
 
-		int LItemT = (int)LHS.m_ItemType;
+		int LItemT = ((int)LHS.m_ItemType) * 10000;
 
-		int RItemT = (int)RHS.m_ItemType;
+		int RItemT = ((int)RHS.m_ItemType) * 10000;
 
 		int L = LhsLevel + LDur + LGold + LItemT;
 

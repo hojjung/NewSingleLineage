@@ -59,8 +59,7 @@ void UWidgetCollecPanelParent::Open()
 	m_AryUpdateElements.Add(UMyGameInstance::Get->m_Inven->m_OnInvenChanged.AddUObject(this, &UWidgetCollecPanelParent::UpdateElements));
 	if(UMyGameInstance::Get->m_EquipManager->GetBag())
 		m_AryUpdateElements.Add(UMyGameInstance::Get->m_EquipManager->GetBag()->m_OnInvenChanged.AddUObject(this, &UWidgetCollecPanelParent::UpdateElements));
-	if(UMyGameInstance::Get->m_EquipManager->GetBelt())
-		m_AryUpdateElements.Add(UMyGameInstance::Get->m_EquipManager->GetBelt()->m_OnInvenChanged.AddUObject(this, &UWidgetCollecPanelParent::UpdateElements));
+	
 	for(UInventory* Storage : UMyGameInstance::Get->GetStorages())
 		m_AryUpdateElements.Add(Storage->m_OnInvenChanged.AddUObject(this, &UWidgetCollecPanelParent::UpdateElements));
 
@@ -77,8 +76,6 @@ void UWidgetCollecPanelParent::OnClose()
 	UMyGameInstance::Get->m_Inven->m_OnInvenChanged.Remove(m_AryUpdateElements[Iter++]);
 	if(UMyGameInstance::Get->m_EquipManager->GetBag())
 		UMyGameInstance::Get->m_EquipManager->GetBag()->m_OnInvenChanged.Remove(m_AryUpdateElements[Iter++]);
-	if(UMyGameInstance::Get->m_EquipManager->GetBelt())
-		UMyGameInstance::Get->m_EquipManager->GetBelt()->m_OnInvenChanged.Remove(m_AryUpdateElements[Iter++]);
 	
 	for(UInventory* Storage : UMyGameInstance::Get->GetStorages())
 		Storage->m_OnInvenChanged.Remove(m_AryUpdateElements[Iter++]);

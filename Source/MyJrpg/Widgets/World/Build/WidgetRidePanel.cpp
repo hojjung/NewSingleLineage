@@ -42,12 +42,6 @@ void UWidgetRidePanel::UpdatePanel()
 		m_Bag->OpenPanel();
 	}
 
-	if(UMyGameInstance::Get->m_EquipManager->GetBelt())
-	{
-		m_Belt->Init(UMyGameInstance::Get->m_EquipManager->GetBelt());
-		m_Belt->OpenPanel();
-	}
-	
 	UpdateElement(m_CostItem,m_RideInven->GetItemConstRef(0));
 }
 

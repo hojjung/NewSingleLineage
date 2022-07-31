@@ -23,7 +23,6 @@ void UWidgetEquipPanel::NativeOnInitialized()
 	m_AryEquips.Add(m_Leg);
 	m_AryEquips.Add(m_Ring);
 	m_AryEquips.Add(m_Neckless);
-	m_AryEquips.Add(m_Belt);
 	m_AryEquips.Add(m_Bag);
 	m_AryEquipDefaults.Add(nullptr);
 	m_AryEquipDefaults.Add(m_WeaponDefault);
@@ -33,7 +32,6 @@ void UWidgetEquipPanel::NativeOnInitialized()
 	m_AryEquipDefaults.Add(m_LegDefault);
 	m_AryEquipDefaults.Add(m_RingDefault);
 	m_AryEquipDefaults.Add(m_NecklessDefault);
-	m_AryEquipDefaults.Add(m_BeltDefault);
 	m_AryEquipDefaults.Add(m_BagDefault);
 	//
 	int Iter = 0;
@@ -58,27 +56,6 @@ void UWidgetEquipPanel::NativeOnInitialized()
 	}
 
 	m_Preview->Init(UMyGameInstance::Get->m_PreviewActorManager);
-
-	m_Quick->Init(UMyGameInstance::Get->m_EquipManager->GetQuickInven());
-
-	UMyGameInstance::Get->m_EquipManager->GetQuickInven()->m_OnInvenChanged.AddUObject(this, &UWidgetEquipPanel::UpdateQuickSlot);
-
-	UpdateQuickSlot();
-}
-
-void UWidgetEquipPanel::UpdateQuickSlot()
-{
-	const TArray<FItemSpec>& AryItems = UMyGameInstance::Get->m_EquipManager->GetQuickInven()->GetAryItems();
-
-	for(const FItemSpec& Item : AryItems)
-	{
-		if (Item.m_ID.IsNone())
-		{
-			m_QuickDefault->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
-			continue;
-		}
-		m_QuickDefault->SetVisibility(ESlateVisibility::Collapsed);
-	}
 }
 
 FReply UWidgetEquipPanel::NativeOnMouseButtonDown(const FGeometry& InGeometry, const FPointerEvent& InMouseEvent)
@@ -101,8 +78,6 @@ void UWidgetEquipPanel::Open()
 	UpdateSlots();
 
 	UMyGameInstance::Get->m_PreviewActorManager->ShowPawn();
-
-	m_Quick->OpenPanel();
 }
 
 void UWidgetEquipPanel::Close()
@@ -110,8 +85,6 @@ void UWidgetEquipPanel::Close()
 	m_Equip->m_OnEquipChanged.Remove(m_Handle);
 
 	UMyGameInstance::Get->m_PreviewActorManager->HidePawn();
-
-	m_Quick->ClosePanel();
 }
 
 void UWidgetEquipPanel::UnFocusCurrent()
@@ -152,14 +125,7 @@ void UWidgetEquipPanel::UpdateElement(UWidgetBaseElement* ele, const FItemSpec& 
 	
 	ele->SetHoldable(true);
 
-	if (ele == m_Belt)
-	{
-		bool b =  UMyLib::GetEquip()->IsBeltUnequipable();
-		
-		ele->SetFocusable(b);
-		ele->SetDragable(b);
-	}
-	else if (ele == m_Bag)
+	if (ele == m_Bag)
 	{
 		bool b =  UMyLib::GetEquip()->IsBagUnequipable();
 		
@@ -183,12 +149,7 @@ bool UWidgetEquipPanel::TryUnequip(EEquipSlotType t)
 		
 		if(!m_Equip->Unequip(t,Inven))
 		{
-			Inven = UMyLib::GetEquip()->GetBelt();
-		
-			if(!m_Equip->Unequip(t,Inven))
-			{
-				return false;
-			}
+			return false;
 		}	
 	}
 	
@@ -242,13 +203,6 @@ void UWidgetEquipPanel::OnDrop(UWidgetBaseElement* ele)
 	if(t == EEquipSlotType::Bag)
 	{
 		if(!UMyLib::GetEquip()->IsBagUnequipable())
-		{
-			return;
-		}
-	}
-	else if(t == EEquipSlotType::Belt)
-	{
-		if(!UMyLib::GetEquip()->IsBeltUnequipable())
 		{
 			return;
 		}

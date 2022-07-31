@@ -15,8 +15,8 @@ class MYJRPG_API OctreeNode : public TSharedFromThis<OctreeNode>
 public:
 	FVector m_Center;
 	FVector m_Extend;
-	float m_fMiniSize = 20;
-	int32 m_nMaxCount = 4;
+	float m_fMiniSize = 40;
+	int32 m_nMaxCount = 5;
 	int32 m_nDepth;
 
 	TArray<AActor*> m_AryActors;
@@ -235,10 +235,6 @@ public:
 			{
 				child->UpdateState(world);
 			}
-		}
-		if (m_nDepth > 0)
-		{
-			DrawBound(world, 1 / UKismetSystemLibrary::GetFrameCount(),1);
 		}
 	}
 };

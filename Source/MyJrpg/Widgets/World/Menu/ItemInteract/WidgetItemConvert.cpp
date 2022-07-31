@@ -128,12 +128,6 @@ void UWidgetItemConvert::UpdatePanel()
 		m_Bag->Init(UMyGameInstance::Get->m_EquipManager->GetBag());
 		m_Bag->OpenPanel();
 	}
-
-	if(UMyGameInstance::Get->m_EquipManager->GetBelt())
-	{
-		m_Belt->Init(UMyGameInstance::Get->m_EquipManager->GetBelt());
-		m_Belt->OpenPanel();
-	}
 	
 	UpdateElement(m_LeftItem,m_ItemConvertInst->GetLeftItem());
 	UpdateElement(m_RightItem,m_ItemConvertInst->GetRightItem());

@@ -27,7 +27,7 @@ protected:
 
 	float m_fCurrentTargetDist;
 
-	ACombatUnitPawn* GetSensedPawn();
+
 
 	virtual void UpdateAISensing() override;
 

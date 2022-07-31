@@ -74,6 +74,13 @@ void UAnimNotifySt_AOECircle::NotifyBegin(USkeletalMeshComponent* MeshComp, UAni
 void UAnimNotifySt_AOECircle::NotifyTick(USkeletalMeshComponent* MeshComp, UAnimSequenceBase* Animation,
 	float FrameDeltaTime)
 {
+#if UE_EDITOR
+	if(!m_MatDynamic)
+	{
+		Super::NotifyTick(MeshComp, Animation, FrameDeltaTime);
+		return;
+	}
+#endif
 	m_fTimer += FrameDeltaTime;
 
 	float Percent = 0.f;

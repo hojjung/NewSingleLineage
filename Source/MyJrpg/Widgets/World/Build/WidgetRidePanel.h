@@ -27,8 +27,6 @@ protected:
 	UWidgetInventory* m_Inven;
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (BindWidget))
 	UWidgetInventory* m_Bag;
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (BindWidget))
-	UWidgetInventory* m_Belt;
 
 	TWeakObjectPtr<UInventory> m_RideInven;
 
@@ -37,8 +35,6 @@ protected:
 protected:
 	virtual void NativeOnInitialized() override;
 
-	void ReduceCarrots();
-	
 	void UpdatePanel();
 
 	void UpdateElement(UWidgetBaseElement* ele, const FItemSpec& item);

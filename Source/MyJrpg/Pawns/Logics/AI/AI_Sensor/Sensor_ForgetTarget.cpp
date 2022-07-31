@@ -61,27 +61,4 @@ bool USensor_ForgetTarget::CheckDistAndAngle(const ACombatUnitPawn* Other)
 	FVector const MyFacingDir = GetSensorRotation().Vector();
 	
 	return (SelfToOtherDir | MyFacingDir) >= m_PeripheralVisionCosine;
-}//원래 앞으로 가면 안되고,(은신을해도걸림?,뒤로가도 걸린다. 즉 각도 계산 없이 사거리 연산
-//근데 은신을 할경우, 앞을 의미하는 각도를 초과하기 전까진 걸리지 않는다.
-
-ACombatUnitPawn* USensor_ForgetTarget::GetSensedPawn()
-{
-	AMyPlayerPawn* Player = UMyLib::GetPlayer();
-	
-	if (!HasLineOfSightTo(Player))
-	{
-		return nullptr;
-	}
-
-	if (CheckIsHidden(Player))
-	{
-		return nullptr;
-	}
-
-	if (!CheckDistAndAngle(Player)) //스텔스보다 먼저해야함
-		{
-		return nullptr;
-		}
-
-	return Player;
 }

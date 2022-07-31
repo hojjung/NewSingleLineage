@@ -13,7 +13,9 @@ void USensor_NPCDefault::Init(ACombatUnitPawn* owner)
 
 void USensor_NPCDefault::UpdateAISensing()
 {
-	if (UMyGameInstance::Get->m_TeamKarma->IsFoe(m_Owner) && m_Owner->GetFocusedTarget())
+	ACombatUnitPawn* FoundPawn = m_Owner->GetFocusedTarget<ACombatUnitPawn>();
+	
+	if (UMyGameInstance::Get->m_TeamKarma->IsFoe(m_Owner) && FoundPawn && FoundPawn->IsAlive())
 	{
 		return;//영원한 추격? 그만 쫓아오는 로직도 있어야하지 않나?
 	}
@@ -70,26 +72,4 @@ bool USensor_NPCDefault::CheckDistAndAngle(const ACombatUnitPawn* Other)
 	FVector const MyFacingDir = GetSensorRotation().Vector();
 	
 	return (SelfToOtherDir | MyFacingDir) >= m_PeripheralVisionCosine;
-}
-
-ACombatUnitPawn* USensor_NPCDefault::GetSensedPawn()
-{
-	AMyPlayerPawn* Player = UMyLib::GetPlayer();
-	
-	if (!HasLineOfSightTo(Player))
-	{
-		return nullptr;
-	}
-
-	if (CheckIsHidden(Player))
-	{
-		return nullptr;
-	}
-
-	if (!CheckDistAndAngle(Player)) //스텔스보다 먼저해야함
-	{
-		return nullptr;
-	}
-
-	return Player;
 }

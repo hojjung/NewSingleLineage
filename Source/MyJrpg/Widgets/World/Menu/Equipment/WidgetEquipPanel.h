@@ -46,17 +46,9 @@ protected:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (BindWidget))
 	UImage* m_NecklessDefault;
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (BindWidget))
-	UWidgetBaseElement* m_Belt;
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (BindWidget))
-	UImage* m_BeltDefault;
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (BindWidget))
 	UWidgetBaseElement* m_Bag;
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (BindWidget))
 	UImage* m_BagDefault;
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (BindWidget))
-	UWidgetInventory* m_Quick;
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (BindWidget))
-	UImage* m_QuickDefault;
 	UPROPERTY()
 	TArray<UWidgetBaseElement*> m_AryEquips;
 	UPROPERTY()
@@ -90,8 +82,6 @@ protected:
 	void OnDrop(UWidgetBaseElement* ele);
 
 	void OnHold(UWidgetBaseElement* ele);
-
-	void UpdateQuickSlot();
 
 public:
 	void UpdateSlots();

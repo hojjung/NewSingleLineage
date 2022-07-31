@@ -7,13 +7,6 @@
 void UEquipManager::Init()
 {
 	ClearEquipSlots();
-
-	m_QuickItem = NewObject<UInventory>(this);
-
-	m_QuickItem->Init(1,NSLOCTEXT("UEquipManager","m_QuickItem","퀵슬롯"));
-
-	m_QuickItem->m_OnItemAdded.AddUObject(UMyGameInstance::Get->m_QuickManager, &UQuickSlotManager::RegisterQuickItemExe);
-	m_QuickItem->m_OnItemRemoved.AddUObject(UMyGameInstance::Get->m_QuickManager, &UQuickSlotManager::UnregisterQuickItemExe);
 }
 
 void UEquipManager::Equip(EEquipSlotType slotWant,UInventory* inven, int invenIndex)
@@ -74,23 +67,26 @@ bool UEquipManager::Unequip(EEquipSlotType slotWant, UInventory* returnInven , i
 	FItemSpec Temp = m_AryEqupSlots[SlotIndex];
 	if(Temp.m_ID.IsNone())
 	{
-		return true;
+		return true;//돌아갈 공간있는지 검사에대한 리턴값이라 이런 모습이다.
 	}
 
 	UnequipOption(SlotIndex,m_AryEqupSlots[SlotIndex]);
 	m_AryEqupSlots[SlotIndex] = FItemSpec();
 
-	if(!returnInvenIndex)
+	if (returnInven)
 	{
-		if(!returnInven->AddItem(Temp))
+		if (!returnInvenIndex)
 		{
-			return false;
+			if (!returnInven->AddItem(Temp))
+			{
+				return false;
+			}
 		}
-	}
-	else
-	{
-		returnInven->AddSlot(*returnInvenIndex,Temp);
-		returnInven->AddItemKey(UMyLib::GetItemData(Temp.m_ID), Temp.m_ID, *returnInvenIndex);
+		else
+		{
+			returnInven->AddSlot(*returnInvenIndex, Temp);
+			returnInven->AddItemKey(UMyLib::GetItemData(Temp.m_ID), Temp.m_ID, *returnInvenIndex);
+		}
 	}
 	
 	SetIsRangeStance();
@@ -105,10 +101,7 @@ bool UEquipManager::Unequip(EEquipSlotType slotWant, UInventory* returnInven , i
 
 void UEquipManager::DestoryItem(EEquipSlotType t)
 {
-	GetEquipItem(t) = FItemSpec();
-
-	SetIsRangeStance();
-	m_OnEquipChanged.Broadcast();
+	Unequip(t,nullptr);
 }
 
 bool UEquipManager::IsItemEquipped(EEquipSlotType wantSlot)
@@ -197,23 +190,6 @@ void UEquipManager::UnequipBag()
 	m_BagInven = nullptr;
 }
 
-void UEquipManager::EquipBelt(int i)
-{
-	m_BeltSlots	= NewObject<UInventory>(this);
-
-	m_BeltSlots->Init(i,NSLOCTEXT("UEquipManager","Belt","벨트"));
-
-	m_BeltSlots->UpdateInventory();
-	
-	m_BeltSlots->m_OnItemAdded.AddUObject(UMyGameInstance::Get->m_QuickManager, &UQuickSlotManager::RegisterQuickItemExe);
-	m_BeltSlots->m_OnItemRemoved.AddUObject(UMyGameInstance::Get->m_QuickManager, &UQuickSlotManager::UnregisterQuickItemExe);
-}
-
-void UEquipManager::UnequipBelt()
-{
-	m_BeltSlots = nullptr;
-}
-
 bool UEquipManager::IsBagUnequipable()
 {
 	if(!GetBag())
@@ -223,38 +199,14 @@ bool UEquipManager::IsBagUnequipable()
 	return m_BagInven->GetUsingSlotCount() <= 0;	
 }
 
-bool UEquipManager::IsBeltUnequipable()
-{
-	if(!GetBelt())
-	{
-		return true;
-	}
-	return m_BeltSlots->GetUsingSlotCount() <= 0;
-}
-
 UInventory* UEquipManager::GetBag() 
 {
 	return m_BagInven;
 }
 
-UInventory* UEquipManager::GetBelt() 
-{
-	return m_BeltSlots;
-}
-
-UInventory** UEquipManager::GetBeltHolder()
-{
-	return &m_BeltSlots;
-}
-
 UInventory::FOnInvenChanged& UEquipManager::GetOnBagChanged()
 {
 	return GetBag()->GetOnInvenChanged();
-}
-
-UInventory::FOnInvenChanged& UEquipManager::GetOnBeltChanged()
-{
-	return GetBelt()->GetOnInvenChanged();
 }
 
 void UEquipManager::ReduceDurability(EEquipSlotType t, int amount)
@@ -296,10 +248,6 @@ bool UEquipManager::HasSpace(const FItemSpec& addItem)
 		{
 			return true;
 		}
-		if(GetBelt() && GetBelt()->EmptySlotCount() > 0)
-		{
-			return true;
-		}
 		return false;
 	}
 
@@ -311,11 +259,6 @@ bool UEquipManager::HasSpace(const FItemSpec& addItem)
 	{
 		return true;
 	}
-	if(GetBelt() && GetBelt()->HasSpace(addItem))
-	{
-		return true;
-	}
-	
 	return false;
 }
 
@@ -341,14 +284,6 @@ bool UEquipManager::AddItem(FItemSpec& addItem, bool newEquipItem)
 		{
 			m_OnItemEarn.Broadcast(ItemData, StLv);
 			return true;
-		}
-		else
-		{
-			if(GetBelt() && GetBelt()->AddItem(addItem,newEquipItem))
-			{
-				m_OnItemEarn.Broadcast(ItemData, StLv);
-				return true;
-			}	
 		}
 	}
 	//
@@ -377,15 +312,6 @@ FItemSpec* UEquipManager::FindItemInEquip(FName id)
 	}
 	return nullptr;
 }
-const FItemSpec& UEquipManager::GetQuickSlotItem() const
-{
-	return m_QuickItem->GetItemRef(0);
-}
-
-UInventory* UEquipManager::GetQuickInven()
-{
-	return m_QuickItem;
-}
 
 void UEquipManager::ClearEquipSlots()
 {
@@ -399,11 +325,7 @@ void UEquipManager::ClearAllEquipment()
 {
 	ClearEquipSlots();
 	
-	GetQuickInven()->ClearAllInven();
-	
 	m_BagInven = nullptr;
-	
-	m_BeltSlots = nullptr;
 }
 
 void UEquipManager::TakeDurDmg(int am)

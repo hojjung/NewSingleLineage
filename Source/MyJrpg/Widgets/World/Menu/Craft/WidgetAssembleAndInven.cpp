@@ -17,10 +17,6 @@ void UWidgetAssembleAndInven::NativeOnInitialized()
 
 	m_BagPanel->m_OnFocusConfirm.AddUObject(this, &UWidgetAssembleAndInven::OnPlInvenFocuseConfirm);
 
-	m_BeltPanel->m_OnFocus.AddUObject(this, &UWidgetAssembleAndInven::OnPlInvenFocused);
-
-	m_BeltPanel->m_OnFocusConfirm.AddUObject(this, &UWidgetAssembleAndInven::OnPlInvenFocuseConfirm);
-
 	m_AssemblePanel->m_OnComplete.BindUObject(this, &UWidgetAssembleAndInven::ClosePanel);
 }
 
@@ -67,14 +63,7 @@ void UWidgetAssembleAndInven::ClosePanel()
 		UMyGameInstance::Get->m_EquipManager->GetOnBagChanged().Remove(m_DeleBag);
 	}
 
-	if(UMyGameInstance::Get->m_EquipManager->GetBelt())
-	{
-		UMyGameInstance::Get->m_EquipManager->GetOnBeltChanged().Remove(m_DeleBelt);
-	}
-
 	m_BagPanel->ClosePanel();
-
-	m_BeltPanel->ClosePanel();
 }
 
 void UWidgetAssembleAndInven::ShowAssemble(UAssembleInst* inst)
@@ -91,8 +80,6 @@ void UWidgetAssembleAndInven::OpenPanel()
 	m_InvenPanel->OpenPanel();
 
 	m_BagPanel->OpenPanel();
-
-	m_BeltPanel->OpenPanel();
 }
 
 UWidgetInventory* UWidgetAssembleAndInven::GetInvenPanel()

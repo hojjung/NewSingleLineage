@@ -90,11 +90,6 @@ void UWidgetBuildPanel::OpenPanel()
 	{
 		m_DeleBag = UMyGameInstance::Get->m_EquipManager->GetOnBagChanged().AddUObject(this, &UWidgetBuildPanel::UpdateElement);
 	}
-	if(UMyGameInstance::Get->m_EquipManager->GetBelt())
-	{
-		m_DeleBelt = UMyGameInstance::Get->m_EquipManager->GetOnBeltChanged().AddUObject(this, &UWidgetBuildPanel::UpdateElement);
-	}
-
 	UpdateElement();
 }
 
@@ -127,10 +122,6 @@ void UWidgetBuildPanel::ClosePanel()
 	if(UMyGameInstance::Get->m_EquipManager->GetBag())
 	{
 		UMyGameInstance::Get->m_EquipManager->GetOnBagChanged().Remove(m_DeleBag);
-	}
-	if(UMyGameInstance::Get->m_EquipManager->GetBelt())
-	{
-		UMyGameInstance::Get->m_EquipManager->GetOnBeltChanged().Remove(m_DeleBelt);
 	}
 }
 

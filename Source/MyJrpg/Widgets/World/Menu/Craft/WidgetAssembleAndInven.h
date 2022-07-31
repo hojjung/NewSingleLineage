@@ -25,14 +25,10 @@ protected:
 	UWidgetInventory* m_InvenPanel;
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (BindWidget))
 	UWidgetInventory* m_BagPanel;
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (BindWidget))
-	UWidgetInventory* m_BeltPanel;
 
 protected:
 	FDelegateHandle m_DeleBag;
 
-	FDelegateHandle m_DeleBelt;
-	
 protected:
 	virtual void NativeOnInitialized() override;
 

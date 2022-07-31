@@ -21,15 +21,9 @@ void UWidgetStorage::NativeOnInitialized()
 
 	m_Bag->ClosePanel();
 
-	m_Belt->ClosePanel();
-	
 	m_Bag->m_OnFocus.AddUObject(this, &UWidgetStorage::OnPlInvenFocused);
 
 	m_Bag->m_OnFocusConfirm.AddUObject(this, &UWidgetStorage::OnPlInvenFocuseConfirm);
-
-	m_Belt->m_OnFocus.AddUObject(this, &UWidgetStorage::OnPlInvenFocused);
-
-	m_Belt->m_OnFocusConfirm.AddUObject(this, &UWidgetStorage::OnPlInvenFocuseConfirm);
 
 	m_BtnDepositAll->OnClicked.AddDynamic(this, &UWidgetStorage::OnDepositAll);
 	m_BtnWithdrawAll->OnClicked.AddDynamic(this, &UWidgetStorage::OnWithdrawAll);
@@ -47,12 +41,6 @@ void UWidgetStorage::SetTargetInven(UInventory* storage)
 	{
 		m_Bag->Init(UMyGameInstance::Get->m_EquipManager->GetBag());
 		m_Bag->OpenPanel();
-	}
-
-	if(UMyGameInstance::Get->m_EquipManager->GetBelt())
-	{
-		m_Belt->Init(UMyGameInstance::Get->m_EquipManager->GetBelt());
-		m_Belt->OpenPanel();
 	}
 
 	OpenPanel();
@@ -79,10 +67,6 @@ void UWidgetStorage::ClosePanel()
 	if(UMyGameInstance::Get->m_EquipManager->GetBag())
 	{
 		m_Bag->ClosePanel();
-	}
-	if(UMyGameInstance::Get->m_EquipManager->GetBelt())
-	{
-		m_Belt->ClosePanel();
 	}
 }
 
@@ -132,11 +116,6 @@ void UWidgetStorage::OnDepositAll()
 	if(UMyGameInstance::Get->m_EquipManager->GetBag())
 	{
 		AddRemoveItemAll(UMyGameInstance::Get->m_EquipManager->GetBag(),FAddItem::CreateUObject(m_StoragePanel->GetInven(), &UInventory::AddItem));
-	}
-	
-	if(UMyGameInstance::Get->m_EquipManager->GetBelt())
-	{
-		AddRemoveItemAll(UMyGameInstance::Get->m_EquipManager->GetBelt(),FAddItem::CreateUObject(m_StoragePanel->GetInven(), &UInventory::AddItem));
 	}
 }
 

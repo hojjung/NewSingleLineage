@@ -194,7 +194,7 @@ bool UEnchantManager::IsAbleTarget(const FItemSpec& target) const
 	{
 		return UExe_EnchantArmor::StaticClass() == FoundMat.m_ClassExeItem;
 	}
-	else if ((int)EEquipSlotType::Ring <= (int)FoundTarget.m_ItemType && (int)FoundTarget.m_ItemType <= (int)EEquipSlotType::Belt)
+	else if ((int)EEquipSlotType::Ring <= (int)FoundTarget.m_ItemType && (int)FoundTarget.m_ItemType <= (int)EEquipSlotType::Neckless)
 	{
 		return UExe_EnchantTrinket::StaticClass() == FoundMat.m_ClassExeItem;
 	}
@@ -221,7 +221,7 @@ bool UEnchantManager::IsAbleMaterial(const FItemSpec& material) const
 	{
 		return UExe_EnchantArmor::StaticClass() == FoundMat.m_ClassExeItem;
 	}
-	else if ((int)EEquipSlotType::Ring <= (int)FoundTarget.m_ItemType && (int)FoundTarget.m_ItemType <= (int)EEquipSlotType::Belt)
+	else if ((int)EEquipSlotType::Ring <= (int)FoundTarget.m_ItemType && (int)FoundTarget.m_ItemType <= (int)EEquipSlotType::Neckless)
 	{
 		return UExe_EnchantTrinket::StaticClass() == FoundMat.m_ClassExeItem;
 	}

@@ -246,26 +246,9 @@ void UZoneInstManager::AddPlayerAllItem(UInventory* inven)
 	
 	AryTotalItems.Reserve(100);
 
-	if(!Equip->GetQuickSlotItem().m_ID.IsNone())
-	{
-		AryTotalItems.Add(Equip->GetQuickSlotItem());
-	}
-
 	if(Equip->GetBag())
 	{
 		for(const FItemSpec& ItemInInven : Equip->GetBag()->GetAryItems())
-		{
-			if(ItemInInven.m_ID.IsNone())
-			{
-				continue;
-			}
-			AryTotalItems.Add(ItemInInven);
-		}
-	}
-
-	if(Equip->GetBelt())
-	{
-		for(const FItemSpec& ItemInInven : Equip->GetBelt()->GetAryItems())
 		{
 			if(ItemInInven.m_ID.IsNone())
 			{

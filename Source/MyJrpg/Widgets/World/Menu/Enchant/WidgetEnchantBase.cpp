@@ -40,17 +40,6 @@ void UWidgetEnchantBase::UpdateInvens()
 		m_BagPanel->SetHoldable(false);
 		m_BagPanel->OpenPanel();
 	}
-
-	if(!UMyGameInstance::Get->m_EquipManager->GetBelt())
-	{
-		m_BeltPanel->Clear();
-	}
-	else
-	{
-		m_BeltPanel->Init(UMyGameInstance::Get->m_EquipManager->GetBelt());
-		m_BeltPanel->SetHoldable(false);
-		m_BeltPanel->OpenPanel();
-	}
 }
 
 void UWidgetEnchantBase::Open()
@@ -77,8 +66,6 @@ void UWidgetEnchantBase::OnClose()
 	m_InvenPanel->ClosePanel();
 
 	m_BagPanel->ClosePanel();
-
-	m_BeltPanel->ClosePanel();
 
 	UMyGameInstance::Get->m_EnchantManager->Clear();
 }

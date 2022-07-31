@@ -40,10 +40,6 @@ protected:
 protected:
 	UPROPERTY()
 	UInventory* m_BagInven;
-	UPROPERTY()
-	UInventory* m_BeltSlots;
-	UPROPERTY()
-	UInventory* m_QuickItem;
 	
 protected:
 	void EquipOption(int index, const FItemSpec& itemWant);
@@ -85,24 +81,12 @@ public:
 	
 	void UnequipBag();
 
-	void EquipBelt(int i);
-	
-	void UnequipBelt();
-
 	bool IsBagUnequipable();
 
-	bool IsBeltUnequipable();
-	
 	UInventory* GetBag() ;
-
-	UInventory* GetBelt() ;
-
-	UInventory** GetBeltHolder();
 
 	UInventory::FOnInvenChanged& GetOnBagChanged();
 
-	UInventory::FOnInvenChanged& GetOnBeltChanged();
-	
 	void ReduceDurability(EEquipSlotType t, int amount);
 
 	void UpdateDur();
@@ -119,10 +103,6 @@ public:
 	FItemSpec* FindItemInEquip(FName id);
 
 public:
-	const FItemSpec& GetQuickSlotItem() const;
-
-	UInventory* GetQuickInven();
-	
 	void ClearEquipSlots();
 
 	void ClearAllEquipment();

@@ -164,17 +164,6 @@ void UWidgetAssemble::OnPutAll()
 				continue;
 			}
 		}
-		
-		if(Equip->GetBelt())
-		{
-			TryPutItem(Index, Equip->GetBelt(), Cost, RemainItemNeed);
-			
-			if(RemainItemNeed <= 0)
-			{
-				Index++;
-				continue;
-			}
-		}		
 		Index++;
 	}
 	m_AssembleInst->UpdateInventory();
