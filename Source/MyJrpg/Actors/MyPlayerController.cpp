@@ -17,6 +17,10 @@ AMyPlayerController::AMyPlayerController()
 	bShowMouseCursor = true;
 	//
 	SetHidden(false);
+
+	m_bUseFlick = false;
+
+	m_MousePos = FVector2D(0.f);
 }
 
 void AMyPlayerController::BeginPlay()
@@ -68,6 +72,26 @@ void AMyPlayerController::SetupInputComponent()
 	Super::SetupInputComponent();
 	InputComponent->BindAction("Exit", EInputEvent::IE_Pressed, this, &AMyPlayerController::OpenExitPanel);
 	InputComponent->BindAction("MouseClick", EInputEvent::IE_Pressed, this, &AMyPlayerController::OnTouchPressed);
+
+	InputComponent->BindAction("MouseClick", EInputEvent::IE_Pressed, this, &AMyPlayerController::OnPressed);
+	InputComponent->BindAction("MouseClick", EInputEvent::IE_Released, this, &AMyPlayerController::OnReleased);
+}
+
+void AMyPlayerController::Tick(float DeltaSeconds)
+{
+	Super::Tick(DeltaSeconds);
+
+	if(!m_bUseFlick)
+	{
+		return;
+	}
+	FVector2D OldPos = m_MousePos;
+	
+	GetMousePosition(m_MousePos.X,m_MousePos.Y);
+	
+	FVector2D Delta = (m_MousePos - OldPos) * 2.f;
+
+	m_OnFlick.Broadcast(Delta);
 }
 
 void AMyPlayerController::OpenExitPanel()
@@ -99,6 +123,18 @@ void AMyPlayerController::ExitGame()
 	PRINTF("TryExit");
 
 	UKismetSystemLibrary::QuitGame(GetWorld(), this, EQuitPreference::Quit, true);
+}
+
+void AMyPlayerController::OnPressed()
+{
+	m_bUseFlick = true;
+	GetMousePosition(m_MousePos.X,m_MousePos.Y);
+}
+
+void AMyPlayerController::OnReleased()
+{
+	m_bUseFlick = false;
+	m_MousePos = FVector2D(0.f);
 }
 
 void AMyPlayerController::OnTouchPressed()

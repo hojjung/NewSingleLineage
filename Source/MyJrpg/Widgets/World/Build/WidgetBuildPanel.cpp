@@ -44,10 +44,7 @@ void UWidgetBuildPanel::OnClickElement(UWidgetBuildElement* ele, const FBuildDat
 	m_Focused = ele;
 	m_Focused->MyFocus();
 
-	FVector Loc = UMyLib::GetPlayer()->GetCameraComp()->GetComponentLocation();
-	Loc += FVector(300,-300,0); 
-	FVector PlLoc = UMyLib::GetPlayer()->GetActorLocation();
-	Loc.Z = PlLoc.Z;
+	FVector Loc = UMyLib::GetPlayer()->GetActorLocation();
 	UMyGameInstance::Get->m_BuildManager->CancelSelect();
 	UMyGameInstance::Get->m_BuildManager->SpawnPreviewActor(Loc, &data);
 }
@@ -79,6 +76,8 @@ void UWidgetBuildPanel::OpenPanel()
 	
 	m_DeleTouchWorld = UMyLib::GetPlayerCon()->m_OnTouch.AddUObject(this, &UWidgetBuildPanel::OnTouchWorld);
 
+	m_DeleFlick = UMyLib::GetPlayerCon()->m_OnFlick.AddUObject(this, &UWidgetBuildPanel::OnFlick);
+
 	m_DeleCancel = UMyGameInstance::Get->m_BuildManager->m_OnCancel.AddUObject(this, &UWidgetBuildPanel::OnCancel);
 	
 	m_DeleFurniture = UMyGameInstance::Get->m_BuildManager->m_OnChanged.AddUObject(this, &UWidgetBuildPanel::UpdateFurnitureTab);
@@ -109,6 +108,8 @@ void UWidgetBuildPanel::ClosePanel()
 	OnCancel();
 	
 	UMyLib::GetPlayerCon()->m_OnTouch.Remove(m_DeleTouchWorld);
+
+	UMyLib::GetPlayerCon()->m_OnFlick.Remove(m_DeleFlick);
 
 	UMyGameInstance::Get->m_BuildManager->m_OnCancel.Remove(m_DeleCancel);
 
@@ -189,29 +190,4 @@ void UWidgetBuildPanel::UpdateElement()
 	{
 		Ele->UpdateCost();
 	}
-}
-
-FReply UWidgetBuildPanel::NativeOnTouchMoved(const FGeometry& InGeometry, const FPointerEvent& InGestureEvent)
-{
-	Super::NativeOnTouchMoved(InGeometry, InGestureEvent);
-
-	FVector2D Delta = InGestureEvent.GetCursorDelta() *2.f;
-
-	OnFlick(Delta);
-
-	return FReply::Handled();
-}
-
-FReply UWidgetBuildPanel::NativeOnTouchEnded(const FGeometry& InGeometry, const FPointerEvent& InGestureEvent)
-{
-	Super::NativeOnTouchEnded(InGeometry, InGestureEvent);
-
-	return FReply::Handled();
-}
-
-FReply UWidgetBuildPanel::NativeOnMouseButtonUp(const FGeometry& InGeometry, const FPointerEvent& InMouseEvent)
-{
-	Super::NativeOnMouseButtonUp(InGeometry, InMouseEvent);
-
-	return FReply::Handled();
 }
