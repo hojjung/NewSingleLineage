@@ -60,7 +60,6 @@ void UMyFlockSteering::ApplyControlInputToVelocity(float DeltaTime)
 	
 	Velocity += NewDelta * FMath::Abs(Acceleration) * DeltaTime;
 	//둘의 차이가 너무크니까 지터링되는것
-	
 	Velocity = Velocity.GetClampedToMaxSize(NewMaxSpeed);
 
 	ConsumeInputVector();
@@ -80,6 +79,7 @@ FVector UMyFlockSteering::GetBoidDelta(FVector inputDelta)
 	FVector SepSum = FVector::ZeroVector;
 
 	FVector OwnerLoc = m_Owner->GetActorLocation();
+	
 	OwnerLoc.Z = 0.f;
 
 	if (m_NearMobs.Num() > 0)
@@ -95,6 +95,7 @@ FVector UMyFlockSteering::GetBoidDelta(FVector inputDelta)
 			AlignSum += OtherActor->GetActorForwardVector();
 
 			FVector OtherLoc = OtherActor->GetActorLocation();
+			
 			OtherLoc.Z = 0.f;
 			
 			SepSum += (OwnerLoc - OtherLoc);
@@ -102,7 +103,7 @@ FVector UMyFlockSteering::GetBoidDelta(FVector inputDelta)
 		AlignSum /= Count;
 		SepSum /= Count; 
 	}
-	FinalDelta = (DestDelta * 1.37f) + (SepSum.GetSafeNormal() * 1.245f)+ (AlignSum.GetSafeNormal() * 0.75f); 
+	FinalDelta = (DestDelta * 1.4f) + (SepSum.GetSafeNormal() * 1.245f)+ (AlignSum.GetSafeNormal() * 0.75f); 
 	
 	return FinalDelta.GetSafeNormal();
 }
