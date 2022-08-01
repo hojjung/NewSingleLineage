@@ -43,7 +43,6 @@ UAlertInfoElement* UAlertInfoWindow::GetTextElement()
 	{
 		m_nIndex = 0;
 	}
-	m_OverlayInfo->ShiftChild(0, TextEle);
 	return TextEle;
 }
 
