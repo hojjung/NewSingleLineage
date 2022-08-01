@@ -19,7 +19,7 @@ void UBI_StorageSearch::Init(const TArray<FString>& variable, UInventory* inven)
 	if(inven)
 	{
 		m_Inven	 = inven;
-		m_bIsSearched = true;
+		//m_bIsSearched = true;//무슨근거로 찾은게 되나?
 	}
 	else
 	{
@@ -88,4 +88,14 @@ void UBI_StorageSearch::OnInteract()
 		return ;
 	}
 	Super::OnInteract();
+}
+
+bool UBI_StorageSearch::IsSearched()
+{
+	return m_bIsSearched;
+}
+
+void UBI_StorageSearch::SetSearched(bool is_searched)
+{
+	m_bIsSearched = is_searched;
 }

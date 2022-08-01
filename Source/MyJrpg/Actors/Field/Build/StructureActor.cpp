@@ -200,6 +200,11 @@ void AStructureActor::SetCopiedItemHolder(UInventory* inventory)
 	m_BuildInteract->SetCopiedItemHolder(inventory);
 }
 
+UBuildInteractBase* AStructureActor::GetBuildInteract()
+{
+	return m_BuildInteract;
+}
+
 void AStructureActor::OnInteract()
 {
 	float R = 0;

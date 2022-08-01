@@ -140,11 +140,11 @@ void ULogic_NPCDefault::AlertEnemyToAllies()
 	}
 	m_bAlertOnce = true;
 	
-	UMyGameInstance::Get->m_ZoneInst->GetNearNpcs(m_Owner,m_NearMobs,500);
+	UMyGameInstance::Get->m_ZoneInst->GetNearNpcs<AMonsterPawn>(m_Owner,m_NearMobs,300);
 
 	IFocusable* FocusedTarget = m_Owner->GetFocusedTarget<IFocusable>();
 	
-	for(ACombatUnitPawn* Ally : m_NearMobs)
+	for(AMonsterPawn* Ally : m_NearMobs)
 	{
 		Ally->SetFocusedTarget(FocusedTarget);
 	}

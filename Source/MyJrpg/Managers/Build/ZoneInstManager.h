@@ -60,6 +60,8 @@ public:
 
 	TMap<int,TStrongObjectPtr<UInventory>> m_MapItemHolders;
 
+	TMap<int,bool> m_MapInvenSearched;
+
 	int m_nSpawnEventIndex;
 
 	float m_fSpawnEventTimer;

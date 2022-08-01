@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 
 #include "AI_LogicBase.h"
+#include "MyJrpg/Pawns/MonsterPawn.h"
 #include "Logic_NPCDefault.generated.h"
 
 /**
@@ -26,7 +27,7 @@ public:
 
 protected:
 	UPROPERTY()
-	TArray<ACombatUnitPawn*> m_NearMobs;
+	TArray<AMonsterPawn*> m_NearMobs;
 	
 	EFSM m_CurrentState;
 

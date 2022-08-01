@@ -102,7 +102,7 @@ FVector UMyFlockSteering::GetBoidDelta(FVector inputDelta)
 		AlignSum /= Count;
 		SepSum /= Count; 
 	}
-	FinalDelta = (DestDelta * 1.3f) + (SepSum.GetSafeNormal() * 1.1f )+ (AlignSum.GetSafeNormal() * 0.7f); 
+	FinalDelta = (DestDelta * 1.37f) + (SepSum.GetSafeNormal() * 1.245f)+ (AlignSum.GetSafeNormal() * 0.75f); 
 	
 	return FinalDelta.GetSafeNormal();
 }

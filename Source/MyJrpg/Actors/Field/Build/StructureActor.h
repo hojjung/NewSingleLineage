@@ -74,4 +74,6 @@ public:
 	virtual void Destroyed() override;
 	
 	void SetCopiedItemHolder(UInventory* inventory);
+
+	UBuildInteractBase* GetBuildInteract();
 };

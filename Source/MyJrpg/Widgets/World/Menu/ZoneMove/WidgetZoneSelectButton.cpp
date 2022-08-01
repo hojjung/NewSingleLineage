@@ -1,6 +1,7 @@
 #include "WidgetZoneSelectButton.h"
 
 #include "Components/ScrollBoxSlot.h"
+#include "MyJrpg/Actors/Field/Build/BuildInteract/BI_StorageSearch.h"
 #include "MyJrpg/DataTables/GatherTable.h"
 #include "MyJrpg/Managers/MyGameInstance.h"
 #include "MyJrpg/Managers/RewardManager.h"

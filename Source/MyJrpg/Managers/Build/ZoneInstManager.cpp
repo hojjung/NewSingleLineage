@@ -2,6 +2,7 @@
 #include "NPCPaletteDataAsset.h"
 #include "MyJrpg/MyLib.h"
 #include "MyJrpg/Actors/Field/ItemActor.h"
+#include "MyJrpg/Actors/Field/Build/BuildInteract/BI_StorageSearch.h"
 #include "MyJrpg/DataTables/BuildData.h"
 #include "MyJrpg/DataTables/GatherTable.h"
 #include "MyJrpg/DataTables/ZoneData.h"
@@ -149,6 +150,15 @@ int UZoneInstManager::SaveActors(const FName& id)
 			TStrongObjectPtr<UInventory> ItemHolder(ActorEle->GetItemHolder());
 			
 			BuildInst->m_MapItemHolders.Add(Index, ItemHolder);
+
+			if(ActorEle->GetBuildData().m_ClassInter == UBI_StorageSearch::StaticClass())
+			{
+				UBI_StorageSearch* Search = Cast<UBI_StorageSearch> (ActorEle->GetBuildInteract());
+				
+				bool IsSearched = Search->IsSearched();
+				
+				BuildInst->m_MapInvenSearched.Add(Index, IsSearched);
+			}
 		}
 		BuildInst->m_AryZoneActorTrans.Add(ZoneData);
 		
@@ -489,6 +499,22 @@ AStructureActor* UZoneInstManager::SpawnBuildActor(const FZoneActorTransform& sp
 	
 	StructureActor->ConfirmBuild( InvenFound ? InvenFound->Get() : nullptr);
 
+	if(StructureActor->GetBuildData().m_ClassInter == UBI_StorageSearch::StaticClass())
+	{
+		UBI_StorageSearch* Search = Cast<UBI_StorageSearch> (StructureActor->GetBuildInteract());
+				
+		const bool* IsSearched = serialData.m_MapInvenSearched.Find(index);
+
+		if(!IsSearched || !(*IsSearched))
+		{
+			Search->SetSearched(false);	
+		}
+		else
+		{
+			Search->SetSearched(true);
+		}
+	}
+
 	if(UMyGameInstance::Get->m_LevelMoveManager->GetCrntZoneID() == TEXT("PlayerHome"))
 	{
 		UMyGameInstance::Get->m_BuildManager->SetStructureGrid(StructureActor);
@@ -556,42 +582,42 @@ void UZoneInstManager::AddTrackIcon(UMeshComponent* mesh)
 	m_MiniMapCam->AddTrackIcon(mesh);
 }
 
-void UZoneInstManager::RemovePlayerTomb()
+void UZoneInstManager::RemovePlayerTomb()//세이브 당하지 않기 위해서 지우는것, 세이브 직렬화에서 찾아서 지우는것
 {
 	if(!m_PlayerTombZoneID.IsNone())
 	{
 		int Index = 0;
 		
 		if(m_PlayerTombZoneID == UMyGameInstance::Get->m_LevelMoveManager->GetCrntZoneID())
-		{
+		{//현재 지역이 무덤이 존재하는 지역일때
 			for(TWeakObjectPtr<AStructureActor> CurrentBuildActor : m_Build)
-			{
+			{//액터중에서 찾아내서 무덤을 없애준다.
 				if(CurrentBuildActor->GetBuildData().m_RowID == TEXT("PlayerTomb"))
 				{
 					break;
 				}
 				Index++;
 			}
-			m_Build.RemoveAt(Index);
+			m_Build.RemoveAt(Index);//액터를 못찾았으면?
 		}
-		
-		Index = 0;
-		
-		FZoneSerialData* PlZOneData = m_MapBuildInsts.Find(m_PlayerTombZoneID);
-		
-		for(const FZoneActorTransform& ZoneTans : PlZOneData->m_AryZoneActorTrans)
+		else
 		{
-			if(ZoneTans.m_IDEntity == TEXT("PlayerTomb"))
+			FZoneSerialData* PlZOneData = m_MapBuildInsts.Find(m_PlayerTombZoneID);
+		
+			for(const FZoneActorTransform& ZoneTans : PlZOneData->m_AryZoneActorTrans)
 			{
-				break;
+				if(ZoneTans.m_IDEntity == TEXT("PlayerTomb"))
+				{
+					break;
+				}
+				Index++;
 			}
-			Index++;
-		}
-		PlZOneData->m_MapItemHolders.Remove(Index);
+			PlZOneData->m_MapItemHolders.Remove(Index);
 
-		PlZOneData->m_AryZoneActorTrans.RemoveAt(Index);
+			PlZOneData->m_AryZoneActorTrans.RemoveAt(Index);	
+		}
 	}
-	m_PlayerTombZoneID = NAME_None;
+	m_PlayerTombZoneID = NAME_None;//무덤이 존재하는 존 이름 없앰
 }
 
 void UZoneInstManager::SaveActorsOnPlayerDead(const FName& id)
@@ -604,11 +630,6 @@ void UZoneInstManager::SaveActorsOnPlayerDead(const FName& id)
 	
 	AddPlayerAllItem(DeadInven);
 	
-	if(DeadInven->IsEmpty())
-	{
-		return;
-	}
-
 	int Index = SaveActors(id);
 
 	AActor* Pl = UMyLib::GetPlayer();

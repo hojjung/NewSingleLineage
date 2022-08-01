@@ -25,4 +25,9 @@ protected:
 	virtual bool IsEraseable() override;
 
 	virtual void OnInteract() override;
+
+public:
+	bool IsSearched();
+	
+	void SetSearched(bool is_searched);
 };
