@@ -1,6 +1,7 @@
 #include "AnimNotifySt_AOECircle.h"
 #include "Animation/AnimNotifies/AnimNotifyState_Trail.h"
 #include "MyJrpg/MyLib.h"
+#include "MyJrpg/Managers/MyGameInstance.h"
 
 UAnimNotifySt_AOECircle::UAnimNotifySt_AOECircle(const FObjectInitializer& obj): Super(obj)
 {
@@ -96,9 +97,9 @@ void UAnimNotifySt_AOECircle::NotifyTick(USkeletalMeshComponent* MeshComp, UAnim
 
 bool UAnimNotifySt_AOECircle::TraceDamage(ACombatUnitPawn* CPawn)
 {
-	TArray<AActor*> Hits;
+	TArray<ACombatUnitPawn*> Hits;
 
-	if (!TraceSphere(CPawn, Hits, 0.f, m_Radius, m_TargetClass))
+	if (!TraceSphere(CPawn, Hits, m_Radius))
 	{
 		return false;
 	}
@@ -153,20 +154,9 @@ void UAnimNotifySt_AOECircle::NotifyEnd(USkeletalMeshComponent* MeshComp, UAnimS
 	Super::NotifyEnd(MeshComp, Animation);
 }
 
-bool UAnimNotifySt_AOECircle::TraceSphere(ACombatUnitPawn* instigator, TArray<AActor*>& outHits, float range, float radius, TSubclassOf<ACombatUnitPawn> classFilter)
+bool UAnimNotifySt_AOECircle::TraceSphere(const ACombatUnitPawn* instigator, TArray<ACombatUnitPawn*>& outHits, float radius)
 {
-	FVector StartTrace = instigator->GetActorLocation() +(instigator->GetActorForwardVector() * range);
+	UMyGameInstance::Get->m_ZoneInst->GetNearNpcs(instigator, outHits, radius);
 	
-	return TraceSphere(instigator, outHits, StartTrace, radius, classFilter);
-}
-
-bool UAnimNotifySt_AOECircle::TraceSphere(ACombatUnitPawn* instigator, TArray<AActor*>& outHits, FVector start, float radius,TSubclassOf<ACombatUnitPawn> classFilter)
-{
-	//DrawDebugSphere(GetWorld(),start,radius,12,FColor::Red,false,1);
-	if(!UMyLib::SphereOverlapActors(instigator,instigator->GetActorRotation(),start,radius,
-		instigator->GetTraceObjTypes(),classFilter,instigator->GetTraceIgnoredActors(),outHits))
-	{
-		return false;
-	}
-	return true;
+	return outHits.Num() > 0;
 }

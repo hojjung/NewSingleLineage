@@ -7,8 +7,6 @@
 void UMyFlockSteering::BeginPlay()
 {
 	Super::BeginPlay();
-	m_SetIgnoreSelf.Reset();
-	m_SetIgnoreSelf.Add(m_Owner);
 	m_NearMobs.Reserve(20);
 }
 
@@ -71,11 +69,11 @@ void UMyFlockSteering::ApplyControlInputToVelocity(float DeltaTime)
 FVector UMyFlockSteering::GetBoidDelta(FVector inputDelta)
 {
 	m_NearMobs.Reset();
-	UMyGameInstance::Get->m_ZoneInst->GetNearNpcs<ACombatUnitPawn>(m_Owner,m_NearMobs,400);
+	UMyGameInstance::Get->m_ZoneInst->GetNearNpcs<AMonsterPawn>(m_Owner,m_NearMobs,400);
 	
 	FVector FinalDelta = FVector::ZeroVector;
 	
-	FVector DestDelta = inputDelta * 1.2f;
+	FVector DestDelta = inputDelta;
 	
 	FVector AlignSum = m_Owner->GetActorForwardVector();
 	
@@ -86,8 +84,14 @@ FVector UMyFlockSteering::GetBoidDelta(FVector inputDelta)
 
 	if (m_NearMobs.Num() > 0)
 	{
+		int Count = 1;
+		
 		for (ACombatUnitPawn* OtherActor : m_NearMobs)
 		{
+			if(!OtherActor->IsAlive())
+			{
+				continue;
+			}
 			AlignSum += OtherActor->GetActorForwardVector();
 
 			FVector OtherLoc = OtherActor->GetActorLocation();
@@ -95,10 +99,10 @@ FVector UMyFlockSteering::GetBoidDelta(FVector inputDelta)
 			
 			SepSum += (OwnerLoc - OtherLoc);
 		}
-		AlignSum /= m_NearMobs.Num();
-		SepSum /= m_NearMobs.Num(); 
+		AlignSum /= Count;
+		SepSum /= Count; 
 	}
-	FinalDelta = DestDelta + AlignSum.GetSafeNormal() + SepSum.GetSafeNormal();
+	FinalDelta = (DestDelta * 1.3f) + (SepSum.GetSafeNormal() * 1.1f )+ (AlignSum.GetSafeNormal() * 0.7f); 
 	
 	return FinalDelta.GetSafeNormal();
 }

@@ -11,7 +11,10 @@
 #include "SkillData.generated.h"
 
 /**
- * 
+ * 다른 몬스터가 쓰더라도
+ * 몽타쥬 노티파이는 똑같이 되어잇게끔
+ * 몽타쥬맞 맞춰주면 어떤 몬스터든 해당 스킬을 쓸수 있다.
+ * 플레이어도 디버프에 걸려야하고 그디버프를 방어할 마법이나 스크롤도 있어야한다
  */
 UCLASS()
 class MYJRPG_API USkillData : public UObject
@@ -29,6 +32,8 @@ struct FSkillDataRow : public FTableRowBase
 	GENERATED_BODY()
 
 public:
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
+	UAnimMontage* m_Motion;
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
 	bool m_bCanMove = false;
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)

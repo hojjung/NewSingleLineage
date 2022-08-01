@@ -134,4 +134,5 @@ public:
 	
 	static void SetConfirmPanel(const FText&& txt,UWidgetConfirmPanel::FOnClick onCancel, UWidgetConfirmPanel::FOnClick onConfirm);
 
+	static void SnapActorToNav(AActor* want);
 };

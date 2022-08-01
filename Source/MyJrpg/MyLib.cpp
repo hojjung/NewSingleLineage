@@ -533,8 +533,28 @@ void UMyLib::SetConfirmPanel(const FText&& txt, UWidgetConfirmPanel::FOnClick on
 {
 	SetConfirmPanel(txt,onCancel,onConfirm);
 }
+
+void UMyLib::SnapActorToNav(AActor* want)
+{
+	FVector ActorLoc = want->GetActorLocation();
+	FNavLocation Loc;
+	if(!GetNavSys()->ProjectPointToNavigation(ActorLoc,Loc))
+	{
+		GetNavSys()->GetRandomPointInNavigableRadius(ActorLoc,1000,Loc);
+	}
+	FVector Extent;
+	
+	want->GetActorBounds(true, ActorLoc, Extent);
+	
+	FVector NewLoc = Loc;
+	
+	NewLoc.Z += Extent.Z;
+	
+	want->SetActorLocation(NewLoc);
+}
+
 void UMyLib::SetConfirmPanel(const FText& txt, UWidgetConfirmPanel::FOnClick onCancel,
-	UWidgetConfirmPanel::FOnClick onConfirm)
+                             UWidgetConfirmPanel::FOnClick onConfirm)
 {
 	ABaseHUD *hud = Cast<ABaseHUD>(UGameplayStatics::GetPlayerController( GetUWorld(),0)->GetHUD());
 

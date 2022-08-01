@@ -61,7 +61,5 @@ protected:
 
 	virtual void NotifyEnd(USkeletalMeshComponent * MeshComp, UAnimSequenceBase * Animation) override;
 
-	bool TraceSphere(ACombatUnitPawn* instigator, TArray<AActor*>& outHits, float range, float radius, TSubclassOf<ACombatUnitPawn> classFilter);
-
-	bool TraceSphere(ACombatUnitPawn* instigator, TArray<AActor*>& outHits, FVector start, float radius, TSubclassOf<ACombatUnitPawn> classFilter);
+	bool TraceSphere(const ACombatUnitPawn* instigator, TArray<ACombatUnitPawn*>& outHits, float radius);
 };

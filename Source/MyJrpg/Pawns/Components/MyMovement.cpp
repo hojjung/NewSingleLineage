@@ -34,13 +34,7 @@ void UMyMovement::BeginPlay()
 
 void UMyMovement::SnapToNav()
 {
-	FVector ActorLoc = GetActorLocation();
-	FNavLocation Loc;
-	if(!UMyLib::GetNavSys()->ProjectPointToNavigation(ActorLoc,Loc))
-	{
-		UMyLib::GetNavSys()->GetRandomPointInNavigableRadius(ActorLoc,1000,Loc);
-	}
-	m_Owner->SetActorFeetLocation(Loc.Location);
+	UMyLib::SnapActorToNav(m_Owner);
 }
 
 void UMyMovement::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
