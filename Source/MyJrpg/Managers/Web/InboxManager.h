@@ -22,6 +22,8 @@ public:
 	FString ItemAmount;
 	UPROPERTY(EditAnywhere)
 	FString ExpireTime;
+	UPROPERTY(EditAnywhere)
+	bool IsPermanent;
 	
 	FString m_StrRemainTime;
 

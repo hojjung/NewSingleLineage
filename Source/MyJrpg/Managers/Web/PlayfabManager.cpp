@@ -27,7 +27,7 @@ void UPlayfabManager::OnErrorPlayfabReq(const FFailRslt& ErrorResult)
 		|| ErrorResult.ErrorCode == PlayFab::PlayFabErrorCode::PlayFabErrorInvalidDisplayNameRandomSuffixLength
 		|| ErrorResult.ErrorCode == PlayFab::PlayFabErrorCode::PlayFabErrorAllowNonUniquePlayerDisplayNamesDisableNotAllowed)
 	{
-		m_OnNickNameFail.ExecuteIfBound();
+		m_OnLoginEnd.ExecuteIfBound();
 	}
 }
 
@@ -45,9 +45,8 @@ void UPlayfabManager::Init()
 	m_Auth = USessionTicket::CreateAuthCon();
 }
 
-void UPlayfabManager::StartPlayfabLogin(FOnLoginEnd dele)
+void UPlayfabManager::StartPlayfabLogin()
 {
-	m_OnLoginEnd = dele;
 #if PLATFORM_WINDOWS
 	UMyLib::PrintInfoText(LOCTEXT("Try Login With Desktop", "로그인 시도-PC"));
 	
@@ -196,14 +195,15 @@ void UPlayfabManager::OnSuccessTimeGet(const PlayFab::ClientModels::FGetTimeResu
 
 void UPlayfabManager::RequestVersionCheck()
 {
-		PlayFab::ClientModels::FExecuteCloudScriptRequest Req;
-		
-		Req.FunctionName =TEXT( "CheckVersion");
-		
-		Req.GeneratePlayStreamEvent = true;
-		
-		GetClientAPI->ExecuteCloudScript(Req,FExeCScriptDele::CreateUObject(this, &UPlayfabManager::OnVersionCheckCloudScriptSuccess),
-			FFailDele::CreateUObject(this, &UPlayfabManager::OnErrorPlayfabReq));
+	PlayFab::ClientModels::FExecuteCloudScriptRequest Req;
+
+	Req.FunctionName = TEXT("CheckVersion");
+
+	Req.GeneratePlayStreamEvent = true;
+
+	GetClientAPI->ExecuteCloudScript(
+		Req, FExeCScriptDele::CreateUObject(this, &UPlayfabManager::OnVersionCheckCloudScriptSuccess),
+		FFailDele::CreateUObject(this, &UPlayfabManager::OnErrorPlayfabReq));
 }
 
 void UPlayfabManager::OnVersionCheckCloudScriptSuccess(const FExeCScriptRslt& rslt)
@@ -222,6 +222,7 @@ void UPlayfabManager::OnVersionCheckCloudScriptSuccess(const FExeCScriptRslt& rs
 	if(m_CurrentVersionName == m_ServerVersion)
 	{
 		PRINTF("Version Same");
+		StartPlayfabLogin();
 	}
 	else
 	{
@@ -262,10 +263,15 @@ void UPlayfabManager::OnServerCloseCheckScriptSuccess(const FExeCScriptRslt& rsl
 	if(!m_bIsServerClosed)
 	{
 		UMyLib::PrintInfoText(LOCTEXT("Server Open", "서버 사용 가능") , FLinearColor::Green);
+		RequestVersionCheck();
 	}
 	else
 	{
-		UMyLib::PrintInfoText(LOCTEXT("Server Closed", "서버 사용 불가"), FLinearColor::Red);
+		FText ServerClosedTxt = LOCTEXT("Server Closed", "서버 사용 불가");
+
+		FString Str = FString::Printf(TEXT("%s:%s"),*ServerClosedTxt.ToString(), *m_ServerCloseOpenTime); 
+		
+		UMyLib::PrintInfoText(Str, FLinearColor::Red);
 	}
 }
 

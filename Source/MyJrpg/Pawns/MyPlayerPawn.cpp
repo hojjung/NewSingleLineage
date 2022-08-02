@@ -479,7 +479,6 @@ void AMyPlayerPawn::SetCameraOffset(const FVector2D& delta)
 	
 	FVector NewLoc = -FVector(NewLoc2D.X, NewLoc2D.Y, 0);
 
-	PRINTF("NewLoc:%s", *NewLoc.ToString());
 	m_DissolveCam->AddRelativeLocation(NewLoc);
 
 	FVector Loc = m_DissolveCam->GetComponentLocation();
@@ -487,7 +486,6 @@ void AMyPlayerPawn::SetCameraOffset(const FVector2D& delta)
 	Loc.X = FMath::Clamp(Loc.X, -2700.f, 2700.f);
 	
 	Loc.Y = FMath::Clamp(Loc.Y, -2700.f, 2700.f);
-
 	
 	m_DissolveCam->SetWorldLocation(Loc);
 }

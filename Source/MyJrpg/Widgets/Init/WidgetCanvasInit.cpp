@@ -27,10 +27,10 @@ void UWidgetCanvasInit::StartPlayfabLogin()
 	m_BtnCloseNews->OnClicked.AddDynamic(this, &UWidgetCanvasInit::OnCloseNews);
 
 	UMyGameInstance::Get->m_PlayfabManager->RequestTitleNews(FNewsDele::CreateUObject(this, &UWidgetCanvasInit::OnSuccessGetTitleNews));
-
-	UMyGameInstance::Get->m_PlayfabManager->StartPlayfabLogin(UPlayfabManager::FOnLoginEnd::CreateUObject(this, &UWidgetCanvasInit::OpenConfirmPanel));
-
-	UMyGameInstance::Get->m_PlayfabManager->m_OnNickNameFail.BindUObject(this, &UWidgetCanvasInit::OpenConfirmPanel);
+	
+	UMyGameInstance::Get->m_PlayfabManager->m_OnLoginEnd.BindUObject(this, &UWidgetCanvasInit::OpenConfirmPanel);
+	
+	UMyGameInstance::Get->m_PlayfabManager->RequestServerOpenCheck();
 }
 
 void UWidgetCanvasInit::OnSuccessGetTitleNews(const PlayFab::ClientModels::FGetTitleNewsResult& rslt)

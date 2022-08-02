@@ -50,7 +50,8 @@ public:
 
 	DECLARE_DELEGATE(FOnLoginEnd);
 
-	FOnLoginEnd m_OnNickNameFail;
+	FOnLoginEnd m_OnLoginEnd;
+
 protected:
 	PlayFabClientPtr GetClientAPI = nullptr;
 	UPROPERTY()
@@ -75,34 +76,20 @@ protected:
 	FString m_ServerVersion;
 	UPROPERTY()
 	FString m_CurrentVersionName;
-
-protected:
-	FOnLoginEnd m_OnLoginEnd;
-
+	
 protected:
 	void OnErrorPlayfabReq(const FFailRslt& ErrorResult);
 	
-public:
-	void RequestSetNickname(FString str);
-
-protected:
 	void OnNickNameSetSuccess(const PlayFab::ClientModels::FUpdateUserTitleDisplayNameResult& result);
-
-public:
-	void RequestTitleNews(FNewsDele onEnd);
-
-protected:
-	void OnVersionCheckCloudScriptSuccess(const FExeCScriptRslt& rslt);
 
 	void RequestVersionCheck();
 	
+	void OnVersionCheckCloudScriptSuccess(const FExeCScriptRslt& rslt);
+
 	void OnServerCloseCheckScriptSuccess(const FExeCScriptRslt& rslt);
 
-	void RequestServerOpenCheck();
-
 	void RequestGetServerTime();
-
-
+	
 	void OnSuccessTimeGet(const PlayFab::ClientModels::FGetTimeResult& rslt);
 	
 	void OnSuccessGetAccountInfo(const FGetAccntInfoRslt& rslt);
@@ -110,19 +97,23 @@ protected:
 	void HandleExternalUIClose(TSharedPtr<const FUniqueNetId> uniqueId, const int ControllerIndex, const FOnlineError& error);
 
 	void OnSessionLoginErrorPlayfabReq(const FFailRslt& ErrorResult);
-
 	
 	void TryLoginPlayfabGoogle();
 	
  	void OnSuccessPlayfabLogin(const PlayFab::ClientModels::FLoginResult& Result);
 
-public:
-	void Init();
-	
-	void StartPlayfabLogin(FOnLoginEnd dele);
+	void StartPlayfabLogin();
 	
 	void RequestGetAccountInfo();
+public:
+	void Init();
 
+	void RequestTitleNews(FNewsDele onEnd);
+	
+	void RequestServerOpenCheck();
+	
 	const FString& GetNickName();
+
+	void RequestSetNickname(FString str);
 };
 
