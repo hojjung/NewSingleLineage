@@ -14,6 +14,12 @@ class MYJRPG_API UMyCheatManager : public UCheatManager
 {
 	GENERATED_BODY()
 public:
+	static float Dest;
+
+	static float Sep;
+
+	static float Align;
+public:
 	UFUNCTION(Exec)
 	void AddItemToPlayer(FName id,int amount);
 	UFUNCTION(Exec)
@@ -29,4 +35,12 @@ public:
 	void TryCompleteQuest(FName id);
 	UFUNCTION(Exec)
 	void KillPlayer();
+	UFUNCTION(Exec)
+	void SetDest(float v);
+	UFUNCTION(Exec)
+	void SetAlign(float v);
+	UFUNCTION(Exec)
+	void SetSep(float v);
+	UFUNCTION(Exec)
+	void SetClear();
 };

@@ -1,5 +1,4 @@
 #include "MyFlockSteering.h"
-
 #include "MyJrpg/Managers/MyGameInstance.h"
 #include "MyJrpg/Pawns/MonsterPawn.h"
 
@@ -74,8 +73,6 @@ FVector UMyFlockSteering::GetBoidDelta(FVector inputDelta)
 	
 	FVector DestDelta = inputDelta;
 	
-	FVector AlignSum = m_Owner->GetActorForwardVector();
-	
 	FVector SepSum = FVector::ZeroVector;
 
 	FVector OwnerLoc = m_Owner->GetActorLocation();
@@ -92,18 +89,15 @@ FVector UMyFlockSteering::GetBoidDelta(FVector inputDelta)
 			{
 				continue;
 			}
-			AlignSum += OtherActor->GetActorForwardVector();
-
 			FVector OtherLoc = OtherActor->GetActorLocation();
 			
 			OtherLoc.Z = 0.f;
 			
 			SepSum += (OwnerLoc - OtherLoc);
 		}
-		AlignSum /= Count;
 		SepSum /= Count; 
 	}
-	FinalDelta = (DestDelta * 1.4f) + (SepSum.GetSafeNormal() * 1.245f)+ (AlignSum.GetSafeNormal() * 0.75f); 
+	FinalDelta = (DestDelta * 1.2f) + SepSum.GetSafeNormal(); 
 	
 	return FinalDelta.GetSafeNormal();
 }
