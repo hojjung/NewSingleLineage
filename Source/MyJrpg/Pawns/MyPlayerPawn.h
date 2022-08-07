@@ -95,7 +95,7 @@ private:
 	
 	void ShowIndicator(IFocusable* target);
 
-	bool CheckTargetRange();
+	bool CheckTargetRange(float per = 1.f);
 
 	void OnRequestMoveDone(FAIRequestID id, const FPathFollowingResult& rslt);
 

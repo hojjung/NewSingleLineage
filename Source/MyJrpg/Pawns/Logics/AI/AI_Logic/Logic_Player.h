@@ -14,8 +14,6 @@ class MYJRPG_API ULogic_Player : public UAI_LogicBase
 	GENERATED_BODY()
 
 public:
-	DECLARE_MULTICAST_DELEGATE(FOnManualMoveDone);
-
 	enum EFSM
 	{
 		Idle,

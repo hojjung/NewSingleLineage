@@ -47,6 +47,17 @@ void USensor_LogicBase::SetTimer(const float TimeInterval)
 	}
 }
 
+void USensor_LogicBase::OnTimer()
+{
+	if (!m_Owner || !m_Owner->GetWorld())
+	{
+		return;
+	}
+
+	UpdateAISensing();
+
+	SetTimer(m_SensingInterval);
+};
 
 void USensor_LogicBase::SetSensingInterval(const float NewSensingInterval)
 {
@@ -78,20 +89,6 @@ void USensor_LogicBase::SetSensingInterval(const float NewSensingInterval)
 		}
 	}
 }
-
-
-void USensor_LogicBase::OnTimer()
-{
-	if (!m_Owner || !m_Owner->GetWorld())
-	{
-		return;
-	}
-
-	UpdateAISensing();
-
-	SetTimer(m_SensingInterval);
-};
-
 
 bool USensor_LogicBase::HasLineOfSightTo(const AActor* Other) const
 {

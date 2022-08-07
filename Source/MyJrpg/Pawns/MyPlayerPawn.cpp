@@ -643,7 +643,7 @@ bool AMyPlayerPawn::IsSneak() const
 	return m_bIsSneaking;
 }
 
-bool AMyPlayerPawn::CheckTargetRange()
+bool AMyPlayerPawn::CheckTargetRange(float per)
 {
 	if(!GetFocusedTarget<ACombatUnitPawn>())
 	{
@@ -651,5 +651,5 @@ bool AMyPlayerPawn::CheckTargetRange()
 	}
 	float DistSqr = FVector::DistSquared2D(GetActorLocation(), GetFocusedActorLocation());
 
-	return DistSqr <= GetAttackRangeSqr();
+	return DistSqr <= (GetAttackRangeSqr() * per);
 }

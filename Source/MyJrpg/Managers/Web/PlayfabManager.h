@@ -102,12 +102,13 @@ protected:
 	
  	void OnSuccessPlayfabLogin(const PlayFab::ClientModels::FLoginResult& Result);
 
-	void StartPlayfabLogin();
 	
 	void RequestGetAccountInfo();
 public:
 	void Init();
 
+	void StartPlayfabLogin();
+	
 	void RequestTitleNews(FNewsDele onEnd);
 	
 	void RequestServerOpenCheck();

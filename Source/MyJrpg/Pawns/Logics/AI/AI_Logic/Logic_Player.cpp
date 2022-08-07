@@ -23,8 +23,6 @@ void ULogic_Player::Init(ACombatUnitPawn* pawnUnit)
 	m_AryStateFunction[static_cast<int>(EFSM::Chase)] = &ULogic_Player::OnChase;
 
 	m_AryStateFunction[static_cast<int>(EFSM::Combat)] = &ULogic_Player::OnCombat;
-
-
 	//
 	ResetStartPosition(m_Owner->GetActorLocation());
 }
