@@ -101,3 +101,8 @@ FVector UMyFlockSteering::GetBoidDelta(FVector inputDelta)
 	
 	return FinalDelta.GetSafeNormal();
 }
+
+void UMyFlockSteering::TrySnapFloor()
+{
+	SnapToNav();
+}

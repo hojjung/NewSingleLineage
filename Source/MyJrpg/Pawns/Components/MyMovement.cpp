@@ -80,7 +80,8 @@ void UMyMovement::TickComponent(float DeltaTime, ELevelTick TickType, FActorComp
 			const FVector NewLocation = UpdatedComponent->GetComponentLocation();
 			Velocity = ((NewLocation - OldLocation) / DeltaTime);
 		}
-		SnapToNav();
+		//SnapToNav();//이게 없으면 플레이어는 바닥을 못올라가고, 몬스터는 바닥 밖으로 낑겨버린다
+		TrySnapFloor();
 	}
 
 	m_ImpactVector = FVector::ZeroVector;
@@ -170,5 +171,10 @@ bool UMyMovement::CanStepUp(const FHitResult& Hit) const
 	if (!HitActor->CanBeBaseForCharacter(m_Owner))
 		return false;
 	return true;
+}
+
+void UMyMovement::TrySnapFloor()
+{
+	//NotUse
 }
 

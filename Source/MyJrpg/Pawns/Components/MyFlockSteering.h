@@ -28,4 +28,6 @@ protected:
 
 protected:
 	FVector GetBoidDelta(FVector inputDelta);
+
+	virtual void TrySnapFloor() override;
 };

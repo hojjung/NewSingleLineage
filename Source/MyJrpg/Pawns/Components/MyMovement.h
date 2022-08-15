@@ -48,6 +48,8 @@ protected:
 	virtual void HandleImpact(const FHitResult& Hit, float TimeSlice=0.f, const FVector& MoveDelta = FVector::ZeroVector) override;
 
 	bool CanStepUp(const FHitResult& Hit) const;
+
+	virtual  void TrySnapFloor();
 };
 
 
