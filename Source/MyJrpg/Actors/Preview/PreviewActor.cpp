@@ -38,8 +38,9 @@ APreviewActor::APreviewActor()
 	//
 	m_Spring = CreateDefaultSubobject<USpringArmComponent>("Spring");
 	m_Spring->SetupAttachment(RootComponent);
+	m_Spring->SetRelativeLocation(FVector(0,0,10));
 	m_Spring->SetRelativeRotation(FRotator(-5, 200.f, 0));
-	m_Spring->TargetArmLength = 200;
+	m_Spring->TargetArmLength = 270;
 	m_Spring->bDoCollisionTest = 0;
 
 	m_Capture = CreateDefaultSubobject<USceneCaptureComponent2D>("Capture2D");
@@ -49,14 +50,10 @@ APreviewActor::APreviewActor()
 	m_Capture->PrimitiveRenderMode = ESceneCapturePrimitiveRenderMode::PRM_UseShowOnlyList;
 	m_Capture->CaptureSource = ESceneCaptureSource::SCS_SceneColorHDR;
 	m_Capture->SetTickableWhenPaused(true);
-	m_Capture->ProjectionType = ECameraProjectionMode::Orthographic;
-	m_Capture->OrthoWidth = 190.f;
+	m_Capture->ProjectionType = ECameraProjectionMode::Perspective;
+	m_Capture->FOVAngle = 45;
 	m_Capture->PostProcessBlendWeight = 0.f;
 	//
-	m_Light = CreateDefaultSubobject<UPointLightComponent>("m_Light");
-	m_Light->SetupAttachment(RootComponent);
-	m_Light->SetRelativeLocation(FVector(130,80,80));
-	m_Light->CastShadows = false;
 	//
 	m_bTouched = false;
 	//

@@ -28,8 +28,6 @@ protected:
 	USceneCaptureComponent2D* m_Capture;
 	UPROPERTY(VisibleAnywhere,BlueprintReadWrite)
 	USpringArmComponent* m_Spring;
-	UPROPERTY(VisibleAnywhere)
-	UPointLightComponent* m_Light;
 protected:
 	UPROPERTY(VisibleAnywhere)
 	UStaticMeshComponent* m_MeshLeftHand;
