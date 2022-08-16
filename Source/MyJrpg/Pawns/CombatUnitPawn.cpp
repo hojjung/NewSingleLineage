@@ -32,6 +32,9 @@ ACombatUnitPawn::ACombatUnitPawn(const FObjectInitializer& objInit):Super(objIni
 	//
 	m_IconComp = CreateDefaultSubobject<UMinimapIconComp>("m_NonRotComp");
 	m_IconComp->SetupAttachment(RootComponent);
+
+	GetSkMesh()->SetRenderCustomDepth(true);
+	GetSkMesh()->SetCustomDepthStencilValue(1);
 }
 
 void ACombatUnitPawn::SetIcon()

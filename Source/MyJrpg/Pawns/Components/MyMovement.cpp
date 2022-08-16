@@ -80,7 +80,7 @@ void UMyMovement::TickComponent(float DeltaTime, ELevelTick TickType, FActorComp
 			const FVector NewLocation = UpdatedComponent->GetComponentLocation();
 			Velocity = ((NewLocation - OldLocation) / DeltaTime);
 		}
-		//SnapToNav();//이게 없으면 플레이어는 바닥을 못올라가고, 몬스터는 바닥 밖으로 낑겨버린다
+		//이게 없으면 플레이어는 바닥을 못올라가고, 몬스터는 바닥 밖으로 낑겨버린다
 		TrySnapFloor();
 	}
 
