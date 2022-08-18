@@ -35,6 +35,12 @@ AModularUnitPawn::AModularUnitPawn(const FObjectInitializer& objInit): Super(obj
 
 	m_Axe = FoundSm01.Object;
 	m_Pickaxe = FoundSm02.Object;
+
+	m_MeshRightHand->SetRenderCustomDepth(true);
+	m_MeshRightHand->SetCustomDepthStencilValue(1);
+
+	m_MeshLeftHand->SetRenderCustomDepth(true);
+	m_MeshLeftHand->SetCustomDepthStencilValue(1);
 }
 
 void AModularUnitPawn::AttachWeapons()

@@ -35,6 +35,9 @@ AItemActor::AItemActor()
 	m_IconMeshComp = CreateDefaultSubobject<UMinimapIconComp>("m_IconMeshComp");
 	m_IconMeshComp->SetupAttachment(RootComponent);
 	m_IconMeshComp->SetLayerHeight(30.f);
+
+	m_MeshItem->SetRenderCustomDepth(true);
+	m_MeshItem->SetCustomDepthStencilValue(1);
 }
 
 void AItemActor::EndPlay(const EEndPlayReason::Type EndPlayReason)
